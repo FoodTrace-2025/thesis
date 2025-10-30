@@ -13,21 +13,35 @@ session: 4
 
 **For AI Agents:** This file is your entry point. Use the links below to navigate to detailed documentation.
 
-### Core References
+### Core BMAD Documents (Required for Development)
 
 - **Project Foundation** → @docs/brief.md (v1.1 - 47K - Complete project vision, 4-role architecture)
-- **Session History** → @.claude/sessions/session-history.md (Sessions 1-2 detailed archive)
-- **Thesis Writing Guide** → @docs/planning/thesis-outline.md (942 lines, OAMK structure, Weeks 10-12 plan)
-- **Team Workload** → @docs/planning/team-workload.md (724 lines, role breakdown, hours)
-- **Architecture Decisions** → @docs/planning/session-notes/2025-10-17-architecture-decisions.md (Session 1 decisions)
+- **Product Requirements** → @docs/prd.md (v1.1 - 2,624 lines - Sections 1-6, 12 epics)
+- **Architecture** → @docs/architecture.md (to be created Week 2 - System design, tech stack)
 
-### Architecture
+### Supporting Documents (Reference During Development)
 
-- **Tech Stack** → See Tech Stack section below + @README.md
-- **BMAD Workflow** → @docs/architecture/bmad-workflow.md (Complete Phase 1-3 guide, SM→Dev→QA cycle)
-- **Development Guide** → @docs/development-guide.md (All commands, troubleshooting, setup)
-- **Learning Resources** → @docs/learning-resources.md (Solidity, Web3, academic research)
-- **Quick File Paths** → See Quick Reference section below
+- **Team Workload** → @docs/planning/team-workload.md (Role assignments, epic ownership, week-by-week tasks)
+- **Action Plan** → @docs/planning/action-plan.md (Week 0-3 immediate tasks, kickoff agenda)
+- **Technical Constraints** → @docs/planning/technical-constraints.md ⚠️ **Architect reads this Week 2** (Risks, Supabase limits, gas targets)
+- **Change Management** → @docs/planning/change-management.md ⚠️ **Team reads Week 6/7/8** (Scope reduction decision trees, emergency plans)
+- **Development Guide** → @docs/development-guide.md (Commands, troubleshooting, DoD checklists)
+- **Learning Resources** → @docs/learning-resources.md ⚠️ **Week 1 & 10** (Solidity tutorials, academic papers)
+
+### Architecture Decisions (Reference When Justifying Choices)
+
+- **Session 1 Decisions** → @docs/planning/session-notes/2025-10-17-architecture-decisions.md (Why Next.js monolith? Why IoT simulator? Why Supabase?)
+- **Kickoff Agenda** → @docs/planning/session-notes/2025-10-31-kickoff-meeting-agenda.md
+
+### Thesis Materials (Week 10-12 Writing Phase)
+
+- **Thesis Outline** → @docs/planning/thesis-outline.md (OAMK structure, 942 lines, chapter breakdown)
+- **Session History** → @.claude/sessions/session-history.md (Sessions 1-5 archive)
+
+### BMAD Methodology Reference
+
+- **BMAD User Guide** → @.bmad-core/user-guide.md (Official methodology guide, Phase 1-3 workflow, SM→Dev→QA cycle)
+- **Tech Stack** → See Tech Stack section below
 
 ### Generated During Development (Week 3+)
 
@@ -49,32 +63,32 @@ session: 4
 
 ## Current Session Status
 
-- **Last Updated**: 2025-10-25 (Session 4 Complete)
-- **Project Status**: Repository Security Configured - Production-Ready Gitignore ✅
-- **Project Completion**: ~12% (Week 0/12 complete)
-- **Active Stage**: Pre-Development (Week 0 - Security hardened, ready for kickoff)
-- **Next Priority**: Generate Draft PRD v0.1 (tomorrow), Kickoff meeting (October 31, 2025)
-- **Recent Changes**: Comprehensive .gitignore created, environment template added, verification scripts built, all changes committed
-- **Blockers**: None - repository secured and ready
-- **Ready for**: PRD generation tomorrow, then Week 1 after kickoff
+- **Last Updated**: 2025-10-30 (Session 5 Complete)
+- **Project Status**: PRD Complete - Ready for Architecture Phase ✅
+- **Project Completion**: ~18% (Week 0/12 complete)
+- **Active Stage**: Pre-Development (Week 0 - PRD v1.1 complete, ready for kickoff)
+- **Next Priority**: Kickoff meeting (October 31, 2025), then Architecture document (Week 2)
+- **Recent Changes**: PRD completed (2,624 lines, Sections 1-6), Sections 7-11 extracted to supporting documents
+- **Blockers**: None - PRD ready for team review
+- **Ready for**: Kickoff meeting, Week 1 setup & learning, Week 2 architecture phase
 
-### Current Session Achievements (Session 4 - 2025-10-25)
+### Current Session Achievements (Session 5 - 2025-10-30)
 
-✅ **Critical Security Fix**: Created comprehensive .gitignore (328 lines) protecting secrets, API keys, blockchain private keys
-✅ **Environment Template**: Built .env.example (114 lines) for secure team onboarding with all required variables
-✅ **Verification Scripts**: Created automated gitignore violation checker (8 categories) and safe cleanup utility
-✅ **Repository Audit**: Confirmed 0 violations, 120 legitimate files tracked, repository pristine and secure
-✅ **Kickoff Support**: Provided meeting agenda, BMAD methodology explanation, PRD timing recommendations
-✅ **Successful Commit**: Pushed 5 security files to repository (commit 9cb2218) - all changes version controlled
+✅ **PRD Completion**: Created comprehensive PRD v1.1 (2,624 lines, ~37 pages, Sections 1-6)
+✅ **Document Slimming**: Reduced PRD from 3,939 lines to 2,624 lines (-35% reduction, -55% page count)
+✅ **Content Preservation**: Extracted Sections 7-11 to supporting documents (technical-constraints.md, action-plan.md, change-management.md)
+✅ **Supporting Documents**: Created 4 specialized docs, appended DoD checklist to development-guide.md
+✅ **Cross-References**: Added Document References section with clear navigation to all supporting docs
+✅ **Obsolete Cleanup**: Removed outdated references, updated INDEX.md, README.md, and CLAUDE.md status
 
 ---
 
 ## Tech Stack
 
-**Frontend:** Next.js 15 (React 19, App Router) + TypeScript 5.8+ + Chakra UI v3
+**Frontend:** Next.js 14.2.15 (React 18, Pages Router) + TypeScript 5.8+ + Chakra UI v2
 **Smart Contracts:** Solidity ^0.8.20 + Hardhat + OpenZeppelin + Chai/Mocha (>70% coverage)
-**Backend:** Next.js Monolith (API Routes serverless) + Supabase (PostgreSQL + pgBouncer) + Prisma ORM
-**Hosting:** Vercel (Asia CDN) + Sepolia Testnet (Ethereum)
+**Backend:** Next.js Monolith (API Routes) + Supabase (PostgreSQL + pgBouncer) + Prisma ORM
+**Hosting:** Render (Node.js Server) + Sepolia Testnet (Ethereum)
 **Web3:** Wagmi v2 + Viem + RainbowKit
 **QR Codes:** react-qr-code + html5-qrcode
 
@@ -113,7 +127,7 @@ session: 4
 
 4. **Supabase** (vs vanilla PostgreSQL) - Built-in pgBouncer connection pooling
 
-   - Critical for serverless (prevents connection exhaustion in Vercel)
+   - Critical for database connections (prevents connection exhaustion)
 
 5. **Ethereum Sepolia** (vs Hyperledger Fabric) - Public testnet, €0 cost
 
@@ -135,11 +149,11 @@ session: 4
 
 ### **After Kickoff (Week 1 - Oct 31 - Nov 7):**
 
-1. Create GitHub organization (FoodTrace-OAMK recommended)
+1. Create GitHub organization (FoodTrace-2025 created ✅)
 2. Setup development environments (all 3 team members)
 3. Sam: Start Cyfrin Updraft Solidity course (10-15 hours)
 4. TaiSheng: Setup Supabase + Prisma
-5. YiLing: Research Chakra UI v3, create Figma wireframes
+5. YiLing: Research Chakra UI v2, create Figma wireframes
 
 ### **Week 2 Critical Milestone (NON-NEGOTIABLE):**
 
@@ -163,7 +177,6 @@ session: 4
 # Navigation & Context
 /home/kala/Documents/GitHub/thesis/CLAUDE.md                         (✅ 28K - THIS FILE)
 /home/kala/Documents/GitHub/thesis/README.md                         (✅ 11K)
-/home/kala/Documents/GitHub/thesis/docs/INDEX.md                     (✅ 11K)
 
 # Planning & Reference
 /home/kala/Documents/GitHub/thesis/docs/planning/thesis-outline.md  (✅ 30K)
@@ -173,7 +186,7 @@ session: 4
 # Development Guides
 /home/kala/Documents/GitHub/thesis/docs/development-guide.md        (✅ NEW - Commands, troubleshooting)
 /home/kala/Documents/GitHub/thesis/docs/learning-resources.md       (✅ NEW - Tutorials, research)
-/home/kala/Documents/GitHub/thesis/docs/architecture/bmad-workflow.md (✅ NEW - BMAD Phase 1-3)
+/home/kala/Documents/GitHub/thesis/.bmad-core/user-guide.md         (✅ BMAD official methodology guide)
 
 # External Templates
 /home/kala/Downloads/Thesis-template-110625-Word.docx               (OAMK template)
@@ -213,7 +226,7 @@ npx prisma studio             # Open database GUI
 1. **DO NOT implement** unless explicitly requested
 2. **ASK questions** if unclear, list one by one at end of responses
 3. **Use tools:** context7, web search, MCP for research
-4. **Follow BMAD:** SM → Dev → QA cycle (see @docs/architecture/bmad-workflow.md)
+4. **Follow BMAD:** SM → Dev → QA cycle (see @.bmad-core/user-guide.md)
 5. **One story at a time:** Never work on multiple stories simultaneously
 
 ### For Development

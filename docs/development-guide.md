@@ -314,6 +314,184 @@ NEW CHAT → @qa *review {story}
 
 ---
 
+## 📋 Definition of Done Checklist
+
+### Epic-Level Definition of Done
+
+**For an epic to be considered "DONE", ALL of the following must be true:**
+
+#### Code Quality
+- ✅ All code merged to `main` branch (no WIP branches)
+- ✅ Code follows project coding standards (see `docs/architecture/coding-standards.md` after Architect creates it)
+- ✅ No ESLint errors or warnings
+- ✅ No TypeScript type errors (`npm run type-check` passes)
+- ✅ All console.log() debugging statements removed
+
+#### Testing
+- ✅ Smart contracts: >70% test coverage (`npx hardhat coverage`)
+- ✅ Smart contracts: All functions have unit tests
+- ✅ Smart contracts: Integration tests pass (complete product journey)
+- ✅ Frontend: Manual testing on Chrome, Firefox, Safari
+- ✅ Frontend: Mobile responsive (tested on iOS + Android)
+- ✅ API: All endpoints tested with Postman/automated tests
+
+#### Documentation
+- ✅ Smart contract functions: NatSpec comments (/** */ format)
+- ✅ Complex functions: Inline comments explaining logic
+- ✅ API endpoints: Documented in README or separate API.md
+- ✅ Database schema: Prisma models documented
+- ✅ User-facing features: Entry in user manual (Week 9)
+
+#### Functionality
+- ✅ All acceptance criteria met (see epic specifications)
+- ✅ No P0 (critical) bugs remaining (P1-P2 acceptable if documented)
+- ✅ Feature works end-to-end (tested by all 3 team members)
+- ✅ Error handling implemented (user sees friendly error, not crash)
+- ✅ Loading states implemented (user knows system is working)
+
+#### Deployment (Epic 9)
+- ✅ Code deployed to production (Render.com)
+- ✅ Feature accessible via live URL
+- ✅ Environment variables configured correctly
+- ✅ No secrets in codebase (all in .env.local, .gitignore)
+
+#### Review
+- ✅ Code reviewed by at least 1 other team member (GitHub PR approval)
+- ✅ Demo'd to team during weekly standup
+- ✅ QA agent review passed (after BMAD workflow starts Week 3+)
+
+---
+
+### Story-Level Definition of Done
+
+**For a story (created by SM agent in Week 3+) to be "DONE":**
+
+#### SM Agent Creates Story
+- ✅ Story file exists in `docs/stories/epic-X.story-Y.md`
+- ✅ Story status: `Draft` → `Approved` (SM reviewed and approved)
+
+#### Dev Agent Implements
+- ✅ All code files created/modified as specified in story
+- ✅ Tests written and passing
+- ✅ Story status: `Approved` → `InProgress` → `Review`
+
+#### QA Agent Reviews
+- ✅ QA gate created in `docs/qa/gates/epic-X.story-Y.yml`
+- ✅ All blockers resolved (no ❌ items in QA gate)
+- ✅ Warnings acknowledged (⚠️ items documented)
+- ✅ Story status: `Review` → `Done` ✅
+
+---
+
+### Week-Level Definition of Done
+
+**Weekly Checkpoints:**
+
+**Week 2 (End of Planning Phase):**
+- ✅ PRD created and approved by team
+- ✅ Architecture document created and approved
+- ✅ PO validation >90% alignment with brief.md
+- ✅ GitHub organization created, all members added
+- ✅ 3 wallets funded with Sepolia test ETH (0.5 ETH each)
+- ✅ First "Hello World" contract deployed to testnet
+
+**Week 4 (Critical Checkpoint - Contracts Done):**
+- ✅ All smart contracts deployed to Sepolia testnet
+- ✅ Contracts verified on Etherscan
+- ✅ Test coverage >70%
+- ✅ Database schema deployed to Supabase
+- ✅ Component library 80% complete
+
+**Week 7 (Critical Checkpoint - Integration Done):**
+- ✅ All 4 role interfaces functional (Producer, Distributor, Retailer, Consumer)
+- ✅ Wallet connection working (RainbowKit integrated)
+- ✅ Product can be registered, transferred, and queried end-to-end
+- ✅ QR code generation and scanning working
+- ✅ IoT simulator functional
+
+**Week 8 (Testing Complete):**
+- ✅ No P0 (critical) bugs remaining
+- ✅ Cross-browser testing complete (Chrome, Firefox, Safari)
+- ✅ Mobile testing complete (iOS + Android)
+- ✅ Performance acceptable (<3 second page load, <100ms API)
+- ✅ Accessibility baseline met (WCAG Level A)
+
+**Week 9 (Demo Ready):**
+- ✅ Deployed to Render.com (live URL accessible)
+- ✅ Demo video recorded (3-5 minutes, high quality)
+- ✅ User manual complete (screenshots, step-by-step)
+- ✅ Presentation slides prepared
+- ✅ Demo rehearsed (all 3 members can present)
+
+**Week 12 (Thesis Submitted):**
+- ✅ Thesis document complete (60+ pages)
+- ✅ Formatted using OAMK template
+- ✅ References 20+ sources (IEEE or APA style)
+- ✅ Poster created (A1 size, OAMK template)
+- ✅ All figures numbered and captioned
+- ✅ Peer review complete (each member reads full thesis)
+- ✅ Submitted to OAMK Theseus system
+
+---
+
+### Project-Level Definition of Done
+
+**For the entire FoodTrace project to be "DONE":**
+
+#### Functional Requirements
+- ✅ Producer can register products on blockchain
+- ✅ Distributor can add trace records
+- ✅ Retailer can receive and update products
+- ✅ Consumer can query product history (wallet-free)
+- ✅ QR codes generated and scannable
+- ✅ IoT simulator generates realistic sensor data
+- ✅ Temperature violations trigger alerts
+
+#### Technical Requirements
+- ✅ Smart contracts deployed to Sepolia testnet (permanent)
+- ✅ Application deployed to Render.com (live URL)
+- ✅ Database hosted on Supabase (persistent)
+- ✅ >70% test coverage (smart contracts)
+- ✅ No critical security vulnerabilities
+- ✅ Gas costs <0.01 ETH per transaction (testnet)
+
+#### Academic Requirements
+- ✅ Thesis 60-100 pages (meets OAMK standards)
+- ✅ Abstract <300 words (describes project clearly)
+- ✅ Literature review cites 20+ sources
+- ✅ Methodology explains BMAD approach
+- ✅ Results include performance metrics, test coverage
+- ✅ Discussion addresses limitations (GIGO problem, scalability)
+- ✅ Conclusion answers all research questions
+- ✅ Formatted correctly (OAMK template)
+- ✅ Poster created (A1, professional quality)
+
+#### Demo Requirements
+- ✅ Complete product journey demo (Producer → Distributor → Retailer → Consumer)
+- ✅ QR code scanning demo (on smartphone)
+- ✅ Consumer query demo (wallet-free access)
+- ✅ IoT simulator demo (Normal/Warning/Critical scenarios)
+- ✅ Blockchain transparency demo (Etherscan verification)
+- ✅ Demo video recorded (backup if live fails)
+- ✅ Presentation <20 minutes (thesis defense)
+
+#### Documentation Requirements
+- ✅ README.md complete (setup instructions, tech stack, architecture)
+- ✅ API documentation (all endpoints documented)
+- ✅ User manual (step-by-step with screenshots)
+- ✅ Technical documentation (smart contracts, database schema)
+- ✅ Code comments (NatSpec for contracts, inline for complex logic)
+- ✅ .env.example (all required environment variables listed)
+
+#### Team Requirements
+- ✅ All 3 members contributed equally (~400 hours each)
+- ✅ Git commit history shows balanced contributions
+- ✅ No major conflicts or issues (resolved through consensus)
+- ✅ Weekly standups held consistently
+- ✅ All members can explain architecture and design decisions
+
+---
+
 **Document Maintained By:** Sam Chou (Team Lead)
-**Last Review:** 2025-10-24
-**Next Review:** After PRD creation (Week 2)
+**Last Review:** 2025-10-30
+**Next Review:** After architecture.md creation (Week 2)

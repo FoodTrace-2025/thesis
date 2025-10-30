@@ -206,25 +206,25 @@ This document contains all learning resources, tutorials, documentation links, a
 
 ## 🛠️ Additional Tools & Technologies
 
-### Next.js 15 (App Router)
+### Next.js 14.2.15 (Pages Router)
 
 **Official Documentation:**
 
 - **URL:** https://nextjs.org/docs
 - **Key Topics:**
-  - Pages Router (our choice)
-  - API Routes (serverless backend)
+  - Pages Router (our choice - battle-tested)
+  - API Routes (Node.js server on Render)
   - Static Site Generation (SSG)
   - Image Optimization
 
-**Why Pages Router (not App Router):**
+**Why Next.js 14 (not 15):**
 
-- Simpler for thesis POC
-- Better documentation/examples
-- Team familiar with Pages Router
-- More stable (App Router still evolving)
+- Stable version (1+ year in production)
+- React 18 ecosystem mature
+- Better compatibility with Chakra UI v2
+- Proven reliability for thesis project
 
-### Chakra UI v3
+### Chakra UI v2
 
 **Official Documentation:**
 
@@ -277,7 +277,7 @@ This document contains all learning resources, tutorials, documentation links, a
 **YiLing (UI/UX Lead):**
 
 - [ ] Read "Intro to Ethereum" (ethereum.org) (2 hours)
-- [ ] Research Chakra UI v3 components (3 hours)
+- [ ] Research Chakra UI v2 components (3 hours)
 - [ ] Create Figma wireframes for 4 roles (4 hours)
 - [ ] Study Web3 UX best practices (2 hours)
 
@@ -323,7 +323,7 @@ This document contains all learning resources, tutorials, documentation links, a
 
 - ✅ Understand blockchain basics (wallets, gas, transactions)
 - ✅ Know Web3 UX patterns (wallet connection, transaction feedback)
-- ✅ Familiar with Chakra UI v3 components
+- ✅ Familiar with Chakra UI v2 components
 - ✅ Created initial wireframes
 
 ### By End of Week 2

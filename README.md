@@ -35,14 +35,15 @@ A proof-of-concept blockchain-based food supply chain traceability system that e
 
 ## 📚 Documentation
 
-**👉 [Complete Documentation Index](./docs/INDEX.md)** ← **START HERE!**
+**👉 [AI Agent Context](./CLAUDE.md)** ← **For AI Agents**
+**👉 [Project Brief](./docs/brief.md)** ← **START HERE for Humans!**
 
 ### Quick Links
 
 | Document                               | Description                           | Status       |
 | -------------------------------------- | ------------------------------------- | ------------ |
 | [Project Brief](./docs/brief.md)       | Foundation document, project vision   | ✅ Complete  |
-| [PRD](./docs/prd.md)                   | Product requirements, features, epics | 🔜 Week 2    |
+| [PRD](./docs/prd.md)                   | Product requirements, features, epics | ✅ Complete  |
 | [Architecture](./docs/architecture.md) | System design, tech stack             | 🔜 Week 2    |
 | [Planning Artifacts](./docs/planning/) | Initial planning, team workload       | 📦 Reference |
 
@@ -52,9 +53,9 @@ A proof-of-concept blockchain-based food supply chain traceability system that e
 
 ### Frontend
 
-- **Framework:** Next.js 15 (React 19)
+- **Framework:** Next.js 14.2.15 (React 18)
 - **Language:** TypeScript 5.8+
-- **UI Library:** Chakra UI v3
+- **UI Library:** Chakra UI v2
 - **Web3:** Wagmi v2, Viem, RainbowKit
 - **QR Codes:** react-qr-code, html5-qrcode
 
@@ -69,13 +70,13 @@ A proof-of-concept blockchain-based food supply chain traceability system that e
 ### Backend & Database
 
 - **Architecture:** Next.js Monolith (frontend + backend)
-- **API:** Next.js API Routes (serverless)
+- **API:** Next.js API Routes
 - **Database:** Supabase (PostgreSQL + connection pooling)
 - **ORM:** Prisma
 
 ### Hosting
 
-- **Application:** Vercel (Next.js deployment)
+- **Application:** Render (Node.js Server)
 - **Database:** Supabase
 - **Smart Contract:** Sepolia Testnet (permanent)
 
@@ -136,9 +137,9 @@ npm run deploy:sepolia
 
 1. **Read Documentation:**
 
-   - Start with [Documentation Index](./docs/INDEX.md)
-   - Read [Project Brief](./docs/brief.md)
+   - Start with [Project Brief](./docs/brief.md)
    - Review [Team Workload](./docs/planning/team-workload.md)
+   - See [CLAUDE.md](./CLAUDE.md) for full documentation map
 
 2. **Install Tools:**
 
@@ -158,11 +159,11 @@ npm run deploy:sepolia
 ```
 thesis/
 ├── .bmad-core/          # BMAD methodology configuration
+├── CLAUDE.md            # 🤖 AI agent entry point & documentation map
 ├── docs/                # 📚 Documentation (core documents)
-│   ├── INDEX.md         # Master documentation index
-│   ├── brief.md         # Project brief
-│   ├── prd.md           # Product requirements (to be created)
-│   ├── architecture.md  # System architecture (to be created)
+│   ├── brief.md         # Project brief (v1.1)
+│   ├── prd.md           # Product requirements (v1.1, Sections 1-6)
+│   ├── architecture.md  # System architecture (to be created Week 2)
 │   ├── planning/        # Planning artifacts
 │   ├── prd/             # Sharded PRD epics (generated)
 │   ├── architecture/    # Sharded architecture (generated)

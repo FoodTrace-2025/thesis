@@ -117,9 +117,9 @@ Blockchain technology offers unique advantages:
 ### Frontend
 
 ```
-Framework: Next.js 15 (React 19)
+Framework: Next.js 14.2.15 (React 18)
 Language: TypeScript 5.8+
-UI Library: Chakra UI v3
+UI Library: Chakra UI v2
 Web3 Integration:
   - Wagmi v2 (React Hooks for Ethereum)
   - Viem (TypeScript Ethereum library)
@@ -143,18 +143,18 @@ Gas Token: Test ETH (from faucets)
 
 ```
 Architecture: Next.js Monolith (frontend + backend in one app)
-API: Next.js API Routes (serverless)
+API: Next.js API Routes
 Database: Supabase (PostgreSQL with built-in connection pooling)
 ORM: Prisma
-File Storage: Local storage / Cloudinary (for images)
+File Storage: Supabase Storage (for images)
 IoT Simulation: Custom admin interface (fake sensor data)
 ```
 
 **Why Supabase?**
-- Built-in connection pooling (pgBouncer) solves serverless cold-start issues
+- Built-in connection pooling (pgBouncer) prevents connection exhaustion
 - PostgreSQL-compatible (no SQL changes needed)
-- Free tier generous enough for thesis project
-- Prevents database connection exhaustion in serverless environment
+- Free tier generous enough for thesis project (1GB storage, 2GB bandwidth)
+- Integrated storage with CDN and image resizing capabilities
 
 ### Development Tools
 
@@ -171,7 +171,7 @@ CI/CD: GitHub Actions (optional)
 ### Hosting
 
 ```
-Application: Vercel (frontend + API routes in one deployment)
+Application: Render (Node.js Server, free tier 750 hours/month)
 Database: Supabase (PostgreSQL with connection pooling)
 Smart Contract: Sepolia Testnet (permanent)
 ```
@@ -464,7 +464,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Create Prisma schema file
 - [ ] Define API endpoints (REST)
 - [ ] Plan data flow (on-chain vs off-chain)
-- [ ] Setup Vercel Postgres or Supabase
+- [ ] Setup Supabase (database + storage)
 
 **Person 3 (UI/UX Lead - HEAVY WEEK):**
 - [ ] **Create wireframes for all 4 interfaces** (Figma/Sketch)
@@ -539,7 +539,7 @@ Smart Contract: Sepolia Testnet (permanent)
 
 **Person 3 (UI/UX Lead):**
 - [ ] Setup Next.js project with TypeScript
-- [ ] Install and configure Chakra UI v3 / Tailwind CSS
+- [ ] Install and configure Chakra UI v2 / Tailwind CSS
 - [ ] **Create reusable component library:**
   - Button components (primary, secondary, outline)
   - Input fields (text, number, date, file upload)
@@ -648,7 +648,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Web3 wallet integration working
 - [ ] Consumer query page (wallet-free)
 - [ ] Mobile-responsive on all pages
-- [ ] Application deployed to Vercel
+- [ ] Application deployed to Render
 - [ ] End-to-end workflow tested
 
 ---
@@ -936,7 +936,7 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 ### Technical Success
 
 - ✅ Smart contract deployed to Sepolia testnet
-- ✅ Frontend application accessible online (Vercel)
+- ✅ Frontend application accessible online (Render)
 - ✅ Complete supply chain workflow functions end-to-end
 - ✅ QR code generation and scanning works on mobile
 - ✅ Consumer can view product history without wallet
@@ -976,7 +976,7 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 - [ ] Deployment scripts
 - [ ] Test suite (unit + integration)
 - [ ] GitHub repository with clear README
-- [ ] Deployed application (Vercel)
+- [ ] Deployed application (Render)
 - [ ] Contract verified on Etherscan
 
 ### Documentation
@@ -1056,9 +1056,9 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 |------|------|--------|
 | Development tools | €0 | Open source (VS Code, Git, Hardhat) |
 | Test ETH | €0 | Sepolia faucets |
-| Hosting | €0 | Vercel free tier |
-| Database | €0 | Vercel Postgres free tier |
-| Domain (optional) | €0 | Vercel subdomain |
+| Hosting | €0 | Render free tier (750 hours/month) |
+| Database | €0 | Supabase free tier (1GB storage, 2GB bandwidth) |
+| Domain (optional) | €0 | Render subdomain |
 | Learning resources | €0 | Free tutorials (Cyfrin, docs) |
 
 ### Optional (If Budget Available)
@@ -1256,11 +1256,12 @@ The simulator generates data identical to real sensors, demonstrating the same b
 ### Should we use Next.js monolith or separate Node.js backend?
 
 **A:** Use **Next.js monolith** (frontend + backend together) because:
-- **Simpler deployment**: One Vercel deployment instead of two services
+- **Simpler deployment**: One Render deployment instead of two services
 - **No CORS issues**: Frontend and API in same app
 - **Team efficiency**: Everyone knows Next.js already
-- **Cost**: Free hosting on Vercel
+- **Cost**: Free hosting on Render (750 hours/month free tier)
 - **Perfect for MVP**: Suitable for 10-week POC project
+- **Render advantage**: Runs as traditional Node.js server (not serverless), no cold starts
 
 Only consider separate Node.js backend if you need WebSockets, MQTT, or background jobs (not needed for this thesis).
 

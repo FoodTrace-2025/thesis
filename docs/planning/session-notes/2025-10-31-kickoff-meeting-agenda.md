@@ -122,9 +122,9 @@
 
 - **IDE:** VS Code (all team members)
 - **Blockchain:** Hardhat + MetaMask + Sepolia testnet
-- **Frontend:** Next.js 15 + TypeScript + Chakra UI v3
-- **Database:** Supabase (PostgreSQL + connection pooling)
-- **Hosting:** Vercel (free tier sufficient)
+- **Frontend:** Next.js 14.2.15 + TypeScript + React 18 + Chakra UI v2
+- **Database:** Supabase (PostgreSQL + connection pooling + Storage)
+- **Hosting:** Render (free tier 750 hours/month, Node.js server)
 
 ### 6. Communication & Collaboration (10 min)
 
@@ -139,7 +139,7 @@
 **Documentation:**
 
 - All docs in `/docs` folder (BMAD standards)
-- INDEX.md as master reference
+- CLAUDE.md as AI agent reference, brief.md as team starting point
 - Session notes after each meeting
 
 **GitHub Workflow:**
@@ -165,7 +165,7 @@
 - [ ] Create MetaMask wallets (1 per person minimum)
 - [ ] Get Sepolia test ETH from faucets
 - [ ] Read Project Brief thoroughly
-- [ ] Review [Documentation Index](../INDEX.md)
+- [ ] Review [Project Brief](../../brief.md) and [CLAUDE.md](../../../CLAUDE.md) for full documentation map
 
 **Sam (Blockchain Lead):**
 
@@ -184,7 +184,7 @@
 **YiLing (UI/UX):**
 
 - [ ] Setup Figma account (if using for wireframes)
-- [ ] Research Chakra UI v3 components
+- [ ] Research Chakra UI v2 components
 - [ ] Review Web3 wallet connection (RainbowKit)
 - [ ] Explore QR code libraries (react-qr-code, html5-qrcode)
 
@@ -280,8 +280,8 @@
 - [Project Brief](../../brief.md)
 - [Team Workload Analysis](../team-workload.md)
 - [Architecture Decisions (Oct 17)](./2025-10-17-architecture-decisions.md)
-- [Documentation Index](../../INDEX.md)
-- [README.md](../../README.md)
+- [CLAUDE.md Documentation Map](../../../CLAUDE.md)
+- [README.md](../../../README.md)
 
 ---
 

@@ -331,10 +331,10 @@ Brief overview of each chapter (one paragraph per chapter).
 **Content:**
 - System architecture overview
 - Technology stack decisions:
-  - Frontend: Next.js 15 (why monolith vs microservices)
+  - Frontend: Next.js 14.2.15 + React 18 (why monolith vs microservices, why v14 vs v15)
   - Smart contracts: Solidity + Hardhat (why Hardhat vs Foundry)
   - Database: Supabase (why connection pooling critical)
-  - Hosting: Vercel + Sepolia
+  - Hosting: Render (Node.js Server) + Sepolia
 - Architecture patterns (separation of on-chain/off-chain data)
 
 **Include diagram:** System architecture (from architecture.md after it's created)
@@ -512,7 +512,7 @@ Brief overview of each chapter (one paragraph per chapter).
 
 - Integration testing approach
 - CI/CD pipeline (if implemented)
-- Vercel deployment process
+- Render deployment process (Node.js server)
 - Environment variables management
 - Monitoring and logging
 

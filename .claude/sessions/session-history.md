@@ -29,6 +29,8 @@ This file contains archived session achievements for historical reference.
 - scripts/remove-tracked-gitignored-files.sh (128 lines) - Safe cleanup utility
 - scripts/README.md (251 lines) - Complete documentation
 
+*(Note: These utility scripts were later removed in commit 62272bc after verification was complete and repository was confirmed secure)*
+
 **Repository Status:**
 - ✅ All sensitive data protected
 - ✅ Zero gitignore violations detected
