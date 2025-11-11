@@ -19,6 +19,7 @@ This project aims to develop a proof-of-concept blockchain-based food supply cha
 ### Problem Statement
 
 Current food supply chains face critical challenges:
+
 - **Limited Traceability:** Traditional systems take 7+ days to trace product origins (Walmart case study)
 - **Data Tampering Risk:** Centralized databases can be modified without detection
 - **Consumer Trust Deficit:** Consumers cannot verify product authenticity and journey
@@ -27,6 +28,7 @@ Current food supply chains face critical challenges:
 ### Why Blockchain?
 
 Blockchain technology offers unique advantages:
+
 - **Immutability:** Once recorded, data cannot be altered
 - **Transparency:** All stakeholders can access the same trusted information
 - **Decentralization:** No single point of failure
@@ -65,6 +67,7 @@ Blockchain technology offers unique advantages:
 ### In Scope (MVP - 10 Weeks)
 
 **Core Features:**
+
 - ✅ Product registration and unique ID generation
 - ✅ **4-role supply chain tracking (Producer → Distributor → Retailer → Consumer)**
 - ✅ **IoT sensor simulator (admin interface for generating test data)**
@@ -79,12 +82,14 @@ Blockchain technology offers unique advantages:
 - ✅ Temperature/humidity monitoring (simulated data)
 
 **Supply Chain Roles (Simplified):**
+
 1. **Producer** (combines farmer + initial processing) - Creates and registers products
 2. **Distributor** (combines transport + quality check) - Handles logistics and verification
 3. **Retailer** - Final sales point
 4. **Consumer** - End user (wallet-free query access)
 
 **Technical Components:**
+
 - ✅ Smart contracts (Solidity)
 - ✅ Web application (Next.js + TypeScript)
 - ✅ Wallet integration (MetaMask, RainbowKit)
@@ -105,6 +110,7 @@ Blockchain technology offers unique advantages:
 ### Use Case Focus
 
 **Primary Use Case:** Oulu Region Organic Blueberries
+
 - From local farm to supermarket
 - **4 supply chain participants (3 with wallets, 1 consumer)**
 - Simulated environment with realistic data
@@ -151,6 +157,7 @@ IoT Simulation: Custom admin interface (fake sensor data)
 ```
 
 **Why Supabase?**
+
 - Built-in connection pooling (pgBouncer) prevents connection exhaustion
 - PostgreSQL-compatible (no SQL changes needed)
 - Free tier generous enough for thesis project (1GB storage, 2GB bandwidth)
@@ -183,24 +190,24 @@ Smart Contract: Sepolia Testnet (permanent)
 ### High-Level Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
+┌───────────────────────────────────────────────────────────────────────┐
 │                   User Interface Layer                                │
-├────────────────┬────────────────┬──────────────┬────────────┬────────┤
-│   Producer     │  Distributor   │   Retailer   │  Consumer  │  IoT   │
+├────────────────┬────────────────┬──────────────┬────────────┬─────────┤
+│   Producer     │  Distributor   │   Retailer   │  Consumer  │  IoT    │
 │   Portal       │   Portal       │   Portal     │   Query    │Simulator│
-│ (Wallet Req.)  │ (Wallet Req.)  │(Wallet Req.) │(No Wallet) │(Admin) │
-└────────┬───────┴────────┬───────┴──────┬───────┴──────┬─────┴────┬───┘
+│ (Wallet Req.)  │ (Wallet Req.)  │(Wallet Req.) │(No Wallet) │(Admin)  │
+└────────┬───────┴────────┬───────┴──────┬───────┴──────┬─────┴────┬────┘
          │                │              │              │          │
          └────────────────┴──────────────┴──────────────┴──────────┘
                                   │
          ┌────────────────────────▼──────────────────────────┐
          │     Next.js Monolith (Frontend + Backend)         │
-         │  ┌──────────────────┐  ┌──────────────────────┐  │
-         │  │   Web3 Layer     │  │   API Routes         │  │
-         │  │ • Wagmi Hooks    │  │ • /api/products      │  │
-         │  │ • RainbowKit     │  │ • /api/iot/simulate  │  │
-         │  │ • Contract calls │  │ • /api/qrcode        │  │
-         │  └──────────────────┘  └──────────────────────┘  │
+         │  ┌──────────────────┐  ┌──────────────────────┐   │
+         │  │   Web3 Layer     │  │   API Routes         │   │
+         │  │ • Wagmi Hooks    │  │ • /api/products      │   │
+         │  │ • RainbowKit     │  │ • /api/iot/simulate  │   │
+         │  │ • Contract calls │  │ • /api/qrcode        │   │
+         │  └──────────────────┘  └──────────────────────┘   │
          │  • QR Code Generation/Scanning                    │
          │  • Role-Based Access Control                      │
          └──────┬────────────────────┬───────────────────────┘
@@ -219,6 +226,7 @@ Smart Contract: Sepolia Testnet (permanent)
 ```
 
 **Key Architectural Decisions:**
+
 1. **Monolithic Structure**: Next.js handles both frontend and backend (simpler deployment)
 2. **Serverless API**: Next.js API Routes for backend logic (no separate Node.js server)
 3. **Supabase for Database**: Built-in connection pooling prevents serverless issues
@@ -228,6 +236,7 @@ Smart Contract: Sepolia Testnet (permanent)
 ### Data Storage Strategy
 
 **On-Chain (Blockchain):**
+
 - Product ID and hash
 - Creator address
 - Timestamps
@@ -236,6 +245,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - Critical supply chain events
 
 **Off-Chain (PostgreSQL):**
+
 - Product descriptions
 - High-resolution images
 - Detailed metadata
@@ -243,6 +253,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - Analytics data
 
 **Benefits:**
+
 - Lower gas costs
 - Faster queries
 - Rich media support
@@ -257,6 +268,7 @@ Smart Contract: Sepolia Testnet (permanent)
 **User Story:** As a farmer, I want to register my harvested products on the blockchain so that consumers can verify their origin.
 
 **Functionality:**
+
 - Connect wallet (MetaMask)
 - Fill product form:
   - Product name (e.g., "Organic Blueberries")
@@ -270,6 +282,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - Generate QR code for printing
 
 **Acceptance Criteria:**
+
 - Transaction completes successfully on testnet
 - QR code is generated and downloadable
 - Product appears in farmer's dashboard
@@ -282,6 +295,7 @@ Smart Contract: Sepolia Testnet (permanent)
 **User Story:** As a supply chain participant, I want to add my processing step to the product history so the complete journey is documented.
 
 **Functionality:**
+
 - Scan product QR code or enter Product ID
 - View current product status
 - Add trace record:
@@ -295,6 +309,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - View updated product history
 
 **Acceptance Criteria:**
+
 - Only authorized roles can add records
 - Each record has unique timestamp
 - Gas fees are reasonable (<$0.01 on testnet)
@@ -307,12 +322,14 @@ Smart Contract: Sepolia Testnet (permanent)
 **User Story:** As a quality inspector, I want to verify product information to increase trust in the system.
 
 **Functionality:**
+
 - Independent parties can verify product data
 - Verification requires different wallet address than creator
 - Product marked as "Verified" after 2+ verifications
 - Verification increases creator's reputation score
 
 **Acceptance Criteria:**
+
 - Creator cannot verify own products
 - Each address can verify once per product
 - Verification count is visible to consumers
@@ -325,6 +342,7 @@ Smart Contract: Sepolia Testnet (permanent)
 **User Story:** As a consumer, I want to scan a product's QR code and see its complete journey without needing a cryptocurrency wallet.
 
 **Functionality:**
+
 - Scan QR code with smartphone camera
 - View product information:
   - Product name and photo
@@ -338,6 +356,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - Link to blockchain explorer for verification
 
 **Acceptance Criteria:**
+
 - Works on mobile browsers
 - Loads in <3 seconds
 - Shows all supply chain events
@@ -351,6 +370,7 @@ Smart Contract: Sepolia Testnet (permanent)
 **User Story:** As a system administrator, I want to simulate IoT sensor data to test the blockchain traceability system without requiring physical hardware.
 
 **Functionality:**
+
 - Admin-only interface (not public-facing)
 - Select product to attach sensor data
 - Generate realistic sensor readings:
@@ -368,6 +388,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - Trigger alerts for out-of-range conditions
 
 **Acceptance Criteria:**
+
 - Simulated data has same structure as real IoT sensors
 - Data is recorded on blockchain with immutable timestamp
 - Alerts trigger when temperature exceeds thresholds
@@ -375,6 +396,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - Can simulate multiple sensors simultaneously
 
 **Academic Justification:**
+
 - Enables reproducible testing without hardware costs (€150+ saved)
 - Focuses thesis on blockchain innovation, not IoT engineering
 - Standard practice in POC development (IBM Food Trust uses test harnesses)
@@ -387,16 +409,20 @@ Smart Contract: Sepolia Testnet (permanent)
 **Addressing the GIGO Problem:**
 
 **Implemented Safeguards:**
+
 1. **Timestamp Validation**
+
    - Production date cannot be in future
    - Upload time must be after production date
    - Warning if upload delay >7 days
 
 2. **Multi-Party Verification**
+
    - Requires 2+ independent confirmations
    - Unverified products show warning
 
 3. **Reputation System**
+
    - Accumulate trust score over time
    - Low reputation triggers warnings
    - Fraud reports permanently recorded
@@ -406,6 +432,7 @@ Smart Contract: Sepolia Testnet (permanent)
    - Timestamp and GPS comparison
 
 **Future Enhancements (Discussed in Thesis):**
+
 - IoT sensor automation
 - AI anomaly detection
 - Third-party auditing integration
@@ -415,9 +442,11 @@ Smart Contract: Sepolia Testnet (permanent)
 ## 7. Development Timeline (10 Weeks)
 
 ### Week 1: Foundation & Learning
+
 **Focus:** Environment setup and role-specific learning
 
 **Person 1 (Blockchain Lead - Sam):**
+
 - [ ] Complete Solidity fundamentals (Cyfrin Updraft, 10-15 hours) **HEAVY**
 - [ ] Setup Hardhat development environment
 - [ ] Setup MetaMask with testnet wallets
@@ -425,6 +454,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Experiment with OpenZeppelin contracts
 
 **Person 2 (Backend Lead):**
+
 - [ ] Complete Solidity basics (Cyfrin Updraft, 5-8 hours) **MEDIUM**
 - [ ] Learn Hardhat testing framework in depth
 - [ ] Setup PostgreSQL + Prisma
@@ -432,6 +462,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Plan database schema
 
 **Person 3 (UI/UX Lead):**
+
 - [ ] Research Web3 UI/UX best practices **PRIMARY FOCUS**
 - [ ] Study blockchain wallet UX patterns (MetaMask, Rainbow)
 - [ ] Analyze competitor interfaces (IBM Food Trust UI)
@@ -440,6 +471,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Learn basic Web3 concepts (wallets, gas, transactions)
 
 **Team Deliverables:**
+
 - [ ] GitHub repository created and configured
 - [ ] Next-Web3-Boilerplate cloned and running
 - [ ] **3 test wallets created** (Producer, Distributor, Retailer)
@@ -450,9 +482,11 @@ Smart Contract: Sepolia Testnet (permanent)
 ---
 
 ### Week 2: Design & Prototyping
+
 **Focus:** System design and architecture (CRITICAL WEEK FOR PERSON 3)
 
 **Person 1 (Blockchain Lead):**
+
 - [ ] Design smart contract structure
 - [ ] Define contract functions and events
 - [ ] Write simple "Hello World" contract
@@ -460,6 +494,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Collaborate on system architecture diagram
 
 **Person 2 (Backend Lead):**
+
 - [ ] Finalize database schema (PostgreSQL)
 - [ ] Create Prisma schema file
 - [ ] Define API endpoints (REST)
@@ -467,6 +502,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Setup Supabase (database + storage)
 
 **Person 3 (UI/UX Lead - HEAVY WEEK):**
+
 - [ ] **Create wireframes for all 4 interfaces** (Figma/Sketch)
   - Producer dashboard and product registration
   - Distributor interface
@@ -484,6 +520,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Iterate based on feedback
 
 **Team Deliverables:**
+
 - [ ] **Complete UI/UX designs approved by team** ✅
 - [ ] System architecture diagram
 - [ ] Smart contract specification document
@@ -494,9 +531,11 @@ Smart Contract: Sepolia Testnet (permanent)
 ---
 
 ### Week 3-4: Smart Contract Development
+
 **Focus:** Core blockchain logic (HEAVY WEEK FOR PERSON 1 & 2)
 
 **Person 1 (Blockchain Lead - HEAVY):**
+
 - [ ] **Implement FoodTraceability contract** (Solidity)
   - Product registration function
   - Trace record addition function
@@ -511,6 +550,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Support Person 2 with test debugging
 
 **Person 2 (Backend Lead - HEAVY):**
+
 - [ ] **Write comprehensive smart contract tests**
   - Unit tests for each function (Chai + Mocha)
   - Integration tests for workflows
@@ -538,6 +578,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Deploy database schema to Supabase
 
 **Person 3 (UI/UX Lead):**
+
 - [ ] Setup Next.js project with TypeScript
 - [ ] Install and configure Chakra UI v2 / Tailwind CSS
 - [ ] **Create reusable component library:**
@@ -562,6 +603,7 @@ Smart Contract: Sepolia Testnet (permanent)
 **Milestone:** ✅ Smart contract complete and deployed to Sepolia
 
 **Deliverables:**
+
 - [ ] **Audited and deployed smart contract**
 - [ ] Test coverage >70%
 - [ ] Deployment documentation
@@ -573,9 +615,11 @@ Smart Contract: Sepolia Testnet (permanent)
 ---
 
 ### Week 5-7: Frontend Development & Integration
+
 **Focus:** User interfaces and Web3 integration (HEAVY FOR PERSON 2 & 3)
 
 **Person 1 (Blockchain Lead - SUPPORT ROLE):**
+
 - [ ] Support Person 2 with Web3 integration questions
 - [ ] Debug contract interaction issues
 - [ ] Optimize gas costs if needed
@@ -584,6 +628,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Document contract usage patterns
 
 **Person 2 (Backend Lead - HEAVY):**
+
 - [ ] **Setup RainbowKit wallet connection**
 - [ ] **Integrate Wagmi v2 hooks:**
   - `useAccount` (wallet connection)
@@ -607,6 +652,7 @@ Smart Contract: Sepolia Testnet (permanent)
 **Person 3 (UI/UX Lead - VERY HEAVY):**
 
 **Week 5: Producer Interface**
+
 - [ ] **Product registration form:**
   - All input fields (name, location, date, weight, cert)
   - Form validation (client-side)
@@ -619,6 +665,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] **Integration with wallet** (RainbowKit)
 
 **Week 6: Distributor & Retailer Interfaces**
+
 - [ ] **Distributor interface:**
   - Product lookup (scan/search)
   - Trace record addition form
@@ -630,6 +677,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] **Shared components optimization**
 
 **Week 7: Consumer Interface & Polish**
+
 - [ ] **Consumer query page (NO WALLET REQUIRED):**
   - QR code scanner (html5-qrcode)
   - Product search by ID
@@ -644,6 +692,7 @@ Smart Contract: Sepolia Testnet (permanent)
 **Milestone:** ✅ Fully functional web application
 
 **Deliverables:**
+
 - [ ] **All 4 interfaces complete and functional**
 - [ ] Web3 wallet integration working
 - [ ] Consumer query page (wallet-free)
@@ -654,9 +703,11 @@ Smart Contract: Sepolia Testnet (permanent)
 ---
 
 ### Week 8: Integration Testing & Optimization
+
 **Focus:** End-to-end testing and bug fixes
 
 **Activities:**
+
 - [ ] Full supply chain simulation with test data
 - [ ] Cross-browser testing (Chrome, Firefox, Safari)
 - [ ] Mobile device testing
@@ -667,6 +718,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Bug fixing
 
 **Test Scenarios:**
+
 1. **Complete product journey (3 wallets):**
    - Producer creates product
    - Distributor adds trace record
@@ -686,6 +738,7 @@ Smart Contract: Sepolia Testnet (permanent)
 8. Accessibility compliance
 
 **Deliverables:**
+
 - [ ] Test report document
 - [ ] Bug fix log
 - [ ] Performance benchmarks
@@ -694,9 +747,11 @@ Smart Contract: Sepolia Testnet (permanent)
 ---
 
 ### Week 9: Documentation & Demo Preparation
+
 **Focus:** Polish and presentation materials
 
 **Activities:**
+
 - [ ] Record demo video (3-5 minutes)
 - [ ] Prepare presentation slides
 - [ ] Write user manual
@@ -707,6 +762,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Prepare backup demo screenshots
 
 **Deliverables:**
+
 - [ ] Demo video
 - [ ] Presentation deck
 - [ ] User guide
@@ -716,9 +772,11 @@ Smart Contract: Sepolia Testnet (permanent)
 ---
 
 ### Week 10: Thesis Writing
+
 **Focus:** Academic documentation
 
 **Activities:**
+
 - [ ] Complete thesis first draft
 - [ ] Generate system diagrams and charts
 - [ ] Analyze results
@@ -728,6 +786,7 @@ Smart Contract: Sepolia Testnet (permanent)
 - [ ] Final revisions
 
 **Deliverables:**
+
 - [ ] Complete thesis document
 - [ ] Defense presentation
 - [ ] All supporting materials
@@ -755,9 +814,11 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 ---
 
 ### Person 1: Blockchain & Smart Contract Lead (Sam/FuzzyKala)
+
 **Primary Focus (70%):** Smart contracts, Solidity, gas optimization
 
 **Key Responsibilities:**
+
 - **Weeks 1-2:** Learn Solidity (Cyfrin Updraft 10-15 hours)
 - **Weeks 3-4:** Develop FoodTraceability smart contract
   - Product registration logic
@@ -770,17 +831,20 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 - **Weeks 9-10:** Documentation + Thesis blockchain chapter
 
 **Secondary Focus (30%):**
+
 - System architecture design
 - Git repository management
 - Code reviews
 - Help Person 3 understand Web3 concepts
 
 **Skills to Leverage:**
+
 - ✅ TypeScript/JavaScript expertise
 - ✅ Next.js knowledge
 - ✅ Problem-solving skills
 
 **Skills to Acquire:**
+
 - 🎯 Solidity syntax and patterns (Week 1-2)
 - 🎯 Smart contract security (Week 3-4)
 - 🎯 Gas optimization techniques (Week 5-6)
@@ -790,9 +854,11 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 ---
 
 ### Person 2: Backend & Integration Lead
+
 **Primary Focus (70%):** Testing, backend API, Web3 integration
 
 **Key Responsibilities:**
+
 - **Weeks 1-2:** Learn Solidity basics + Hardhat testing + Database setup
 - **Weeks 3-4:** Smart contract testing + Backend development
   - Write comprehensive tests (Chai + Mocha)
@@ -808,16 +874,19 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 - **Weeks 9-10:** DevOps + Documentation + Thesis backend chapter
 
 **Secondary Focus (30%):**
+
 - Support Person 1 with Solidity (code review)
 - Help Person 3 with component integration
 - Database optimization
 
 **Skills to Leverage:**
+
 - ✅ Full-stack development experience
 - ✅ Backend architecture knowledge
 - ✅ Database design skills
 
 **Skills to Acquire:**
+
 - 🎯 Hardhat testing framework (Week 1-2)
 - 🎯 Wagmi hooks usage (Week 5-6)
 - 🎯 Web3 transaction handling (Week 5-7)
@@ -827,9 +896,11 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 ---
 
 ### Person 3: UI/UX & Frontend Lead
+
 **Primary Focus (85%):** Design, user experience, frontend development
 
 **Key Responsibilities:**
+
 - **Week 1:** Research Web3 UX, user flow mapping, persona creation
 - **Week 2:** Complete design phase
   - Wireframes for all 4 roles (Figma/Sketch)
@@ -849,16 +920,19 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 - **Week 10:** Thesis UI/UX chapter + Design documentation
 
 **Secondary Focus (15%):**
+
 - Basic Web3 understanding (wallet flow)
 - QR code integration
 - User testing facilitation
 
 **Skills to Leverage:**
+
 - ✅ UI/UX design principles
 - ✅ Frontend development
 - ✅ Component-based thinking
 
 **Skills to Acquire:**
+
 - 🎯 Blockchain UI/UX patterns (Week 1)
 - 🎯 Chakra UI / Tailwind (Week 3-4)
 - 🎯 Next.js App Router (Week 5-7)
@@ -871,18 +945,21 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 ### Shared Responsibilities (All Team Members)
 
 **Weekly (Required):**
+
 - Monday standup meetings (14:00-15:00, 1 hour)
 - Demo progress to team
 - Discuss blockers
 - Plan next week's tasks
 
 **As Needed:**
+
 - Code reviews for all pull requests
 - Pair programming sessions
 - Design reviews
 - Integration troubleshooting
 
 **Final Weeks:**
+
 - Week 8: Team testing session
 - Week 9: Demo preparation and dry-run
 - Week 10: Thesis peer review
@@ -903,28 +980,31 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 
 ### Technical Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| Steep Solidity learning curve | Medium | High | Use OpenZeppelin templates; allocate 2 weeks learning time |
-| Smart contract bugs | Medium | High | Extensive testing; code review; stick to simple logic |
-| Gas fees too high | Low | Medium | Deploy to testnet only; optimize contract |
-| Web3 integration complexity | Medium | Medium | Use Next-Web3-Boilerplate; follow Wagmi docs |
-| Time overrun | Medium | High | Strict scope control; MVP focus; weekly checkpoints |
-| Blockchain transaction delays | Low | Low | Use testnet with fast block times; show pending states |
+| Risk                          | Probability | Impact | Mitigation                                                 |
+| ----------------------------- | ----------- | ------ | ---------------------------------------------------------- |
+| Steep Solidity learning curve | Medium      | High   | Use OpenZeppelin templates; allocate 2 weeks learning time |
+| Smart contract bugs           | Medium      | High   | Extensive testing; code review; stick to simple logic      |
+| Gas fees too high             | Low         | Medium | Deploy to testnet only; optimize contract                  |
+| Web3 integration complexity   | Medium      | Medium | Use Next-Web3-Boilerplate; follow Wagmi docs               |
+| Time overrun                  | Medium      | High   | Strict scope control; MVP focus; weekly checkpoints        |
+| Blockchain transaction delays | Low         | Low    | Use testnet with fast block times; show pending states     |
 
 ### Mitigation Strategies
 
 **If Solidity proves too difficult:**
+
 - Simplify contract logic
 - Use more OpenZeppelin pre-built contracts
 - Focus on frontend, basic contract functions only
 
 **If time runs short:**
+
 - Remove optional features (reputation system, EXIF validation)
 - Use pre-built UI components
 - Reduce number of products in demo (3 instead of 10)
 
 **If testing reveals major bugs:**
+
 - Redeploy contract to new address
 - Focus on core features only
 - Document known issues in thesis limitations section
@@ -1004,12 +1084,14 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 ### Smart Contract Testing
 
 **Unit Tests:**
+
 - Test each function independently
 - Test access control (only authorized roles)
 - Test edge cases (invalid dates, empty strings)
 - Test event emissions
 
 **Integration Tests:**
+
 - Test complete product lifecycle
 - Test multi-party verification flow
 - Test reputation system updates
@@ -1023,6 +1105,7 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 ### Frontend Testing
 
 **Manual Testing:**
+
 - Cross-browser compatibility
 - Mobile responsiveness
 - Wallet connection flow
@@ -1030,6 +1113,7 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 - Error messages clarity
 
 **User Acceptance Testing:**
+
 - Complete supply chain simulation
 - QR code scanning on various devices
 - Performance on slow connections
@@ -1039,6 +1123,7 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 ### Security Testing
 
 **Checklist:**
+
 - [ ] No private keys in code
 - [ ] Input validation on all forms
 - [ ] SQL injection prevention (Prisma handles this)
@@ -1052,31 +1137,31 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 
 ### Required (Free)
 
-| Item | Cost | Source |
-|------|------|--------|
-| Development tools | €0 | Open source (VS Code, Git, Hardhat) |
-| Test ETH | €0 | Sepolia faucets |
-| Hosting | €0 | Render free tier (750 hours/month) |
-| Database | €0 | Supabase free tier (1GB storage, 2GB bandwidth) |
-| Domain (optional) | €0 | Render subdomain |
-| Learning resources | €0 | Free tutorials (Cyfrin, docs) |
+| Item               | Cost | Source                                          |
+| ------------------ | ---- | ----------------------------------------------- |
+| Development tools  | €0   | Open source (VS Code, Git, Hardhat)             |
+| Test ETH           | €0   | Sepolia faucets                                 |
+| Hosting            | €0   | Render free tier (750 hours/month)              |
+| Database           | €0   | Supabase free tier (1GB storage, 2GB bandwidth) |
+| Domain (optional)  | €0   | Render subdomain                                |
+| Learning resources | €0   | Free tutorials (Cyfrin, docs)                   |
 
 ### Optional (If Budget Available)
 
-| Item | Cost | Purpose |
-|------|------|---------|
-| Custom domain | €10/year | Professional appearance |
-| Cloudinary/IPFS | €0-20/month | Image hosting |
-| Premium hosting | €20/month | Better performance |
+| Item            | Cost        | Purpose                 |
+| --------------- | ----------- | ----------------------- |
+| Custom domain   | €10/year    | Professional appearance |
+| Cloudinary/IPFS | €0-20/month | Image hosting           |
+| Premium hosting | €20/month   | Better performance      |
 
 ### Cost Savings from Architectural Decisions
 
-| Decision | Cost Saved | Rationale |
-|----------|------------|-----------|
-| IoT Simulator (no real hardware) | €150-200 | Raspberry Pi + sensors + accessories |
-| Next.js Monolith (no separate backend) | €0-15/month | No need for separate server hosting |
-| Supabase Free Tier | €25/month | vs. paid PostgreSQL hosting |
-| Testnet (no mainnet) | €100-1000+ | Gas fees for real Ethereum transactions |
+| Decision                               | Cost Saved  | Rationale                               |
+| -------------------------------------- | ----------- | --------------------------------------- |
+| IoT Simulator (no real hardware)       | €150-200    | Raspberry Pi + sensors + accessories    |
+| Next.js Monolith (no separate backend) | €0-15/month | No need for separate server hosting     |
+| Supabase Free Tier                     | €25/month   | vs. paid PostgreSQL hosting             |
+| Testnet (no mainnet)                   | €100-1000+  | Gas fees for real Ethereum transactions |
 
 **Total Required: €0**
 **Total Optional: €0-50**
@@ -1092,6 +1177,7 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 **Format:** In-person or Discord
 
 **Agenda:**
+
 1. Review previous week progress
 2. Discuss blockers and challenges
 3. Plan current week tasks
@@ -1103,16 +1189,19 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 ### Communication Channels
 
 **GitHub:**
+
 - Issue tracking
 - Pull request reviews
 - Project board (Kanban)
 
 **Discord/Telegram:**
+
 - Daily updates
 - Quick questions
 - Screen sharing for debugging
 
 **Google Drive/OneDrive:**
+
 - Shared documents
 - Thesis drafts
 - Meeting notes
@@ -1122,12 +1211,14 @@ Blockchain Lead    +    Backend/Integration  +  UI/UX Lead
 ### Progress Tracking
 
 **GitHub Projects Board:**
+
 ```
 To Do → In Progress → Review → Done
 ```
 
 **Weekly Progress Reports:**
 Each member submits:
+
 - What I completed
 - What I'm working on
 - Blockers/challenges
@@ -1140,14 +1231,17 @@ Each member submits:
 ### Team Contact
 
 **Person 1 (Sam):**
+
 - GitHub: [FuzzyKala](https://github.com/FuzzyKala)
 - Email: [Your email]
 
 **Person 2:**
+
 - GitHub: [Username]
 - Email: [Email]
 
 **Person 3:**
+
 - GitHub: [Username]
 - Email: [Email]
 
@@ -1156,20 +1250,24 @@ Each member submits:
 ### Key Resources
 
 **Blockchain & Solidity:**
+
 - Cyfrin Updraft: https://updraft.cyfrin.io/
 - Solidity Docs: https://docs.soliditylang.org/
 - OpenZeppelin: https://docs.openzeppelin.com/
 
 **Web3 Frontend:**
+
 - Wagmi: https://wagmi.sh/
 - RainbowKit: https://www.rainbowkit.com/
 - Viem: https://viem.sh/
 
 **Supply Chain References:**
+
 - Walmart Case Study: https://www.lfdecentralizedtrust.org/case-studies/walmart-case-study
 - IBM Food Trust: https://www.ibm.com/blockchain/solutions/food-trust
 
 **Academic:**
+
 - MIT Thesis: https://dspace.mit.edu/handle/1721.1/118559
 - OAMK Ruokajälki: https://www.oamk.fi/en/partnership/rdi-projects/ruokajalki
 
@@ -1180,12 +1278,14 @@ Each member submits:
 ### Immediate Actions (This Week)
 
 **Day 1-2:**
+
 - [ ] All team members read this brief
 - [ ] Schedule first team meeting
 - [ ] Create GitHub repository
 - [ ] Setup communication channels
 
 **Day 3-4:**
+
 - [ ] Clone Next-Web3-Boilerplate
 - [ ] Install all development tools
 - [ ] Create 4 test wallets
@@ -1193,6 +1293,7 @@ Each member submits:
 - [ ] Start Solidity learning (Cyfrin Updraft)
 
 **Day 5-7:**
+
 - [ ] Complete environment setup
 - [ ] Deploy first "Hello World" contract to testnet
 - [ ] Experiment with wallet connection
@@ -1222,6 +1323,7 @@ Each member submits:
 ### What if we don't finish development in 9 weeks?
 
 **A:** The MVP is designed to be achievable in 9 weeks (Weeks 1-9). If delays occur:
+
 1. Remove optional features first (reputation, EXIF)
 2. Simplify the demo (fewer products, fewer roles)
 3. Focus on thesis writing (Weeks 10-12) with current implementation
@@ -1233,6 +1335,7 @@ Each member submits:
 ### What if smart contracts are too difficult?
 
 **A:** We've designed a simple contract structure. If needed:
+
 - Use more OpenZeppelin pre-built code
 - Simplify the data structure
 - Focus more on frontend and less on complex contract logic
@@ -1244,6 +1347,7 @@ Each member submits:
 ### Why use an IoT simulator instead of real sensors?
 
 **A:** Our IoT simulator approach is:
+
 - **Academically valid**: Standard practice in POC development (IBM Food Trust uses test harnesses)
 - **Cost-effective**: Saves €150-200 on hardware
 - **More reliable**: No sensor failures during thesis presentation
@@ -1256,6 +1360,7 @@ The simulator generates data identical to real sensors, demonstrating the same b
 ### Should we use Next.js monolith or separate Node.js backend?
 
 **A:** Use **Next.js monolith** (frontend + backend together) because:
+
 - **Simpler deployment**: One Render deployment instead of two services
 - **No CORS issues**: Frontend and API in same app
 - **Team efficiency**: Everyone knows Next.js already
@@ -1268,6 +1373,7 @@ Only consider separate Node.js backend if you need WebSockets, MQTT, or backgrou
 ### Why Supabase instead of vanilla PostgreSQL?
 
 **A:** Supabase provides:
+
 - **Built-in connection pooling** (pgBouncer) - critical for serverless
 - **Prevents database exhaustion** - Next.js serverless functions create many connections
 - **PostgreSQL-compatible** - no SQL changes needed
@@ -1303,6 +1409,7 @@ Only consider separate Node.js backend if you need WebSockets, MQTT, or backgrou
 **Status:** Ready for BMAD PM Agent (PRD creation)
 
 **Reviewed by:**
+
 - [ ] Person 1 (Sam)
 - [ ] Person 2
 - [ ] Person 3
@@ -1443,6 +1550,7 @@ model Alert {
 ### API Endpoint: `/api/iot/simulate`
 
 **Request:**
+
 ```typescript
 POST /api/iot/simulate
 Content-Type: application/json
@@ -1458,6 +1566,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```typescript
 {
   "success": true,
@@ -1521,4 +1630,4 @@ function addSensorReading(
 
 **END OF PROJECT BRIEF**
 
-*This document should be reviewed and updated as the project progresses. Major changes require team consensus.*
+_This document should be reviewed and updated as the project progresses. Major changes require team consensus._
