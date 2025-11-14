@@ -58,7 +58,7 @@ Core Web Vitals metrics—LCP 2.1s, FCP 1.2s, TTI 2.8s, CLS 0.05—all meet Goog
 
 ### Immutability: Cryptographic Guarantee Against Data Tampering
 
-Blockchain's cryptographic immutability addresses a fundamental weakness of traditional centralized databases: retroactive data modification. SHA-256 hash chaining ensures that once product registration achieves finality on Sepolia (12-15 seconds, 2-3 block confirmations), records become computationally infeasible to alter without rewriting entire blockchain history—requiring 51% network control (Nakamoto, 2008).
+Blockchain's cryptographic immutability addresses a fundamental weakness of traditional centralized databases: retroactive data modification. SHA-256 hash chaining ensures that once product registration achieves finality on Sepolia (12-15 seconds, 2-3 block confirmations), records become computationally infeasible to alter without rewriting entire blockchain history—requiring 51% network control (Nakamoto, 2008). The tamper-resistant nature of blockchain significantly reduces risks of food adulteration and fraud, with immutable records providing secure and verifiable product history that deters fraudulent activities while promoting authenticity in supply chains facing annual economic losses of $10-15 billion globally from food fraud (Food Control, 2024).
 
 Testing confirmed trace records persist immutably across 88 test scenarios including simulated Byzantine attack vectors. Slither security analysis verified absence of state-modifying vulnerabilities enabling unauthorized data changes.
 
@@ -169,6 +169,8 @@ Consensys. (2023). *Web3 user research report: Barriers to blockchain adoption*.
 FDA. (2023). *FSMA Rule 204: Food traceability requirements*. U.S. Food and Drug Administration.
 
 Food and Agriculture Organization (FAO). (2023). *Small family farms country factsheet*.
+
+Food Control. (2024). Leveraging blockchain to tackle food fraud: Innovations and obstacles. *Food Control*. https://doi.org/10.1016/j.foodcont.2024.111666
 
 IBM. (2019). *Walmart and IBM Food Trust case study*. Hyperledger Foundation Case Studies.
 

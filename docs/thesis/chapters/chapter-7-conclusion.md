@@ -223,7 +223,7 @@ The Springer (2025) review documents contradictory findings: **12 papers cite co
 
 ### Medium-Term (6-12 Months)
 
-**MT1: Multi-Chain Interoperability** - Implement cross-chain bridges enabling product transfers between Ethereum Layer 2 chains. Investigate Chainlink CCIP for secure message passing.
+**MT1: Multi-Chain Interoperability** - Implement cross-chain bridges enabling product transfers between Ethereum Layer 2 chains. Investigate Chainlink CCIP for secure message passing. Cross-chain interoperability solutions including outsourcing protocols and smart contract-driven communication mechanisms address fundamental challenges of blockchain interconnection while maintaining cryptographic security guarantees (IEEE, 2024).
 
 **MT2: Zero-Knowledge Proof Privacy** - Integrate zk-SNARKs to enable selective disclosure: prove organic certification without revealing supplier identity, prove temperature maintenance without exposing exact readings. Address GDPR compliance challenges.
 
@@ -284,6 +284,8 @@ Ellahi, R. M., Wood, L. C., & Bekhit, A. E. A. (2024). Blockchain-driven food su
 Food and Agriculture Organization. (2023). *The state of food and agriculture 2023*. FAO. https://doi.org/10.4060/cc7724en
 
 IBM. (2019). Walmart and IBM food trust case study: Building transparency in the food supply chain. *Hyperledger Foundation Case Studies*.
+
+IEEE. (2024). Enhancing blockchain interoperability through cross-chain outsourcing and communication. *IEEE Conference Publication*, Document 10668062. IEEE Xplore.
 
 IEEE Communications Surveys & Tutorials. (2024). A survey on blockchain scalability: From hardware to layer-two protocols. *IEEE Communications Surveys & Tutorials*. https://doi.org/10.1109/COMST.2024.3376252
 
