@@ -1,4 +1,5 @@
 # Product Requirements Document (PRD)
+
 ## FoodTrace - Blockchain Food Supply Chain Traceability System
 
 **Version:** 1.2
@@ -12,14 +13,15 @@
 
 ## Document Control
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 0.1 | 2025-10-30 | PM Agent | Initial draft created from brief.md |
-| 1.0 | 2025-10-30 | PM Agent | Architecture finalized, security hardening added |
-| 1.1 | 2025-11-14 | Team | Session 12: Added Section 7 (High-Level Architecture), Next.js Pages Router corrections, contract address placeholders, timeline updated to End of Week 0 |
-| 1.2 | 2025-11-14 | Team | Session 12: Added Executive Summary (9 sections, ~230 lines) for quick supervisor review - addresses document length concern |
+| Version | Date       | Author   | Changes                                                                                                                                                   |
+| ------- | ---------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0.1     | 2025-10-30 | PM Agent | Initial draft created from brief.md                                                                                                                       |
+| 1.0     | 2025-10-30 | PM Agent | Architecture finalized, security hardening added                                                                                                          |
+| 1.1     | 2025-11-14 | Team     | Session 12: Added Section 7 (High-Level Architecture), Next.js Pages Router corrections, contract address placeholders, timeline updated to End of Week 0 |
+| 1.2     | 2025-11-14 | Team     | Session 12: Added Executive Summary (9 sections, ~230 lines) for quick supervisor review - addresses document length concern                              |
 
 **Review Status:**
+
 - [ ] PO Agent Validation (Target: >90% alignment with brief.md)
 - [ ] Team Review (All 3 members)
 - [ ] Supervisor Approval (After kickoff meeting Oct 31)
@@ -45,13 +47,14 @@ Traditional food supply chains lack transparency and rapid traceability. Walmart
 **FoodTrace** is a proof-of-concept blockchain-based food traceability platform enabling transparent tracking from Producer → Distributor → Retailer → Consumer using Ethereum smart contracts and a wallet-free consumer interface.
 
 **Key Innovations:**
+
 1. **Custodial Wallets:** Email/password login for business users (no MetaMask required) - solves 78% abandonment rate
 2. **Wallet-Free Consumer Access:** QR code scanning without wallet installation - zero friction verification
 3. **Hybrid Storage:** Critical data on-chain (immutable), metadata off-chain (cost optimized) - 96% gas savings
 4. **IoT Simulation:** Software-based sensor data generation - saves €150-200 hardware costs, 3 weeks development time
 5. **Multi-Tenant Security:** AES-256 encrypted wallets, company-scoped data isolation
 
-**Academic Contribution:** Demonstrates Ethereum public blockchain viability for small-producer scenarios (addresses 89% enterprise bias in existing research - Zhao et al., 2023).
+**Academic Contribution:** Demonstrates Ethereum public blockchain viability for small-producer scenarios (addresses research gap: 95% of blockchain food supply chain frameworks focus on enterprise traceability while only 3-5% address small producer financing and donation systems - Ellahi et al., 2024).
 
 ---
 
@@ -79,6 +82,7 @@ DATA LAYER
 ```
 
 **Key Technology Decisions:**
+
 - **Next.js Monolith** (vs separate backend): Simpler deployment, no CORS issues, single Render.com instance
 - **Supabase PostgreSQL** (vs vanilla): Built-in pgBouncer prevents connection exhaustion (critical for serverless)
 - **Custodial Wallets** (vs MetaMask): Matches IBM Food Trust pattern, solves UX barrier for Finnish farmers
@@ -86,6 +90,7 @@ DATA LAYER
 - **Ethereum Sepolia** (vs Hyperledger): Public transparency, educational value, testnet = €0 cost
 
 **Tech Stack:**
+
 - Frontend: Next.js 14 (Pages Router) + React 18 + TypeScript 5.8+ + Chakra UI v2
 - Smart Contracts: Solidity ^0.8.20 + Hardhat + OpenZeppelin (>70% test coverage)
 - Backend: Node.js 18.x LTS + Prisma ORM + NextAuth.js
@@ -99,19 +104,20 @@ DATA LAYER
 
 **12-Week Schedule (9 weeks development + 3 weeks thesis writing)**
 
-| Week | Phase | Critical Deliverables | Risk Level |
-|------|-------|---------------------|-----------|
-| **0** | Pre-Kickoff | Documentation ready ✅ | ✅ Complete |
-| **1** | Setup & Learning | Environments, 3 wallets, Solidity basics | Low |
-| **2** | Planning | **PRD + Architecture (NON-NEGOTIABLE)** | **CRITICAL** |
-| **3-4** | Smart Contracts | Deployed to Sepolia, >70% test coverage | High |
-| **5-7** | Frontend Dev | 4-role UIs, Web3 integration, IoT simulator | Medium |
-| **8** | Testing | E2E tests, bug fixes, deployment to Render | Medium |
-| **9** | Polish | Demo video, documentation, production-ready | Low |
-| **10-12** | Thesis Writing | 60+ pages, poster, defense preparation | Low |
+| Week      | Phase            | Critical Deliverables                       | Risk Level   |
+| --------- | ---------------- | ------------------------------------------- | ------------ |
+| **0**     | Pre-Kickoff      | Documentation ready ✅                      | ✅ Complete  |
+| **1**     | Setup & Learning | Environments, 3 wallets, Solidity basics    | Low          |
+| **2**     | Planning         | **PRD + Architecture (NON-NEGOTIABLE)**     | **CRITICAL** |
+| **3-4**   | Smart Contracts  | Deployed to Sepolia, >70% test coverage     | High         |
+| **5-7**   | Frontend Dev     | 4-role UIs, Web3 integration, IoT simulator | Medium       |
+| **8**     | Testing          | E2E tests, bug fixes, deployment to Render  | Medium       |
+| **9**     | Polish           | Demo video, documentation, production-ready | Low          |
+| **10-12** | Thesis Writing   | 60+ pages, poster, defense preparation      | Low          |
 
 **Critical Success Gates:**
-- ✅ **Week 2 (Completed):** PRD + Architecture approved by supervisor (>90% alignment)
+
+- 🟡 **Week 0:** PRD + Architecture approved by supervisor (>90% alignment)
 - 🔴 **Week 4:** Smart contracts deployed to Sepolia testnet (if missed, thesis fails)
 - 🟡 **Week 9:** Complete POC deployed and demo-ready (buffer = Week 10 for fixes)
 
@@ -121,13 +127,13 @@ DATA LAYER
 
 ### 5. Risk Assessment
 
-| Risk Category | Level | Mitigation Strategy | Contingency Plan |
-|--------------|-------|-------------------|------------------|
-| **Smart Contract Complexity** | 🟡 Medium | Use OpenZeppelin templates; allocate 2 weeks learning; >70% test coverage | Simplify contract logic; remove reputation system if behind |
-| **Wallet UX Barrier** | 🟢 Low (Solved) | Custodial wallets with email/password login | IBM Food Trust pattern validated in production |
-| **Timeline Pressure** | 🟡 Medium | Strict MoSCoW prioritization; cut COULD HAVE features at Week 6 checkpoint | Drop Epic 7 (Visualization), Epic 8 (Multi-Language) |
-| **Gas Cost Uncertainty** | 🟢 Low | Testnet deployment only (€0 cost); struct packing optimization | Document in thesis as "mainnet limitation" |
-| **Team Skill Gaps** | 🟡 Medium | Cyfrin Updraft Solidity course (Week 1); Web3 documentation | Person 1 focuses 70% on Solidity; Person 2 owns testing |
+| Risk Category                 | Level           | Mitigation Strategy                                                        | Contingency Plan                                            |
+| ----------------------------- | --------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Smart Contract Complexity** | 🟡 Medium       | Use OpenZeppelin templates; allocate 2 weeks learning; >70% test coverage  | Simplify contract logic; remove reputation system if behind |
+| **Wallet UX Barrier**         | 🟢 Low (Solved) | Custodial wallets with email/password login                                | IBM Food Trust pattern validated in production              |
+| **Timeline Pressure**         | 🟡 Medium       | Strict MoSCoW prioritization; cut COULD HAVE features at Week 6 checkpoint | Drop Epic 7 (Visualization), Epic 8 (Multi-Language)        |
+| **Gas Cost Uncertainty**      | 🟢 Low          | Testnet deployment only (€0 cost); struct packing optimization             | Document in thesis as "mainnet limitation"                  |
+| **Team Skill Gaps**           | 🟡 Medium       | Cyfrin Updraft Solidity course (Week 1); Web3 documentation                | Person 1 focuses 70% on Solidity; Person 2 owns testing     |
 
 **Overall Risk:** 🟡 **Medium** - Manageable with proactive scope control and MUST HAVE focus
 
@@ -136,6 +142,7 @@ DATA LAYER
 ### 6. Success Criteria
 
 **Technical Success (Minimum Viable Thesis):**
+
 - ✅ Smart contracts deployed to Sepolia testnet (verified on Etherscan)
 - ✅ Frontend application accessible online (Render.com hosting)
 - ✅ Complete supply chain workflow: Producer → Distributor → Retailer → Consumer
@@ -146,9 +153,10 @@ DATA LAYER
 - ✅ Multi-tenant data isolation verified (Company A ≠ Company B)
 
 **Academic Success (Thesis Quality):**
+
 - ✅ Demonstrates understanding of blockchain fundamentals and enterprise patterns
 - ✅ Clear problem statement with real-world context (Walmart 7-day → 2.2s case study)
-- ✅ Proper literature review (20+ academic sources, Zhao et al. 2023 systematic review)
+- ✅ Proper literature review (20+ academic sources, Zhao et al. 2019 + Ellahi et al. 2024 systematic reviews)
 - ✅ Methodology clearly explained (BMAD + Agile, justification for testnet/simulator)
 - ✅ Results analyzed objectively (gas costs, performance metrics, user testing)
 - ✅ **Honest limitations discussion** (custodial wallet trade-offs, oracle problem, GDPR conflicts)
@@ -156,6 +164,7 @@ DATA LAYER
 - ✅ Successful thesis defense with demo
 
 **Business Value (Portfolio Quality):**
+
 - ✅ Demonstrates production-grade architecture patterns (IBM Food Trust comparison)
 - ✅ Solves real UX problem (custodial wallets for non-crypto users)
 - ✅ Portfolio-worthy implementation for all 3 team members
@@ -166,6 +175,7 @@ DATA LAYER
 ### 7. Feature Prioritization (MoSCoW)
 
 **🔴 MUST HAVE (Non-Negotiable - 75-80% effort):**
+
 - Epic 0: Smart Contracts (Product Registry, Trace Records, Sensor Data)
 - Epic 0.5: Custodial Wallets (Email/password login, AES-256 encryption)
 - Epic 0.6: Security Hardening (Multi-tenant isolation, audit logging)
@@ -176,18 +186,21 @@ DATA LAYER
 - Epic 9: Database & Deployment (Supabase + Render.com)
 
 **🟡 SHOULD HAVE (High Value - 15-20% effort):**
+
 - Epic 1.5: Product Transfer Workflow (Email notifications)
 - Epic 3: IoT Sensor Simulator (Normal/Warning/Critical scenarios)
 - Epic 5: Data Visualization (Product journey timeline)
 - Epic 7: Multi-Party Verification (Optional - reputation system)
 
 **🟢 COULD HAVE (Nice-to-Have - 5% effort, cut at Week 6 if behind):**
+
 - Epic 8: Multi-Language Support (Finnish + English i18n)
 - Advanced search/filtering
 - Batch product registration
 - Real-time WebSocket updates
 
 **⚪ WON'T HAVE (Out of Scope):**
+
 - Mainnet deployment (gas costs prohibitive)
 - Real IoT hardware (€150-200 + 3 weeks)
 - AI anomaly detection (complex ML integration)
@@ -199,18 +212,21 @@ DATA LAYER
 ### 8. Resource Allocation
 
 **Team Capacity:**
+
 - Sam (Blockchain Lead): 165-185 hours (39-44% of 420h capacity)
 - TaiSheng (Backend/Integration): 180-205 hours (43-49% capacity)
 - YiLing (UI/UX Lead): 190-226 hours (45-54% capacity)
 - **Total:** 535-616 hours across 3 people (42-49% team capacity utilization)
 
 **Budget:** €0 (all free-tier services)
+
 - Development tools: Free (VS Code, Git, Hardhat)
 - Test ETH: Free (Sepolia faucets)
 - Hosting: Free (Render 750h/month, Supabase 1GB)
 - Learning: Free (Cyfrin Updraft, official documentation)
 
 **Cost Savings Through Architectural Decisions:**
+
 - IoT Simulator (vs hardware): €150-200 saved
 - Next.js Monolith (vs separate backend): €15/month saved
 - Supabase Free Tier (vs paid PostgreSQL): €25/month saved
@@ -224,15 +240,17 @@ DATA LAYER
 **✅ APPROVE FOR THESIS EXECUTION**
 
 **Rationale:**
+
 1. **Technically Feasible:** Architecture validated against IBM Food Trust and Walmart case studies
 2. **Timeline Realistic:** 535-616 hours estimated vs 1,260 hours available (42-49% utilization)
-3. **Academic Merit:** Addresses research gap (89% of papers focus on enterprise, only 11% on small producers)
+3. **Academic Merit:** Addresses research gap (95% of blockchain food frameworks focus on enterprise traceability, only 3-5% on small producer financing/donation - Ellahi et al., 2024)
 4. **Risk Mitigated:** MoSCoW prioritization enables scope cuts if behind schedule
 5. **Zero Cost:** All free-tier infrastructure, no budget required
 6. **Production Patterns:** Custodial wallets + hybrid storage match enterprise best practices
 7. **Learning Value:** Team gains Solidity, Web3, blockchain architecture expertise
 
 **Conditions for Approval:**
+
 - Week 2 milestone (PRD + Architecture) must complete by Nov 14 ✅ (Completed)
 - Week 4 milestone (Smart contracts deployed to Sepolia) is non-negotiable
 - If behind at Week 6 checkpoint, cut COULD HAVE features (Epic 7, 8)
@@ -243,6 +261,7 @@ DATA LAYER
 ---
 
 **For Comprehensive Details:**
+
 - Section 1: Product Vision & Goals (3 pages)
 - Section 2: User Personas (5 detailed personas, 8 pages)
 - Section 3: Feature Prioritization (MoSCoW + dependency map, 4 pages)
@@ -260,6 +279,7 @@ DATA LAYER
 **Executive Summary** (Start Here - 5-10 min read)
 
 **Detailed Sections** (42 pages)
+
 1. [Product Vision & Goals](#1-product-vision--goals)
 2. [User Personas](#2-user-personas)
 3. [Feature Prioritization](#3-feature-prioritization)
@@ -268,12 +288,7 @@ DATA LAYER
 6. [Epic Breakdown](#6-epic-breakdown)
 7. [High-Level System Architecture](#7-high-level-system-architecture)
 
-**Supporting Documents** (See Document References section)
-8. Team Roles & Responsibilities
-9. Technical Constraints
-10. Definition of Done Checklist
-11. Next Steps
-12. Change Management
+**Supporting Documents** (See Document References section) 8. Team Roles & Responsibilities 9. Technical Constraints 10. Definition of Done Checklist 11. Next Steps 12. Change Management
 
 ---
 
@@ -292,6 +307,7 @@ FoodTrace is a proof-of-concept blockchain-based food traceability platform that
 #### The Problem
 
 **Current State:** Traditional food supply chains suffer from:
+
 - **Slow traceability**: Walmart took 7 days to trace mangoes back to source (2016)
 - **Limited transparency**: Consumers cannot verify product authenticity or journey
 - **Data tampering risk**: Centralized databases can be modified without detection
@@ -299,6 +315,7 @@ FoodTrace is a proof-of-concept blockchain-based food traceability platform that
 - **Food safety incidents**: Delayed recalls lead to health risks and economic losses
 
 **Impact:**
+
 - WHO estimates 600 million people fall ill from contaminated food annually
 - Food fraud costs global food industry $40 billion per year
 - 94% of consumers want supply chain transparency (2024 survey)
@@ -309,6 +326,7 @@ FoodTrace is a proof-of-concept blockchain-based food traceability platform that
 #### Why Blockchain?
 
 **Blockchain Advantages:**
+
 1. **Immutability**: Once recorded, data cannot be altered or deleted
 2. **Transparency**: All authorized participants can verify the same information
 3. **Decentralization**: No single point of failure or control
@@ -316,6 +334,7 @@ FoodTrace is a proof-of-concept blockchain-based food traceability platform that
 5. **Cryptographic proof**: Mathematical certainty instead of trust
 
 **Real-World Validation:**
+
 - **Walmart + IBM Food Trust**: Reduced traceability from 7 days → 2.2 seconds
 - **Carrefour**: Blockchain tracking increased sales by 20% (consumer trust)
 - **Nestlé**: Tracks milk from New Zealand farms to Middle East consumers
@@ -327,18 +346,21 @@ FoodTrace is a proof-of-concept blockchain-based food traceability platform that
 #### Primary Goals (MUST Achieve)
 
 1. **Demonstrate Technical Feasibility**
+
    - Deploy functional smart contracts to Ethereum Sepolia testnet
    - Implement complete product journey tracking (Producer → Distributor → Retailer → Consumer)
    - Achieve >70% smart contract test coverage
    - Create wallet-free consumer query interface
 
 2. **Academic Excellence**
+
    - Produce 60+ page thesis meeting OAMK standards
    - Demonstrate understanding of enterprise blockchain architecture
    - Compare Ethereum vs Hyperledger Fabric (justify platform choice)
    - Document limitations honestly (GIGO problem, scalability challenges)
 
 3. **User Experience Innovation**
+
    - Solve "crypto wallet barrier" with custodial wallet architecture
    - Enable email/password login for business users (no MetaMask required)
    - Automated product transfer workflow with notifications
@@ -355,12 +377,14 @@ FoodTrace is a proof-of-concept blockchain-based food traceability platform that
 #### Secondary Goals (SHOULD Achieve)
 
 5. **Realistic Enterprise Architecture**
+
    - Multi-tenant SaaS platform operator model
    - Company invitation-only onboarding (prevent spam)
    - Admin approval workflow for company registration
    - Automated email notifications for supply chain events
 
 6. **IoT Integration Simulation**
+
    - Temperature/humidity monitoring simulator
    - Three scenarios: Normal (2-4°C), Warning (8-10°C), Critical (>10°C)
    - Alert system for out-of-range conditions
@@ -425,6 +449,7 @@ FoodTrace is a proof-of-concept blockchain-based food traceability platform that
 ❌ **Production-Scale Testing** - Load testing, thousands of concurrent users
 
 **Why Out of Scope:**
+
 - Limited to 12-week timeline (9 weeks development)
 - Focus on proof-of-concept, not production deployment
 - Academic thesis, not commercial product launch
@@ -443,26 +468,31 @@ FoodTrace is a proof-of-concept blockchain-based food traceability platform that
 **Tech Savvy:** High (IT background)
 
 #### Background
+
 Laura manages the FoodTrace platform on behalf of the thesis team. She is responsible for onboarding companies, monitoring system health, and ensuring data integrity.
 
 #### Goals
+
 - Approve/reject company registration applications
 - Monitor platform usage and blockchain activity
 - Generate reports for thesis documentation
 - Handle support requests from companies
 
 #### Pain Points
+
 - Manual company approval process (no automated fraud detection)
 - Need to monitor multiple dashboards (Supabase, Etherscan, Render logs)
 - Responsible for security (wallet encryption, tenant isolation)
 
 #### User Stories
+
 - As a platform admin, I want to **review company applications** so that I can prevent spam/fraud
 - As a platform admin, I want to **generate wallet addresses for approved companies** so they can use blockchain
 - As a platform admin, I want to **view audit logs** so I can detect suspicious activity
 - As a platform admin, I want to **see all companies' data** so I can provide support
 
 #### Tech Profile
+
 - Uses: Supabase dashboard, GitHub, Render.com console
 - Comfortable with: SQL queries, blockchain explorers, API testing
 - Needs: Admin portal with approval workflow, audit trail viewer
@@ -478,21 +508,25 @@ Laura manages the FoodTrace platform on behalf of the thesis team. She is respon
 **Tech Savvy:** Medium (uses smartphone, online banking, WhatsApp)
 
 #### Background
+
 Matti runs a small organic farm producing wild blueberries. He wants to prove his products are authentic Finnish organic berries (not imported fakes). He has smartphone but no crypto wallet experience.
 
 #### Goals
+
 - Register harvested products on blockchain (prove authenticity)
 - Generate QR codes to attach to product packaging
 - Track which products were sold to which distributors
 - Build reputation through verified quality records
 
 #### Pain Points
+
 - **Does NOT have MetaMask or crypto wallet** (major barrier!)
 - Does NOT understand "gas fees" or "blockchain confirmations"
 - Limited time (busy during harvest season)
 - Needs simple, familiar interface (like online banking)
 
 #### User Stories
+
 - As a producer, I want to **register products with email login** (not MetaMask) so I can use the system easily
 - As a producer, I want to **upload product photos** so consumers can see what I harvest
 - As a producer, I want to **generate QR codes** so I can print and attach to packaging
@@ -500,6 +534,7 @@ Matti runs a small organic farm producing wild blueberries. He wants to prove hi
 - As a producer, I want to **see my product history** so I can track sales
 
 #### Tech Profile
+
 - Uses: Smartphone (Android), email, online banking, WhatsApp
 - Does NOT use: Crypto wallets, blockchain explorers, DeFi apps
 - Needs: Email login, simple forms, auto-generated QR codes, email notifications
@@ -515,21 +550,25 @@ Matti runs a small organic farm producing wild blueberries. He wants to prove hi
 **Tech Savvy:** Medium-High (uses inventory management software)
 
 #### Background
+
 Liisa works for a regional food distributor. She receives products from multiple farms, checks quality, and ships to retailers. She needs to maintain cold chain integrity and document quality checks.
 
 #### Goals
+
 - Receive notifications when farmers ship products
 - Record temperature during transport (via IoT simulator)
 - Add quality inspection notes to blockchain
 - Transfer products to retailers with full history
 
 #### Pain Points
+
 - Multiple suppliers use different systems (no standardization)
 - Paper-based quality checks (easy to lose/fake)
 - Need to prove cold chain maintained (temperature logs)
 - Manual email coordination with farmers and retailers
 
 #### User Stories
+
 - As a distributor, I want to **receive email notifications** when products arrive so I can schedule quality checks
 - As a distributor, I want to **scan QR codes** to quickly look up product details
 - As a distributor, I want to **record temperature readings** so cold chain is documented
@@ -537,6 +576,7 @@ Liisa works for a regional food distributor. She receives products from multiple
 - As a distributor, I want to **transfer products to retailers** with one click
 
 #### Tech Profile
+
 - Uses: Inventory management software, barcode scanners, email, smartphone
 - Comfortable with: QR scanning, forms, dashboards
 - Needs: Mobile-responsive interface, QR scanner, automated notifications
@@ -552,21 +592,25 @@ Liisa works for a regional food distributor. She receives products from multiple
 **Tech Savvy:** Medium (uses POS system, inventory software)
 
 #### Background
+
 Tommi manages a medium-sized supermarket in Oulu. He wants to stock locally-sourced organic products but needs to verify authenticity (customers demand proof). He's responsible for inventory and product traceability for recalls.
 
 #### Goals
+
 - Verify product authenticity before stocking (check blockchain records)
 - Receive products from distributors with full history
 - Update product status to "Stocked" and "Sold"
 - Quickly trace products if recall needed
 
 #### Pain Points
+
 - Customers demand proof of organic certification (verbal claims not enough)
 - Need rapid recall capability (Finnish food authority requirement)
 - Multiple suppliers, no unified traceability system
 - Staff turnover (need simple system, not complex training)
 
 #### User Stories
+
 - As a retailer, I want to **scan QR codes** to verify product journey before stocking
 - As a retailer, I want to **see temperature history** so I know cold chain was maintained
 - As a retailer, I want to **update product status** when received/stocked/sold
@@ -574,6 +618,7 @@ Tommi manages a medium-sized supermarket in Oulu. He wants to stock locally-sour
 - As a retailer, I want to **trace products quickly** if recall happens
 
 #### Tech Profile
+
 - Uses: POS system, inventory software, smartphone, email
 - Comfortable with: Barcode scanning, simple forms
 - Needs: Quick QR verification, status updates, email notifications
@@ -589,21 +634,25 @@ Tommi manages a medium-sized supermarket in Oulu. He wants to stock locally-sour
 **Tech Savvy:** High (uses smartphone for everything)
 
 #### Background
+
 Sanna is a young professional who cares about food sustainability and authenticity. She's willing to pay premium for verified organic local products. She wants transparency but has zero interest in crypto/blockchain technology.
 
 #### Goals
+
 - Verify product is actually from Finnish farm (not imported fake)
 - See complete product journey (farm → store)
 - Check organic certification is real
 - View temperature history (was cold chain maintained?)
 
 #### Pain Points
+
 - Skeptical of marketing claims ("organic", "local", "sustainable")
 - No way to verify authenticity currently
 - **Does NOT want to create account or download app** (major friction!)
 - **Does NOT understand blockchain** (and doesn't care to learn)
 
 #### User Stories
+
 - As a consumer, I want to **scan QR code with phone camera** (no app needed) so I can see product journey
 - As a consumer, I want to **view product origin** so I can verify it's local
 - As a consumer, I want to **see certification details** so I can trust organic claims
@@ -611,6 +660,7 @@ Sanna is a young professional who cares about food sustainability and authentici
 - As a consumer, I want to **do this WITHOUT registration** so there's no friction
 
 #### Tech Profile
+
 - Uses: Smartphone (iOS/Android), Instagram, online shopping, banking apps
 - Does NOT use: Crypto wallets, blockchain apps
 - Needs: **Zero-friction access** - scan QR → see info immediately (no login, no account, no app download)
@@ -619,13 +669,13 @@ Sanna is a young professional who cares about food sustainability and authentici
 
 ### Persona Summary Table
 
-| Persona | Tech Savvy | Blockchain Knowledge | Login Required? | Primary Device |
-|---------|------------|---------------------|-----------------|----------------|
-| **Platform Admin** | High | Medium | ✅ Yes (Email + MFA) | Desktop/Laptop |
-| **Producer** | Medium | None | ✅ Yes (Email/Password) | Smartphone + Desktop |
-| **Distributor** | Medium-High | None | ✅ Yes (Email/Password) | Smartphone + Tablet |
-| **Retailer** | Medium | None | ✅ Yes (Email/Password) | Smartphone + POS |
-| **Consumer** | High | None | ❌ **NO** (Wallet-free) | Smartphone |
+| Persona            | Tech Savvy  | Blockchain Knowledge | Login Required?         | Primary Device       |
+| ------------------ | ----------- | -------------------- | ----------------------- | -------------------- |
+| **Platform Admin** | High        | Medium               | ✅ Yes (Email + MFA)    | Desktop/Laptop       |
+| **Producer**       | Medium      | None                 | ✅ Yes (Email/Password) | Smartphone + Desktop |
+| **Distributor**    | Medium-High | None                 | ✅ Yes (Email/Password) | Smartphone + Tablet  |
+| **Retailer**       | Medium      | None                 | ✅ Yes (Email/Password) | Smartphone + POS     |
+| **Consumer**       | High        | None                 | ❌ **NO** (Wallet-free) | Smartphone           |
 
 **Key Insight:** Only consumers should have zero-friction access. Business users (Producer/Distributor/Retailer) need accounts for audit trail, but should NOT need crypto wallets.
 
@@ -643,17 +693,17 @@ Features prioritized using **MoSCoW framework** (Must Have, Should Have, Could H
 
 **These features are non-negotiable. Without them, thesis fails.**
 
-| Feature | Description | Rationale |
-|---------|-------------|-----------|
-| **Smart Contract Core** | Product registration, trace records, blockchain events | Core blockchain functionality |
-| **Custodial Wallets** | Email/password login, server-side key management | Solves UX barrier (no MetaMask required) |
-| **Multi-Tenant Security** | Tenant isolation, encryption, audit logs | Production-grade security |
-| **Product Registration** | Producers register products with photos, metadata | Start of supply chain |
-| **QR Code Generation** | Auto-generate QR codes on product registration | Essential for consumer access |
-| **Supply Chain Tracking** | Distributor/Retailer add trace records | Complete supply chain journey |
-| **Consumer Query (Wallet-Free)** | Scan QR → see product journey (no login) | Core value proposition |
-| **Database (Supabase)** | PostgreSQL for metadata, Prisma ORM | Off-chain data storage |
-| **Deployment** | Render.com hosting, Sepolia testnet | Accessible demo |
+| Feature                          | Description                                            | Rationale                                |
+| -------------------------------- | ------------------------------------------------------ | ---------------------------------------- |
+| **Smart Contract Core**          | Product registration, trace records, blockchain events | Core blockchain functionality            |
+| **Custodial Wallets**            | Email/password login, server-side key management       | Solves UX barrier (no MetaMask required) |
+| **Multi-Tenant Security**        | Tenant isolation, encryption, audit logs               | Production-grade security                |
+| **Product Registration**         | Producers register products with photos, metadata      | Start of supply chain                    |
+| **QR Code Generation**           | Auto-generate QR codes on product registration         | Essential for consumer access            |
+| **Supply Chain Tracking**        | Distributor/Retailer add trace records                 | Complete supply chain journey            |
+| **Consumer Query (Wallet-Free)** | Scan QR → see product journey (no login)               | Core value proposition                   |
+| **Database (Supabase)**          | PostgreSQL for metadata, Prisma ORM                    | Off-chain data storage                   |
+| **Deployment**                   | Render.com hosting, Sepolia testnet                    | Accessible demo                          |
 
 **Total MUST HAVE Epics:** 0, 0.5, 0.6, 1, 2, 4, 6, 9
 **Estimated Time:** 65-75 hours
@@ -665,12 +715,12 @@ Features prioritized using **MoSCoW framework** (Must Have, Should Have, Could H
 
 **These features significantly improve the system but aren't absolutely critical.**
 
-| Feature | Description | Rationale |
-|---------|-------------|-----------|
-| **Product Transfer Workflow** | Automated notifications when products transferred | Professional UX, saves manual emails |
-| **IoT Sensor Simulator** | Temperature/humidity monitoring (3 scenarios) | Demonstrates blockchain + IoT integration |
-| **Data Visualization** | Product journey timeline, trace record history | Better UX, easier to understand |
-| **Multi-Party Verification** | Independent verification, reputation system | Trust-building feature |
+| Feature                       | Description                                       | Rationale                                 |
+| ----------------------------- | ------------------------------------------------- | ----------------------------------------- |
+| **Product Transfer Workflow** | Automated notifications when products transferred | Professional UX, saves manual emails      |
+| **IoT Sensor Simulator**      | Temperature/humidity monitoring (3 scenarios)     | Demonstrates blockchain + IoT integration |
+| **Data Visualization**        | Product journey timeline, trace record history    | Better UX, easier to understand           |
+| **Multi-Party Verification**  | Independent verification, reputation system       | Trust-building feature                    |
 
 **Total SHOULD HAVE Epics:** 1.5, 3, 5, 7
 **Estimated Time:** 26-34 hours
@@ -682,12 +732,12 @@ Features prioritized using **MoSCoW framework** (Must Have, Should Have, Could H
 
 **These features are valuable but can be cut if timeline pressure.**
 
-| Feature | Description | Rationale |
-|---------|-------------|-----------|
-| **Multi-Language Support** | Finnish + English languages | Local relevance, but can demo in English only |
-| **Advanced Search** | Filter products by company, date, certification | Convenience feature |
-| **Batch Product Registration** | Upload CSV, register multiple products | Saves time for large producers |
-| **Real-Time Updates** | WebSocket notifications instead of polling | Professional but not essential |
+| Feature                        | Description                                     | Rationale                                     |
+| ------------------------------ | ----------------------------------------------- | --------------------------------------------- |
+| **Multi-Language Support**     | Finnish + English languages                     | Local relevance, but can demo in English only |
+| **Advanced Search**            | Filter products by company, date, certification | Convenience feature                           |
+| **Batch Product Registration** | Upload CSV, register multiple products          | Saves time for large producers                |
+| **Real-Time Updates**          | WebSocket notifications instead of polling      | Professional but not essential                |
 
 **Estimated Time:** 10-15 hours
 **Cut Strategy:** Drop if behind schedule at Week 6 checkpoint
@@ -698,16 +748,16 @@ Features prioritized using **MoSCoW framework** (Must Have, Should Have, Could H
 
 **Explicitly excluded from this thesis.**
 
-| Feature | Reason for Exclusion |
-|---------|---------------------|
-| **Mainnet Deployment** | Gas costs prohibitive, testnet sufficient |
-| **Real IoT Hardware** | Adds 3 weeks, simulator demonstrates concept |
-| **Mobile Native App** | Progressive Web App sufficient, 8-12 hours saved |
-| **AI Anomaly Detection** | Complex ML integration, out of timeline |
-| **IPFS Storage** | Decentralized storage nice-to-have, not critical |
-| **Multiple Blockchains** | Cross-chain complexity unnecessary for POC |
-| **Payment Integration** | Commercial feature, not needed for thesis |
-| **Advanced Reporting** | Data export sufficient for thesis |
+| Feature                  | Reason for Exclusion                             |
+| ------------------------ | ------------------------------------------------ |
+| **Mainnet Deployment**   | Gas costs prohibitive, testnet sufficient        |
+| **Real IoT Hardware**    | Adds 3 weeks, simulator demonstrates concept     |
+| **Mobile Native App**    | Progressive Web App sufficient, 8-12 hours saved |
+| **AI Anomaly Detection** | Complex ML integration, out of timeline          |
+| **IPFS Storage**         | Decentralized storage nice-to-have, not critical |
+| **Multiple Blockchains** | Cross-chain complexity unnecessary for POC       |
+| **Payment Integration**  | Commercial feature, not needed for thesis        |
+| **Advanced Reporting**   | Data export sufficient for thesis                |
 
 ---
 
@@ -765,21 +815,22 @@ Epic 1: Product Registration (Week 3-4)
 
 ### 4.1 Overall Schedule
 
-| Week | Dates | Phase | Focus |
-|------|-------|-------|-------|
-| **0** | Oct 24-30 | Pre-Kickoff | Documentation ready, kickoff prep |
-| **1** | Oct 31 - Nov 7 | Setup & Learning | Environment setup, Solidity basics |
-| **2** | Nov 8-14 | Planning | PRD, Architecture documents (CRITICAL) |
-| **3** | Nov 15-21 | Foundation | Smart contracts start, security setup |
-| **4** | Nov 22-28 | Smart Contracts | Contract completion, testing |
-| **5** | Nov 29 - Dec 5 | Frontend Start | Producer UI, IoT simulator |
-| **6** | Dec 6-12 | Frontend Cont. | Distributor/Retailer UIs |
-| **7** | Dec 13-19 | Frontend Finish | Consumer query, polish |
-| **8** | Dec 20-26 | Testing | Integration tests, bug fixes |
-| **9** | Dec 27 - Jan 2 | Polish | Documentation, demo video |
-| **10-12** | Jan 3-23, 2026 | Thesis Writing | 60+ pages, poster, presentation |
+| Week      | Dates          | Phase            | Focus                                  |
+| --------- | -------------- | ---------------- | -------------------------------------- |
+| **0**     | Oct 24-30      | Pre-Kickoff      | Documentation ready, kickoff prep      |
+| **1**     | Oct 31 - Nov 7 | Setup & Learning | Environment setup, Solidity basics     |
+| **2**     | Nov 8-14       | Planning         | PRD, Architecture documents (CRITICAL) |
+| **3**     | Nov 15-21      | Foundation       | Smart contracts start, security setup  |
+| **4**     | Nov 22-28      | Smart Contracts  | Contract completion, testing           |
+| **5**     | Nov 29 - Dec 5 | Frontend Start   | Producer UI, IoT simulator             |
+| **6**     | Dec 6-12       | Frontend Cont.   | Distributor/Retailer UIs               |
+| **7**     | Dec 13-19      | Frontend Finish  | Consumer query, polish                 |
+| **8**     | Dec 20-26      | Testing          | Integration tests, bug fixes           |
+| **9**     | Dec 27 - Jan 2 | Polish           | Documentation, demo video              |
+| **10-12** | Jan 3-23, 2026 | Thesis Writing   | 60+ pages, poster, presentation        |
 
 **Key Milestones:**
+
 - ✅ Week 2: PRD + Architecture approved by PO agent (>90%)
 - 🎯 Week 4: Smart contracts deployed to Sepolia (verified on Etherscan)
 - 🎯 Week 7: Frontend complete (all 4 role UIs working)
@@ -795,6 +846,7 @@ Epic 1: Product Registration (Week 3-4)
 **Team Focus:** Foundation skills, environment setup
 
 **Sam (Blockchain Lead - 15-20 hours):**
+
 - Complete Cyfrin Updraft "Simple Storage" (3 hours)
 - Complete Cyfrin Updraft "Fund Me" (4 hours)
 - Read OpenZeppelin AccessControl docs (2 hours)
@@ -803,6 +855,7 @@ Epic 1: Product Registration (Week 3-4)
 - Create 3 test wallets, get Sepolia ETH (1 hour)
 
 **TaiSheng (Backend/Integration - 15-20 hours):**
+
 - Learn Solidity basics (Cyfrin Updraft, 5 hours)
 - Learn Hardhat testing (3 hours)
 - Setup Supabase account + project (2 hours)
@@ -811,6 +864,7 @@ Epic 1: Product Registration (Week 3-4)
 - Plan API endpoints (2 hours)
 
 **YiLing (UI/UX Lead - 12-15 hours):**
+
 - Research Web3 UX best practices (2 hours)
 - Read "Intro to Ethereum" (ethereum.org) (2 hours)
 - Study Chakra UI v2 components (3 hours)
@@ -818,6 +872,7 @@ Epic 1: Product Registration (Week 3-4)
 - User flow mapping (4 roles) (3 hours)
 
 **Deliverables:**
+
 - ✅ All team members can run Hardhat locally
 - ✅ 3 MetaMask wallets funded with Sepolia ETH
 - ✅ GitHub organization created (FoodTrace-2025)
@@ -830,6 +885,7 @@ Epic 1: Product Registration (Week 3-4)
 **Team Focus:** PRD, Architecture, Design
 
 **All Team Members:**
+
 - **Monday**: Kickoff meeting with supervisor (2 hours)
 - **Tuesday-Thursday**: Create PRD + Architecture using BMAD (Web UI)
   - Sam: Input blockchain requirements (3 hours)
@@ -838,6 +894,7 @@ Epic 1: Product Registration (Week 3-4)
 - **Friday**: PO validation, team review (2 hours)
 
 **YiLing (HEAVY WEEK - 20-25 hours):**
+
 - **Design Phase (CRITICAL):**
   - Create wireframes for all 4 interfaces (Figma) (8 hours)
   - Design system creation (colors, typography, icons) (6 hours)
@@ -846,16 +903,19 @@ Epic 1: Product Registration (Week 3-4)
   - Iterate based on feedback (3 hours)
 
 **Sam:**
+
 - Design smart contract structure (4 hours)
 - Define contract functions and events (3 hours)
 - Collaborate on architecture diagram (2 hours)
 
 **TaiSheng:**
+
 - Finalize Prisma schema (3 hours)
 - Define API endpoints (REST) (2 hours)
 - Plan data flow (on-chain vs off-chain) (2 hours)
 
 **Deliverables:**
+
 - ✅ PRD approved by PO agent (>90% alignment)
 - ✅ Architecture document complete
 - ✅ UI/UX designs approved by team
@@ -871,6 +931,7 @@ Epic 1: Product Registration (Week 3-4)
 **Team Focus:** Smart contracts begin, security setup, component library
 
 **Sam (20-25 hours - HEAVY):**
+
 - **Epic 1: Product Registration (Smart Contract)**
   - Implement `ProductRegistry.sol` (6 hours)
   - Product struct, registration function, events (4 hours)
@@ -879,6 +940,7 @@ Epic 1: Product Registration (Week 3-4)
   - Deploy to local Hardhat network (1 hour)
 
 **TaiSheng (20-25 hours - HEAVY):**
+
 - **Epic 0.6: Security Hardening (Tier 1 - CRITICAL)**
   - Wallet encryption library (1 hour)
   - Environment variable security (0.5 hours)
@@ -892,6 +954,7 @@ Epic 1: Product Registration (Week 3-4)
   - Achieve >70% coverage (2 hours)
 
 **YiLing (15-20 hours):**
+
 - **Epic 0: Component Library (50% complete)**
   - Button, Input, Card components (4 hours)
   - Modal, Toast components (3 hours)
@@ -900,6 +963,7 @@ Epic 1: Product Registration (Week 3-4)
   - Storybook documentation (2 hours)
 
 **Deliverables:**
+
 - ✅ ProductRegistry.sol deployed to local Hardhat
 - ✅ Security Tier 1 complete (4.5 hours)
 - ✅ Company registration API working
@@ -912,6 +976,7 @@ Epic 1: Product Registration (Week 3-4)
 **Team Focus:** Complete all smart contracts, security hardening, testing
 
 **Sam (20-25 hours - HEAVY):**
+
 - **Epic 2: Supply Chain Tracking**
   - TraceRecord struct and functions (4 hours)
   - Role-based trace record addition (3 hours)
@@ -927,6 +992,7 @@ Epic 1: Product Registration (Week 3-4)
 - **Verify on Etherscan** (1 hour)
 
 **TaiSheng (20-25 hours):**
+
 - **Epic 0.6: Security Tier 2**
   - Database RLS + audit logs (2 hours)
   - Integration tests (2 hours)
@@ -941,6 +1007,7 @@ Epic 1: Product Registration (Week 3-4)
   - Coverage report >70% (1 hour)
 
 **YiLing (15-20 hours):**
+
 - **Component Library (100% complete)**
   - Complete remaining components (7 hours)
   - Responsive layout system (3 hours)
@@ -948,11 +1015,13 @@ Epic 1: Product Registration (Week 3-4)
   - Component documentation (2 hours)
 
 **Sam + TaiSheng (4 hours):**
+
 - **Epic 0.6: Team Component Contributions**
   - Sam: Button variants, Input fields (2 hours)
   - TaiSheng: Form validation wrappers (2 hours)
 
 **Deliverables:**
+
 - ✅ **CRITICAL:** All smart contracts deployed to Sepolia (verified on Etherscan)
 - ✅ Security Tier 2 complete (13.5 hours total Epic 0.6)
 - ✅ Component library 100% ready
@@ -967,6 +1036,7 @@ Epic 1: Product Registration (Week 3-4)
 **Team Focus:** Producer UI, IoT simulator, wallet integration
 
 **Sam (15-20 hours - SUPPORT ROLE):**
+
 - **Support TaiSheng with Web3 integration** (4 hours)
 - **Code review for backend PRs** (2 hours)
 - **Bug fixes in smart contracts** (2 hours)
@@ -974,6 +1044,7 @@ Epic 1: Product Registration (Week 3-4)
 - **Pair programming with YiLing** (Tuesday/Thursday 2+2 hours)
 
 **TaiSheng (20-25 hours - HEAVY):**
+
 - **Epic 1: Web3 Integration**
   - RainbowKit wallet connection (optional for admins) (2 hours)
   - Wagmi hooks setup (3 hours)
@@ -986,6 +1057,7 @@ Epic 1: Product Registration (Week 3-4)
 - **Pair programming with YiLing** (Tuesday/Thursday 2+2 hours)
 
 **YiLing (25-30 hours - VERY HEAVY):**
+
 - **Epic 1: Producer Dashboard**
   - Product registration form (6 hours)
   - Form validation (client-side) (2 hours)
@@ -1000,6 +1072,7 @@ Epic 1: Product Registration (Week 3-4)
 - **Pair programming sessions** (Tuesday/Thursday 2+2 hours)
 
 **Deliverables:**
+
 - ✅ Producer can register products via email login
 - ✅ QR codes auto-generated
 - ✅ IoT simulator working (3 scenarios)
@@ -1014,6 +1087,7 @@ Epic 1: Product Registration (Week 3-4)
 **Team Focus:** Distributor and Retailer interfaces
 
 **Sam (15-20 hours - SUPPORT):**
+
 - **Support integrations** (4 hours)
 - **Code review** (2 hours)
 - **Contract bug fixes** (2 hours)
@@ -1021,6 +1095,7 @@ Epic 1: Product Registration (Week 3-4)
 - **Documentation** (2 hours)
 
 **TaiSheng (20-25 hours):**
+
 - **Epic 1.5: Transfer Workflow Backend**
   - Complete transfer API (2 hours)
   - Email notification templates (2 hours)
@@ -1033,6 +1108,7 @@ Epic 1: Product Registration (Week 3-4)
 - **Pair programming with YiLing** (Tuesday/Thursday 2+2 hours)
 
 **YiLing (25-30 hours - VERY HEAVY):**
+
 - **Epic 2: Distributor Interface**
   - Pending shipments dashboard (4 hours)
   - Receive product action (3 hours)
@@ -1045,6 +1121,7 @@ Epic 1: Product Registration (Week 3-4)
 - **Pair programming sessions** (Tuesday/Thursday 2+2 hours)
 
 **Deliverables:**
+
 - ✅ Distributor can receive products, add trace records
 - ✅ Retailer can stock products, update status
 - ✅ Product transfer workflow automated (email notifications)
@@ -1059,6 +1136,7 @@ Epic 1: Product Registration (Week 3-4)
 **Team Focus:** Consumer interface, polish, data visualization
 
 **Sam (15 hours):**
+
 - **Documentation** (4 hours)
 - **Code review** (3 hours)
 - **Bug fixes** (3 hours)
@@ -1066,6 +1144,7 @@ Epic 1: Product Registration (Week 3-4)
 - **Prepare demo data** (3 hours)
 
 **TaiSheng (15-20 hours):**
+
 - **Epic 4: Consumer Query API**
   - Wallet-free product query (2 hours)
   - Trace history endpoint (2 hours)
@@ -1077,6 +1156,7 @@ Epic 1: Product Registration (Week 3-4)
 - **Pair programming with YiLing** (Tuesday 2 hours)
 
 **YiLing (25-30 hours - VERY HEAVY):**
+
 - **Epic 4: Consumer Query Page (CRITICAL)**
   - QR code scanner (html5-qrcode) (4 hours)
   - Product search by ID (2 hours)
@@ -1091,6 +1171,7 @@ Epic 1: Product Registration (Week 3-4)
 - **Accessibility improvements** (2 hours)
 
 **Deliverables:**
+
 - ✅ **CRITICAL:** Consumer can scan QR → see product journey (NO LOGIN)
 - ✅ Mobile-responsive on all pages
 - ✅ Data visualization working
@@ -1107,28 +1188,34 @@ Epic 1: Product Registration (Week 3-4)
 **All Team Members (18-24 hours each):**
 
 **Testing Scenarios:**
+
 1. **Complete Product Journey (3 wallets)**
+
    - Sam: Producer creates product (1 hour)
    - TaiSheng: Distributor adds trace record (1 hour)
    - YiLing: Retailer stocks product (1 hour)
    - All: Consumer queries (wallet-free) (1 hour)
 
 2. **IoT Simulator Testing**
+
    - Generate Normal scenario (15 minutes)
    - Generate Warning scenario (15 minutes)
    - Generate Critical scenario (15 minutes)
    - Verify alerts trigger (30 minutes)
 
 3. **Cross-Tenant Isolation**
+
    - Create 2 companies (15 minutes)
    - Verify Company A cannot access Company B data (1 hour)
 
 4. **Security Testing**
+
    - Verify wallet encryption working (30 minutes)
    - Check audit logs populated (30 minutes)
    - Test tenant middleware (1 hour)
 
 5. **Cross-Browser Testing**
+
    - Chrome, Firefox, Safari (2 hours)
    - Mobile (Android + iOS) (2 hours)
 
@@ -1137,14 +1224,17 @@ Epic 1: Product Registration (Week 3-4)
    - Blockchain transaction speed (1 hour)
 
 **Bug Fixing:**
+
 - Critical bugs: 6-8 hours
 - Minor bugs: 4-6 hours
 
 **Optional (if time permits):**
+
 - Epic 8: Multi-Language (4-6 hours)
 - Epic 5: Multi-Party Verification completion (if not done Week 4)
 
 **Deliverables:**
+
 - ✅ Test report document
 - ✅ Bug fix log
 - ✅ Performance benchmarks
@@ -1161,6 +1251,7 @@ Epic 1: Product Registration (Week 3-4)
 **All Team Members (12-15 hours each):**
 
 **Sam:**
+
 - Record demo video (product registration) (2 hours)
 - Write smart contract technical docs (3 hours)
 - Prepare blockchain chapter outline (thesis) (3 hours)
@@ -1168,6 +1259,7 @@ Epic 1: Product Registration (Week 3-4)
 - Deployment support (2 hours)
 
 **TaiSheng:**
+
 - Deploy to Render.com (3 hours)
 - API documentation (2 hours)
 - Database backup/restore procedure (1 hour)
@@ -1175,6 +1267,7 @@ Epic 1: Product Registration (Week 3-4)
 - Demo video (backend flow) (2 hours)
 
 **YiLing:**
+
 - Record demo video (consumer query) (2 hours)
 - User manual with screenshots (4 hours)
 - Prepare presentation slides (3 hours)
@@ -1182,6 +1275,7 @@ Epic 1: Product Registration (Week 3-4)
 - Backup demo screenshots (1 hour)
 
 **Deliverables:**
+
 - ✅ Demo video (3-5 minutes, all roles)
 - ✅ Presentation deck (for thesis defense)
 - ✅ User guide with screenshots
@@ -1196,18 +1290,21 @@ Epic 1: Product Registration (Week 3-4)
 **Team Focus:** Academic documentation (60+ pages)
 
 **Week 10 (Jan 3-9):**
+
 - **Sam**: Chapter 1 (Introduction), Chapter 2.1-2.2 (Supply chain + Blockchain)
 - **TaiSheng**: Chapter 2.3 (Blockchain food systems), Chapter 3 (Methodology)
 - **YiLing**: Chapter 2.4-2.5 (IoT + Web3), Chapter 4.3 (Frontend implementation)
 - **Team Meeting (Friday)**: Review progress, adjust plan
 
 **Week 11 (Jan 10-16):**
+
 - **Sam**: Chapter 4.1 (Smart contract implementation), Chapter 6 (Discussion)
 - **TaiSheng**: Chapter 4.2 (Backend), Chapter 5 (Results & Testing)
 - **YiLing**: Chapter 5.3 (User acceptance testing), Format all figures/tables
 - **Team (Friday)**: Draft abstract together
 
 **Week 12 (Jan 17-23):**
+
 - **Monday**: Chapter 7 (Conclusion) - collaborative
 - **Tuesday**: Compile references, check citations
 - **Wednesday**: Format appendices
@@ -1221,14 +1318,14 @@ Epic 1: Product Registration (Week 3-4)
 
 ### 4.3 Critical Milestones
 
-| Milestone | Date | Gate Criteria | Risk if Missed |
-|-----------|------|---------------|----------------|
-| **PRD + Architecture** | Nov 14 (Week 2) | PO validation >90% | Chaos in Week 3+ |
-| **Smart Contracts Deployed** | Nov 28 (Week 4) | Verified on Etherscan, >70% coverage | Cannot build frontend |
-| **Producer UI Working** | Dec 5 (Week 5) | Can register products | Behind schedule |
-| **Frontend Complete** | Dec 19 (Week 7) | All 4 UIs functional | Cannot test E2E |
-| **System Deployed** | Jan 2 (Week 9) | Render.com live, demo ready | No thesis demo |
-| **Thesis Submitted** | Jan 23 (Week 12) | 60+ pages, OAMK format | Failed graduation |
+| Milestone                    | Date             | Gate Criteria                        | Risk if Missed        |
+| ---------------------------- | ---------------- | ------------------------------------ | --------------------- |
+| **PRD + Architecture**       | Nov 14 (Week 2)  | PO validation >90%                   | Chaos in Week 3+      |
+| **Smart Contracts Deployed** | Nov 28 (Week 4)  | Verified on Etherscan, >70% coverage | Cannot build frontend |
+| **Producer UI Working**      | Dec 5 (Week 5)   | Can register products                | Behind schedule       |
+| **Frontend Complete**        | Dec 19 (Week 7)  | All 4 UIs functional                 | Cannot test E2E       |
+| **System Deployed**          | Jan 2 (Week 9)   | Render.com live, demo ready          | No thesis demo        |
+| **Thesis Submitted**         | Jan 23 (Week 12) | 60+ pages, OAMK format               | Failed graduation     |
 
 ---
 
@@ -1238,38 +1335,38 @@ Epic 1: Product Registration (Week 3-4)
 
 #### Smart Contract Performance
 
-| Metric | Target | Measurement Method | Rationale |
-|--------|--------|-------------------|-----------|
-| **Gas Cost (Registration)** | <100k gas | Hardhat gas reporter | Reasonable mainnet cost |
-| **Gas Cost (Trace Record)** | <80k gas | Hardhat gas reporter | Frequent operation, must be cheap |
-| **Gas Cost (Sensor Data)** | <60k gas | Hardhat gas reporter | High volume, optimize heavily |
-| **Test Coverage** | >70% | `npx hardhat coverage` | Industry standard for production |
-| **Security Score** | Zero critical issues | Slither static analysis | Production-grade security |
-| **Contract Size** | <24 KB | Hardhat compilation | Ethereum contract size limit |
+| Metric                      | Target               | Measurement Method      | Rationale                         |
+| --------------------------- | -------------------- | ----------------------- | --------------------------------- |
+| **Gas Cost (Registration)** | <100k gas            | Hardhat gas reporter    | Reasonable mainnet cost           |
+| **Gas Cost (Trace Record)** | <80k gas             | Hardhat gas reporter    | Frequent operation, must be cheap |
+| **Gas Cost (Sensor Data)**  | <60k gas             | Hardhat gas reporter    | High volume, optimize heavily     |
+| **Test Coverage**           | >70%                 | `npx hardhat coverage`  | Industry standard for production  |
+| **Security Score**          | Zero critical issues | Slither static analysis | Production-grade security         |
+| **Contract Size**           | <24 KB               | Hardhat compilation     | Ethereum contract size limit      |
 
 ---
 
 #### Application Performance
 
-| Metric | Target | Measurement Method | Rationale |
-|--------|--------|-------------------|-----------|
-| **Page Load Time** | <3 seconds | Chrome DevTools | User retention standard |
-| **API Response Time** | <500ms (p95) | Server logs | Acceptable UX |
-| **Blockchain Query Time** | <2 seconds | Frontend timer | Consumer patience limit |
-| **First Load JS** | <250 KB | Next.js build analyzer | Mobile performance |
-| **QR Scan Success Rate** | >95% | User testing | Critical for consumer adoption |
-| **Mobile Responsiveness** | 100% pages | Manual testing | 60%+ mobile usage |
+| Metric                    | Target       | Measurement Method     | Rationale                      |
+| ------------------------- | ------------ | ---------------------- | ------------------------------ |
+| **Page Load Time**        | <3 seconds   | Chrome DevTools        | User retention standard        |
+| **API Response Time**     | <500ms (p95) | Server logs            | Acceptable UX                  |
+| **Blockchain Query Time** | <2 seconds   | Frontend timer         | Consumer patience limit        |
+| **First Load JS**         | <250 KB      | Next.js build analyzer | Mobile performance             |
+| **QR Scan Success Rate**  | >95%         | User testing           | Critical for consumer adoption |
+| **Mobile Responsiveness** | 100% pages   | Manual testing         | 60%+ mobile usage              |
 
 ---
 
 #### Security Metrics
 
-| Metric | Target | Measurement Method | Rationale |
-|--------|--------|-------------------|-----------|
-| **Cross-Tenant Leaks** | Zero | Integration tests | Multi-tenant requirement |
-| **Private Keys in Git** | Zero | `git log -S` grep | Critical security |
-| **Audit Log Coverage** | 100% wallet ops | Database query | Accountability |
-| **SQL Injection Attempts** | Zero successful | Input validation tests | Standard web security |
+| Metric                     | Target          | Measurement Method     | Rationale                |
+| -------------------------- | --------------- | ---------------------- | ------------------------ |
+| **Cross-Tenant Leaks**     | Zero            | Integration tests      | Multi-tenant requirement |
+| **Private Keys in Git**    | Zero            | `git log -S` grep      | Critical security        |
+| **Audit Log Coverage**     | 100% wallet ops | Database query         | Accountability           |
+| **SQL Injection Attempts** | Zero successful | Input validation tests | Standard web security    |
 
 ---
 
@@ -1277,14 +1374,14 @@ Epic 1: Product Registration (Week 3-4)
 
 #### Core Features
 
-| Feature | Success Criteria | Measurement |
-|---------|-----------------|-------------|
-| **Product Registration** | Producer can register product in <2 minutes | User testing |
-| **QR Code Generation** | Auto-generated, downloadable PNG | Manual verification |
-| **Supply Chain Tracking** | Complete journey (Producer → Consumer) visible | E2E test |
-| **Consumer Query** | Wallet-free access, <10 seconds to see history | User testing |
-| **IoT Simulator** | 3 scenarios generate data correctly | Manual testing |
-| **Email Notifications** | 100% delivery rate (SendGrid) | Email logs |
+| Feature                   | Success Criteria                               | Measurement         |
+| ------------------------- | ---------------------------------------------- | ------------------- |
+| **Product Registration**  | Producer can register product in <2 minutes    | User testing        |
+| **QR Code Generation**    | Auto-generated, downloadable PNG               | Manual verification |
+| **Supply Chain Tracking** | Complete journey (Producer → Consumer) visible | E2E test            |
+| **Consumer Query**        | Wallet-free access, <10 seconds to see history | User testing        |
+| **IoT Simulator**         | 3 scenarios generate data correctly            | Manual testing      |
+| **Email Notifications**   | 100% delivery rate (SendGrid)                  | Email logs          |
 
 ---
 
@@ -1292,28 +1389,28 @@ Epic 1: Product Registration (Week 3-4)
 
 #### Producer Experience
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| **Registration Time** | <5 minutes first time | User testing |
-| **Repeat Registration** | <2 minutes | User testing |
-| **Error Rate** | <5% failed transactions | Analytics |
-| **Perceived Ease of Use** | >4/5 rating | Post-demo survey |
+| Metric                    | Target                  | Measurement      |
+| ------------------------- | ----------------------- | ---------------- |
+| **Registration Time**     | <5 minutes first time   | User testing     |
+| **Repeat Registration**   | <2 minutes              | User testing     |
+| **Error Rate**            | <5% failed transactions | Analytics        |
+| **Perceived Ease of Use** | >4/5 rating             | Post-demo survey |
 
 #### Distributor/Retailer Experience
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| **QR Scan Success** | >95% first try | User testing |
-| **Trace Record Time** | <3 minutes | User testing |
-| **Mobile Usability** | >4/5 rating | Post-demo survey |
+| Metric                | Target         | Measurement      |
+| --------------------- | -------------- | ---------------- |
+| **QR Scan Success**   | >95% first try | User testing     |
+| **Trace Record Time** | <3 minutes     | User testing     |
+| **Mobile Usability**  | >4/5 rating    | Post-demo survey |
 
 #### Consumer Experience (CRITICAL)
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| **Zero-Friction Access** | No login required | Manual verification |
-| **Information Clarity** | Understand product journey | User survey |
-| **Trust Indicator** | Feel more confident buying | Qualitative feedback |
+| Metric                   | Target                     | Measurement          |
+| ------------------------ | -------------------------- | -------------------- |
+| **Zero-Friction Access** | No login required          | Manual verification  |
+| **Information Clarity**  | Understand product journey | User survey          |
+| **Trust Indicator**      | Feel more confident buying | Qualitative feedback |
 
 ---
 
@@ -1321,24 +1418,24 @@ Epic 1: Product Registration (Week 3-4)
 
 #### Thesis Quality
 
-| Metric | Target | Evaluation |
-|--------|--------|------------|
-| **Page Count** | 60-80 pages | Word count |
-| **References** | 20-30 sources | Bibliography |
-| **Test Coverage Documented** | >70% with screenshots | Thesis Chapter 5 |
-| **Limitations Discussed** | Honest assessment | Thesis Chapter 6 |
-| **Future Work** | Concrete recommendations | Thesis Chapter 7 |
-| **OAMK Format Compliance** | 100% | Template adherence |
+| Metric                       | Target                   | Evaluation         |
+| ---------------------------- | ------------------------ | ------------------ |
+| **Page Count**               | 60-80 pages              | Word count         |
+| **References**               | 20-30 sources            | Bibliography       |
+| **Test Coverage Documented** | >70% with screenshots    | Thesis Chapter 5   |
+| **Limitations Discussed**    | Honest assessment        | Thesis Chapter 6   |
+| **Future Work**              | Concrete recommendations | Thesis Chapter 7   |
+| **OAMK Format Compliance**   | 100%                     | Template adherence |
 
 #### Defense Preparation
 
-| Item | Target | Status |
-|------|--------|--------|
-| **Demo Video** | 3-5 minutes, all features | Week 9 |
-| **Presentation Slides** | 15-20 slides | Week 9 |
-| **Backup Screenshots** | 20+ screenshots | Week 9 |
-| **Code Repository** | Clean, documented | Week 9 |
-| **Poster** | A1 size, OAMK style | Week 12 |
+| Item                    | Target                    | Status  |
+| ----------------------- | ------------------------- | ------- |
+| **Demo Video**          | 3-5 minutes, all features | Week 9  |
+| **Presentation Slides** | 15-20 slides              | Week 9  |
+| **Backup Screenshots**  | 20+ screenshots           | Week 9  |
+| **Code Repository**     | Clean, documented         | Week 9  |
+| **Poster**              | A1 size, OAMK style       | Week 12 |
 
 ---
 
@@ -1346,21 +1443,21 @@ Epic 1: Product Registration (Week 3-4)
 
 #### Development Efficiency
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| **Code Review Time** | <24 hours | GitHub PR timestamps |
-| **Bug Fix Time** | <48 hours for critical | Issue tracker |
-| **Sprint Completion** | >80% story points | Weekly review |
-| **Test Automation** | >70% coverage | CI/CD |
+| Metric                | Target                 | Measurement          |
+| --------------------- | ---------------------- | -------------------- |
+| **Code Review Time**  | <24 hours              | GitHub PR timestamps |
+| **Bug Fix Time**      | <48 hours for critical | Issue tracker        |
+| **Sprint Completion** | >80% story points      | Weekly review        |
+| **Test Automation**   | >70% coverage          | CI/CD                |
 
 #### Collaboration
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| **Weekly Meetings** | 100% attendance | Meeting notes |
-| **Pair Programming** | 4+ sessions (Week 5-7) | Calendar |
-| **Code Review Participation** | All PRs reviewed by 2+ people | GitHub |
-| **Knowledge Sharing** | Documented in session notes | Git commits |
+| Metric                        | Target                        | Measurement   |
+| ----------------------------- | ----------------------------- | ------------- |
+| **Weekly Meetings**           | 100% attendance               | Meeting notes |
+| **Pair Programming**          | 4+ sessions (Week 5-7)        | Calendar      |
+| **Code Review Participation** | All PRs reviewed by 2+ people | GitHub        |
+| **Knowledge Sharing**         | Documented in session notes   | Git commits   |
 
 ---
 
@@ -1368,13 +1465,13 @@ Epic 1: Product Registration (Week 3-4)
 
 **Optional tracking if project continues:**
 
-| Metric | Potential Value | Notes |
-|--------|----------------|-------|
-| **GitHub Stars** | Track interest | Community validation |
-| **Fork Count** | Reusability | Other students/researchers |
-| **Blog Posts** | Thought leadership | Career benefit |
-| **Job Offers** | Portfolio value | Career outcome |
-| **Startup Potential** | Feasibility | Post-thesis decision |
+| Metric                | Potential Value    | Notes                      |
+| --------------------- | ------------------ | -------------------------- |
+| **GitHub Stars**      | Track interest     | Community validation       |
+| **Fork Count**        | Reusability        | Other students/researchers |
+| **Blog Posts**        | Thought leadership | Career benefit             |
+| **Job Offers**        | Portfolio value    | Career outcome             |
+| **Startup Potential** | Feasibility        | Post-thesis decision       |
 
 ---
 
@@ -1384,21 +1481,21 @@ This section provides high-level descriptions of all 12 epics. Detailed stories 
 
 **Epic Summary:**
 
-| Epic | Name | Priority | Hours | Owner | Week |
-|------|------|----------|-------|-------|------|
-| 0 | Project Setup | 🔴 Must Have | 4-6h | All | 1-2 |
-| 0.5 | Company & User Management | 🔴 Must Have | 6-8h | TaiSheng | 3 |
-| 0.6 | Security Hardening | 🔴 Must Have | 16.5h | TaiSheng + Sam | 3-4 |
-| 1 | Product Registration | 🔴 Must Have | 8-10h | Sam + TaiSheng + YiLing | 3-5 |
-| 1.5 | Product Transfer Workflow | 🟡 Should Have | 4-6h | TaiSheng + YiLing | 4-6 |
-| 2 | Supply Chain Tracking | 🔴 Must Have | 10-12h | Sam + TaiSheng + YiLing | 4-6 |
-| 3 | IoT Simulator | 🟡 Should Have | 6-8h | Sam + YiLing | 4-5 |
-| 4 | Consumer Query | 🔴 Must Have | 8-10h | TaiSheng + YiLing | 6-7 |
-| 5 | Multi-Party Verification | 🟡 Should Have | 6-8h | Sam | 4 or 7 |
-| 6 | QR Functionality | 🔴 Must Have | 4-6h | TaiSheng + YiLing | 5-6 |
-| 7 | Data Visualization | 🟡 Should Have | 6-8h | TaiSheng + YiLing | 7 |
-| 8 | Multi-Language | 🟢 Could Have | 4-6h | YiLing | 8 |
-| 9 | Deployment | 🔴 Must Have | 4-6h | TaiSheng | 8-9 |
+| Epic | Name                      | Priority       | Hours  | Owner                   | Week   |
+| ---- | ------------------------- | -------------- | ------ | ----------------------- | ------ |
+| 0    | Project Setup             | 🔴 Must Have   | 4-6h   | All                     | 1-2    |
+| 0.5  | Company & User Management | 🔴 Must Have   | 6-8h   | TaiSheng                | 3      |
+| 0.6  | Security Hardening        | 🔴 Must Have   | 16.5h  | TaiSheng + Sam          | 3-4    |
+| 1    | Product Registration      | 🔴 Must Have   | 8-10h  | Sam + TaiSheng + YiLing | 3-5    |
+| 1.5  | Product Transfer Workflow | 🟡 Should Have | 4-6h   | TaiSheng + YiLing       | 4-6    |
+| 2    | Supply Chain Tracking     | 🔴 Must Have   | 10-12h | Sam + TaiSheng + YiLing | 4-6    |
+| 3    | IoT Simulator             | 🟡 Should Have | 6-8h   | Sam + YiLing            | 4-5    |
+| 4    | Consumer Query            | 🔴 Must Have   | 8-10h  | TaiSheng + YiLing       | 6-7    |
+| 5    | Multi-Party Verification  | 🟡 Should Have | 6-8h   | Sam                     | 4 or 7 |
+| 6    | QR Functionality          | 🔴 Must Have   | 4-6h   | TaiSheng + YiLing       | 5-6    |
+| 7    | Data Visualization        | 🟡 Should Have | 6-8h   | TaiSheng + YiLing       | 7      |
+| 8    | Multi-Language            | 🟢 Could Have  | 4-6h   | YiLing                  | 8      |
+| 9    | Deployment                | 🔴 Must Have   | 4-6h   | TaiSheng                | 8-9    |
 
 **Total:** 101.5-115.5 hours (19-27% of team capacity)
 
@@ -1447,6 +1544,7 @@ Establish development environment, tooling, and foundational infrastructure for 
 #### Technical Approach
 
 **Repository Structure:**
+
 ```
 thesis/
 ├── .bmad-core/          # BMAD methodology configuration
@@ -1466,6 +1564,7 @@ thesis/
 ```
 
 **Key Configuration Files:**
+
 - `hardhat.config.ts` - Sepolia network, Etherscan verification
 - `tsconfig.json` - TypeScript strict mode
 - `.eslintrc.js` - Linting rules (no raw SQL, no MetaMask prompts in business UIs)
@@ -1479,35 +1578,39 @@ thesis/
 #### Team Assignment
 
 **Sam (2 hours):**
+
 - Setup Hardhat project
 - Configure OpenZeppelin contracts
 - Deploy "Hello World" to Sepolia
 - Document wallet creation process
 
 **TaiSheng (2 hours):**
+
 - Setup Next.js project structure
 - Configure Prisma + Supabase
 - Create initial database schema
 - Setup API route scaffolding
 
 **YiLing (1 hour):**
+
 - Setup Chakra UI
 - Create basic page templates
 - Configure responsive layout system
 
 **All Together (1 hour):**
+
 - Review setup checklist
 - Ensure everyone can run project locally
 - Document common issues
 
 #### Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Team members use different Node versions | Use `.nvmrc` file (Node 18+) |
-| Supabase connection fails | Use connection pooling, test with `prisma studio` |
-| Hardhat compilation errors | Pin Solidity version, use OpenZeppelin 5.0+ |
-| Git merge conflicts | Establish branching strategy early |
+| Risk                                     | Mitigation                                        |
+| ---------------------------------------- | ------------------------------------------------- |
+| Team members use different Node versions | Use `.nvmrc` file (Node 18+)                      |
+| Supabase connection fails                | Use connection pooling, test with `prisma studio` |
+| Hardhat compilation errors               | Pin Solidity version, use OpenZeppelin 5.0+       |
+| Git merge conflicts                      | Establish branching strategy early                |
 
 ---
 
@@ -1552,6 +1655,7 @@ Implement multi-tenant company registration and user management system. Platform
 #### Technical Approach
 
 **Database Schema (Prisma):**
+
 ```prisma
 model Company {
   id                  String   @id @default(cuid())
@@ -1580,6 +1684,7 @@ model User {
 ```
 
 **API Endpoints:**
+
 - `POST /api/companies/apply` - Company registration
 - `GET /api/admin/companies/pending` - List pending applications
 - `POST /api/admin/companies/:id/approve` - Approve company (generates wallet)
@@ -1587,6 +1692,7 @@ model User {
 - `POST /api/auth/login` - Email/password authentication
 
 **Wallet Generation Flow:**
+
 ```typescript
 async function approveCompany(companyId) {
   const wallet = ethers.Wallet.createRandom();
@@ -1595,10 +1701,10 @@ async function approveCompany(companyId) {
   await db.company.update({
     where: { id: companyId },
     data: {
-      status: 'APPROVED',
+      status: "APPROVED",
       encryptedPrivateKey: encryptedKey,
-      walletAddress: wallet.address
-    }
+      walletAddress: wallet.address,
+    },
   });
 }
 ```
@@ -1611,6 +1717,7 @@ async function approveCompany(companyId) {
 #### Team Assignment
 
 **TaiSheng (6-8 hours):**
+
 - Company registration form + API (2 hours)
 - Admin approval workflow (2 hours)
 - Wallet generation on approval (2 hours)
@@ -1619,11 +1726,11 @@ async function approveCompany(companyId) {
 
 #### Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Fake company registrations | Manual admin approval required |
-| User creates account with non-company email | Email domain validation enforced |
-| Wallet generation fails | Retry logic, fallback to manual generation |
+| Risk                                        | Mitigation                                 |
+| ------------------------------------------- | ------------------------------------------ |
+| Fake company registrations                  | Manual admin approval required             |
+| User creates account with non-company email | Email domain validation enforced           |
+| Wallet generation fails                     | Retry logic, fallback to manual generation |
 
 ---
 
@@ -1644,6 +1751,7 @@ Implement production-grade security controls to protect custodial wallets, preve
 #### Three-Tier Approach
 
 **Tier 1: MUST HAVE (4.5 hours - CRITICAL):**
+
 - Proven encryption library (AES-256-CBC) for wallet private keys
 - Environment variable security (.env.local in .gitignore)
 - Prisma tenant middleware (automatic companyId filtering)
@@ -1651,12 +1759,14 @@ Implement production-grade security controls to protect custodial wallets, preve
 - Pair programming schedule (process change)
 
 **Tier 2: SHOULD HAVE (9 hours - High Value):**
+
 - Database RLS + audit logging
 - Cross-tenant integration tests
 - Input validation + SQL injection prevention
 - Team component contributions (Sam/TaiSheng help YiLing)
 
 **Tier 3: NICE TO HAVE (3 hours - Optional):**
+
 - Key rotation strategy documentation
 - Supabase Row Level Security policies
 - Code review security checklist
@@ -1712,6 +1822,7 @@ Enable producers to register harvested products on the blockchain with metadata 
 #### Acceptance Criteria (Epic Level)
 
 **Smart Contract:**
+
 - ✅ `ProductRegistry.sol` contract deployed to Sepolia
 - ✅ `registerProduct()` function accepts (name, origin, harvestDate, certification)
 - ✅ ProductRegistered event emitted with productId, producer address, timestamp
@@ -1721,6 +1832,7 @@ Enable producers to register harvested products on the blockchain with metadata 
 - ✅ Gas cost <100k gas per registration
 
 **Backend API:**
+
 - ✅ `POST /api/products/register` endpoint
 - ✅ Server-side wallet decryption and transaction signing
 - ✅ Product metadata saved to Supabase (off-chain)
@@ -1729,6 +1841,7 @@ Enable producers to register harvested products on the blockchain with metadata 
 - ✅ Transaction hash returned to frontend
 
 **Frontend:**
+
 - ✅ Product registration form (simple, mobile-responsive)
 - ✅ Form validation (harvest date cannot be future, name required)
 - ✅ Image upload component with preview
@@ -1739,6 +1852,7 @@ Enable producers to register harvested products on the blockchain with metadata 
 #### Technical Approach
 
 **Smart Contract (`contracts/ProductRegistry.sol`):**
+
 ```solidity
 contract ProductRegistry is AccessControl {
   struct Product {
@@ -1787,16 +1901,20 @@ contract ProductRegistry is AccessControl {
 ```
 
 **Backend API (`src/app/api/products/register/route.ts`):**
+
 ```typescript
 export async function POST(req: Request) {
   const session = await getServerSession();
   const user = await db.user.findUnique({
     where: { email: session.user.email },
-    include: { company: true }
+    include: { company: true },
   });
 
   // Decrypt company wallet (custodial)
-  const privateKey = decrypt(user.company.encryptedPrivateKey, process.env.ENCRYPTION_KEY);
+  const privateKey = decrypt(
+    user.company.encryptedPrivateKey,
+    process.env.ENCRYPTION_KEY
+  );
   const wallet = new ethers.Wallet(privateKey, provider);
 
   // Sign transaction server-side
@@ -1818,8 +1936,8 @@ export async function POST(req: Request) {
       imageUrl: uploadedImageUrl,
       companyId: user.companyId,
       createdByUserId: user.id,
-      transactionHash: receipt.transactionHash
-    }
+      transactionHash: receipt.transactionHash,
+    },
   });
 
   return Response.json({ success: true, productId });
@@ -1827,11 +1945,18 @@ export async function POST(req: Request) {
 ```
 
 **Frontend Form (`src/app/producer/register/page.tsx`):**
+
 ```typescript
 <form onSubmit={handleRegisterProduct}>
   <Input name="name" label="Product Name" required />
   <Input name="origin" label="Origin Location" required />
-  <Input type="date" name="harvestDate" label="Harvest Date" max={today} required />
+  <Input
+    type="date"
+    name="harvestDate"
+    label="Harvest Date"
+    max={today}
+    required
+  />
   <Textarea name="certification" label="Organic Certification" />
   <ImageUpload name="photo" label="Product Photo" />
   <Button type="submit" loading={isPending}>
@@ -1848,25 +1973,28 @@ export async function POST(req: Request) {
 #### Team Assignment
 
 **Sam (4 hours):**
+
 - ProductRegistry.sol contract (3 hours)
 - Unit tests with Hardhat (1 hour)
 
 **TaiSheng (3 hours):**
+
 - Product registration API (2 hours)
 - Wallet decryption + transaction signing (1 hour)
 
 **YiLing (2-3 hours):**
+
 - Producer dashboard page (1 hour)
 - Product registration form (1-2 hours)
 
 #### Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Wallet decryption fails | Error handling, retry logic, log to audit trail |
+| Risk                            | Mitigation                                           |
+| ------------------------------- | ---------------------------------------------------- |
+| Wallet decryption fails         | Error handling, retry logic, log to audit trail      |
 | Blockchain transaction rejected | Gas estimation, nonce management, show error to user |
-| Image upload fails | Optional field, show warning, allow retry |
-| Form validation bypassed | Server-side validation in API route |
+| Image upload fails              | Optional field, show warning, allow retry            |
+| Form validation bypassed        | Server-side validation in API route                  |
 
 ---
 
@@ -1901,6 +2029,7 @@ Automate product handoff workflow between supply chain participants. Producer tr
 #### Acceptance Criteria (Epic Level)
 
 **Backend:**
+
 - ✅ `POST /api/products/:id/transfer` endpoint
 - ✅ Transfer specifies target company + user
 - ✅ Email notification sent to recipient (SendGrid or Supabase Email)
@@ -1909,6 +2038,7 @@ Automate product handoff workflow between supply chain participants. Producer tr
 - ✅ Audit log records transfer (from/to/when)
 
 **Frontend:**
+
 - ✅ Producer dashboard shows "Transfer Product" button
 - ✅ Transfer modal: Select distributor company, select user
 - ✅ Loading state during transfer
@@ -1919,6 +2049,7 @@ Automate product handoff workflow between supply chain participants. Producer tr
 #### Technical Approach
 
 **Transfer API:**
+
 ```typescript
 // POST /api/products/:id/transfer
 export async function POST(req, { params }) {
@@ -1928,27 +2059,27 @@ export async function POST(req, { params }) {
   await db.product.update({
     where: { id: params.id },
     data: {
-      status: 'IN_TRANSIT',
-      currentHolderId: toCompanyId
-    }
+      status: "IN_TRANSIT",
+      currentHolderId: toCompanyId,
+    },
   });
 
   // 2. Create notification
   await db.notification.create({
     data: {
       userId: toUserId,
-      type: 'INCOMING_SHIPMENT',
+      type: "INCOMING_SHIPMENT",
       productId: params.id,
       message: `New shipment from ${session.user.company.name}`,
-      read: false
-    }
+      read: false,
+    },
   });
 
   // 3. Send email
   await sendEmail({
     to: toUser.email,
     subject: `New shipment: ${product.name}`,
-    body: `Login to FoodTrace to receive it. Product ID: ${params.id}`
+    body: `Login to FoodTrace to receive it. Product ID: ${params.id}`,
   });
 
   return Response.json({ success: true });
@@ -1956,9 +2087,10 @@ export async function POST(req, { params }) {
 ```
 
 **Dashboard Pending Shipments:**
+
 ```typescript
 <DashboardSection title="Pending Shipments" count={pendingCount}>
-  {pendingShipments.map(product => (
+  {pendingShipments.map((product) => (
     <ProductCard key={product.id}>
       <Text>{product.name}</Text>
       <Text>From: {product.company.name}</Text>
@@ -1978,21 +2110,23 @@ export async function POST(req, { params }) {
 #### Team Assignment
 
 **TaiSheng (2-3 hours):**
+
 - Transfer API endpoint (1 hour)
 - Email notification service (1 hour)
 - Dashboard notification system (1 hour)
 
 **YiLing (2-3 hours):**
+
 - Transfer modal UI (1 hour)
 - Pending shipments dashboard (1-2 hours)
 
 #### Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Email not delivered | Use reliable service (SendGrid), log delivery status |
-| User doesn't check dashboard | Email notification as primary method |
-| Transfer to wrong company | Confirmation modal, show company name clearly |
+| Risk                         | Mitigation                                           |
+| ---------------------------- | ---------------------------------------------------- |
+| Email not delivered          | Use reliable service (SendGrid), log delivery status |
+| User doesn't check dashboard | Email notification as primary method                 |
+| Transfer to wrong company    | Confirmation modal, show company name clearly        |
 
 ---
 
@@ -2026,6 +2160,7 @@ Distributors and retailers add trace records to products as they move through su
 #### Acceptance Criteria (Epic Level)
 
 **Smart Contract:**
+
 - ✅ `TraceRecords.sol` contract (or integrated into ProductRegistry)
 - ✅ `addTraceRecord()` function accepts (productId, action, location, notes)
 - ✅ TraceRecordAdded event emitted
@@ -2035,12 +2170,14 @@ Distributors and retailers add trace records to products as they move through su
 - ✅ Gas cost <80k gas per trace record
 
 **Backend:**
+
 - ✅ `POST /api/products/:id/trace` endpoint
 - ✅ Blockchain transaction + database save
 - ✅ `GET /api/products/:id/trace-history` returns complete journey
 - ✅ Caching for frequently queried products
 
 **Frontend:**
+
 - ✅ "Add Trace Record" form (distributor/retailer dashboards)
 - ✅ Action dropdown (Received, Quality Check, Shipped, Stocked, Sold)
 - ✅ Location input (GPS optional, text required)
@@ -2051,6 +2188,7 @@ Distributors and retailers add trace records to products as they move through su
 #### Technical Approach
 
 **Smart Contract:**
+
 ```solidity
 struct TraceRecord {
   uint256 productId;
@@ -2092,25 +2230,28 @@ function addTraceRecord(
 #### Team Assignment
 
 **Sam (4 hours):**
+
 - TraceRecord struct and functions (3 hours)
 - Unit tests (1 hour)
 
 **TaiSheng (3 hours):**
+
 - Trace record API (2 hours)
 - Trace history query optimization (1 hour)
 
 **YiLing (4-5 hours):**
+
 - Distributor trace form (2 hours)
 - Retailer trace form (2 hours)
 - Timeline view component (1 hour)
 
 #### Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Gas costs too high (many trace records) | Optimize struct, consider off-chain option |
-| Missing trace records (user forgets) | Dashboard reminders, pending actions |
-| Fake location data | GPS integration (future), manual entry OK for POC |
+| Risk                                    | Mitigation                                        |
+| --------------------------------------- | ------------------------------------------------- |
+| Gas costs too high (many trace records) | Optimize struct, consider off-chain option        |
+| Missing trace records (user forgets)    | Dashboard reminders, pending actions              |
+| Fake location data                      | GPS integration (future), manual entry OK for POC |
 
 ---
 
@@ -2146,18 +2287,21 @@ Admin interface to simulate IoT sensor data (temperature, humidity, GPS) for pro
 #### Acceptance Criteria (Epic Level)
 
 **Smart Contract:**
+
 - ✅ `addSensorData()` function accepts (productId, temperature, humidity, location)
 - ✅ SensorDataRecorded event emitted
-- ✅ Temperature stored as int256 * 100 (gas optimization: 3.2°C = 320)
+- ✅ Temperature stored as int256 \* 100 (gas optimization: 3.2°C = 320)
 - ✅ Gas cost <60k gas per reading
 
 **Backend:**
+
 - ✅ `POST /api/iot/simulate` endpoint
 - ✅ Saves to database + blockchain
 - ✅ Alert triggered if temperature > 8°C (Warning) or > 10°C (Critical)
 - ✅ Alert notification sent to product owner
 
 **Frontend:**
+
 - ✅ IoT Simulator admin page (only platform admin access)
 - ✅ Product selector dropdown
 - ✅ Three scenario buttons with icons: ✅ Normal, ⚠️ Warning, 🚨 Critical
@@ -2168,27 +2312,29 @@ Admin interface to simulate IoT sensor data (temperature, humidity, GPS) for pro
 #### Technical Approach
 
 **Scenario Presets:**
+
 ```typescript
 const scenarios = {
   normal: {
     temperature: () => 2 + Math.random() * 2, // 2-4°C
-    humidity: () => 70 + Math.random() * 5,   // 70-75%
-    status: 'SAFE'
+    humidity: () => 70 + Math.random() * 5, // 70-75%
+    status: "SAFE",
   },
   warning: {
     temperature: () => 8 + Math.random() * 2, // 8-10°C
-    humidity: () => 75 + Math.random() * 10,  // 75-85%
-    status: 'WARNING'
+    humidity: () => 75 + Math.random() * 10, // 75-85%
+    status: "WARNING",
   },
   critical: {
     temperature: () => 10 + Math.random() * 5, // 10-15°C
-    humidity: () => 85 + Math.random() * 10,   // 85-95%
-    status: 'CRITICAL'
-  }
+    humidity: () => 85 + Math.random() * 10, // 85-95%
+    status: "CRITICAL",
+  },
 };
 ```
 
 **UI Simulator Page:**
+
 ```typescript
 <SimulatorPage>
   <ProductSelect value={selectedProduct} onChange={setSelectedProduct} />
@@ -2224,24 +2370,27 @@ const scenarios = {
 #### Team Assignment
 
 **Sam (2 hours):**
+
 - Smart contract sensor data function (1.5 hours)
 - Unit tests (0.5 hours)
 
 **TaiSheng (2 hours):**
+
 - IoT simulate API (1 hour)
 - Alert triggering logic (1 hour)
 
 **YiLing (3-4 hours):**
+
 - Simulator admin page UI (2 hours)
 - Scenario buttons and data preview (1-2 hours)
 
 #### Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Data looks fake to reviewers | Use realistic ranges, mention "simulator" clearly in thesis |
-| Auto-mode generates too much data | Rate limiting, max 10 readings per product |
-| Alerts spam users | Rate limit alerts (max 1 per hour per product) |
+| Risk                              | Mitigation                                                  |
+| --------------------------------- | ----------------------------------------------------------- |
+| Data looks fake to reviewers      | Use realistic ranges, mention "simulator" clearly in thesis |
+| Auto-mode generates too much data | Rate limiting, max 10 readings per product                  |
+| Alerts spam users                 | Rate limit alerts (max 1 per hour per product)              |
 
 ---
 
@@ -2277,12 +2426,14 @@ Public-facing interface where consumers scan QR code (or enter Product ID) to vi
 #### Acceptance Criteria (Epic Level)
 
 **Backend:**
+
 - ✅ `GET /api/products/:id/public` endpoint (no authentication required)
 - ✅ Returns: product details, trace history, sensor readings, verification status
 - ✅ Caching for popular products (Redis or Supabase caching)
 - ✅ Rate limiting to prevent abuse (100 requests/minute per IP)
 
 **Frontend:**
+
 - ✅ `/products/:id` public page (no login required)
 - ✅ QR code scanner (html5-qrcode library)
 - ✅ Product search by ID (alternative to QR scan)
@@ -2297,6 +2448,7 @@ Public-facing interface where consumers scan QR code (or enter Product ID) to vi
 #### Technical Approach
 
 **Consumer Query Page:**
+
 ```typescript
 // src/app/products/[id]/page.tsx (public route, no auth)
 export default async function ProductPage({ params }) {
@@ -2305,8 +2457,8 @@ export default async function ProductPage({ params }) {
     include: {
       company: true,
       traceRecords: true,
-      sensorReadings: true
-    }
+      sensorReadings: true,
+    },
   });
 
   return (
@@ -2336,6 +2488,7 @@ export default async function ProductPage({ params }) {
 ```
 
 **QR Scanner Component:**
+
 ```typescript
 <QRScanner
   onScan={(productId) => router.push(`/products/${productId}`)}
@@ -2350,11 +2503,13 @@ export default async function ProductPage({ params }) {
 #### Team Assignment
 
 **TaiSheng (3 hours):**
+
 - Public product API endpoint (1 hour)
 - Query optimization + caching (1 hour)
 - Rate limiting (1 hour)
 
 **YiLing (5-7 hours):**
+
 - Consumer query page layout (2 hours)
 - QR scanner integration (2 hours)
 - Supply chain timeline component (2 hours)
@@ -2363,11 +2518,11 @@ export default async function ProductPage({ params }) {
 
 #### Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| QR scan fails on some phones | Fallback to manual Product ID entry |
-| Page load too slow | Caching, optimize images, lazy load charts |
-| Abuse (spam requests) | Rate limiting per IP, Cloudflare DDoS protection |
+| Risk                             | Mitigation                                               |
+| -------------------------------- | -------------------------------------------------------- |
+| QR scan fails on some phones     | Fallback to manual Product ID entry                      |
+| Page load too slow               | Caching, optimize images, lazy load charts               |
+| Abuse (spam requests)            | Rate limiting per IP, Cloudflare DDoS protection         |
 | Confusing for non-tech consumers | Simple language, visual timeline, hide blockchain jargon |
 
 ---
@@ -2413,6 +2568,7 @@ Allow independent third parties (quality inspectors, certification bodies) to ve
 #### Team Assignment
 
 **Sam (6-8 hours):**
+
 - Smart contract verification logic (3 hours)
 - Reputation system (basic) (3 hours)
 - Unit tests (1-2 hours)
@@ -2451,6 +2607,7 @@ Automatic QR code generation when products registered. QR code encodes Product I
 #### Acceptance Criteria (Epic Level)
 
 **Backend:**
+
 - ✅ QR code generated server-side after product registration
 - ✅ QR encodes: `https://foodtrace.app/products/{productId}`
 - ✅ PNG file saved to Supabase Storage
@@ -2458,6 +2615,7 @@ Automatic QR code generation when products registered. QR code encodes Product I
 - ✅ QR download endpoint: `GET /api/products/:id/qr`
 
 **Frontend:**
+
 - ✅ Producer dashboard shows QR code thumbnail
 - ✅ "Download QR Code" button (downloads PNG)
 - ✅ QR preview modal (before download)
@@ -2467,21 +2625,22 @@ Automatic QR code generation when products registered. QR code encodes Product I
 #### Technical Approach
 
 **QR Generation (server-side):**
+
 ```typescript
-import QRCode from 'qrcode';
+import QRCode from "qrcode";
 
 async function generateQR(productId: string) {
   const url = `${process.env.NEXT_PUBLIC_APP_URL}/products/${productId}`;
 
   const qrDataUrl = await QRCode.toDataURL(url, {
-    errorCorrectionLevel: 'M',
+    errorCorrectionLevel: "M",
     width: 300,
-    margin: 2
+    margin: 2,
   });
 
   // Upload to Supabase Storage
   const { data } = await supabase.storage
-    .from('qr-codes')
+    .from("qr-codes")
     .upload(`${productId}.png`, qrDataUrl);
 
   return data.publicUrl;
@@ -2489,16 +2648,16 @@ async function generateQR(productId: string) {
 ```
 
 **Producer Dashboard:**
+
 ```typescript
 <ProductCard>
   <Image src={product.qrCodeUrl} alt="QR Code" width={100} />
-  <Button onClick={() => downloadQR(product.id)}>
-    Download QR Code
-  </Button>
+  <Button onClick={() => downloadQR(product.id)}>Download QR Code</Button>
 </ProductCard>
 ```
 
 **Consumer QR Scanner:**
+
 ```typescript
 <QRScanner
   fps={10}
@@ -2518,20 +2677,22 @@ async function generateQR(productId: string) {
 #### Team Assignment
 
 **TaiSheng (2 hours):**
+
 - QR generation on product registration (1 hour)
 - QR download API (1 hour)
 
 **YiLing (2-4 hours):**
+
 - QR display in producer dashboard (1 hour)
 - QR scanner in consumer page (2-3 hours, includes testing on multiple devices)
 
 #### Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| QR doesn't scan on some phones | Use standard QR format, test on iOS + Android |
-| QR print quality poor | Generate high-res (300 DPI), provide SVG option |
-| QR damaged/unreadable | Include Product ID text below QR as backup |
+| Risk                           | Mitigation                                      |
+| ------------------------------ | ----------------------------------------------- |
+| QR doesn't scan on some phones | Use standard QR format, test on iOS + Android   |
+| QR print quality poor          | Generate high-res (300 DPI), provide SVG option |
+| QR damaged/unreadable          | Include Product ID text below QR as backup      |
 
 ---
 
@@ -2566,6 +2727,7 @@ Visual representation of product journey through supply chain. Timeline view sho
 #### Acceptance Criteria (Epic Level)
 
 **Consumer View:**
+
 - ✅ Product journey timeline (vertical, mobile-optimized)
 - ✅ Each trace record shows: date, actor, location, notes
 - ✅ Icons for different actions (✅ Received, 📦 Shipped, 🏪 Stocked)
@@ -2573,11 +2735,13 @@ Visual representation of product journey through supply chain. Timeline view sho
 - ⚠️ Optional: Map view showing product movement
 
 **Business User Dashboard:**
+
 - ✅ Total products registered (count)
 - ✅ Recent activity feed
 - ✅ Pending actions (products to transfer, shipments to receive)
 
 **Platform Admin Dashboard:**
+
 - ✅ Total companies, users, products
 - ✅ Recent blockchain transactions
 - ✅ System health metrics
@@ -2585,16 +2749,19 @@ Visual representation of product journey through supply chain. Timeline view sho
 #### Technical Approach
 
 **Timeline Component:**
+
 ```typescript
 <Timeline>
-  {traceRecords.map(record => (
+  {traceRecords.map((record) => (
     <TimelineItem key={record.id}>
       <TimelineIcon action={record.action} />
       <TimelineContent>
         <Text fontWeight="bold">{record.action}</Text>
         <Text fontSize="sm">{record.company.name}</Text>
         <Text fontSize="sm">{record.location}</Text>
-        <Text fontSize="xs" color="gray">{formatDate(record.timestamp)}</Text>
+        <Text fontSize="xs" color="gray">
+          {formatDate(record.timestamp)}
+        </Text>
       </TimelineContent>
     </TimelineItem>
   ))}
@@ -2602,8 +2769,9 @@ Visual representation of product journey through supply chain. Timeline view sho
 ```
 
 **Temperature Chart:**
+
 ```typescript
-import { LineChart, Line, XAxis, YAxis, ReferenceLine } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, ReferenceLine } from "recharts";
 
 <LineChart data={sensorReadings}>
   <XAxis dataKey="timestamp" />
@@ -2611,7 +2779,7 @@ import { LineChart, Line, XAxis, YAxis, ReferenceLine } from 'recharts';
   <ReferenceLine y={8} stroke="orange" label="Warning" />
   <ReferenceLine y={10} stroke="red" label="Critical" />
   <Line dataKey="temperature" stroke="blue" />
-</LineChart>
+</LineChart>;
 ```
 
 #### Dependencies
@@ -2621,21 +2789,23 @@ import { LineChart, Line, XAxis, YAxis, ReferenceLine } from 'recharts';
 #### Team Assignment
 
 **TaiSheng (2 hours):**
+
 - Dashboard analytics API (1 hour)
 - Data aggregation queries (1 hour)
 
 **YiLing (4-6 hours):**
+
 - Timeline component (2 hours)
 - Temperature chart (2 hours)
 - Dashboard widgets (2 hours if time permits)
 
 #### Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Chart library too complex | Use simple Chakra UI charts or Chart.js |
-| Mobile performance poor | Lazy load charts, simplify for mobile |
-| Behind schedule | Cut to simple list view instead of fancy timeline |
+| Risk                      | Mitigation                                        |
+| ------------------------- | ------------------------------------------------- |
+| Chart library too complex | Use simple Chakra UI charts or Chart.js           |
+| Mobile performance poor   | Lazy load charts, simplify for mobile             |
+| Behind schedule           | Cut to simple list view instead of fancy timeline |
 
 ---
 
@@ -2704,6 +2874,7 @@ Deploy application to production environment (Render.com Node.js Server). Smart 
 #### Acceptance Criteria (Epic Level)
 
 **Deployment:**
+
 - ✅ Application deployed to Render.com (free tier Node.js Server)
 - ✅ Custom domain (optional): foodtrace.app or similar
 - ✅ HTTPS enabled (automatic with Render.com)
@@ -2711,11 +2882,13 @@ Deploy application to production environment (Render.com Node.js Server). Smart 
 - ✅ Database migrations run successfully
 
 **Monitoring:**
+
 - ✅ Error logging (Sentry or Render.com logs)
 - ✅ Uptime monitoring (UptimeRobot free tier)
 - ✅ Database backup schedule (Supabase automatic backups)
 
 **Documentation:**
+
 - ✅ Deployment guide (how to redeploy if needed)
 - ✅ Environment variables documented (.env.example)
 - ✅ Rollback procedure documented
@@ -2723,6 +2896,7 @@ Deploy application to production environment (Render.com Node.js Server). Smart 
 #### Technical Approach
 
 **Render.com Configuration:**
+
 ```yaml
 # render.yaml
 services:
@@ -2741,6 +2915,7 @@ services:
 ```
 
 **Deployment Checklist:**
+
 1. ✅ Environment variables set in Render.com dashboard
 2. ✅ Database migrations run: `npx prisma migrate deploy`
 3. ✅ Smart contracts verified on Etherscan
@@ -2754,23 +2929,25 @@ services:
 #### Team Assignment
 
 **TaiSheng (4-5 hours):**
+
 - Render.com deployment configuration (2 hours)
 - Environment variables setup (1 hour)
 - Database migration (1 hour)
 - Monitoring setup (1 hour)
 
 **Sam (1 hour):**
+
 - Verify smart contracts on Etherscan (if not done)
 - Test blockchain connectivity from production
 
 #### Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Deployment fails | Test on staging branch first, rollback procedure |
-| Environment variables wrong | Triple-check .env.example matches production |
-| Database connection fails | Test Supabase connection pooling before deploy |
-| Demo breaks before thesis defense | Keep staging environment as backup |
+| Risk                              | Mitigation                                       |
+| --------------------------------- | ------------------------------------------------ |
+| Deployment fails                  | Test on staging branch first, rollback procedure |
+| Environment variables wrong       | Triple-check .env.example matches production     |
+| Database connection fails         | Test Supabase connection pooling before deploy   |
+| Demo breaks before thesis defense | Keep staging environment as backup               |
 
 ---
 
@@ -2855,6 +3032,7 @@ The architecture balances thesis constraints with real-world enterprise patterns
 **Choice:** Single Next.js application handles both frontend (React) and backend (API Routes)
 
 **Rationale:**
+
 - **Simpler deployment**: One Render.com service instead of two (frontend + backend)
 - **No CORS issues**: API Routes and frontend share same origin
 - **Team efficiency**: All 3 members already know Next.js
@@ -2870,6 +3048,7 @@ The architecture balances thesis constraints with real-world enterprise patterns
 **Choice:** Supabase-hosted PostgreSQL with built-in pgBouncer connection pooling
 
 **Rationale:**
+
 - **Critical feature**: pgBouncer prevents connection exhaustion (Next.js serverless functions create many connections)
 - **PostgreSQL-compatible**: No SQL changes needed, standard Prisma ORM works
 - **Free tier generous**: 1GB storage, 2GB bandwidth sufficient for thesis
@@ -2885,12 +3064,14 @@ The architecture balances thesis constraints with real-world enterprise patterns
 **Choice:** Email/password login, server-side wallet generation, encrypted private key storage
 
 **Rationale:**
+
 - **Solves UX barrier**: 78% blockchain app abandonment due to wallet complexity (Consensys 2023)
 - **Target user reality**: Finnish farmers don't have MetaMask (Persona 2: Matti Virtanen, age 52)
 - **Enterprise pattern**: IBM Food Trust uses custodial wallets for business users
 - **Academic justification**: Demonstrates understanding of production blockchain UX challenges
 
 **Security implementation:**
+
 - Private keys encrypted with AES-256
 - Encryption key stored as Render.com environment variable (not in database)
 - Audit logging for all wallet operations
@@ -2905,6 +3086,7 @@ The architecture balances thesis constraints with real-world enterprise patterns
 **Choice:** Critical data on blockchain, metadata in PostgreSQL, cryptographically linked
 
 **On-Chain (Ethereum Sepolia):**
+
 - Product ID and hash
 - Ownership transfers (Producer → Distributor → Retailer)
 - Timestamps (immutable audit trail)
@@ -2912,6 +3094,7 @@ The architecture balances thesis constraints with real-world enterprise patterns
 - Verification records
 
 **Off-Chain (Supabase PostgreSQL):**
+
 - Product descriptions (changeable without gas costs)
 - High-resolution images (too expensive on-chain)
 - Detailed sensor logs (thousands of readings)
@@ -2921,6 +3104,7 @@ The architecture balances thesis constraints with real-world enterprise patterns
 **Cryptographic Linking:** SHA-256 hashes of off-chain data stored on-chain for integrity verification
 
 **Rationale:**
+
 - **Gas optimization**: Full on-chain storage costs ~$50 per product (Ethereum mainnet), hybrid approach ~$5
 - **Performance**: PostgreSQL queries 100× faster than blockchain reads for complex filters
 - **GDPR compliance**: Off-chain personal data can be deleted (blockchain immutability prevents deletion)
@@ -2934,6 +3118,7 @@ The architecture balances thesis constraints with real-world enterprise patterns
 **Choice:** Software-based sensor simulator with 3 scenarios (Normal/Warning/Critical)
 
 **Rationale:**
+
 - **Cost savings**: €150-200 (Raspberry Pi + DHT22 sensors + GPS module)
 - **Academic validity**: Standard practice in POC development (IBM Food Trust uses test harnesses)
 - **Reproducible demos**: No hardware failures during thesis defense presentation
@@ -2989,22 +3174,26 @@ The architecture balances thesis constraints with real-world enterprise patterns
 ### 7.5 Security Architecture
 
 **Multi-Tenant Isolation:**
+
 - Database-level: Prisma queries scoped by `companyId` (prevent cross-company data access)
 - Wallet isolation: Each company has unique Ethereum address, encrypted separately
 - Row-level security: Supabase RLS policies enforce tenant boundaries
 
 **Wallet Security (Tier 1 - Academic POC):**
+
 - Private keys encrypted with AES-256 (crypto-js library)
 - Encryption key stored as environment variable (Render.com secret)
 - Keys never logged or exposed to frontend
 - Audit trail: All wallet operations logged with timestamp, user, action
 
 **Authentication:**
+
 - NextAuth.js with email/password (Prisma adapter)
 - Session cookies (httpOnly, secure, sameSite)
 - Company-scoped access (users can only access their company's data)
 
 **Future hardening (out of scope for Week 0):**
+
 - Tier 2: Hardware Security Modules (HSM) for key storage
 - Tier 3: Multi-sig wallets (2-of-3 approval for large operations)
 
@@ -3016,22 +3205,23 @@ Full security specification: See Epic 0.6 (Security Hardening) and future `docs/
 
 This architecture directly supports the following MUST HAVE epics:
 
-| Epic | Architecture Component |
-|------|------------------------|
-| **Epic 0: Smart Contracts** | Ethereum Sepolia layer (Product Registry, Trace Records, Sensor Data contracts) |
-| **Epic 0.5: Custodial Wallets** | Next.js backend wallet management + AES-256 encryption |
-| **Epic 0.6: Security** | Multi-tenant isolation, audit logging, encrypted storage |
-| **Epic 1: Product Registration** | Frontend forms + API routes + blockchain integration |
-| **Epic 2: Supply Chain Tracking** | Trace record flow (Distributor/Retailer trace additions) |
-| **Epic 4: Consumer Query** | Wallet-free read-only queries via public RPC (Alchemy) |
-| **Epic 6: QR Codes** | QR generation (react-qr-code) + scanning (html5-qrcode) |
-| **Epic 9: Database** | Supabase PostgreSQL + Prisma ORM + pgBouncer pooling |
+| Epic                              | Architecture Component                                                          |
+| --------------------------------- | ------------------------------------------------------------------------------- |
+| **Epic 0: Smart Contracts**       | Ethereum Sepolia layer (Product Registry, Trace Records, Sensor Data contracts) |
+| **Epic 0.5: Custodial Wallets**   | Next.js backend wallet management + AES-256 encryption                          |
+| **Epic 0.6: Security**            | Multi-tenant isolation, audit logging, encrypted storage                        |
+| **Epic 1: Product Registration**  | Frontend forms + API routes + blockchain integration                            |
+| **Epic 2: Supply Chain Tracking** | Trace record flow (Distributor/Retailer trace additions)                        |
+| **Epic 4: Consumer Query**        | Wallet-free read-only queries via public RPC (Alchemy)                          |
+| **Epic 6: QR Codes**              | QR generation (react-qr-code) + scanning (html5-qrcode)                         |
+| **Epic 9: Database**              | Supabase PostgreSQL + Prisma ORM + pgBouncer pooling                            |
 
 ---
 
 ### 7.7 Technology Stack Summary
 
 **Layer 1: User Interface**
+
 - Next.js 14.2.15 (React 18, Pages Router)
 - TypeScript 5.8+
 - Chakra UI v2 (component library)
@@ -3039,6 +3229,7 @@ This architecture directly supports the following MUST HAVE epics:
 - html5-qrcode (QR scanning)
 
 **Layer 2: Application (Next.js Monolith)**
+
 - Backend: Next.js API Routes + Node.js 18.x LTS
 - Web3: Wagmi v2 + Viem + RainbowKit
 - Authentication: NextAuth.js (Prisma adapter)
@@ -3046,6 +3237,7 @@ This architecture directly supports the following MUST HAVE epics:
 - Encryption: crypto-js (AES-256)
 
 **Layer 3: Data**
+
 - Blockchain: Ethereum Sepolia Testnet
 - Smart Contracts: Solidity ^0.8.20 + Hardhat + OpenZeppelin
 - Database: Supabase PostgreSQL + pgBouncer
@@ -3053,6 +3245,7 @@ This architecture directly supports the following MUST HAVE epics:
 - RPC Provider: Alchemy (public blockchain access)
 
 **Deployment:**
+
 - Application: Render.com (Node.js server, 750h/month free)
 - Database: Supabase (1GB storage, 2GB bandwidth free)
 - Blockchain: Sepolia (permanent, no hosting cost)
@@ -3062,11 +3255,13 @@ This architecture directly supports the following MUST HAVE epics:
 ### 7.8 Scalability Considerations
 
 **Current Design (Academic POC):**
+
 - Target: 3-5 companies, 100-500 products, 10-20 concurrent users
 - Database: Single Supabase instance (1GB sufficient)
 - Blockchain: Sepolia testnet (2,000-3,500 TPS shared across all users)
 
 **Production Evolution (Out of Scope, Discussed in Thesis):**
+
 - Database: Connection pooling (pgBouncer) allows 100+ concurrent users
 - Blockchain: Migrate to Hyperledger Fabric consortium (2,000-3,500 TPS dedicated)
 - Caching: Redis for frequently accessed product queries
@@ -3074,6 +3269,7 @@ This architecture directly supports the following MUST HAVE epics:
 - Monitoring: Sentry for error tracking, Datadog for performance
 
 **Thesis Discussion Points:**
+
 - Ethereum Layer 1 limitations (30-50 TPS) vs Hyperledger Fabric (2,000-3,500 TPS)
 - Gas cost economics for low-margin products (lettuce vs specialty items)
 - Public blockchain transparency vs business confidentiality needs
@@ -3083,13 +3279,15 @@ This architecture directly supports the following MUST HAVE epics:
 ### 7.9 Architecture Validation
 
 **Design Validated Against:**
+
 - ✅ IBM Food Trust architecture (custodial wallets, hybrid storage)
 - ✅ Walmart blockchain case study (testnet → production migration pattern)
 - ✅ OAMK Ruokajälki project requirements (Finnish market needs)
-- ✅ Zhao et al. (2023) systematic review (Ethereum vs Hyperledger comparison)
+- ✅ Zhao et al. (2019) systematic review (Ethereum vs Hyperledger comparison, 71 papers reviewed)
 - ✅ BMAD methodology (rapid prototyping, MUST/SHOULD/COULD prioritization)
 
 **Peer-Reviewed:**
+
 - Session 4: Architecture risk assessment (added Epic 0.6 Security)
 - Session 11: Thesis chapter verification (alignment with implementation reality)
 - Session 12: PRD architecture documentation (this section)
@@ -3107,32 +3305,39 @@ This architecture directly supports the following MUST HAVE epics:
 **Note:** Sections 8-12 have been extracted to separate documents for easier team review and future maintenance. Section 7 (High-Level System Architecture) has been added to PRD for supervisor review context.
 
 ### Section 8: Team Roles & Responsibilities
+
 **Location:** `docs/planning/team-workload.md` (existing document, 724 lines)
 **Content:** Complete breakdown of Sam, TaiSheng, and YiLing's roles, epic assignments, weekly focus areas, time estimates
 
 ### Section 9: Technical Constraints
+
 **Location:** `docs/planning/technical-constraints.md` (new document)
 **Content:** Technology limitations, development environment requirements, timeline pressures, academic constraints, risk mitigations
 
 ### Section 10: Definition of Done
+
 **Location:** `docs/development-guide.md` (appended to existing document)
 **Content:** Epic-level, story-level, week-level, and project-level completion checklists
 
 ### Section 11: Next Steps
+
 **Location:** `docs/planning/action-plan.md` (new document)
 **Content:** Week 0-3 action items, kickoff meeting agenda, communication setup, BMAD workflow instructions
 
 ### Section 12: Change Management
+
 **Location:** `docs/planning/change-management.md` (new document)
 **Content:** Scope change process, decision trees, escalation procedures, emergency contingency plans
 
 **Why Extracted:**
+
 - Original PRD was 3,939 lines (~83 pages) - too long for team review
 - Modern PRD best practice: 1-6 pages (2024-2025 industry standard)
 - Sections 8-12 are process/planning documents, not product requirements
 - Current PRD (Sections 1-7): ~2,800 lines (~47 pages) - focused on product vision + epic requirements + high-level architecture
 
 **For Team Review:**
+
 - Start with Sections 1-7 (this document) - product requirements, epic breakdown, and high-level architecture
 - Reference supporting documents as needed during Week 2-3 planning
 
@@ -3152,17 +3357,20 @@ This architecture directly supports the following MUST HAVE epics:
 **Methodology:** BMAD (Breakthrough Method of Agile AI-driven Development)
 
 **Changes from v1.0:**
+
 - Removed Sections 7-11 (extracted to separate documents)
 - Reduced from 3,939 lines (~83 pages) to ~2,580 lines (~43 pages)
 - Focused on product requirements and epic specifications only
 - Supporting documents: team-workload.md, technical-constraints.md, development-guide.md, action-plan.md, change-management.md
 
 **Review Cycle:**
+
 - [ ] PO Agent Validation (Target: >90%)
 - [ ] Team Review (Sam, TaiSheng, YiLing)
 - [ ] Supervisor Approval (Kickoff meeting Oct 31)
 
 **Total Estimated Project Effort:**
+
 - Sam: 165-185 hours (39-44% of 420h capacity)
 - TaiSheng: 180-205 hours (43-49% of capacity)
 - YiLing: 190-226 hours (45-54% of capacity)
@@ -3175,6 +3383,7 @@ This architecture directly supports the following MUST HAVE epics:
 **END OF PRODUCT REQUIREMENTS DOCUMENT**
 
 **Next Steps:**
+
 1. Team review of this PRD (Sections 1-7)
 2. Reference supporting documents:
    - docs/planning/team-workload.md (team roles)

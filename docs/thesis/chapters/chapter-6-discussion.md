@@ -68,7 +68,7 @@ Testing confirmed trace records persist immutably across 88 test scenarios inclu
 
 Public blockchain transparency addresses information asymmetry documented by Casino et al. (2021): traditional supply chains suffer from siloed data where upstream actors remain invisible to downstream consumers. Ethereum's public ledger enables any party to verify supply chain claims independently via block explorers (Etherscan) or direct RPC queries without requiring wallet installation.
 
-Consumer query testing validated that non-technical users successfully verified complete product journeys in 4.2 seconds average without creating accounts. The 95% QR code scanning success rate demonstrates practical viability of trustless verification—consumers cryptographically validate product history without relying on producer honesty or third-party auditors. Zhao et al.'s (2023) systematic review identifies transparency as blockchain's primary value proposition, with 89% of surveyed papers citing "consumer trust through independent verification" as key benefit.
+Consumer query testing validated that non-technical users successfully verified complete product journeys in 4.2 seconds average without creating accounts. The 95% QR code scanning success rate demonstrates practical viability of trustless verification—consumers cryptographically validate product history without relying on producer honesty or third-party auditors. Zhao et al.'s (2019) systematic review identifies transparency as blockchain's primary value proposition, documenting how public blockchains enable consumer trust through independent verification without intermediary reliance.
 
 **Business Confidentiality Tension:** Public blockchains expose competitive intelligence—transaction volumes reveal market share, timing patterns indicate pricing strategies. The implementation mitigates this through selective disclosure: critical traceability data (product ID, timestamps, custody transfers) remains public, while business-sensitive information (pricing, profit margins, supplier contracts) resides off-chain. The 50/50 Ethereum-Hyperledger split in academic literature (Springer, 2025) reflects this unresolved tension.
 
@@ -76,7 +76,7 @@ Consumer query testing validated that non-technical users successfully verified 
 
 Blockchain consensus enables sub-second to sub-minute traceability compared to days or weeks for traditional paper-based systems. The Walmart case study (IBM, 2019) provides the seminal benchmark: tracing mango origins required 6 days 18 hours using paper records versus 2.2 seconds with blockchain—a 281,000× speedup enabling targeted recalls instead of blanket regional bans.
 
-The implementation achieved 1.8-second average query performance, beating Hyperledger Fabric benchmarks. Complete supply chain journeys (Producer → Distributor → Retailer → Consumer) execute in 4.2 seconds end-to-end, meeting FDA FSMA Rule 204 requirement for 24-hour traceability with 99.995% time margin. Zhao et al.'s (2023) meta-analysis reports average query times: blockchain systems 2-5 seconds versus traditional systems 4-7 days, a 100,000× median improvement.
+The implementation achieved 1.8-second average query performance, beating Hyperledger Fabric benchmarks. Complete supply chain journeys (Producer → Distributor → Retailer → Consumer) execute in 4.2 seconds end-to-end, meeting FDA FSMA Rule 204 requirement for 24-hour traceability with 99.995% time margin. Zhao et al.'s (2019) review demonstrates blockchain traceability enables sub-second to sub-minute query times compared to multi-day traditional reconciliation processes, representing order-of-magnitude improvement in recall response speed.
 
 **Transaction Confirmation Trade-off:** While queries are fast (1.8s), writing transactions requires 12-15 seconds for Ethereum block confirmation—significantly slower than centralized database writes (sub-100ms). Optimistic UI updates address perceived latency (show pending state immediately, confirm asynchronously), though this introduces error recovery complexity absent from traditional applications.
 
@@ -90,7 +90,7 @@ Blockchain guarantees data immutability but cannot verify off-chain data accurac
 
 Testing revealed that producers could intentionally enter false harvest dates (backdating organic certification) and pass all smart contract validations. Timestamp checks prevent future dates but cannot detect past-dating fraud. Buterin (2014) identifies this as the fundamental oracle problem: "Blockchains are closed systems; they cannot natively access external truth." Multi-party verification partially mitigates this through social consensus, yet Casino et al. (2021) demonstrate that Sybil attacks—single actors controlling multiple validator identities—remain practical without identity verification systems.
 
-IoT sensor data integration compounds this challenge. While the simulator demonstrates architecture for recording temperature data on-chain, real deployment requires trusting sensor hardware accuracy and tamper-resistance. Zhao et al. (2023) document that commodity DHT22 sensors exhibit ±0.5°C measurement variance and are physically accessible to malicious actors. Hardware security modules (HSMs) address this through hardware-attested measurements but add $50-200 per sensor—prohibitive for small-scale deployments. The oracle problem introduces an unavoidable trade-off: pure software verification (cheap but gameable) versus hardware security (trustworthy but expensive).
+IoT sensor data integration compounds this challenge. While the simulator demonstrates architecture for recording temperature data on-chain, real deployment requires trusting sensor hardware accuracy and tamper-resistance. Zhao et al. (2019) document challenges with IoT sensor integration including device reliability, network connectivity, and physical security vulnerabilities. Hardware security modules (HSMs) address this through hardware-attested measurements but add $50-200 per sensor—prohibitive for small-scale deployments. The oracle problem introduces an unavoidable trade-off: pure software verification (cheap but gameable) versus hardware security (trustworthy but expensive).
 
 ### 6.3.2 Economic Viability for Low-Margin Products
 
@@ -176,7 +176,7 @@ Wood, G. (2014). *Ethereum: A secure decentralised generalised transaction ledge
 
 Zhang, F., et al. (2016). Town Crier: An authenticated data feed for smart contracts. *ACM CCS*, 270-282.
 
-Zhao, G., et al. (2023). Blockchain technology in agri-food value chain management: A synthesis of applications, challenges and future research directions. *Computers in Industry*, 143, 103771.
+Zhao, G., et al. (2019). Blockchain technology in agri-food value chain management: A synthesis of applications, challenges and future research directions. *Computers in Industry*, 109, 83-99. https://doi.org/10.1016/j.compind.2019.04.002
 
 ---
 

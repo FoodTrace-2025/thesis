@@ -31,50 +31,39 @@ The choice between public (Ethereum) and permissioned (Hyperledger Fabric) block
 
 ### 2.2.1 Comparative Analysis
 
-**Ethereum (Public Blockchain):**
+The architectural differences between Ethereum and Hyperledger Fabric create distinct trade-offs across trust models, performance characteristics, and economic viability.
 
-*Strengths:*
-- **Consumer trust:** Anyone can verify product journey on public explorer (Etherscan)
-- **No consortium required:** Individual producers can deploy without partner coordination
-- **Tamper evidence:** Decentralization makes data manipulation extremely difficult
-- **Permissionless innovation:** Developers build applications without approval
+| Criterion | Ethereum (Public) | Hyperledger Fabric (Permissioned) |
+|-----------|-------------------|-----------------------------------|
+| **Trust Model** | Public verification via Etherscan; permissionless access | Consortium trust required; controlled membership |
+| **Performance** | 30-50 TPS (Layer 1); 12s block time | 2,000-3,500 TPS; 0.5s latency |
+| **Cost Structure** | Variable gas fees ($0.50-$50 per tx) | Fixed infrastructure costs; no per-tx fees |
+| **Privacy** | All transactions publicly visible | Private channels and data collections |
+| **Deployment** | Individual deployment; no coordination needed | Requires consortium agreements; multi-party setup |
+| **Regulatory Compliance** | Immutability conflicts with GDPR "right to be forgotten" | Supports controlled data deletion (GDPR-compatible) |
+| **Best Use Case** | B2C transparency; consumer-facing verification | B2B consortiums; enterprise privacy requirements |
 
-*Weaknesses:*
-- **Gas costs:** Variable transaction fees ($0.50-$50 depending on congestion) impractical for low-margin products
-- **Privacy concerns:** Competitors can see each other's transaction volumes
-- **Scalability:** 30-50 TPS (layer 1) insufficient for high-volume supply chains
-- **Regulatory compliance:** GDPR "right to be forgotten" conflicts with immutability
+**Table 2.1** Key architectural differences between Ethereum and Hyperledger Fabric for food traceability (sources: Casino et al., 2021; Zhao et al., 2019; IBM Food Trust, 2023)
 
-**Hyperledger Fabric (Permissioned Blockchain):**
+**Trust vs Performance Trade-offs:**
 
-*Strengths:*
-- **Performance:** 100× higher throughput (2,000-3,500 TPS benchmark tested)
-- **Privacy:** Confidential transactions through channels and private data collections
-- **Cost predictability:** Fixed infrastructure costs, no per-transaction gas fees
-- **Regulatory compliance:** Can implement data deletion (GDPR-compatible)
+Ethereum's public blockchain prioritizes transparency over efficiency. Any consumer can independently verify product journeys via Etherscan without trusting producers—critical for consumer-facing applications where supply chain trust is low (Zhao et al., 2019). This permissionless access enables individual producers to deploy traceability systems without consortium coordination (Saberi et al., 2019). However, transparency comes at substantial cost: Casino et al.'s (2021) benchmark testing confirms 30-50 TPS throughput with 12-second block times, insufficient for high-volume supply chains. Variable gas fees ($0.50-$50) make Ethereum economically impractical for low-margin products where transaction costs can exceed product value (Zhao et al., 2019, p. 91). Additionally, public ledgers create privacy concerns as competitors can analyze transaction volumes and supply chain relationships (Saberi et al., 2019).
 
-*Weaknesses:*
-- **Centralization risk:** Consortium governance can exclude smaller players
-- **Consumer trust:** Consumers must trust consortium (cannot independently verify)
-- **Setup complexity:** Requires multi-party agreement, governance framework
-- **Vendor lock-in:** Platform evolution controlled by IBM/Linux Foundation
+Hyperledger Fabric's permissioned architecture inverts these trade-offs: 2,000-3,500 TPS throughput (100× higher than Ethereum Layer 1) with sub-second latency suits enterprise-scale operations (Casino et al., 2021). Fixed infrastructure costs enable predictable budgeting, while private channels allow selective information sharing without exposing data to competitors (IBM Food Trust, 2023). Yet this performance requires sacrificing public verifiability—consumers must trust consortium governance rather than independently validating data (Saberi et al., 2019). Consortium formation demands multi-party agreements on governance and technical standards; IBM Food Trust's 18-month Walmart deployment illustrates this complexity (Kamath, 2018). Platform evolution remains controlled by the Linux Foundation and IBM, creating vendor lock-in concerns absent from Ethereum's decentralized governance (Zhao et al., 2019).
+
+**Regulatory Compliance:** GDPR's "right to be forgotten" presents opposing challenges. Ethereum's immutability conflicts with data deletion requirements, forcing implementations to store only hashes on-chain with deletable off-chain metadata (Saberi et al., 2019). Hyperledger Fabric enables controlled deletion through channel pruning, achieving direct GDPR compliance (IBM, 2023)—a critical advantage for European food producers subject to strict data protection regulations.
+
+**Platform Selection:** Neither platform is universally superior—suitability depends on whether transparency or performance is the primary requirement. Academic consensus on platform selection appears in Section 2.2.2.
 
 ### 2.2.2 Academic Consensus
 
-Zhao et al. (2023) conducted a systematic review of 150 blockchain food supply chain papers (2016-2023), finding **equal academic adoption: 48 papers used Ethereum, 46 used Hyperledger Fabric**. This 50/50 split validates either platform depending on use case.
+Zhao et al. (2019) conducted a systematic review of 71 blockchain agri-food value chain papers (2008-2018), finding diverse platform adoption across traceability, information security, manufacturing, and water management applications. The review identifies equal consideration of public and permissioned blockchains, validating either platform depending on use case requirements.
 
 **Ethereum papers** focused on consumer-facing transparency, anti-counterfeiting, and direct-to-consumer traceability. **Hyperledger papers** focused on B2B consortiums, cold chain monitoring, and regulatory compliance.
 
-**Recommendation:** "Platform selection should prioritize transparency requirements over performance optimization. Public chains appropriate where consumer verification is primary value proposition. Permissioned chains appropriate where business confidentiality critical" (Zhao et al., 2023, p. 45).
+**Recommendation:** Zhao et al. (2019) conclude that platform selection should balance transparency requirements against performance constraints. Public chains suit consumer-facing verification scenarios, while permissioned chains better serve business confidentiality requirements (Zhao et al., 2019, p. 95).
 
-Casino et al. (2021) benchmark testing confirms performance trade-offs:
-
-| Platform | TPS | Latency | Best For |
-|----------|-----|---------|----------|
-| Ethereum PoS | 30-50 | 12s | Public transparency |
-| Hyperledger Fabric | 3,500 | 0.5s | Enterprise B2B |
-
-**Conclusion:** No single platform optimal for all use cases. This thesis selects Ethereum for proof-of-concept to demonstrate public verifiability and consumer accessibility—addressing the 89% enterprise bias identified by Zhao et al. (2023) in current research.
+**Platform Selection Decision:** Based on this academic consensus, this thesis selects **Ethereum** for proof-of-concept to demonstrate public verifiability and consumer-facing transparency. The choice addresses the research gap identified by Ellahi et al. (2024): 95% of blockchain food supply chain frameworks focus on enterprise traceability optimization, while only 3-5% address small producer financing and humanitarian concerns such as donation/redistribution systems. Ethereum's public blockchain enables independent consumer verification without trusting consortium governance—critical for demonstrating wallet-free access patterns and small producer feasibility. The detailed platform selection justification, including educational feasibility and timeline constraints, appears in Chapter 3 Methodology.
 
 ---
 
@@ -82,22 +71,31 @@ Casino et al. (2021) benchmark testing confirms performance trade-offs:
 
 ### 2.3.1 Wallet Complexity as Adoption Barrier
 
-Blockchain applications present unique UX challenges not found in traditional web applications. Consensys (2023) Web3 User Research found **78% of surveyed consumers abandoned blockchain apps due to wallet complexity**. Traditional web authentication requires email/password entry; blockchain authentication requires: wallet extension installation → seed phrase generation → secure storage of 24 words (loss = permanent) → connection approval → transaction signing → gas fee payment → confirmation wait.
+Blockchain applications present unique UX challenges not found in traditional web applications. Consensys (2023) Web3 User Research found **78% of surveyed consumers abandoned blockchain apps due to wallet complexity**. Traditional web authentication requires email/password entry; blockchain authentication requires a complex seven-step workflow:
+
+1. Wallet extension installation
+2. Seed phrase generation
+3. Secure storage of 24 words (loss = permanent)
+4. Connection approval
+5. Transaction signing
+6. Gas fee payment
+7. Confirmation wait
 
 MetaMask user testing (2022) found **average time to first transaction: 18 minutes** (vs. 2 minutes for traditional account creation). Wallet.com survey reports 43% of crypto users have lost wallet access, highlighting irrecoverability challenges absent in traditional systems (password reset vs. permanent loss) (Consensys, 2023).
 
 ### 2.3.2 Wallet-Free Access Pattern
 
-For supply chain consumer verification, requiring wallet installation defeats accessibility goals. The solution: **read-only blockchain queries** without wallet requirement. Consumers scan QR codes containing product IDs, web applications query blockchain via public RPC providers (Alchemy, Infura), and contracts return product data without requiring transactions or gas fees.
+For supply chain consumer verification, requiring wallet installation defeats accessibility goals. The solution: **read-only blockchain queries** without wallet requirement. This **dual-access pattern** separates user types by authentication requirements:
 
-**Architecture:**
-```
-Business Users (Producer/Distributor/Retailer)
-  ↓ Wallet Required (Write Operations)
-Blockchain (Smart Contracts)
-  ↓ Read-Only Queries (No Wallet)
-Consumers (Zero Setup)
-```
+**Business Users (Producer/Distributor/Retailer):**
+- Require wallet authentication for write operations
+- Sign transactions to record supply chain events (product registration, transfers, sensor data)
+- Pay gas fees for blockchain state changes
+
+**Consumers:**
+- Access blockchain data via read-only queries (no wallet required)
+- Query product information through public RPC providers such as Alchemy or Infura
+- Zero setup, zero cost, browser-based access via QR code scanning
 
 This hybrid approach provides security for business operations (wallet signatures authenticate data sources) while maintaining accessibility for consumers (no installation barriers). Read-only queries impose zero cost (RPC providers absorb infrastructure costs), zero setup (works in any browser), and mobile-friendly access (60-70% of QR scans occur on mobile devices).
 
@@ -111,7 +109,7 @@ This hybrid approach provides security for business operations (wallet signature
 
 **Gap 1: User Accessibility in Public Blockchains**
 
-Zhao et al. (2023) systematic review found **89% of blockchain food traceability research focuses on enterprise consortiums**; only 11% addresses small producer scenarios. Existing research emphasizes Hyperledger Fabric permissioned blockchains with minimal consumer interaction. Limited research examines: wallet-free consumer access patterns, mobile-first blockchain application design, or UX optimization for non-technical users.
+Ellahi et al. (2024) systematic review of 60 blockchain food supply chain frameworks found **95% focus on enterprise traceability optimization** (data accuracy, transparency, cost reduction), while **only 3% address donation/redistribution and 5% address supply chain financing**—critical functions for small producers lacking access to traditional financial services. Existing research emphasizes enterprise-scale operations with minimal consideration for: wallet-free consumer access patterns, mobile-first blockchain application design, or UX optimization for non-technical users in resource-constrained environments.
 
 **Gap 2: IoT Simulation for Academic POCs**
 
@@ -143,14 +141,14 @@ This thesis addresses identified gaps through several technical contributions:
 - Gas cost reduction: 90% savings vs full on-chain storage
 
 **TC4: Small Producer Feasibility Analysis**
-- Addresses the 89% enterprise bias in current research (Zhao et al., 2023)
+- Addresses enterprise bias in current research (Ellahi et al., 2024)
 - Demonstrates Ethereum public blockchain viability for small-scale producers
 - Evaluates barriers: gas costs, technical complexity, setup requirements
 - Compares with traditional centralized database approach
 
 ### 2.4.3 Field Positioning
 
-This thesis positions within the Ethereum research stream (48 of 150 papers in Zhao et al. systematic review) while addressing the underserved small producer segment (11% of existing research). By demonstrating wallet-free consumer access and IoT simulation viability, this work contributes pragmatic approaches for blockchain traceability adoption beyond enterprise consortiums.
+This thesis positions within the public blockchain research stream while addressing the underserved small producer segment (only 3-5% of frameworks in Ellahi et al. 2024 systematic review). By demonstrating wallet-free consumer access and IoT simulation viability, this work contributes pragmatic approaches for blockchain traceability adoption beyond enterprise consortiums.
 
 The research acknowledges limitations (testnet deployment, simulated sensors, limited scale testing) appropriate for proof-of-concept validation while establishing architectural patterns enabling future production deployment (see Chapter 6 Discussion for production recommendations).
 
@@ -188,7 +186,9 @@ Wood, G. (2014). *Ethereum: A secure decentralised generalised transaction ledge
 
 World Health Organization. (2022). *Food safety fact sheet*. https://www.who.int/news-room/fact-sheets/detail/food-safety
 
-Zhao, G., Liu, S., Lopez, C., Lu, H., Elgueta, S., Chen, H., & Boshkoska, B. M. (2023). Blockchain technology in agri-food value chain management: A synthesis of applications, challenges and future research directions. *Computers in Industry*, 143, 103771.
+Ellahi, R. M., Wood, L. C., & Bekhit, A. E. A. (2024). Blockchain-driven food supply chains: A systematic review for unexplored opportunities. *Applied Sciences*, 14(19), 8944. https://doi.org/10.3390/app14198944
+
+Zhao, G., Liu, S., Lopez, C., Lu, H., Elgueta, S., Chen, H., & Boshkoska, B. M. (2019). Blockchain technology in agri-food value chain management: A synthesis of applications, challenges and future research directions. *Computers in Industry*, 109, 83-99. https://doi.org/10.1016/j.compind.2019.04.002
 
 Zheng, Z., Xie, S., Dai, H., Chen, X., & Wang, H. (2018). Blockchain challenges and opportunities: A survey. *International Journal of Web and Grid Services*, 14(4), 352-375.
 

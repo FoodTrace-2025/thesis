@@ -4,7 +4,7 @@
 
 This thesis developed and evaluated a proof-of-concept blockchain-based food supply chain traceability system addressing the fundamental research question: **"How can blockchain technology be made accessible to mainstream users while preserving its core benefits of decentralization, transparency, and immutability?"**
 
-The work progressed through six phases: (1) Problem definition through comprehensive literature review of 30+ sources, documenting the 50/50 split between Ethereum (48 papers) and Hyperledger Fabric (46 papers) platforms (Zhao et al., 2023); (2) Platform selection justifying Ethereum Sepolia testnet based on educational accessibility, transparency alignment, zero-cost development, and JavaScript tooling familiarity; (3) Smart contract implementation developing four core Solidity ^0.8.20 contracts (ProductRegistry, TraceRecords, SensorData, Verification) totaling 847 lines with >70% test coverage; (4) Full-stack application development implementing 4-role supply chain model (Producer, Distributor, Retailer, Consumer) with custodial wallet architecture for business users and wallet-free consumer access; (5) Testing and performance validation achieving 94.7% smart contract coverage, 12.8-second average block confirmation, and 1.8-second query performance; (6) Comparative analysis revealing blockchain advantages (cryptographic immutability, public transparency, 1.8s query vs 7 days traditional) and limitations (Layer 1 costs $5-13 per product vs Layer 2 $0.01-$0.26, oracle problem, GDPR conflicts).
+The work progressed through six phases: (1) Problem definition through comprehensive literature review of 30+ sources, analyzing blockchain platform trade-offs and identifying the enterprise-bias research gap (Ellahi et al., 2024; Zhao et al., 2019); (2) Platform selection justifying Ethereum Sepolia testnet based on educational accessibility, transparency alignment, zero-cost development, and JavaScript tooling familiarity; (3) Smart contract implementation developing four core Solidity ^0.8.20 contracts (ProductRegistry, TraceRecords, SensorData, Verification) totaling 847 lines with >70% test coverage; (4) Full-stack application development implementing 4-role supply chain model (Producer, Distributor, Retailer, Consumer) with custodial wallet architecture for business users and wallet-free consumer access; (5) Testing and performance validation achieving 94.7% smart contract coverage, 12.8-second average block confirmation, and 1.8-second query performance; (6) Comparative analysis revealing blockchain advantages (cryptographic immutability, public transparency, 1.8s query vs 7 days traditional) and limitations (Layer 1 costs $5-13 per product vs Layer 2 $0.01-$0.26, oracle problem, GDPR conflicts).
 
 The hybrid data architecture balanced blockchain immutability with practical cost management: critical data (product IDs, ownership transfers, timestamps) stored on-chain using optimized Solidity structs (88,432 gas per product registration), while voluminous metadata (descriptions, images, detailed sensor logs) resides off-chain in PostgreSQL with SHA-256 cryptographic linking, achieving 90% gas cost reduction.
 
@@ -153,7 +153,7 @@ Implementation uses read-only blockchain queries via public RPC providers (Alche
 
 ### Research Gap Addressed
 
-The Springer (2025) systematic review quantifies the gap: **89% of reviewed papers (52/58) study enterprise consortiums; only 11% (6/58) address small producer scenarios**, and "none explicitly analyze cost viability for <100-product operations." The 570 million small farms globally (FAO, 2023) representing the majority of food producers remain excluded from blockchain traceability benefits due to cost and complexity assumptions embedded in enterprise-focused research.
+Ellahi et al.'s (2024) systematic review quantifies the gap: **95% of 60 reviewed frameworks (57/60) focus on enterprise traceability optimization; only 3-5% (2-3/60) address small producer financing and humanitarian concerns** such as donation/redistribution systems. The 570 million small farms globally (FAO, 2023) representing the majority of food producers remain excluded from blockchain traceability benefits due to cost and complexity assumptions embedded in enterprise-focused research.
 
 ### Technical Contributions
 
@@ -295,7 +295,9 @@ Wang, H., Chen, Y., & Liu, Z. (2023). Gas consumption patterns in Ethereum suppl
 
 World Health Organization. (2022). *Food safety fact sheet*. https://www.who.int/news-room/fact-sheets/detail/food-safety
 
-Zhao, G., et al. (2023). Blockchain technology in agri-food value chain management: A synthesis of applications, challenges and future research directions. *Computers in Industry*, 143, 103771.
+Ellahi, R. M., Wood, L. C., & Bekhit, A. E. A. (2024). Blockchain-driven food supply chains: A systematic review for unexplored opportunities. *Applied Sciences*, 14(19), 8944. https://doi.org/10.3390/app14198944
+
+Zhao, G., et al. (2019). Blockchain technology in agri-food value chain management: A synthesis of applications, challenges and future research directions. *Computers in Industry*, 109, 83-99. https://doi.org/10.1016/j.compind.2019.04.002
 
 ---
 

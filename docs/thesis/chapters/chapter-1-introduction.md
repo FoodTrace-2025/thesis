@@ -10,7 +10,7 @@ However, existing blockchain supply chain implementations face a critical trade-
 
 ### Research Gap
 
-Current research lacks solutions balancing transparency benefits of public blockchains with accessibility requirements for mass adoption. The Springer (2025) systematic literature review analyzing 48 blockchain food traceability papers found 89% focus on enterprise consortiums; only 11% address small producer scenarios. Moreover, wallet-based access remains the dominant pattern, creating adoption barriers for end consumers who simply want to verify product authenticity without installing cryptocurrency software.
+Current research lacks solutions balancing transparency benefits of public blockchains with accessibility requirements for mass adoption. Ellahi et al.'s (2024) systematic review analyzing 60 blockchain food supply chain frameworks found 95% focus on enterprise traceability optimization; only 3-5% address small producer financing and humanitarian concerns. Moreover, wallet-based access remains the dominant pattern, creating adoption barriers for end consumers who simply want to verify product authenticity without installing cryptocurrency software.
 
 This thesis addresses this gap by demonstrating how Ethereum public blockchain can provide transparent supply chain tracking while enabling wallet-free consumer access through hybrid architecture: critical data on-chain (product identity, ownership, timestamps), metadata off-chain (PostgreSQL), cryptographically linked via SHA-256 hashes. This approach targets small-scale producers—the 570 million farms globally (FAO, 2023) underserved by enterprise consortium models.
 
