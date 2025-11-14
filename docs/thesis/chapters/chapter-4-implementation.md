@@ -10,7 +10,7 @@ The FoodTrace system deploys three Solidity smart contracts to Ethereum Sepolia 
 
 ### 4.1.1 ProductRegistry Contract
 
-The ProductRegistry contract serves as the core ledger for product registration and ownership tracking. The contract implements OpenZeppelin's AccessControl for role-based permissions, allowing only verified producers to register products while enabling public read access for consumers. Each product stores critical data on-chain: product ID (auto-incremented counter), creator address, registration timestamp, and current status (Active, Transferred, or Sold).
+The ProductRegistry contract serves as the core ledger for product registration and ownership tracking. The contract implements OpenZeppelin's AccessControl library for role-based permissions (OpenZeppelin, 2024), allowing only verified producers to register products while enabling public read access for consumers. Each product stores critical data on-chain: product ID (auto-incremented counter), creator address, registration timestamp, and current status (Active, Transferred, or Sold).
 
 Key design decisions prioritize gas cost optimization while maintaining immutability, applying best practices from systematic reviews documenting 27+ gas-efficient patterns for smart contract development (Springer, 2025). Product names and descriptions stored as Keccak-256 hashes (bytes32) referencing off-chain metadata in Supabase PostgreSQL, reducing gas consumption from ~100,000 to ~60,000 per registration through data structure optimization. The contract emits ProductRegistered events upon successful registration, enabling efficient off-chain indexing for the consumer query interface without additional storage costs.
 
@@ -34,7 +34,7 @@ Design trade-offs balance on-chain verification against gas costs for high-frequ
 
 ### 4.1.4 Deployment and Verification
 
-All contracts deployed to Ethereum Sepolia testnet using Hardhat deployment scripts with gas price optimization targeting 20-30 gwei during off-peak hours. Each contract verified on Etherscan immediately post-deployment using Hardhat's verify task, making source code publicly auditable. Post-deployment testing validated cross-contract interactions and confirmed target gas costs: ProductRegistry.registerProduct() averaged 88,432 gas, TraceRecords.addTraceRecord() averaged 72,156 gas, and SensorData.recordReading() averaged 45,234 gas.
+All contracts deployed to Ethereum Sepolia testnet using Hardhat deployment scripts (Hardhat, 2024) with gas price optimization targeting 20-30 gwei during off-peak hours following Ethereum gas optimization best practices (Ethereum.org, 2024). Each contract verified on Etherscan immediately post-deployment using Hardhat's verify task, making source code publicly auditable. Post-deployment testing validated cross-contract interactions and confirmed target gas costs: ProductRegistry.registerProduct() averaged 88,432 gas, TraceRecords.addTraceRecord() averaged 72,156 gas, and SensorData.recordReading() averaged 45,234 gas.
 
 All contracts verified on Etherscan (Sepolia): https://sepolia.etherscan.io/
 
@@ -44,13 +44,13 @@ All contracts verified on Etherscan (Sepolia): https://sepolia.etherscan.io/
 
 ## 4.2 Backend Development
 
-The backend architecture uses Next.js API routes (serverless functions) combined with Supabase PostgreSQL for off-chain data storage and Wagmi v2 for blockchain interaction.
+The backend architecture uses Next.js 14 API routes (Next.js, 2024) for serverless functions combined with Supabase PostgreSQL for off-chain data storage and Wagmi v2 (Wagmi, 2024) for blockchain interaction following modern Web3 development patterns.
 
 ### 4.2.1 Database Schema (Prisma + Supabase)
 
 The PostgreSQL database schema follows normalized relational database principles while accommodating blockchain data patterns. Primary tables include Product (stores off-chain metadata linked to on-chain product IDs), TraceRecord (caches blockchain trace events for fast queries), SensorReading (stores IoT simulator data), and User/Company (authentication and multi-tenancy). Each table includes blockchain-specific fields: transactionHash (links to Ethereum transaction), blockNumber (for event ordering), and onChainId (maps to smart contract product ID).
 
-Foreign key relationships enforce referential integrity between Product, TraceRecord, SensorReading, User, and Company tables. Prisma's migration system manages schema evolution with automatic rollback capabilities. Connection pooling through Supabase's pgBouncer (TRANSACTION mode) prevents connection exhaustion in Next.js serverless environment where each API route invocation creates a new database client.
+Foreign key relationships enforce referential integrity between Product, TraceRecord, SensorReading, User, and Company tables. Prisma ORM (Prisma, 2024) manages schema evolution through declarative migrations with automatic rollback capabilities, providing type-safe database access and preventing SQL injection vulnerabilities. Connection pooling through Supabase's pgBouncer (TRANSACTION mode) prevents connection exhaustion in Next.js serverless environment where each API route invocation creates a new database client.
 
 Database indexing strategy prioritizes consumer query performance: composite index on (Product.onChainId, TraceRecord.timestamp) enables efficient trace history retrieval, and index on SensorReading.timestamp enables cold chain monitoring queries.
 
@@ -69,7 +69,7 @@ Performance optimization employs caching strategies: React Query on frontend cac
 
 ### 4.2.3 Web3 Integration (Wagmi v2)
 
-Web3 functionality implemented using Wagmi v2 library providing React hooks for Ethereum interaction. Configuration in `src/lib/wagmi.ts` defines Sepolia chain connection, Alchemy RPC provider (HTTP transport), and contract ABIs. Wagmi's createConfig initializes Web3 client with connection pooling and automatic retry logic for failed RPC requests.
+Web3 functionality implemented using Wagmi v2 library (Wagmi, 2024) providing React hooks for Ethereum interaction, built on Viem (Viem, 2024) for type-safe Ethereum operations. Configuration in `src/lib/wagmi.ts` defines Sepolia chain connection, Alchemy RPC provider (HTTP transport), and contract ABIs. Wagmi's createConfig initializes Web3 client with connection pooling and automatic retry logic for failed RPC requests.
 
 Server-side blockchain interaction follows custodial wallet pattern: producer/distributor/retailer wallets stored encrypted (AES-256) in database, decrypted server-side for transaction signing. This eliminates frontend MetaMask requirements for business users while maintaining security through encryption-at-rest and HTTPS transport encryption. Transaction signing flow: API route retrieves encrypted private key → decrypts using environment variable key → creates Wagmi wallet connector → signs transaction → returns transaction hash to frontend.
 
@@ -81,7 +81,7 @@ Error handling addresses common Web3 failure modes: RPC timeout (retry with expo
 
 ## 4.3 Frontend Development
 
-The frontend implements four role-specific interfaces (Producer, Distributor, Retailer, Consumer) using Next.js 14 Pages Router with TypeScript and Chakra UI v2 component library.
+The frontend implements four role-specific interfaces (Producer, Distributor, Retailer, Consumer) using Next.js 14 Pages Router with TypeScript and Chakra UI v2 component library (Chakra UI, 2024) for accessible, customizable React components following WAI-ARIA design patterns.
 
 ### 4.3.1 Layout Architecture and Routing
 
@@ -188,13 +188,29 @@ The complete FoodTrace implementation utilizes:
 
 ## References for Chapter 4
 
+Chakra UI. (2024). *Chakra UI documentation: Accessible React component library*. Retrieved from https://chakra-ui.com/docs
+
 Consensys. (2023). *Web3 user research report: Barriers to blockchain adoption*. ConsenSys AG.
+
+Ethereum.org. (2024). *Ethereum development documentation: Gas optimization best practices*. Retrieved from https://ethereum.org/en/developers/docs/
+
+Hardhat. (2024). *Hardhat documentation: Ethereum development environment*. Retrieved from https://hardhat.org/docs
+
+Next.js. (2024). *Next.js 14 documentation: The React framework for production*. Vercel. Retrieved from https://nextjs.org/docs
+
+OpenZeppelin. (2024). *OpenZeppelin contracts documentation: Secure smart contract library*. Retrieved from https://docs.openzeppelin.com/contracts
+
+Prisma. (2024). *Prisma ORM documentation: Type-safe database access*. Retrieved from https://www.prisma.io/docs
 
 Springer. (2025). A systematic review on smart contracts security design patterns. *Empirical Software Engineering*. https://doi.org/10.1007/s10664-025-10646-w
 
 Tsang, Y. P., Choy, K. L., Wu, C. H., Ho, G. T. S., & Lam, H. Y. (2019). Blockchain-driven IoT for food traceability with an integrated consensus mechanism. *IEEE Access*, 7, 129000-129017. https://doi.org/10.1109/ACCESS.2019.2940227
 
+Viem. (2024). *Viem documentation: TypeScript interface for Ethereum*. Retrieved from https://viem.sh
+
 Voskobojnikov, A., Wiese, O., Mehrabi Koushki, M., Roth, V., & Beznosov, K. (2021). The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. *CHI '21: CHI Conference on Human Factors in Computing Systems*. https://doi.org/10.1145/3411764.3445407
+
+Wagmi. (2024). *Wagmi v2 documentation: React hooks for Ethereum*. Retrieved from https://wagmi.sh
 
 ---
 

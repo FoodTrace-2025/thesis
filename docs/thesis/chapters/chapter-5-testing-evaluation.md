@@ -127,7 +127,7 @@ All tests passed across Chrome 120, Firefox 121, and Safari 17.2 with no browser
 
 ### 5.3.3 Accessibility Testing
 
-Accessibility testing ensured WCAG 2.1 Level AA compliance using automated Lighthouse audits and manual keyboard navigation testing.
+Accessibility testing ensured WCAG 2.1 Level AA compliance (W3C, 2018) using automated Lighthouse audits and manual keyboard navigation testing, validating conformance to Web Content Accessibility Guidelines for perceivable, operable, understandable, and robust user interfaces.
 
 **Lighthouse Accessibility Scores:**
 
@@ -361,9 +361,15 @@ The FoodTrace system does not solve the "oracle problem"—ensuring off-chain da
 
 Cohn, M. (2009). *Succeeding with agile: Software development using Scrum*. Addison-Wesley Professional.
 
+Hardhat. (2024). *Hardhat documentation: Ethereum development environment*. Retrieved from https://hardhat.org/docs
+
 IEEE. (2024). Optimizing gas consumption in Ethereum smart contracts: Best practices and techniques. *IEEE Conference Publication*, Document 10429984. IEEE Xplore.
 
+Solidity. (2024). *Solidity documentation: Smart contract programming language*. Retrieved from https://docs.soliditylang.org
+
 Tsang, Y. P., Choy, K. L., Wu, C. H., Ho, G. T. S., & Lam, H. Y. (2019). Blockchain-driven IoT for food traceability with an integrated consensus mechanism. *IEEE Access*, 7, 129000-129017. https://doi.org/10.1109/ACCESS.2019.2940227
+
+W3C. (2018). *Web Content Accessibility Guidelines (WCAG) 2.1*. World Wide Web Consortium. Retrieved from https://www.w3.org/TR/WCAG21/
 
 ---
 

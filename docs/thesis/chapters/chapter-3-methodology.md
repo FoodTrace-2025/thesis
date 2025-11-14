@@ -106,7 +106,7 @@ The system employs hybrid data storage balancing blockchain immutability with of
 
 The testing approach emphasizes risk-based prioritization across multiple test levels, following test-driven development (TDD) principles demonstrated feasible for agile blockchain smart contract development despite unique constraints including transaction immutability and deployment costs (IEEE, 2024). The test pyramid strategy prioritizes unit testing volume over integration and end-to-end tests for optimal development velocity and defect detection efficiency.
 
-**Unit Tests (Hardhat + Mocha + Chai):** Validate individual smart contract functions with >70% coverage target. Example: `registerProduct()` validation (should emit event, should revert if date is future, should assign correct ID). Execution time: ~15 seconds for 42 tests.
+**Unit Tests (Hardhat + Mocha + Chai):** Validate individual smart contract functions with >70% coverage target using Hardhat's Ethereum development environment (Hardhat, 2024) and Solidity testing capabilities (Solidity, 2024). Example: `registerProduct()` validation (should emit event, should revert if date is future, should assign correct ID). Execution time: ~15 seconds for 42 tests.
 
 **Integration Tests (Hardhat + Mocha):** Validate multi-contract interactions. Example: Complete product journey (register → distributor trace → retailer trace → consumer query). Execution time: ~45 seconds including blockchain transaction simulation.
 
@@ -189,6 +189,8 @@ All collected data organized in `docs/metrics/` for thesis reference, directly i
 
 ## References for Chapter 3
 
+Hardhat. (2024). *Hardhat documentation: Ethereum development environment*. Retrieved from https://hardhat.org/docs
+
 IEEE. (2024). Feasibility of test-driven development in agile blockchain smart contract development: A comprehensive analysis. *IEEE Conference Publication*, Document 10742781. IEEE Xplore.
 
 Marchesi, L., Marchesi, M., & Tonelli, R. (2020). ABCDE—agile block chain DApp engineering. *Blockchain: Research and Applications*, 1(1-2), 100002. https://doi.org/10.1016/j.bcra.2020.100002
@@ -196,6 +198,8 @@ Marchesi, L., Marchesi, M., & Tonelli, R. (2020). ABCDE—agile block chain DApp
 MDPI. (2023). Research on the construction of grain food multi-chain blockchain based on zero-knowledge proof. *Foods*, 12(8), 1600. https://doi.org/10.3390/foods12081600
 
 Saurabh, S., & Dey, K. (2021). Blockchain adoption in food supply chains: A review and implementation framework. *Production Planning & Control*, 32(10), 821-841. https://doi.org/10.1080/09537287.2021.1939902
+
+Solidity. (2024). *Solidity documentation: Smart contract programming language*. Retrieved from https://docs.soliditylang.org
 
 Zhao, G., Liu, S., Lopez, C., Lu, H., Elgueta, S., Chen, H., & Boshkoska, B. M. (2019). Blockchain technology in agri-food value chain management: A synthesis of applications, challenges and future research directions. *Computers in Industry*, 109, 83-99. https://doi.org/10.1016/j.compind.2019.04.002
 
