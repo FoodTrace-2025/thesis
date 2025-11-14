@@ -164,8 +164,6 @@ Voskobojnikov, A., Wiese, O., Mehrabi Koushki, M., Roth, V., & Beznosov, K. (202
 
 Casino, F., Dasaklis, T. K., & Patsakis, C. (2019). A systematic literature review of blockchain-based applications: Current status, classification and open issues. *Telematics and Informatics*, 61, 101597.
 
-Consensys. (2023). *Web3 user research report: Barriers to blockchain adoption*. ConsenSys AG.
-
 FDA. (2023). *FSMA Rule 204: Food traceability requirements*. U.S. Food and Drug Administration.
 
 Food and Agriculture Organization (FAO). (2023). *Small family farms country factsheet*.

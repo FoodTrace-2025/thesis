@@ -83,7 +83,7 @@ Blockchain applications present unique UX challenges not found in traditional we
 6. Gas fee payment
 7. Confirmation wait
 
-Blockchain wallet onboarding requires **substantially longer time than traditional account creation** due to seed phrase generation, secure backup procedures, and network configuration steps. Kaspersky (2023) survey found that **32% of cryptocurrency owners have lost access to a crypto-related account at some point**, highlighting irrecoverability challenges absent in traditional systems (password reset vs. permanent loss).
+Blockchain wallet onboarding requires **substantially longer time than traditional account creation** due to seed phrase generation, secure backup procedures, and network configuration steps. Empirical research analyzing 45,821 mobile wallet app reviews documents that users frequently experience irreversible monetary losses due to seed phrase mismanagement, with wallet complexity presenting significant adoption barriers for both novice and experienced users (Voskobojnikov et al., 2021). These irrecoverability challenges are absent in traditional systems where password reset mechanisms prevent permanent account loss.
 
 ### 2.3.2 Wallet-Free Access Pattern
 
@@ -180,9 +180,9 @@ Buterin, V., & Griffith, V. (2017). Casper the friendly finality gadget. *arXiv 
 
 Casino, F., Dasaklis, T. K., & Patsakis, C. (2019). A systematic literature review of blockchain-based applications: Current status, classification and open issues. *Telematics and Informatics*, 61, 101597.
 
-Consensys. (2023). *Web3 user research report: Barriers to blockchain adoption*. ConsenSys AG.
-
 FDA. (2023). *FSMA Rule 204: Food traceability requirements*. U.S. Food and Drug Administration. https://www.fda.gov/food/food-safety-modernization-act-fsma/fsma-final-rule-requirements-additional-traceability-records-certain-foods
+
+Voskobojnikov, A., Wiese, O., Mehrabi Koushki, M., Roth, V., & Beznosov, K. (2021). The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. *CHI '21: CHI Conference on Human Factors in Computing Systems*. https://doi.org/10.1145/3411764.3445407
 
 Gartner. (2023). *Supply chain technology trends: Top 10 priorities for 2024*. Gartner Research.
 

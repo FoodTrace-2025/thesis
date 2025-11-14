@@ -190,8 +190,6 @@ The complete FoodTrace implementation utilizes:
 
 Chakra UI. (2024). *Chakra UI documentation: Accessible React component library*. Retrieved from https://chakra-ui.com/docs
 
-Consensys. (2023). *Web3 user research report: Barriers to blockchain adoption*. ConsenSys AG.
-
 Ethereum.org. (2024). *Ethereum development documentation: Gas optimization best practices*. Retrieved from https://ethereum.org/en/developers/docs/
 
 Hardhat. (2024). *Hardhat documentation: Ethereum development environment*. Retrieved from https://hardhat.org/docs

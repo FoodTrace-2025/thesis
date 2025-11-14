@@ -79,7 +79,7 @@ Query performance of 1.8 seconds outperformed IBM Food Trust's 2.2-second Hyperl
 
 **UX Challenges Quantified:**
 - Wallet setup complexity presents significant adoption barriers for non-technical users
-- Kaspersky (2023): 32% of cryptocurrency owners have lost access to crypto accounts, highlighting irrecoverability challenges
+- Empirical research analyzing 45,821 mobile wallet app reviews documents frequent irreversible monetary losses due to seed phrase mismanagement (Voskobojnikov et al., 2021)
 - Wallet onboarding requires substantially longer time than traditional account creation due to seed phrase management and multi-step authentication
 
 **Pattern 1: Custodial Wallets for Business Users**
@@ -277,8 +277,6 @@ The question is now *"How do we scale this technology equitably?"*—and that re
 
 ## References for Chapter 7
 
-ConsenSys. (2023). *Web3 user research report: Barriers to blockchain adoption*. ConsenSys AG.
-
 Ellahi, R. M., Wood, L. C., & Bekhit, A. E. A. (2024). Blockchain-driven food supply chains: A systematic review for unexplored opportunities. *Applied Sciences*, 14(19), 8944. https://doi.org/10.3390/app14198944
 
 Food and Agriculture Organization. (2023). *The state of food and agriculture 2023*. FAO. https://doi.org/10.4060/cc7724en
@@ -292,6 +290,8 @@ IEEE Communications Surveys & Tutorials. (2024). A survey on blockchain scalabil
 IEEE Transactions on Network Science and Engineering. (2024). Performance evaluation of blockchain sharding with EIP-4844: Analysis and implications for Ethereum scalability. *IEEE Transactions on Network Science and Engineering*. https://doi.org/10.1109/TNSE.2025.3594281
 
 Nakamoto, S. (2008). *Bitcoin: A peer-to-peer electronic cash system*. https://bitcoin.org/bitcoin.pdf
+
+Voskobojnikov, A., Wiese, O., Mehrabi Koushki, M., Roth, V., & Beznosov, K. (2021). The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. *CHI '21: CHI Conference on Human Factors in Computing Systems*. https://doi.org/10.1145/3411764.3445407
 
 World Health Organization. (2022). *Food safety fact sheet*. https://www.who.int/news-room/fact-sheets/detail/food-safety
 

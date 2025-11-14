@@ -6,7 +6,7 @@ Blockchain technology, introduced by Nakamoto (2008) with Bitcoin, has evolved b
 
 Food supply chains exemplify these challenges. Traditional centralized systems rely on intermediaries and paper-based tracking, creating information asymmetries and slow response times. Walmart's 2016 mango traceability experiment required nearly seven days using conventional paper-based methods (Kamath, 2018). After implementing IBM Food Trust on Hyperledger Fabric, the same query completed in 2.2 seconds (Kamath, 2018; Hyperledger Foundation case study, 2019)—demonstrating blockchain's technical capability for rapid consensus across distributed stakeholders.
 
-However, existing blockchain supply chain implementations face a critical trade-off between accessibility and decentralization. Enterprise solutions like IBM Food Trust provide user-friendly interfaces but rely on permissioned blockchains controlled by centralized gatekeepers, undermining public verifiability (Hyperledger Foundation case study, 2019). Conversely, public blockchain applications (Ethereum DApps) offer true decentralization but suffer from poor user experience—requiring wallet management, cryptocurrency for transaction fees, and technical expertise that excludes mainstream users (Consensys, 2023). This creates a "crypto-native vs mainstream user" divide limiting adoption beyond technical enthusiasts.
+However, existing blockchain supply chain implementations face a critical trade-off between accessibility and decentralization. Enterprise solutions like IBM Food Trust provide user-friendly interfaces but rely on permissioned blockchains controlled by centralized gatekeepers, undermining public verifiability (Hyperledger Foundation case study, 2019). Conversely, public blockchain applications (Ethereum DApps) offer true decentralization but suffer from poor user experience—requiring wallet management, cryptocurrency for transaction fees, and technical expertise that excludes mainstream users, with empirical research documenting that both novice and experienced users struggle with wallet complexity leading to frustration and dangerous errors (Voskobojnikov et al., 2021). This creates a "crypto-native vs mainstream user" divide limiting adoption beyond technical enthusiasts.
 
 ### Research Gap
 
@@ -73,7 +73,7 @@ This thesis progresses through seven chapters: **Chapter 1** (current) establish
 
 Buterin, V. (2014). _Ethereum: A next-generation smart contract and decentralized application platform_. Ethereum Foundation. https://ethereum.org/whitepaper
 
-Consensys. (2023). _Web3 User Research: Barriers to Blockchain Adoption_. Consensys Research Reports.
+Ellahi, R. M., Wood, L. C., & Bekhit, A. E. A. (2024). Blockchain-driven food supply chains: A systematic review for unexplored opportunities. _Applied Sciences_, 14(19), 8944. https://doi.org/10.3390/app14198944
 
 Food and Agriculture Organization (FAO). (2023). _Small family farms country factsheet_. Retrieved from https://www.fao.org/family-farming
 
