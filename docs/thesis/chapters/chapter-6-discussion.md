@@ -116,7 +116,7 @@ The Springer (2025) systematic review identifies regulatory uncertainty as the p
 
 ### 6.3.4 IoT Simulation Versus Real Hardware
 
-The software-based IoT simulator enabled reproducible testing and architectural validation without hardware costs, yet real IoT integration introduces challenges absent from the POC:
+The software-based IoT simulator enabled reproducible testing and architectural validation without hardware costs, yet real IoT integration introduces challenges absent from the POC. Production blockchain-IoT systems require addressing device management, network reliability, and physical security challenges documented in food traceability implementations (Tsang et al., 2019).
 
 1. **Device Management:** Sensors require firmware updates, battery replacement (DHT22: ~6 month lifespan), and failure recovery over 12-month deployments. The simulator assumed 100% uptime.
 
@@ -130,7 +130,7 @@ Real IoT deployment introduces significant development time (months) and hardwar
 
 ### 6.3.5 User Experience Barriers
 
-**Wallet Complexity:** Despite wallet-free consumer access, supply chain participants require wallet management. Initial MetaMask wallet setup—seed phrase generation, backup instructions, network configuration, test ETH acquisition—proved substantially more time-consuming for non-technical users than traditional account creation. Wallet complexity including seed phrase management presents significant adoption barriers for non-technical users.
+**Wallet Complexity:** Despite wallet-free consumer access, supply chain participants require wallet management. Initial MetaMask wallet setup—seed phrase generation, backup instructions, network configuration, test ETH acquisition—proved substantially more time-consuming for non-technical users than traditional account creation. Empirical research analyzing thousands of cryptocurrency wallet reviews documents that wallet complexity including seed phrase management presents significant adoption barriers for non-technical users, with both novice and experienced users struggling with UX issues that can lead to irreversible monetary losses (Voskobojnikov et al., 2021).
 
 The seed phrase backup process proved particularly problematic. Test participants frequently asked: "Why must I write down 24 words? Can't I just use email/password?" Security best practices mandate offline seed phrase storage, yet this conflicts with user expectations shaped by traditional account recovery. The custodial wallet abstraction (storing encrypted private keys server-side) resolves this for business users willing to trust the platform, yet introduces the centralization that blockchain aimed to eliminate.
 
@@ -143,6 +143,10 @@ The seed phrase backup process proved particularly problematic. Test participant
 Buterin, V. (2014). *Ethereum: A next-generation smart contract and decentralized application platform*. Ethereum Foundation.
 
 Buterin, V. (2017). The meaning of decentralization. *Medium*.
+
+Tsang, Y. P., Choy, K. L., Wu, C. H., Ho, G. T. S., & Lam, H. Y. (2019). Blockchain-driven IoT for food traceability with an integrated consensus mechanism. *IEEE Access*, 7, 129000-129017. https://doi.org/10.1109/ACCESS.2019.2940227
+
+Voskobojnikov, A., Wiese, O., Mehrabi Koushki, M., Roth, V., & Beznosov, K. (2021). The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. *CHI '21: CHI Conference on Human Factors in Computing Systems*. https://doi.org/10.1145/3411764.3445407
 
 Casino, F., Dasaklis, T. K., & Patsakis, C. (2019). A systematic literature review of blockchain-based applications: Current status, classification and open issues. *Telematics and Informatics*, 61, 101597.
 

@@ -62,7 +62,7 @@ Gas costs were measured for all primary contract functions and compared against 
 | `recordSensorData()` | 52,341 | <60k | ✅ Pass | ~$0.79 |
 | `getProduct()` (read-only) | 0 | 0 | ✅ Pass | Free |
 
-Gas optimization techniques applied included struct packing to minimize storage slots (reducing SSTORE operations costing 20,000 gas each), limiting indexed parameters to 3 per event, and using uint256 consistently to avoid type conversion costs. These optimizations reduced registration costs from ~100,000 to ~87,432 gas (12.6% improvement).
+Gas optimization techniques applied included struct packing to minimize storage slots (reducing SSTORE operations costing 20,000 gas each), limiting indexed parameters to 3 per event, and using uint256 consistently to avoid type conversion costs, following documented best practices for Ethereum smart contract gas consumption optimization (IEEE, 2024). These optimizations reduced registration costs from ~100,000 to ~87,432 gas (12.6% improvement).
 
 ### 5.2.3 Security Testing
 
@@ -323,7 +323,7 @@ While immutability is a core benefit, it creates challenges for data correction 
 
 ### 5.7.3 IoT Simulation Limitations
 
-The FoodTrace system uses IoT simulator rather than real sensor hardware, introducing limitations:
+The FoodTrace system uses IoT simulator rather than real sensor hardware, introducing limitations. While blockchain-IoT integration architectures have been demonstrated for food traceability with physical sensors (Tsang et al., 2019), simulation-based approaches trade real-world validation for development speed and cost efficiency appropriate for proof-of-concept implementations.
 
 **Data Authenticity:** Simulated sensor data lacks authenticity of real-world measurements. Manual data entry introduces opportunity for data manipulation. Three preset scenarios (Normal/Warning/Critical) create predictable patterns rather than natural sensor variability. While `isSimulated: true` flag provides transparency, consumers may distrust data labeled as simulated even if representing real conditions.
 
@@ -360,6 +360,10 @@ The FoodTrace system does not solve the "oracle problem"—ensuring off-chain da
 ## References for Chapter 5
 
 Cohn, M. (2009). *Succeeding with agile: Software development using Scrum*. Addison-Wesley Professional.
+
+IEEE. (2024). Optimizing gas consumption in Ethereum smart contracts: Best practices and techniques. *IEEE Conference Publication*, Document 10429984. IEEE Xplore.
+
+Tsang, Y. P., Choy, K. L., Wu, C. H., Ho, G. T. S., & Lam, H. Y. (2019). Blockchain-driven IoT for food traceability with an integrated consensus mechanism. *IEEE Access*, 7, 129000-129017. https://doi.org/10.1109/ACCESS.2019.2940227
 
 ---
 

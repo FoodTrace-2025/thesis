@@ -2,7 +2,7 @@
 
 ## 3.1 Development Approach
 
-This project follows agile development methodology with iterative development cycles, test-driven development, and systematic quality gates. Development utilizes AI-assisted tooling (Claude Code IDE) following OAMK guidelines on generative AI usage in studies. AI tools support code scaffolding, documentation generation, and workflow automation.
+This project follows agile development methodology with iterative development cycles, test-driven development, and systematic quality gates aligned with blockchain-specific development best practices. The ABCDE (Agile Block Chain DApp Engineering) framework guides implementation, separating development activities into two flows—smart contract development and off-chain software development—each performed iteratively with integration activities every 2-3 iterations (Marchesi et al., 2020). Development utilizes AI-assisted tooling (Claude Code IDE) following OAMK guidelines on generative AI usage in studies. AI tools support code scaffolding, documentation generation, and workflow automation.
 
 However, all technical decisions—blockchain architecture design, smart contract security patterns, Web3 integration strategies, and platform selection trade-offs—were researched, analyzed, and validated by the development team through literature review and comparative analysis documented in Chapter 2. The learning focus remains on Ethereum fundamentals, Solidity security patterns, supply chain traceability architecture, and Web3 accessibility challenges.
 
@@ -44,7 +44,7 @@ These checkpoints prevent proceeding with inconsistent requirements or unstable 
 
 ### 3.3.1 Selection Criteria
 
-The choice between Ethereum and Hyperledger Fabric required analysis of factors relevant to an academic proof-of-concept:
+The choice between Ethereum and Hyperledger Fabric required analysis of factors relevant to an academic proof-of-concept, informed by systematic literature reviews documenting blockchain adoption drivers and barriers in food supply chains (Saurabh & Dey, 2021). Platform selection frameworks emphasize evaluating transparency requirements, cost structures, throughput constraints, and regulatory compliance capabilities (Zhao et al., 2019).
 
 **Educational Feasibility:** Ethereum provides extensive free learning resources (Cyfrin Updraft, Ethereum.org tutorials) reducing Week 1-2 learning time. Hyperledger Fabric's steeper learning curve requires understanding consortium blockchain concepts with fewer beginner-friendly resources.
 
@@ -80,11 +80,13 @@ This architecture balances simplicity appropriate for 12-week development timeli
 
 ### 3.4.2 Hybrid Data Architecture
 
-The system employs hybrid data storage balancing blockchain immutability with off-chain efficiency:
+The system employs hybrid data storage balancing blockchain immutability with off-chain efficiency, following architectural patterns documented in blockchain-based food supply chain frameworks that achieve 75% storage cost reductions through selective on-chain/off-chain data partitioning (MDPI, 2023):
 
 **On-Chain Data (Ethereum Smart Contracts):** Product registration (Product ID, creator address, timestamp), trace records (actor address, action type, location, timestamp), sensor data (temperature, humidity, sensor ID, timestamp), and verification status (verifier addresses, verification timestamps).
 
 **Off-Chain Data (Supabase PostgreSQL):** Product metadata (name, description, photos), rich text content (quality notes, location descriptions), cached blockchain data for fast queries, and user authentication.
+
+**Cryptographic Linking:** SHA-256 hashes stored on-chain reference off-chain metadata, enabling verification of data integrity without storing full content on blockchain. Future implementations could extend this pattern using zero-knowledge proofs for selective disclosure, enabling privacy-preserving verification of organic certifications or temperature compliance without revealing exact values (MDPI, 2023).
 
 **Rationale:** Storing all data on-chain incurs prohibitive gas costs (1KB costs ~640,000 gas = €20-30 on mainnet) and creates immutability constraints preventing description edits. Storing all data off-chain eliminates immutability benefits and prevents independent verification. The hybrid approach stores critical data on-chain for immutability while maintaining flexible metadata off-chain, achieving cost efficiency while preserving traceability integrity.
 
@@ -102,7 +104,7 @@ The system employs hybrid data storage balancing blockchain immutability with of
 
 ### 3.5.1 Testing Strategy
 
-The testing approach emphasizes risk-based prioritization across multiple test levels:
+The testing approach emphasizes risk-based prioritization across multiple test levels, following test-driven development (TDD) principles demonstrated feasible for agile blockchain smart contract development despite unique constraints including transaction immutability and deployment costs (IEEE, 2024). The test pyramid strategy prioritizes unit testing volume over integration and end-to-end tests for optimal development velocity and defect detection efficiency.
 
 **Unit Tests (Hardhat + Mocha + Chai):** Validate individual smart contract functions with >70% coverage target. Example: `registerProduct()` validation (should emit event, should revert if date is future, should assign correct ID). Execution time: ~15 seconds for 42 tests.
 
@@ -186,6 +188,14 @@ All collected data organized in `docs/metrics/` for thesis reference, directly i
 ---
 
 ## References for Chapter 3
+
+IEEE. (2024). Feasibility of test-driven development in agile blockchain smart contract development: A comprehensive analysis. *IEEE Conference Publication*, Document 10742781. IEEE Xplore.
+
+Marchesi, L., Marchesi, M., & Tonelli, R. (2020). ABCDE—agile block chain DApp engineering. *Blockchain: Research and Applications*, 1(1-2), 100002. https://doi.org/10.1016/j.bcra.2020.100002
+
+MDPI. (2023). Research on the construction of grain food multi-chain blockchain based on zero-knowledge proof. *Foods*, 12(8), 1600. https://doi.org/10.3390/foods12081600
+
+Saurabh, S., & Dey, K. (2021). Blockchain adoption in food supply chains: A review and implementation framework. *Production Planning & Control*, 32(10), 821-841. https://doi.org/10.1080/09537287.2021.1939902
 
 Zhao, G., Liu, S., Lopez, C., Lu, H., Elgueta, S., Chen, H., & Boshkoska, B. M. (2019). Blockchain technology in agri-food value chain management: A synthesis of applications, challenges and future research directions. *Computers in Industry*, 109, 83-99. https://doi.org/10.1016/j.compind.2019.04.002
 
