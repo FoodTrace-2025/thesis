@@ -507,12 +507,14 @@ This thesis demonstrates that BMAD (Build-Measure-Assess-Decide) methodology ena
 Literature review (Springer, 2025; Zhao et al., 2019) documents equal academic adoption of Ethereum (24 papers) and Hyperledger Fabric (24 papers) for food supply chain traceability, suggesting platform-agnostic validity of blockchain approach.
 
 **Selection Criteria Prioritization:**
+
 1. Educational feasibility (12-week constraint, zero prior blockchain experience)
 2. Zero-cost infrastructure (testnet availability, no cloud hosting fees)
 3. Public verifiability (thesis reviewers can independently verify transactions via Etherscan)
 4. Abundant learning resources (Cyfrin Updraft, Ethereum.org, 10+ years community support)
 
 **Ethereum Advantages for Academic POC:**
+
 - Setup time: <30 minutes (Sepolia testnet) vs 40+ hours (Hyperledger multi-node consortium)
 - Cost: €0 (free test ETH) vs €50-100/month (AWS/Azure cloud infrastructure)
 - Transparency: Public blockchain enables consumer trust verification without consortium membership
@@ -521,6 +523,7 @@ Literature review (Springer, 2025; Zhao et al., 2019) documents equal academic a
 **Hyperledger Fabric Advantages (Acknowledged for Production):**
 
 Thesis Discussion (Chapter 6) critically evaluates Ethereum limitations and recommends Hyperledger Fabric for production B2B scenarios:
+
 - Throughput: 2,000-3,500 TPS (Fabric) vs 30-50 TPS (Ethereum L1)
 - Transaction costs: Zero fees (consortium) vs $5-13 per transaction (Ethereum mainnet)
 - GDPR compliance: Data deletion capability (Fabric) vs immutability conflict (Ethereum)
@@ -535,6 +538,7 @@ Upon completing this thesis, students will demonstrate:
 1. **Blockchain Fundamentals**: Design and deploy smart contracts (Solidity ^0.8.20) with role-based access control (OpenZeppelin AccessControl), event emission, gas optimization patterns, and security hardening (reentrancy protection, input validation).
 
 2. **Enterprise Architecture Patterns**: Implement production-grade patterns validated against industry case studies:
+
    - Custodial wallet management (AES-256 encryption, server-side transaction signing)
    - Multi-tenant data isolation (Supabase row-level security)
    - Hybrid data architecture (on-chain: 87KB critical data, off-chain: 2.3MB metadata, SHA-256 cryptographic linking)
@@ -1571,23 +1575,32 @@ This section provides high-level descriptions of all 12 epics. Detailed stories 
 
 **Epic Summary:**
 
-| Epic | Name                      | Priority       | Hours  | Owner                   | Week   |
-| ---- | ------------------------- | -------------- | ------ | ----------------------- | ------ |
-| 0    | Project Setup             | 🔴 Must Have   | 4-6h   | All                     | 1-2    |
-| 0.5  | Company & User Management | 🔴 Must Have   | 6-8h   | TaiSheng                | 3      |
-| 0.6  | Security Hardening        | 🔴 Must Have   | 16.5h  | TaiSheng + Sam          | 3-4    |
-| 1    | Product Registration      | 🔴 Must Have   | 8-10h  | Sam + TaiSheng + YiLing | 3-5    |
-| 1.5  | Product Transfer Workflow | 🟡 Should Have | 4-6h   | TaiSheng + YiLing       | 4-6    |
-| 2    | Supply Chain Tracking     | 🔴 Must Have   | 10-12h | Sam + TaiSheng + YiLing | 4-6    |
-| 3    | IoT Simulator             | 🟡 Should Have | 6-8h   | Sam + YiLing            | 4-5    |
-| 4    | Consumer Query            | 🔴 Must Have   | 8-10h  | TaiSheng + YiLing       | 6-7    |
-| 5    | Multi-Party Verification  | 🟡 Should Have | 6-8h   | Sam                     | 4 or 7 |
-| 6    | QR Functionality          | 🔴 Must Have   | 4-6h   | TaiSheng + YiLing       | 5-6    |
-| 7    | Data Visualization        | 🟡 Should Have | 6-8h   | TaiSheng + YiLing       | 7      |
-| 8    | Multi-Language            | 🟢 Could Have  | 4-6h   | YiLing                  | 8      |
-| 9    | Deployment                | 🔴 Must Have   | 4-6h   | TaiSheng                | 8-9    |
+| Epic | Name                      | Priority       | Hours   | Owner                   | Week   |
+| ---- | ------------------------- | -------------- | ------- | ----------------------- | ------ |
+| 0    | Project Setup             | 🔴 Must Have   | 4-6h    | All                     | 1-2    |
+| 0.5  | Company & User Management | 🔴 Must Have   | 8-10h   | TaiSheng                | 3      |
+| 0.6  | Security Hardening        | 🔴 Must Have   | 16.5h   | TaiSheng + Sam          | 3-4    |
+| 0.7  | Component Library         | 🔴 Must Have   | 10-15h  | YiLing + Sam + TaiSheng | 3-4    |
+| 1    | Product Registration      | 🔴 Must Have   | 12-15h  | Sam + TaiSheng + YiLing | 3-5    |
+| 1.5  | Product Transfer Workflow | 🟡 Should Have | 4-6h    | TaiSheng + YiLing       | 4-6    |
+| 2    | Supply Chain Tracking     | 🔴 Must Have   | 12-15h  | Sam + TaiSheng + YiLing | 4-6    |
+| 3    | IoT Simulator             | 🟡 Should Have | 6-8h    | Sam + YiLing            | 4-5    |
+| 4    | Consumer Query            | 🔴 Must Have   | 8-10h   | TaiSheng + YiLing       | 6-7    |
+| 5    | Multi-Party Verification  | 🟢 Could Have  | 6-8h    | Sam                     | 4 or 7 |
+| 6    | QR Functionality          | 🔴 Must Have   | 4-6h    | TaiSheng + YiLing       | 5-6    |
+| 7    | Data Visualization        | 🟡 Should Have | 6-8h    | TaiSheng + YiLing       | 7      |
+| 8    | Multi-Language            | 🟢 Could Have  | 4-6h    | YiLing                  | 8      |
+| 9    | Deployment                | 🔴 Must Have   | 6-9h    | TaiSheng                | 8-9    |
 
-**Total:** 101.5-115.5 hours (19-27% of team capacity)
+**Total:** 121.5-145.5 hours (23-28% of team capacity)
+
+**Changes from initial estimates (Session 14):**
+- Epic 0.5: +2h (multi-tenant complexity)
+- Epic 0.7: NEW +10-15h (component library work previously embedded in timeline)
+- Epic 1: +4-5h (first Web3 integration learning curve)
+- Epic 2: +2-3h (three separate UIs + timeline complexity)
+- Epic 9: +2-3h (deployment always harder than expected)
+- **Total increase:** +20-30h reflecting realistic bachelor student timeline with zero blockchain experience
 
 ---
 
@@ -1707,7 +1720,7 @@ thesis/
 ### Epic 0.5: Company & User Management
 
 **Priority:** 🔴 Must Have
-**Estimated Time:** 6-8 hours
+**Estimated Time:** 8-10 hours
 **Assigned:** TaiSheng (Lead)
 **Timeline:** Week 3
 **Dependencies:** Epic 0 (Project Setup)
@@ -1881,10 +1894,180 @@ Implement production-grade security controls to protect custodial wallets, preve
 
 ---
 
+### Epic 0.7: Component Library
+
+**Priority:** 🔴 Must Have
+**Estimated Time:** 10-15 hours
+**Assigned:** YiLing (Lead, 10-12h), Sam + TaiSheng (Support, 2-3h each)
+**Timeline:** Week 3-4 (parallel with Epic 0.6 and Epic 1)
+**Dependencies:** Epic 0 (Chakra UI setup)
+
+#### Epic Description
+
+Build reusable React component library using Chakra UI v2 to accelerate frontend development across all 4 user roles (Producer, Distributor, Retailer, Consumer). Component library must be 100% complete before Week 5 when intensive UI development begins, preventing duplicate work and ensuring consistent design system.
+
+#### Business Value
+
+- **Development Speed:** Reusable components save 20-30 hours in Weeks 5-7 (no rebuilding forms for each role)
+- **Consistent UX:** Same look/feel across all interfaces builds user trust
+- **Mobile-First:** Responsive components work on desktop, tablet, phone without rework
+- **Accessibility:** WCAG-compliant components prevent late-stage accessibility fixes
+- **Team Efficiency:** Sam/TaiSheng can integrate UI faster with ready-made components
+
+#### User Stories (High-Level)
+
+- As a **frontend developer**, I want **reusable form components** so I don't rebuild inputs for each page
+- As a **frontend developer**, I want **responsive layout system** so mobile works without extra CSS
+- As a **frontend developer**, I want **validation components** so forms have consistent error handling
+- As a **team member**, I want **component documentation** so I know which components exist and how to use them
+
+#### Acceptance Criteria (Epic Level)
+
+**Core Components (Week 3):**
+
+- ✅ Button variants (Primary, Secondary, Danger, Ghost)
+- ✅ Input fields (Text, Number, Date, TextArea, Select)
+- ✅ Form validation wrappers (client-side validation, error messages)
+- ✅ Card layouts (Product card, Company card, Trace record card)
+- ✅ Navigation components (Header, Sidebar, Breadcrumbs)
+- ✅ Loading states (Spinner, Skeleton, Progress bar)
+- ✅ Toast notifications (Success, Error, Warning, Info)
+
+**Advanced Components (Week 4):**
+
+- ✅ Modal dialogs (Confirmation, Form modal, Info modal)
+- ✅ Table components (Sortable, Filterable, Pagination)
+- ✅ Timeline component (for product journey visualization)
+- ✅ Chart wrappers (Temperature chart, Activity chart)
+- ✅ QR code display component (react-qr-code integration)
+- ✅ File upload component (Image upload with preview, drag-and-drop)
+
+**Responsive Layout System:**
+
+- ✅ Mobile-first breakpoints (sm: 480px, md: 768px, lg: 1024px, xl: 1280px)
+- ✅ Grid system (1-12 columns, auto-responsive)
+- ✅ Flexbox utilities (justify, align, gap, wrap)
+- ✅ Container components (Page container, Section container, Content container)
+
+**Documentation:**
+
+- ✅ Component storybook or docs/components.md with usage examples
+- ✅ Code snippets showing how to import and use each component
+- ✅ Props documentation (what props each component accepts)
+
+#### Technical Approach
+
+**Component Structure:**
+
+```
+src/components/
+├── ui/                    # Core UI components
+│   ├── Button.tsx
+│   ├── Input.tsx
+│   ├── Select.tsx
+│   ├── Card.tsx
+│   ├── Modal.tsx
+│   └── ...
+├── forms/                 # Form-specific components
+│   ├── ProductForm.tsx
+│   ├── TraceRecordForm.tsx
+│   ├── ValidationWrapper.tsx
+│   └── ...
+├── layout/                # Layout components
+│   ├── Header.tsx
+│   ├── Sidebar.tsx
+│   ├── Container.tsx
+│   └── ...
+└── visualization/         # Charts and timeline
+    ├── Timeline.tsx
+    ├── TemperatureChart.tsx
+    └── ...
+```
+
+**Example Component (Button):**
+
+```typescript
+import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react';
+
+export const Button = ({ variant = 'primary', ...props }: ButtonProps) => {
+  const variantStyles = {
+    primary: { bg: 'blue.500', color: 'white', _hover: { bg: 'blue.600' } },
+    secondary: { bg: 'gray.200', color: 'gray.800', _hover: { bg: 'gray.300' } },
+    danger: { bg: 'red.500', color: 'white', _hover: { bg: 'red.600' } },
+  };
+
+  return <ChakraButton {...variantStyles[variant]} {...props} />;
+};
+```
+
+**Form Validation Wrapper:**
+
+```typescript
+export const ValidatedInput = ({ name, label, validation, ...props }) => {
+  const [error, setError] = useState('');
+
+  const handleBlur = (e) => {
+    const value = e.target.value;
+    if (validation.required && !value) {
+      setError(`${label} is required`);
+    } else if (validation.pattern && !validation.pattern.test(value)) {
+      setError(validation.message || 'Invalid format');
+    } else {
+      setError('');
+    }
+  };
+
+  return (
+    <FormControl isInvalid={!!error}>
+      <FormLabel>{label}</FormLabel>
+      <Input {...props} onBlur={handleBlur} />
+      {error && <FormErrorMessage>{error}</FormErrorMessage>}
+    </FormControl>
+  );
+};
+```
+
+#### Dependencies
+
+**Requires:** Epic 0 (Chakra UI installed)
+**Blocks:** Epic 1, 2, 3, 4 (all frontend epics depend on component library)
+
+#### Team Assignment
+
+**YiLing (10-12 hours - Lead):**
+
+- Core components (Button, Input, Card, Navigation) (4 hours)
+- Responsive layout system (Grid, Flexbox, Containers) (3 hours)
+- Form validation components (ValidationWrapper, error handling) (3 hours)
+- Component documentation (usage examples, props) (2 hours)
+
+**Sam (2 hours - Support, Epic 0.6 coordination):**
+
+- Button variants (Primary, Secondary, Danger) (1 hour)
+- Input field component (text, number, date) (1 hour)
+
+**TaiSheng (2-3 hours - Support, Epic 0.6 coordination):**
+
+- Form validation wrappers (client-side validation) (2 hours)
+- Toast notification wrapper (success/error states) (1 hour)
+
+**Note:** Sam and TaiSheng contributions are part of Epic 0.6 Tier 2 "Team Component Contributions" but create outputs used in Epic 0.7 component library.
+
+#### Risks & Mitigations
+
+| Risk | Mitigation |
+|------|-----------|
+| Component library not ready by Week 5 | Start Week 3 (not Week 4), prioritize core components first |
+| YiLing overwhelmed with 15h workload | Sam/TaiSheng contribute 2h each (Week 3-4) reducing YiLing to 10-12h |
+| Components not reusable enough | Code review by Sam/TaiSheng before Week 5 starts |
+| Missing components discovered late | Create "component backlog" in Week 4, add as needed in Week 5-7 |
+
+---
+
 ### Epic 1: Product Registration
 
 **Priority:** 🔴 Must Have
-**Estimated Time:** 8-10 hours (Smart Contract 4h + Backend 3h + Frontend 2-3h)
+**Estimated Time:** 12-15 hours (Smart Contract 4h + Backend 4-5h + Frontend 4-6h)
 **Assigned:** Sam (Smart Contract), TaiSheng (Backend), YiLing (Frontend)
 **Timeline:** Week 3-5
 **Dependencies:** Epic 0.5 (Company Management), Epic 0.6 Tier 1 (Security)
@@ -2223,7 +2406,7 @@ export async function POST(req, { params }) {
 ### Epic 2: Supply Chain Tracking
 
 **Priority:** 🔴 Must Have
-**Estimated Time:** 10-12 hours (Smart Contract 4h + Backend 3h + Frontend 4-5h)
+**Estimated Time:** 12-15 hours (Smart Contract 4h + Backend 3-4h + Frontend 5-7h)
 **Assigned:** Sam (Smart Contract), TaiSheng (Backend), YiLing (Frontend)
 **Timeline:** Week 4-6
 **Dependencies:** Epic 1 (Product Registration)
@@ -2940,7 +3123,7 @@ Add Finnish language support alongside English. Relevant for local market (OAMK 
 ### Epic 9: Deployment & DevOps
 
 **Priority:** 🔴 Must Have
-**Estimated Time:** 4-6 hours
+**Estimated Time:** 6-9 hours
 **Assigned:** TaiSheng (Lead), Sam (Support)
 **Timeline:** Week 8-9
 **Dependencies:** All features complete
@@ -3062,36 +3245,36 @@ The architecture balances thesis constraints with real-world enterprise patterns
 ### 7.2 System Architecture Diagram
 
 ```
-┌───────────────────────────────────────────────────────────────────────┐
-│                   USER INTERFACE LAYER                                 │
-├────────────────┬────────────────┬──────────────┬────────────┬─────────┤
-│   Producer     │  Distributor   │   Retailer   │  Consumer  │  IoT    │
-│   Portal       │   Portal       │   Portal     │   Query    │Simulator│
-│ (Wallet Req.)  │ (Wallet Req.)  │(Wallet Req.) │(No Wallet) │(Admin)  │
-│                │                │              │            │         │
-│ • Register     │ • Receive      │ • Stock      │ • Scan QR  │ • Normal│
-│   Products     │   Products     │   Products   │ • View     │ • Warning│
+┌─────────────────────────────────────────────────────────────────────────┐
+│                   USER INTERFACE LAYER                                  │
+├────────────────┬────────────────┬──────────────┬────────────┬───────────┤
+│   Producer     │  Distributor   │   Retailer   │  Consumer  │  IoT      │
+│   Portal       │   Portal       │   Portal     │   Query    │Simulator  │
+│ (Wallet Req.)  │ (Wallet Req.)  │(Wallet Req.) │(No Wallet) │(Admin)    │
+│                │                │              │            │           │
+│ • Register     │ • Receive      │ • Stock      │ • Scan QR  │ • Normal  │
+│   Products     │   Products     │   Products   │ • View     │ • Warning │
 │ • Upload       │ • Add Trace    │ • Mark Sold  │   Journey  │ • Critical│
-│   Photos       │   Records      │ • Update     │ • Verify   │ • Manual│
-│ • Generate QR  │ • Record Temp  │   Status     │   Organic  │   Entry│
-│ • Transfer     │ • Quality      │ • Trace      │ • Check    │         │
-│   to Dist.     │   Check        │   History    │   Alerts   │         │
-└────────┬───────┴────────┬───────┴──────┬───────┴──────┬─────┴────┬────┘
+│   Photos       │   Records      │ • Update     │ • Verify   │ • Manual  │
+│ • Generate QR  │ • Record Temp  │   Status     │   Organic  │   Entry   │
+│ • Transfer     │ • Quality      │ • Trace      │ • Check    │           │
+│   to Dist.     │   Check        │   History    │   Alerts   │           │
+└────────┬───────┴────────┬───────┴──────┬───────┴──────┬─────┴────┬──────┘
          │                │              │              │          │
          └────────────────┴──────────────┴──────────────┴──────────┘
                                   │
          ┌────────────────────────▼──────────────────────────┐
          │     NEXT.JS MONOLITH (Frontend + Backend)         │
-         │  ┌──────────────────┐  ┌──────────────────────┐   │
-         │  │   Web3 Layer     │  │   API Routes         │   │
-         │  │ • Wagmi Hooks    │  │ • /api/products      │   │
-         │  │ • RainbowKit     │  │ • /api/traces        │   │
-         │  │ • Viem (Ethereum)│  │ • /api/iot/simulate  │   │
-         │  │ • Contract calls │  │ • /api/qrcode        │   │
+         │  ┌──────────────────┐  ┌───────────────────────┐  │
+         │  │   Web3 Layer     │  │   API Routes          │  │
+         │  │ • Wagmi Hooks    │  │ • /api/products       │  │
+         │  │ • RainbowKit     │  │ • /api/traces         │  │
+         │  │ • Viem (Ethereum)│  │ • /api/iot/simulate   │  │
+         │  │ • Contract calls │  │ • /api/qrcode         │  │
          │  │ • Transaction    │  │ • /api/auth (NextAuth)│  │
-         │  │   signing        │  │ • /api/transfer      │   │
-         │  └──────────────────┘  └──────────────────────┘   │
-         │                                                    │
+         │  │   signing        │  │ • /api/transfer       │  │
+         │  └──────────────────┘  └───────────────────────┘  │
+         │                                                   │
          │  • QR Code Generation/Scanning (html5-qrcode)     │
          │  • Role-Based Access Control (4 roles + admin)    │
          │  • Custodial Wallet Management (AES-256)          │
@@ -3461,26 +3644,28 @@ This architecture directly supports the following MUST HAVE epics:
 - [ ] Team Review (Sam, TaiSheng, YiLing)
 - [ ] Supervisor Approval (Kickoff meeting Oct 31)
 
-**Total Estimated Project Effort:**
+**Total Estimated Project Effort (Session 14 Updated):**
 
-- Sam: 165-185 hours (39-44% of 420h capacity)
-- TaiSheng: 180-205 hours (43-49% of capacity)
-- YiLing: 190-226 hours (45-54% of capacity)
-- **TOTAL**: 535-616 hours across 3 people (42-49% team capacity utilization) ✅ Achievable
+- Sam: 320-380 hours (80-95% of 400h capacity)
+- TaiSheng: 335-400 hours (84-100% of capacity)
+- YiLing: 360-436 hours (90-109% of capacity)
+- **TOTAL**: 1,015-1,216 hours across 3 people (85-101% team capacity utilization)
+- **Development Phase Only**: 555-646 hours (increased +20-30h from Session 14 epic hour refinement)
+- ✅ Achievable (team has committed additional time beyond 1,200h if needed)
 
 ### 5.2 Total Project Hours Breakdown (All Phases)
 
-| Phase | Weeks | Sam | TaiSheng | YiLing | TOTAL |
-|-------|-------|-----|----------|--------|-------|
-| Planning & Learning | 0-2 | 30-35h | 30-35h | 40-50h | 100-120h |
-| Development | 3-9 | 165-185h | 180-205h | 190-226h | 535-616h |
-| Thesis Writing | 10-12 | 120-150h | 120-150h | 120-150h | 360-450h |
-| **TOTAL** | **0-12** | **315-370h** | **330-390h** | **350-426h** | **995-1,186h** |
+| Phase               | Weeks    | Sam          | TaiSheng     | YiLing       | TOTAL          |
+| ------------------- | -------- | ------------ | ------------ | ------------ | -------------- |
+| Planning & Learning | 0-2      | 30-35h       | 30-35h       | 40-50h       | 100-120h       |
+| Development         | 3-9      | 170-195h     | 185-215h     | 200-236h     | 555-646h       |
+| Thesis Writing      | 10-12    | 120-150h     | 120-150h     | 120-150h     | 360-450h       |
+| **TOTAL**           | **0-12** | **320-380h** | **335-400h** | **360-436h** | **1,015-1,216h** |
 
-**Buffer**: 14-205h for contingencies (1-17% margin)
-**Note**: Development hours (535-616h) represent implementation work only. Total project allocation includes planning phase (Week 0-2) and thesis writing phase (Week 10-12), totaling approximately 1,200 hours across three team members (400h per student).
+**Buffer**: -15 to +184h for contingencies (-1% to +15% margin)
+**Note**: Development hours (555-646h) represent implementation work only, increased by +20-30h (Session 14) to reflect realistic bachelor student timeline with zero blockchain experience. Epic hours increased from 101.5-115.5h to 121.5-145.5h based on comprehensive hour analysis. Total project allocation includes planning phase (Week 0-2) and thesis writing phase (Week 10-12), totaling approximately 1,200 hours across three team members (400h per student).
 
-**Project Completion Confidence:** 🟢 High (well within 12-week timeline)
+**Project Completion Confidence:** 🟢 High (realistic estimates, team has committed additional time beyond 1,200h if needed)
 
 ---
 
