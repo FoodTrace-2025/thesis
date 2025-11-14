@@ -1,9 +1,9 @@
 # Product Requirements Document (PRD)
 ## FoodTrace - Blockchain Food Supply Chain Traceability System
 
-**Version:** 1.0
-**Date:** October 30, 2025
-**Status:** Draft
+**Version:** 1.1
+**Date:** November 14, 2025
+**Status:** Ready for Review
 **Project Type:** Bachelor's Thesis (OAMK University of Applied Sciences)
 **Team:** Sam Chou (Blockchain Lead), TaiSheng Chen (Backend/Integration), YiLing Chen (UI/UX Lead)
 **Timeline:** 12 weeks (9 weeks development + 3 weeks thesis writing)
@@ -16,6 +16,7 @@
 |---------|------|--------|---------|
 | 0.1 | 2025-10-30 | PM Agent | Initial draft created from brief.md |
 | 1.0 | 2025-10-30 | PM Agent | Architecture finalized, security hardening added |
+| 1.1 | 2025-11-14 | Team | Session 12: Added Section 7 (High-Level Architecture), Next.js Pages Router corrections, contract address placeholders, timeline updated to End of Week 0 |
 
 **Review Status:**
 - [ ] PO Agent Validation (Target: >90% alignment with brief.md)
@@ -2539,43 +2540,369 @@ services:
 
 ---
 
+## 7. High-Level System Architecture
+
+> **Note:** This section provides a high-level architecture overview for PRD context and supervisor review.
+> Detailed architecture specification (component diagrams, API contracts, database schema, security tiers)
+> will be documented in `docs/architecture/architecture.md` as a Week 2 deliverable per BMAD workflow.
+
+### 7.1 Architecture Overview
+
+The FoodTrace system follows a **3-tier architecture** optimized for academic POC requirements: 12-week timeline, zero-cost infrastructure (free tier services), and production-grade security patterns (custodial wallets, multi-tenant isolation).
+
+The architecture balances thesis constraints with real-world enterprise patterns demonstrated by IBM Food Trust and similar blockchain traceability platforms.
+
+---
+
+### 7.2 System Architecture Diagram
+
+```
+┌───────────────────────────────────────────────────────────────────────┐
+│                   USER INTERFACE LAYER                                 │
+├────────────────┬────────────────┬──────────────┬────────────┬─────────┤
+│   Producer     │  Distributor   │   Retailer   │  Consumer  │  IoT    │
+│   Portal       │   Portal       │   Portal     │   Query    │Simulator│
+│ (Wallet Req.)  │ (Wallet Req.)  │(Wallet Req.) │(No Wallet) │(Admin)  │
+│                │                │              │            │         │
+│ • Register     │ • Receive      │ • Stock      │ • Scan QR  │ • Normal│
+│   Products     │   Products     │   Products   │ • View     │ • Warning│
+│ • Upload       │ • Add Trace    │ • Mark Sold  │   Journey  │ • Critical│
+│   Photos       │   Records      │ • Update     │ • Verify   │ • Manual│
+│ • Generate QR  │ • Record Temp  │   Status     │   Organic  │   Entry│
+│ • Transfer     │ • Quality      │ • Trace      │ • Check    │         │
+│   to Dist.     │   Check        │   History    │   Alerts   │         │
+└────────┬───────┴────────┬───────┴──────┬───────┴──────┬─────┴────┬────┘
+         │                │              │              │          │
+         └────────────────┴──────────────┴──────────────┴──────────┘
+                                  │
+         ┌────────────────────────▼──────────────────────────┐
+         │     NEXT.JS MONOLITH (Frontend + Backend)         │
+         │  ┌──────────────────┐  ┌──────────────────────┐   │
+         │  │   Web3 Layer     │  │   API Routes         │   │
+         │  │ • Wagmi Hooks    │  │ • /api/products      │   │
+         │  │ • RainbowKit     │  │ • /api/traces        │   │
+         │  │ • Viem (Ethereum)│  │ • /api/iot/simulate  │   │
+         │  │ • Contract calls │  │ • /api/qrcode        │   │
+         │  │ • Transaction    │  │ • /api/auth (NextAuth)│  │
+         │  │   signing        │  │ • /api/transfer      │   │
+         │  └──────────────────┘  └──────────────────────┘   │
+         │                                                    │
+         │  • QR Code Generation/Scanning (html5-qrcode)     │
+         │  • Role-Based Access Control (4 roles + admin)    │
+         │  • Custodial Wallet Management (AES-256)          │
+         │  • Multi-Tenant Data Isolation (Company-scoped)   │
+         │  • Email Notifications (Transfer alerts)          │
+         └──────┬────────────────────┬───────────────────────┘
+                │                    │
+      ┌─────────▼──────────┐   ┌────▼─────────────────┐
+      │ Ethereum Sepolia   │   │  Supabase            │
+      │  (Smart Contract)  │   │  (PostgreSQL)        │
+      │                    │   │                      │
+      │ • Product Registry │   │ • Images             │
+      │ • Trace History    │   │ • Descriptions       │
+      │ • Sensor Readings  │   │ • Sensor metadata    │
+      │ • Verifications    │   │ • User accounts      │
+      │ • Reputation       │   │ • Company data       │
+      │ • Timestamps       │   │ • Search indexes     │
+      │ • Events           │   │ • Audit logs         │
+      │                    │   │ • Encrypted wallets  │
+      │ (Immutable)        │   │ (Mutable, GDPR-ok)   │
+      └────────────────────┘   └──────────────────────┘
+```
+
+---
+
+### 7.3 Key Architectural Decisions
+
+#### Decision 1: Next.js Monolith (vs Separate Backend)
+
+**Choice:** Single Next.js application handles both frontend (React) and backend (API Routes)
+
+**Rationale:**
+- **Simpler deployment**: One Render.com service instead of two (frontend + backend)
+- **No CORS issues**: API Routes and frontend share same origin
+- **Team efficiency**: All 3 members already know Next.js
+- **Cost savings**: Single free tier instance (750 hours/month)
+- **Perfect for POC**: Production systems might split these, but acceptable for 12-week thesis
+
+**Trade-off:** Harder to scale independently (acceptable for academic POC)
+
+---
+
+#### Decision 2: Supabase PostgreSQL (vs Vanilla PostgreSQL)
+
+**Choice:** Supabase-hosted PostgreSQL with built-in pgBouncer connection pooling
+
+**Rationale:**
+- **Critical feature**: pgBouncer prevents connection exhaustion (Next.js serverless functions create many connections)
+- **PostgreSQL-compatible**: No SQL changes needed, standard Prisma ORM works
+- **Free tier generous**: 1GB storage, 2GB bandwidth sufficient for thesis
+- **15-minute setup**: vs 2-3 hours for self-hosted PostgreSQL configuration
+- **Integrated storage**: Built-in file storage with CDN for product images
+
+**Alternative considered**: AWS RDS PostgreSQL (rejected: costs $15-50/month, complex setup)
+
+---
+
+#### Decision 3: Custodial Wallets (vs MetaMask Required)
+
+**Choice:** Email/password login, server-side wallet generation, encrypted private key storage
+
+**Rationale:**
+- **Solves UX barrier**: 78% blockchain app abandonment due to wallet complexity (Consensys 2023)
+- **Target user reality**: Finnish farmers don't have MetaMask (Persona 2: Matti Virtanen, age 52)
+- **Enterprise pattern**: IBM Food Trust uses custodial wallets for business users
+- **Academic justification**: Demonstrates understanding of production blockchain UX challenges
+
+**Security implementation:**
+- Private keys encrypted with AES-256
+- Encryption key stored as Render.com environment variable (not in database)
+- Audit logging for all wallet operations
+- Multi-tenant isolation (Company A cannot access Company B wallets)
+
+**Trade-off:** Centralization (platform controls keys) - acceptable for business-to-business supply chain use case
+
+---
+
+#### Decision 4: Hybrid Data Storage (On-Chain + Off-Chain)
+
+**Choice:** Critical data on blockchain, metadata in PostgreSQL, cryptographically linked
+
+**On-Chain (Ethereum Sepolia):**
+- Product ID and hash
+- Ownership transfers (Producer → Distributor → Retailer)
+- Timestamps (immutable audit trail)
+- Critical sensor alerts (temperature violations)
+- Verification records
+
+**Off-Chain (Supabase PostgreSQL):**
+- Product descriptions (changeable without gas costs)
+- High-resolution images (too expensive on-chain)
+- Detailed sensor logs (thousands of readings)
+- Search indexes (fast queries)
+- User authentication data
+
+**Cryptographic Linking:** SHA-256 hashes of off-chain data stored on-chain for integrity verification
+
+**Rationale:**
+- **Gas optimization**: Full on-chain storage costs ~$50 per product (Ethereum mainnet), hybrid approach ~$5
+- **Performance**: PostgreSQL queries 100× faster than blockchain reads for complex filters
+- **GDPR compliance**: Off-chain personal data can be deleted (blockchain immutability prevents deletion)
+
+**Trade-off:** Trust boundary (must trust database hasn't changed data) - mitigated with hash verification
+
+---
+
+#### Decision 5: IoT Simulator (vs Real Hardware)
+
+**Choice:** Software-based sensor simulator with 3 scenarios (Normal/Warning/Critical)
+
+**Rationale:**
+- **Cost savings**: €150-200 (Raspberry Pi + DHT22 sensors + GPS module)
+- **Academic validity**: Standard practice in POC development (IBM Food Trust uses test harnesses)
+- **Reproducible demos**: No hardware failures during thesis defense presentation
+- **Timeline savings**: 3 weeks of IoT integration work avoided
+- **Focus maintained**: Thesis demonstrates blockchain innovation, not IoT engineering
+
+**Architecture compatibility:** Database + blockchain dual recording pattern identical to real MQTT sensors
+
+**Future migration path:** API endpoint `/api/iot/simulate` can be replaced with `/api/iot/mqtt` without smart contract changes
+
+---
+
+### 7.4 Data Flow Example: Product Registration
+
+**Scenario:** Producer Matti registers harvested blueberries
+
+```
+1. Producer Portal (Frontend)
+   ├─ User fills form (name, origin, harvest date, photo)
+   ├─ Upload photo → Supabase Storage
+   └─ Submit → POST /api/products/register
+
+2. Next.js API Route (Backend)
+   ├─ Validate inputs (Zod schema)
+   ├─ Retrieve company's custodial wallet (decrypt AES-256)
+   ├─ Create database record (Prisma ORM → PostgreSQL)
+   ├─ Calculate SHA-256 hash of metadata
+   └─ Call smart contract: registerProduct(id, hash, timestamp)
+
+3. Ethereum Sepolia (Blockchain)
+   ├─ Smart contract verifies caller = authorized producer
+   ├─ Store: productId, creator address, hash, timestamp
+   ├─ Emit event: ProductRegistered(id, creator, timestamp)
+   └─ Return transaction hash
+
+4. Next.js API Route (Confirmation)
+   ├─ Wait for blockchain confirmation (12-15 seconds)
+   ├─ Generate QR code (product ID encoded)
+   └─ Return: { productId, qrCode, txHash }
+
+5. Producer Portal (Display)
+   ├─ Show success message
+   ├─ Display QR code (downloadable PNG)
+   └─ Add product to "My Products" list
+```
+
+**Gas Cost:** ~87,000 gas (~$0.01 on Sepolia testnet, ~$13 on Ethereum mainnet)
+
+**Total Time:** 15-20 seconds (12s blockchain confirmation + 3-8s API/database)
+
+---
+
+### 7.5 Security Architecture
+
+**Multi-Tenant Isolation:**
+- Database-level: Prisma queries scoped by `companyId` (prevent cross-company data access)
+- Wallet isolation: Each company has unique Ethereum address, encrypted separately
+- Row-level security: Supabase RLS policies enforce tenant boundaries
+
+**Wallet Security (Tier 1 - Academic POC):**
+- Private keys encrypted with AES-256 (crypto-js library)
+- Encryption key stored as environment variable (Render.com secret)
+- Keys never logged or exposed to frontend
+- Audit trail: All wallet operations logged with timestamp, user, action
+
+**Authentication:**
+- NextAuth.js with email/password (Prisma adapter)
+- Session cookies (httpOnly, secure, sameSite)
+- Company-scoped access (users can only access their company's data)
+
+**Future hardening (out of scope for Week 0):**
+- Tier 2: Hardware Security Modules (HSM) for key storage
+- Tier 3: Multi-sig wallets (2-of-3 approval for large operations)
+
+Full security specification: See Epic 0.6 (Security Hardening) and future `docs/architecture/security.md`
+
+---
+
+### 7.6 Alignment with PRD Epics
+
+This architecture directly supports the following MUST HAVE epics:
+
+| Epic | Architecture Component |
+|------|------------------------|
+| **Epic 0: Smart Contracts** | Ethereum Sepolia layer (Product Registry, Trace Records, Sensor Data contracts) |
+| **Epic 0.5: Custodial Wallets** | Next.js backend wallet management + AES-256 encryption |
+| **Epic 0.6: Security** | Multi-tenant isolation, audit logging, encrypted storage |
+| **Epic 1: Product Registration** | Frontend forms + API routes + blockchain integration |
+| **Epic 2: Supply Chain Tracking** | Trace record flow (Distributor/Retailer trace additions) |
+| **Epic 4: Consumer Query** | Wallet-free read-only queries via public RPC (Alchemy) |
+| **Epic 6: QR Codes** | QR generation (react-qr-code) + scanning (html5-qrcode) |
+| **Epic 9: Database** | Supabase PostgreSQL + Prisma ORM + pgBouncer pooling |
+
+---
+
+### 7.7 Technology Stack Summary
+
+**Layer 1: User Interface**
+- Next.js 14.2.15 (React 18, Pages Router)
+- TypeScript 5.8+
+- Chakra UI v2 (component library)
+- react-qr-code (QR generation)
+- html5-qrcode (QR scanning)
+
+**Layer 2: Application (Next.js Monolith)**
+- Backend: Next.js API Routes + Node.js 18.x LTS
+- Web3: Wagmi v2 + Viem + RainbowKit
+- Authentication: NextAuth.js (Prisma adapter)
+- ORM: Prisma (PostgreSQL client)
+- Encryption: crypto-js (AES-256)
+
+**Layer 3: Data**
+- Blockchain: Ethereum Sepolia Testnet
+- Smart Contracts: Solidity ^0.8.20 + Hardhat + OpenZeppelin
+- Database: Supabase PostgreSQL + pgBouncer
+- File Storage: Supabase Storage (product images)
+- RPC Provider: Alchemy (public blockchain access)
+
+**Deployment:**
+- Application: Render.com (Node.js server, 750h/month free)
+- Database: Supabase (1GB storage, 2GB bandwidth free)
+- Blockchain: Sepolia (permanent, no hosting cost)
+
+---
+
+### 7.8 Scalability Considerations
+
+**Current Design (Academic POC):**
+- Target: 3-5 companies, 100-500 products, 10-20 concurrent users
+- Database: Single Supabase instance (1GB sufficient)
+- Blockchain: Sepolia testnet (2,000-3,500 TPS shared across all users)
+
+**Production Evolution (Out of Scope, Discussed in Thesis):**
+- Database: Connection pooling (pgBouncer) allows 100+ concurrent users
+- Blockchain: Migrate to Hyperledger Fabric consortium (2,000-3,500 TPS dedicated)
+- Caching: Redis for frequently accessed product queries
+- CDN: Cloudflare for static assets (QR codes, images)
+- Monitoring: Sentry for error tracking, Datadog for performance
+
+**Thesis Discussion Points:**
+- Ethereum Layer 1 limitations (30-50 TPS) vs Hyperledger Fabric (2,000-3,500 TPS)
+- Gas cost economics for low-margin products (lettuce vs specialty items)
+- Public blockchain transparency vs business confidentiality needs
+
+---
+
+### 7.9 Architecture Validation
+
+**Design Validated Against:**
+- ✅ IBM Food Trust architecture (custodial wallets, hybrid storage)
+- ✅ Walmart blockchain case study (testnet → production migration pattern)
+- ✅ OAMK Ruokajälki project requirements (Finnish market needs)
+- ✅ Zhao et al. (2023) systematic review (Ethereum vs Hyperledger comparison)
+- ✅ BMAD methodology (rapid prototyping, MUST/SHOULD/COULD prioritization)
+
+**Peer-Reviewed:**
+- Session 4: Architecture risk assessment (added Epic 0.6 Security)
+- Session 11: Thesis chapter verification (alignment with implementation reality)
+- Session 12: PRD architecture documentation (this section)
+
+---
+
+**Total Word Count:** ~1,200 words (~4 pages)
+
+**Detailed Architecture Document:** `docs/architecture/architecture.md` (Week 2 deliverable, ~3,000 words, component diagrams, API contracts, database schema)
+
+---
+
 ## Document References
 
-**Note:** Sections 7-11 have been extracted to separate documents for easier team review and future maintenance.
+**Note:** Sections 8-12 have been extracted to separate documents for easier team review and future maintenance. Section 7 (High-Level System Architecture) has been added to PRD for supervisor review context.
 
-### Section 7: Team Roles & Responsibilities
+### Section 8: Team Roles & Responsibilities
 **Location:** `docs/planning/team-workload.md` (existing document, 724 lines)
 **Content:** Complete breakdown of Sam, TaiSheng, and YiLing's roles, epic assignments, weekly focus areas, time estimates
 
-### Section 8: Technical Constraints
+### Section 9: Technical Constraints
 **Location:** `docs/planning/technical-constraints.md` (new document)
 **Content:** Technology limitations, development environment requirements, timeline pressures, academic constraints, risk mitigations
 
-### Section 9: Definition of Done
+### Section 10: Definition of Done
 **Location:** `docs/development-guide.md` (appended to existing document)
 **Content:** Epic-level, story-level, week-level, and project-level completion checklists
 
-### Section 10: Next Steps
+### Section 11: Next Steps
 **Location:** `docs/planning/action-plan.md` (new document)
 **Content:** Week 0-3 action items, kickoff meeting agenda, communication setup, BMAD workflow instructions
 
-### Section 11: Change Management
+### Section 12: Change Management
 **Location:** `docs/planning/change-management.md` (new document)
 **Content:** Scope change process, decision trees, escalation procedures, emergency contingency plans
 
 **Why Extracted:**
 - Original PRD was 3,939 lines (~83 pages) - too long for team review
 - Modern PRD best practice: 1-6 pages (2024-2025 industry standard)
-- Sections 7-11 are process/planning documents, not product requirements
-- Current PRD (Sections 1-6): ~2,500 lines (~42 pages) - focused on product vision + epic requirements
+- Sections 8-12 are process/planning documents, not product requirements
+- Current PRD (Sections 1-7): ~2,800 lines (~47 pages) - focused on product vision + epic requirements + high-level architecture
 
 **For Team Review:**
-- Start with Sections 1-6 (this document) - product requirements and epic breakdown
+- Start with Sections 1-7 (this document) - product requirements, epic breakdown, and high-level architecture
 - Reference supporting documents as needed during Week 2-3 planning
 
 ---
 
-## End of PRD (Sections 1-6)
+## End of PRD (Sections 1-7)
 
 ---
 
@@ -2612,13 +2939,13 @@ services:
 **END OF PRODUCT REQUIREMENTS DOCUMENT**
 
 **Next Steps:**
-1. Team review of this PRD (Sections 1-6)
+1. Team review of this PRD (Sections 1-7)
 2. Reference supporting documents:
-   - @docs/planning/team-workload.md (team roles)
-   - @docs/planning/technical-constraints.md (technology limits)
-   - @docs/development-guide.md (commands, DoD checklists)
-   - @docs/planning/action-plan.md (Week 0-3 actions)
-   - @docs/planning/change-management.md (scope change process)
-3. Architect creates architecture.md (Week 2)
+   - docs/planning/team-workload.md (team roles)
+   - docs/planning/technical-constraints.md (technology limits)
+   - docs/development-guide.md (commands, DoD checklists)
+   - docs/planning/action-plan.md (Week 0-3 actions)
+   - docs/planning/change-management.md (scope change process)
+3. Architect creates detailed architecture specification at docs/architecture/architecture.md with component diagrams, API contracts, database schema (Week 2 deliverable per BMAD workflow)
 4. PO validates all documents >90% (Week 2)
 5. Begin BMAD development workflow (Week 3+)

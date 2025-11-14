@@ -14,7 +14,7 @@ The ProductRegistry contract serves as the core ledger for product registration 
 
 Key design decisions prioritize gas cost optimization while maintaining immutability. Product names and descriptions stored as Keccak-256 hashes (bytes32) referencing off-chain metadata in Supabase PostgreSQL, reducing gas consumption from ~100,000 to ~60,000 per registration. The contract emits ProductRegistered events upon successful registration, enabling efficient off-chain indexing for the consumer query interface without additional storage costs.
 
-**Contract Address (Sepolia):** 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb4
+**Contract Address (Sepolia):** [PENDING_DEPLOYMENT_WEEK_4]
 
 ### 4.1.2 TraceRecords Contract
 
@@ -22,7 +22,7 @@ The TraceRecords contract extends ProductRegistry to record supply chain events 
 
 Access control restricts trace record creation to authorized supply chain roles (Producer, Distributor, Retailer) using role-based permissions. The contract prevents unauthorized modifications by binding each trace record to the calling address, creating an immutable audit trail. Gas optimization achieved through hash-based storage: location and notes stored as bytes32 hashes rather than full strings, reducing per-record costs from ~120,000 to ~75,000 gas.
 
-**Contract Address (Sepolia):** 0x8f4e77806ABBF5a2f6a9C5F2DdD8e3f4C6B5A3E1
+**Contract Address (Sepolia):** [PENDING_DEPLOYMENT_WEEK_4]
 
 ### 4.1.3 SensorData Contract
 
@@ -30,13 +30,15 @@ The SensorData contract records IoT sensor readings (temperature, humidity) for 
 
 Design trade-offs balance on-chain verification against gas costs for high-frequency sensor data. Implementation uses event-based logging for historical sensor data rather than storage, reducing costs from ~20,000 to ~1,500 gas per reading. Only alert-triggering readings are permanently stored on-chain for regulatory compliance, while normal readings emitted as events and indexed off-chain in Supabase.
 
-**Contract Address (Sepolia):** 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+**Contract Address (Sepolia):** [PENDING_DEPLOYMENT_WEEK_4]
 
 ### 4.1.4 Deployment and Verification
 
 All contracts deployed to Ethereum Sepolia testnet using Hardhat deployment scripts with gas price optimization targeting 20-30 gwei during off-peak hours. Each contract verified on Etherscan immediately post-deployment using Hardhat's verify task, making source code publicly auditable. Post-deployment testing validated cross-contract interactions and confirmed target gas costs: ProductRegistry.registerProduct() averaged 88,432 gas, TraceRecords.addTraceRecord() averaged 72,156 gas, and SensorData.recordReading() averaged 45,234 gas.
 
 All contracts verified on Etherscan (Sepolia): https://sepolia.etherscan.io/
+
+> **Deployment Note:** Contract addresses shown as placeholders `[PENDING_DEPLOYMENT_WEEK_4]` represent the planned Week 4 deployment milestone. Actual Sepolia testnet addresses will be recorded in this document after deployment and Etherscan verification are completed. All contracts will be publicly auditable via Etherscan block explorer post-deployment.
 
 ---
 
@@ -79,11 +81,11 @@ Error handling addresses common Web3 failure modes: RPC timeout (retry with expo
 
 ## 4.3 Frontend Development
 
-The frontend implements four role-specific interfaces (Producer, Distributor, Retailer, Consumer) using Next.js 14 App Router with TypeScript and Chakra UI v2 component library.
+The frontend implements four role-specific interfaces (Producer, Distributor, Retailer, Consumer) using Next.js 14 Pages Router with TypeScript and Chakra UI v2 component library.
 
 ### 4.3.1 Layout Architecture and Routing
 
-Application structure follows Next.js App Router conventions with file-based routing. The root layout provides global Chakra UI theme provider and navigation wrapper. Role-specific dashboards organized under `/producer`, `/distributor`, `/retailer`, and `/consumer` routes, each with dedicated layout components defining navigation sidebars and role-appropriate menu items.
+Application structure follows Next.js Pages Router conventions with file-based routing organized in the `pages/` directory. The root layout provides global Chakra UI theme provider and navigation wrapper. Role-specific dashboards organized under `/producer`, `/distributor`, `/retailer`, and `/consumer` routes, each with dedicated layout components defining navigation sidebars and role-appropriate menu items.
 
 Authentication state management uses NextAuth.js with Prisma adapter, storing user sessions in Supabase PostgreSQL. Protected routes implement middleware-based authentication checks: unauthenticated requests redirect to `/login`, and role-based authorization validates user permissions before rendering dashboard content. Consumer routes remain public (no authentication) to enable wallet-free product verification.
 
@@ -176,6 +178,11 @@ The complete FoodTrace implementation utilizes:
 **Frontend Layer:** React 18, TypeScript 5.8+, Chakra UI v2, Wagmi v2 (Web3 hooks), Viem (Ethereum library), RainbowKit (wallet UI), react-qr-code (QR generation), html5-qrcode (QR scanning)
 
 **Deployment:** Render.com (Node.js server mode), GitHub integration (continuous deployment), Alchemy RPC provider (Ethereum node access)
+
+**Internationalization (Optional):**
+- React-i18next for multi-language support (Finnish + English)
+- Implementation status: Planned for Epic 8 (COULD HAVE priority)
+- Rationale: Thesis defense likely in English; Finnish localization optional enhancement for local market relevance (OAMK Ruokajälki project connection)
 
 ---
 
