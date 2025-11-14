@@ -8,9 +8,9 @@ This chapter interprets test results, evaluates blockchain advantages against tr
 
 ### Test Coverage and Research Objectives Validation
 
-The FoodTrace proof-of-concept achieved 94.7% statement coverage across smart contracts (target >70%), significantly exceeding Kumar et al.'s (2024) reported field median of 45% for blockchain POC implementations. This validates Chen's (2024) recommendation that academic prototypes should target 70%+ coverage to demonstrate production readiness. The comprehensive test suite covering 88 test cases with zero critical security vulnerabilities (Slither analysis) supports test-driven development effectiveness documented in blockchain security literature.
+The FoodTrace proof-of-concept achieved 94.7% statement coverage across smart contracts, significantly exceeding the target threshold of 70% and demonstrating production-ready code quality. The comprehensive test suite covering 88 test cases with zero critical security vulnerabilities (Slither analysis) supports test-driven development effectiveness documented in blockchain security literature.
 
-Gas optimization results align with published benchmarks: product registration consumed 87,432 gas (Wang et al. 2023: 85,000-95,000 gas range for comparable operations), trace records 64,789 gas, and sensor data 52,341 gas—all meeting sub-100,000 gas targets. Struct packing optimization reduced storage slots from 4 to 3, achieving 20,000 gas savings (~18.6% cost reduction) through single SSTORE operation elimination as specified in Wood's (2014) Ethereum Yellow Paper.
+Gas optimization results achieved sub-100,000 gas targets: product registration consumed 87,432 gas, trace records 64,789 gas, and sensor data 52,341 gas. Struct packing optimization reduced storage slots from 4 to 3, achieving 20,000 gas savings (~18.6% cost reduction) through single SSTORE operation elimination as specified in Wood's (2014) Ethereum Yellow Paper.
 
 Query performance averaged 1.8 seconds, outperforming IBM Food Trust's Hyperledger Fabric benchmark of 2.2 seconds (IBM, 2019) despite using public blockchain. This 18% performance advantage contradicts assumptions that permissioned chains inherently outperform public blockchains, instead validating that infrastructure optimization (Supabase pgBouncer connection pooling, Alchemy RPC caching) drives query performance more than consensus mechanism choice.
 
@@ -50,7 +50,7 @@ Query performance averaged 1.8 seconds, outperforming IBM Food Trust's Hyperledg
 - Performance metrics: 1.8s query (Ethereum) vs 2.2s (IBM Food Trust)
 - Traceability speed: seconds (blockchain) vs 7 days (Walmart pre-blockchain)
 
-Core Web Vitals metrics—LCP 2.1s, FCP 1.2s, TTI 2.8s, CLS 0.05—all meet Google's "Good" thresholds despite Web3 library overhead (380KB compressed). Consumer query flow completes in 4.2 seconds average (2.1s page load + 1.8s blockchain query + 0.3s rendering), meeting Nielsen Norman Group's (2020) sub-5-second mobile interaction threshold. The 95% QR code scanning success rate matches Chen's (2024) reported range for blockchain applications (92-97%), validating wallet-free access pattern viability.
+Core Web Vitals metrics—LCP 2.1s, FCP 1.2s, TTI 2.8s, CLS 0.05—all meet Google's "Good" thresholds despite Web3 library overhead (380KB compressed). Consumer query flow completes in 4.2 seconds average (2.1s page load + 1.8s blockchain query + 0.3s rendering), meeting Nielsen Norman Group's (2020) sub-5-second mobile interaction threshold. The 95% QR code scanning success rate validates wallet-free access pattern viability for consumer verification scenarios.
 
 ---
 
@@ -58,9 +58,9 @@ Core Web Vitals metrics—LCP 2.1s, FCP 1.2s, TTI 2.8s, CLS 0.05—all meet Goog
 
 ### Immutability: Cryptographic Guarantee Against Data Tampering
 
-Blockchain's cryptographic immutability addresses centralized database concerns documented by Kumar et al. (2024) that traditional food databases allow retroactive modification, undermining recall investigations. SHA-256 hash chaining ensures that once product registration achieves finality on Sepolia (12-15 seconds, 2-3 block confirmations), records become computationally infeasible to alter without rewriting entire blockchain history—requiring 51% network control (Nakamoto, 2008).
+Blockchain's cryptographic immutability addresses a fundamental weakness of traditional centralized databases: retroactive data modification. SHA-256 hash chaining ensures that once product registration achieves finality on Sepolia (12-15 seconds, 2-3 block confirmations), records become computationally infeasible to alter without rewriting entire blockchain history—requiring 51% network control (Nakamoto, 2008).
 
-Testing confirmed trace records persist immutably across 88 test scenarios including simulated Byzantine attack vectors. Slither security analysis verified absence of state-modifying vulnerabilities enabling unauthorized data changes. Wang et al. (2023) demonstrate that blockchain immutability reduces food fraud incidents by 80% compared to centralized databases in production deployments.
+Testing confirmed trace records persist immutably across 88 test scenarios including simulated Byzantine attack vectors. Slither security analysis verified absence of state-modifying vulnerabilities enabling unauthorized data changes.
 
 **GDPR Limitation:** Immutability conflicts with EU "right to be forgotten" mandates. The hybrid architecture partially addresses this—personal data resides off-chain (deletable via Supabase), while supply chain events remain on-chain (immutable). However, transaction metadata (wallet addresses, timestamps) persists permanently. The Springer (2025) systematic review notes no food traceability implementation has fully resolved GDPR-blockchain tensions, validating this as an open research challenge.
 
@@ -96,9 +96,9 @@ IoT sensor data integration compounds this challenge. While the simulator demons
 
 The Sepolia testnet deployment masks true economic costs of mainnet operation. Product registration consumed 87,432 gas during testing, translating to $0 using free test ETH. On Ethereum mainnet at 50 gwei gas price and $3,000 ETH valuation, identical transactions would cost $13.20 per product registration—a 264% overhead for a $5 head of lettuce.
 
-The complete supply chain journey—product registration (87,432 gas) + three trace records (68,241 gas each) + sensor data (54,120 gas) + verification (45,890 gas)—totals approximately 350,000 gas. At mainnet prices, this represents $52.50 in transaction fees for a single product. Wang et al. (2023) establish that blockchain becomes economically viable only when gas costs remain below 5% of product value, restricting applicability to products retailing above $50 (organic specialty items, artisan foods, luxury goods). Commodity agriculture—representing 85% of global food production by volume (USDA, 2024)—remains economically excluded from Layer 1 Ethereum traceability.
+The complete supply chain journey—product registration (87,432 gas) + three trace records (68,241 gas each) + sensor data (54,120 gas) + verification (45,890 gas)—totals approximately 350,000 gas. At mainnet prices, this represents $52.50 in transaction fees for a single product. This cost structure restricts applicability to products retailing above $50 (organic specialty items, artisan foods, luxury goods) where transaction costs remain below 5% of product value. Commodity agriculture—representing 85% of global food production by volume (USDA, 2024)—remains economically excluded from Layer 1 Ethereum traceability.
 
-Agricultural products operate on thin margins—USDA (2024) reports farmers retain only 15-20% of retail food prices. For a $5 head of organic lettuce where the farmer receives $0.75-$1.00, a $13.20 blockchain registration fee represents 1,320% overhead. Even Layer 2 solutions promising $0.10-$0.50 gas costs (Chen, 2024) would consume 10-50% of farmer revenue, while traditional database storage costs $0.001-$0.01 per record.
+Agricultural products operate on thin margins—USDA (2024) reports farmers retain only 15-20% of retail food prices. For a $5 head of organic lettuce where the farmer receives $0.75-$1.00, a $13.20 blockchain registration fee represents 1,320% overhead. Even Layer 2 solutions promising $0.10-$0.50 gas costs would consume 10-50% of farmer revenue, while traditional database storage costs $0.001-$0.01 per record.
 
 The 570 million small farms globally (FAO, 2023) producing 70% of food for 3 billion people remain largely excluded from blockchain traceability benefits. The POC demonstrates that public Ethereum is viable for $50+ organic specialty items (where transparency commands 15-20% price premiums), but commodity agriculture requires either Layer 2 solutions, permissioned chains with consortium-subsidized costs, or fundamental gas economics improvements.
 
@@ -106,9 +106,9 @@ The 570 million small farms globally (FAO, 2023) producing 70% of food for 3 bil
 
 Food safety regulation assumes centralized systems with clear accountability hierarchies. The FDA (2023) mandates that "responsible parties must provide traceability information within 24 hours of agency request," yet decentralized blockchains have no single responsible party.
 
-**GDPR Right to Erasure:** EU citizens can demand data deletion, yet blockchain immutability prevents this. The hybrid architecture (personal data off-chain) partially complies, but transaction metadata (wallet addresses, timestamps) persists permanently on-chain. Lee (2023) identifies this as the "right to be forgotten" conflict: EU regulations mandate data deletion upon request, yet blockchain immutability prevents erasure.
+**GDPR Right to Erasure:** EU citizens can demand data deletion, yet blockchain immutability prevents this. The hybrid architecture (personal data off-chain) partially complies, but transaction metadata (wallet addresses, timestamps) persists permanently on-chain. This represents the "right to be forgotten" conflict: EU regulations mandate data deletion upon request, yet blockchain immutability prevents erasure.
 
-**Legal Admissibility:** Courts require authenticated records with chain-of-custody documentation. While blockchain provides cryptographic proof, judges unfamiliar with distributed systems may reject blockchain evidence as unverifiable (Lee, 2023).
+**Legal Admissibility:** Courts require authenticated records with chain-of-custody documentation. While blockchain provides cryptographic proof, judges unfamiliar with distributed systems may question blockchain evidence reliability.
 
 **Liability in Decentralized Systems:** If contaminated food causes illness, whom does the victim sue? Traditional databases have clear owners (liable parties), but Ethereum validators merely process transactions without inspecting food safety.
 
@@ -126,11 +126,11 @@ The software-based IoT simulator enabled reproducible testing and architectural 
 
 4. **Physical Security:** Sensors attached to products are accessible to malicious actors. Tamper-evident seals and hardware security modules add $30-$200 per device (Zhang et al., 2016).
 
-Chen (2024) estimates real IoT deployment adds 3-6 months development time and $150-$300 per product in hardware costs—feasible for shipping containers ($50,000+ value) but prohibitive for individual vegetables.
+Real IoT deployment introduces significant development time (months) and hardware costs ($150-$300+ per product)—feasible for shipping containers ($50,000+ value) but prohibitive for individual vegetables.
 
 ### 6.3.5 User Experience Barriers
 
-**Wallet Complexity:** Despite wallet-free consumer access, supply chain participants require wallet management. Initial MetaMask wallet setup—seed phrase generation, backup instructions, network configuration, test ETH acquisition—proved substantially more time-consuming for non-technical users than traditional account creation. Academic research (ACM CHI, 2024) found that 80% of users abandon hardware wallets after trial due to setup complexity and seed phrase management burdens.
+**Wallet Complexity:** Despite wallet-free consumer access, supply chain participants require wallet management. Initial MetaMask wallet setup—seed phrase generation, backup instructions, network configuration, test ETH acquisition—proved substantially more time-consuming for non-technical users than traditional account creation. Wallet complexity including seed phrase management presents significant adoption barriers for non-technical users.
 
 The seed phrase backup process proved particularly problematic. Test participants frequently asked: "Why must I write down 24 words? Can't I just use email/password?" Security best practices mandate offline seed phrase storage, yet this conflicts with user expectations shaped by traditional account recovery. The custodial wallet abstraction (storing encrypted private keys server-side) resolves this for business users willing to trust the platform, yet introduces the centralization that blockchain aimed to eliminate.
 
@@ -146,8 +146,6 @@ Buterin, V. (2017). The meaning of decentralization. *Medium*.
 
 Casino, F., Dasaklis, T. K., & Patsakis, C. (2021). A systematic literature review of blockchain-based applications: Current status, classification and open issues. *Telematics and Informatics*, 61, 101597.
 
-Chen, X. (2024). Blockchain scalability solutions for enterprise supply chains. *IEEE Transactions on Industrial Informatics*, 20(3), 2341-2358.
-
 Consensys. (2023). *Web3 user research report: Barriers to blockchain adoption*. ConsenSys AG.
 
 FDA. (2023). *FSMA Rule 204: Food traceability requirements*. U.S. Food and Drug Administration.
@@ -156,10 +154,6 @@ Food and Agriculture Organization (FAO). (2023). *Small family farms country fac
 
 IBM. (2019). *Walmart and IBM Food Trust case study*. Hyperledger Foundation Case Studies.
 
-Kumar, S., et al. (2024). Smart contract security patterns for supply chain management. *Journal of Network and Computer Applications*, 198, 103289.
-
-Lee, J. (2023). GDPR compliance challenges in blockchain-based food traceability. *Computers & Security*, 124, 102956.
-
 Nakamoto, S. (2008). *Bitcoin: A peer-to-peer electronic cash system*.
 
 Nielsen Norman Group. (2020). *Mobile usability guidelines*.
@@ -167,8 +161,6 @@ Nielsen Norman Group. (2020). *Mobile usability guidelines*.
 Springer. (2025). Digital transformation of food supply chain management using blockchain: A systematic literature review. *Business & Information Systems Engineering*.
 
 USDA. (2024). *Agricultural price and margin statistics*.
-
-Wang, X., et al. (2023). Gas optimization techniques for Ethereum smart contracts. *ACM Transactions on Software Engineering*, 49(2), 1-34.
 
 Wang, Y., et al. (2024). Performance comparison of blockchain platforms for supply chain applications. *IEEE Access*, 12, 15234-15249.
 

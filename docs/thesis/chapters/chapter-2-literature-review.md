@@ -63,7 +63,7 @@ Zhao et al. (2019) conducted a systematic review of 71 blockchain agri-food valu
 
 **Recommendation:** Zhao et al. (2019) conclude that platform selection should balance transparency requirements against performance constraints. Public chains suit consumer-facing verification scenarios, while permissioned chains better serve business confidentiality requirements (Zhao et al., 2019, p. 95).
 
-**Platform Selection Decision:** Based on this academic consensus, this thesis selects **Ethereum** for proof-of-concept to demonstrate public verifiability and consumer-facing transparency. The choice addresses the research gap identified by Ellahi et al. (2024): 95% of blockchain food supply chain frameworks focus on enterprise traceability optimization, while only 3-5% address small producer financing and humanitarian concerns such as donation/redistribution systems. Ethereum's public blockchain enables independent consumer verification without trusting consortium governance—critical for demonstrating wallet-free access patterns and small producer feasibility. The detailed platform selection justification, including educational feasibility and timeline constraints, appears in Chapter 3 Methodology.
+**Platform Selection Decision:** Based on this academic consensus, this thesis selects **Ethereum** for proof-of-concept to demonstrate public verifiability and consumer-facing transparency. The choice addresses the research gap identified by Ellahi et al. (2024): while 88.3% of blockchain food supply chain frameworks focus on traceability and transparency optimization, only 3-5% address small producer financing and humanitarian concerns such as donation/redistribution systems. Ethereum's public blockchain enables independent consumer verification without trusting consortium governance—critical for demonstrating wallet-free access patterns and small producer feasibility. The detailed platform selection justification, including educational feasibility and timeline constraints, appears in Chapter 3 Methodology.
 
 ---
 
@@ -71,7 +71,7 @@ Zhao et al. (2019) conducted a systematic review of 71 blockchain agri-food valu
 
 ### 2.3.1 Wallet Complexity as Adoption Barrier
 
-Blockchain applications present unique UX challenges not found in traditional web applications. Academic research analyzing cryptocurrency wallet user behavior found **80% of users abandoned hardware wallets after trial due to setup complexity** (ACM CHI, 2024). Traditional web authentication requires email/password entry; blockchain authentication requires a complex seven-step workflow:
+Blockchain applications present unique UX challenges not found in traditional web applications. Cryptocurrency wallet setup presents significant adoption barriers including seed phrase management, private key storage, and network configuration complexity. Traditional web authentication requires email/password entry; blockchain authentication requires a complex seven-step workflow:
 
 1. Wallet extension installation
 2. Seed phrase generation
@@ -109,7 +109,7 @@ This hybrid approach provides security for business operations (wallet signature
 
 **Gap 1: User Accessibility in Public Blockchains**
 
-Ellahi et al. (2024) systematic review of 60 blockchain food supply chain frameworks found **95% focus on enterprise traceability optimization** (data accuracy, transparency, cost reduction), while **only 3% address donation/redistribution and 5% address supply chain financing**—critical functions for small producers lacking access to traditional financial services. Existing research emphasizes enterprise-scale operations with minimal consideration for: wallet-free consumer access patterns, mobile-first blockchain application design, or UX optimization for non-technical users in resource-constrained environments.
+Ellahi et al. (2024) systematic review of 60 blockchain food supply chain frameworks found **88.3% focus on traceability and transparency** (data accuracy, supply chain visibility, authenticity verification), while **only 3% address donation/redistribution and 5% address supply chain financing**—critical functions for small producers lacking access to traditional financial services. Existing research emphasizes enterprise-scale operations with minimal consideration for: wallet-free consumer access patterns, mobile-first blockchain application design, or UX optimization for non-technical users in resource-constrained environments.
 
 **Gap 2: IoT Simulation for Academic POCs**
 

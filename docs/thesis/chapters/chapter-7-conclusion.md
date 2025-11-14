@@ -16,7 +16,7 @@ The hybrid data architecture balanced blockchain immutability with practical cos
 
 **Answer:** Ethereum demonstrates technical suitability for transparency-focused food traceability when Layer 2 scaling solutions are employed, but faces cost-viability limitations for high-volume, low-margin products on Layer 1.
 
-**Evidence:** The implementation validated Ethereum's core capabilities—SHA-256 hash chaining prevents retroactive data modification, 12.8-second block confirmation provides reasonable settlement speed, and 156 unit tests with 72% code coverage achieved zero critical vulnerabilities (Slither analysis). Gas consumption of 88,432 gas aligns with Wang et al. (2023) benchmarks (85k-95k range), validating implementation efficiency.
+**Evidence:** The implementation validated Ethereum's core capabilities—SHA-256 hash chaining prevents retroactive data modification, 12.8-second block confirmation provides reasonable settlement speed, and 156 unit tests with 72% code coverage achieved zero critical vulnerabilities (Slither analysis). Gas consumption of 88,432 gas validates implementation efficiency for core supply chain operations.
 
 **Economic Analysis:**
 - **Layer 1 Costs:** Product registration $5.29-$13.23 (30-60 gwei), complete product journey (5 events) $30-$65 total cost—prohibitive for products <$300 retail
@@ -78,7 +78,7 @@ Query performance of 1.8 seconds outperformed IBM Food Trust's 2.2-second Hyperl
 **Answer:** Custodial wallet abstraction for business users and wallet-free read-only access for consumers removes the primary UX barrier (wallet setup) while maintaining cryptographic security through server-side key management and public RPC queries.
 
 **UX Challenges Quantified:**
-- Academic research (ACM CHI, 2024): 80% of users abandoned hardware wallets after trial due to setup complexity
+- Wallet setup complexity presents significant adoption barriers for non-technical users
 - Kaspersky (2023): 32% of cryptocurrency owners have lost access to crypto accounts, highlighting irrecoverability challenges
 - Wallet onboarding requires substantially longer time than traditional account creation due to seed phrase management and multi-step authentication
 
@@ -158,7 +158,7 @@ Ellahi et al.'s (2024) systematic review quantifies the gap: **while 88.3% of 60
 ### Technical Contributions
 
 **TC1: Wallet-Free Consumer Access Pattern**
-- **Problem:** Wallet setup complexity causes 80% user abandonment (ACM CHI, 2024)
+- **Problem:** Wallet setup complexity presents significant barriers for mainstream consumer adoption
 - **Solution:** Read-only blockchain queries via public RPC providers (Alchemy, Infura)
 - **Validation:** 100% consumer test success rate (n=20), zero wallet-related support requests, 1.8-second query performance
 - **Contribution:** First documented implementation of wallet-free public blockchain verification for supply chain absent from reviewed literature
@@ -183,7 +183,7 @@ Ellahi et al.'s (2024) systematic review quantifies the gap: **while 88.3% of 60
 
 ### Challenges Existing Assumptions
 
-The work contradicts Lee (2023) and Kumar (2024) assertions that "public blockchains are unsuitable for small producers due to prohibitive gas costs." Layer 1 costs ($5-13 per product) confirm concerns for commodity foods (<$5 retail), but Layer 2 costs ($0.01-$0.26 per product) contradict blanket infeasibility claims for mid-tier products ($15-50 retail).
+The work challenges common assumptions that public blockchains are unsuitable for small producers due to prohibitive gas costs. Layer 1 costs ($5-13 per product) confirm concerns for commodity foods (<$5 retail), but Layer 2 costs ($0.01-$0.26 per product) contradict blanket infeasibility claims for mid-tier products ($15-50 retail).
 
 The Springer (2025) review documents contradictory findings: **12 papers cite cost barriers** yet **8 papers report successful small producer deployments**. This thesis explains the discrepancy through explicit Layer 1 vs Layer 2 comparison—a distinction absent from 87% of reviewed papers.
 
@@ -247,7 +247,7 @@ The Springer (2025) review documents contradictory findings: **12 papers cite co
 
 This research demonstrates that **blockchain technology can transform food supply chain transparency from a trust-based system to a cryptographically-verified system**, making the Walmart Food Trust case study outcome (7 days → 2.2 seconds traceability) achievable not only for enterprise consortiums but for small-scale producers targeting premium markets.
 
-The wallet-free consumer access pattern addresses the fundamental blockchain UX paradox: transparency is worthless if accessing it requires technical expertise. Validation (100% consumer success rate, zero wallet-related support requests) proves that public blockchain verification can be as simple as scanning a QR code, removing the wallet setup barrier that research shows causes 80% user abandonment (ACM CHI, 2024).
+The wallet-free consumer access pattern addresses the fundamental blockchain UX paradox: transparency is worthless if accessing it requires technical expertise. Validation (100% consumer success rate, zero wallet-related support requests) proves that public blockchain verification can be as simple as scanning a QR code, removing the wallet setup complexity barrier that prevents mainstream consumer adoption.
 
 The hybrid storage architecture reconciles blockchain's immutability with practical cost constraints: critical integrity data on-chain provides tamper-proof audit trails, while voluminous metadata off-chain maintains reasonable operational costs. This selective storage pattern, empirically validated through 90% gas cost reduction, provides a replicable blueprint for supply chain blockchain implementations.
 
@@ -281,17 +281,7 @@ Food and Agriculture Organization. (2023). *The state of food and agriculture 20
 
 IBM. (2019). Walmart and IBM food trust case study: Building transparency in the food supply chain. *Hyperledger Foundation Case Studies*.
 
-Kumar, S., Singh, R., & Patel, M. (2024). Blockchain adoption barriers in agri-food supply chains: A systematic review. *Computers in Industry*, 152, 104089.
-
-Lee, J. (2023). Performance analysis of public vs permissioned blockchains for supply chain management. *IEEE Transactions on Engineering Management*, 70(3), 1247-1262.
-
-MetaMask. (2022). *User onboarding research: Wallet setup friction analysis*. ConsenSys internal report.
-
 Nakamoto, S. (2008). *Bitcoin: A peer-to-peer electronic cash system*. https://bitcoin.org/bitcoin.pdf
-
-Wallet.com. (2023). *Cryptocurrency user survey: Security and usability challenges*. Wallet.com Research.
-
-Wang, H., Chen, Y., & Liu, Z. (2023). Gas consumption patterns in Ethereum supply chain smart contracts. *Journal of Blockchain Research*, 5(2), 87-104.
 
 World Health Organization. (2022). *Food safety fact sheet*. https://www.who.int/news-room/fact-sheets/detail/food-safety
 

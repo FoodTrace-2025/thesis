@@ -105,7 +105,7 @@ All business user interfaces implement optimistic UI updates showing pending ope
 
 ### 4.3.3 Consumer Query Interface (Wallet-Free)
 
-Consumer query interface provides public product verification without authentication or wallet requirements, addressing the wallet complexity barrier that research shows causes 80% user abandonment (ACM CHI, 2024).
+Consumer query interface provides public product verification without authentication or wallet requirements, addressing wallet complexity barriers including seed phrase management and private key storage that deter mainstream consumer adoption.
 
 Primary entry point uses QR code scanning via html5-qrcode library: accesses device camera (requires HTTPS and user permission), decodes QR code, extracts product ID, and navigates to product detail page. Fallback manual entry allows consumers to type product ID directly if camera unavailable or QR code damaged.
 
