@@ -20,7 +20,7 @@ This thesis addresses this gap by demonstrating how Ethereum public blockchain c
 
 The central problem addressed is: **How can blockchain technology be made accessible to mainstream users while preserving its core benefits of decentralization, transparency, and immutability?**
 
-This manifests in food supply chain traceability through interconnected challenges: (1) User experience barriers—cryptocurrency wallet setup requires seed phrase management, network configuration, and irrecoverable key storage that deters mainstream adoption (academic research analyzing wallet UX identifies these as primary abandonment factors); (2) Cost-prohibitive transaction fees—Ethereum mainnet gas costs range from $0.20-$2 per transaction under normal conditions, though peak congestion historically reached $2-10, exceeding small producer margins; (3) Oracle problem—blockchain ensures data immutability but cannot verify off-chain data accuracy ("garbage in, garbage out"); and (4) Platform selection complexity—when to use public blockchain (Ethereum) vs permissioned alternatives (Hyperledger Fabric).
+This manifests in food supply chain traceability through interconnected challenges: (1) User experience barriers—cryptocurrency wallet setup requires seed phrase management, network configuration, and irrecoverable key storage that deters mainstream adoption, with empirical research documenting that wallet complexity presents significant barriers for both novice and experienced users, leading to frustration and irreversible monetary losses (Voskobojnikov et al., 2021); (2) Cost-prohibitive transaction fees—Ethereum mainnet gas costs vary significantly based on network congestion, with transaction fees often exceeding economic viability for low-margin products; (3) Oracle problem—blockchain ensures data immutability but cannot verify off-chain data accuracy ("garbage in, garbage out"); and (4) Platform selection complexity—when to use public blockchain (Ethereum) vs permissioned alternatives (Hyperledger Fabric).
 
 ---
 
@@ -84,6 +84,8 @@ Kamath, R. (2018). Food traceability on blockchain: Walmart's pork and mango pil
 Nakamoto, S. (2008). _Bitcoin: A peer-to-peer electronic cash system_. https://bitcoin.org/bitcoin.pdf
 
 Springer. (2025). Digital transformation of food supply chain management using blockchain: A systematic literature review. _Business & Information Systems Engineering_. https://doi.org/10.1007/s12599-025-00948-0
+
+Voskobojnikov, A., Wiese, O., Mehrabi Koushki, M., Roth, V., & Beznosov, K. (2021). The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. _CHI '21: CHI Conference on Human Factors in Computing Systems_. https://doi.org/10.1145/3411764.3445407
 
 Wood, G. (2014). _Ethereum: A secure decentralised generalised transaction ledger_. Ethereum Foundation. https://ethereum.github.io/yellowpaper/paper.pdf
 

@@ -99,7 +99,7 @@ For supply chain consumer verification, requiring wallet installation defeats ac
 - Query product information through public RPC providers such as Alchemy or Infura
 - Zero setup, zero cost, browser-based access via QR code scanning
 
-This hybrid approach provides security for business operations (wallet signatures authenticate data sources) while maintaining accessibility for consumers (no installation barriers). Read-only queries impose zero cost (RPC providers absorb infrastructure costs), zero setup (works in any browser), and mobile-friendly access (60-70% of QR scans occur on mobile devices).
+This hybrid approach provides security for business operations (wallet signatures authenticate data sources) while maintaining accessibility for consumers (no installation barriers). Read-only queries impose zero cost (RPC providers absorb infrastructure costs), zero setup (works in any browser), and mobile-first design optimized for QR code scanning on smartphones.
 
 Consumer acceptance research examining 715 Greek consumers found high valuation for QR codes with blockchain-based traceability information, with consumers demonstrating willingness to pay price premiums for traceable food products where QR codes enable direct verification of authenticity claims (British Food Journal, 2024). Emerging Web3 identity solutions integrating zero-knowledge proofs achieve 12.5-second proof generation times while reducing compliance costs by 40% through automated verification, demonstrating technical feasibility for privacy-preserving consumer authentication patterns (ACM Transactions on the Web, 2024).
 
