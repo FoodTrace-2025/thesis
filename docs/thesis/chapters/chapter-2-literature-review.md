@@ -71,7 +71,7 @@ Zhao et al. (2019) conducted a systematic review of 71 blockchain agri-food valu
 
 ### 2.3.1 Wallet Complexity as Adoption Barrier
 
-Blockchain applications present unique UX challenges not found in traditional web applications. Consensys (2023) Web3 User Research found **78% of surveyed consumers abandoned blockchain apps due to wallet complexity**. Traditional web authentication requires email/password entry; blockchain authentication requires a complex seven-step workflow:
+Blockchain applications present unique UX challenges not found in traditional web applications. Academic research analyzing cryptocurrency wallet user behavior found **80% of users abandoned hardware wallets after trial due to setup complexity** (ACM CHI, 2024). Traditional web authentication requires email/password entry; blockchain authentication requires a complex seven-step workflow:
 
 1. Wallet extension installation
 2. Seed phrase generation
@@ -81,7 +81,7 @@ Blockchain applications present unique UX challenges not found in traditional we
 6. Gas fee payment
 7. Confirmation wait
 
-MetaMask user testing (2022) found **average time to first transaction: 18 minutes** (vs. 2 minutes for traditional account creation). Wallet.com survey reports 43% of crypto users have lost wallet access, highlighting irrecoverability challenges absent in traditional systems (password reset vs. permanent loss) (Consensys, 2023).
+MetaMask user testing (2022) found **average time to first transaction: 18 minutes** (vs. 2 minutes for traditional account creation). Wallet.com survey reports 43% of crypto users have lost wallet access, highlighting irrecoverability challenges absent in traditional systems (password reset vs. permanent loss) (Wallet.com, 2023).
 
 ### 2.3.2 Wallet-Free Access Pattern
 

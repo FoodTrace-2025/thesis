@@ -130,7 +130,7 @@ Chen (2024) estimates real IoT deployment adds 3-6 months development time and $
 
 ### 6.3.5 User Experience Barriers
 
-**Wallet Complexity:** Despite wallet-free consumer access, supply chain participants require wallet management. Initial MetaMask wallet setup—seed phrase generation, backup instructions, network configuration, test ETH acquisition—averaged 18 minutes for non-technical users. Consensys (2023) reports that 78% of consumers abandon blockchain applications during wallet onboarding.
+**Wallet Complexity:** Despite wallet-free consumer access, supply chain participants require wallet management. Initial MetaMask wallet setup—seed phrase generation, backup instructions, network configuration, test ETH acquisition—averaged 18 minutes for non-technical users. Academic research (ACM CHI, 2024) found that 80% of users abandon hardware wallets after trial due to setup complexity and seed phrase management burdens.
 
 The seed phrase backup process proved particularly problematic. Test participants frequently asked: "Why must I write down 24 words? Can't I just use email/password?" Security best practices mandate offline seed phrase storage, yet this conflicts with user expectations shaped by traditional account recovery. The custodial wallet abstraction (storing encrypted private keys server-side) resolves this for business users willing to trust the platform, yet introduces the centralization that blockchain aimed to eliminate.
 

@@ -38,7 +38,7 @@
 
 Traditional food supply chains lack transparency and rapid traceability. Walmart's 2016 case study demonstrated that tracing product origins required **7 days using paper records**, enabling contamination spread and delayed recalls. Current systems suffer from data silos (no shared source of truth), manual verification (easily forged certificates), and centralized databases (vulnerable to tampering). The WHO estimates 600 million people fall ill annually from contaminated food, costing the global economy $110 billion.
 
-**Core Challenge:** How can blockchain technology enable transparent, immutable food traceability while solving the critical UX barrier (78% of users abandon blockchain apps due to wallet complexity)?
+**Core Challenge:** How can blockchain technology enable transparent, immutable food traceability while solving the critical UX barrier (research shows 80% of users abandon wallet setup due to complexity)?
 
 ---
 
@@ -48,13 +48,13 @@ Traditional food supply chains lack transparency and rapid traceability. Walmart
 
 **Key Innovations:**
 
-1. **Custodial Wallets:** Email/password login for business users (no MetaMask required) - solves 78% abandonment rate
+1. **Custodial Wallets:** Email/password login for business users (no MetaMask required) - solves 80% abandonment rate
 2. **Wallet-Free Consumer Access:** QR code scanning without wallet installation - zero friction verification
 3. **Hybrid Storage:** Critical data on-chain (immutable), metadata off-chain (cost optimized) - 96% gas savings
 4. **IoT Simulation:** Software-based sensor data generation - saves €150-200 hardware costs, 3 weeks development time
 5. **Multi-Tenant Security:** AES-256 encrypted wallets, company-scoped data isolation
 
-**Academic Contribution:** Demonstrates Ethereum public blockchain viability for small-producer scenarios (addresses research gap: 95% of blockchain food supply chain frameworks focus on enterprise traceability while only 3-5% address small producer financing and donation systems - Ellahi et al., 2024).
+**Academic Contribution:** Demonstrates Ethereum public blockchain viability for small-producer scenarios (addresses research gap: while 88.3% of blockchain food supply chain frameworks address traceability/transparency, only 3-5% address small producer financing and donation systems - Ellahi et al., 2024).
 
 ---
 
@@ -3065,7 +3065,7 @@ The architecture balances thesis constraints with real-world enterprise patterns
 
 **Rationale:**
 
-- **Solves UX barrier**: 78% blockchain app abandonment due to wallet complexity (Consensys 2023)
+- **Solves UX barrier**: 80% user abandonment due to wallet setup complexity (ACM CHI 2024)
 - **Target user reality**: Finnish farmers don't have MetaMask (Persona 2: Matti Virtanen, age 52)
 - **Enterprise pattern**: IBM Food Trust uses custodial wallets for business users
 - **Academic justification**: Demonstrates understanding of production blockchain UX challenges

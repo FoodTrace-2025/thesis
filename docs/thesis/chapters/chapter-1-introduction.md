@@ -20,7 +20,7 @@ This thesis addresses this gap by demonstrating how Ethereum public blockchain c
 
 The central problem addressed is: **How can blockchain technology be made accessible to mainstream users while preserving its core benefits of decentralization, transparency, and immutability?**
 
-This manifests in food supply chain traceability through interconnected challenges: (1) User experience barriers—78% of consumers abandon blockchain apps due to wallet complexity (Consensys, 2023); (2) Cost-prohibitive transaction fees—Ethereum mainnet gas costs ($2-10 per simple operation) exceed small producer margins; (3) Oracle problem—blockchain ensures data immutability but cannot verify off-chain data accuracy ("garbage in, garbage out"); and (4) Platform selection complexity—when to use public blockchain (Ethereum) vs permissioned alternatives (Hyperledger Fabric).
+This manifests in food supply chain traceability through interconnected challenges: (1) User experience barriers—research shows 80% of users abandon wallet setup due to complexity (ACM CHI, 2024); (2) Cost-prohibitive transaction fees—Ethereum mainnet gas costs ($2-10 per simple operation) exceed small producer margins; (3) Oracle problem—blockchain ensures data immutability but cannot verify off-chain data accuracy ("garbage in, garbage out"); and (4) Platform selection complexity—when to use public blockchain (Ethereum) vs permissioned alternatives (Hyperledger Fabric).
 
 ---
 

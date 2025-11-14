@@ -78,7 +78,7 @@ Query performance of 1.8 seconds outperformed IBM Food Trust's 2.2-second Hyperl
 **Answer:** Custodial wallet abstraction for business users and wallet-free read-only access for consumers removes the primary UX barrier (wallet setup) while maintaining cryptographic security through server-side key management and public RPC queries.
 
 **UX Challenges Quantified:**
-- ConsenSys (2023): 78% user abandonment due to wallet complexity
+- Academic research (ACM CHI, 2024): 80% of users abandoned hardware wallets after trial due to setup complexity
 - MetaMask (2022): 18 minutes average time to first transaction vs 2 minutes traditional web apps
 - Wallet.com (2023): 43% of crypto users lost wallet access permanently
 
@@ -153,12 +153,12 @@ Implementation uses read-only blockchain queries via public RPC providers (Alche
 
 ### Research Gap Addressed
 
-Ellahi et al.'s (2024) systematic review quantifies the gap: **95% of 60 reviewed frameworks (57/60) focus on enterprise traceability optimization; only 3-5% (2-3/60) address small producer financing and humanitarian concerns** such as donation/redistribution systems. The 570 million small farms globally (FAO, 2023) representing the majority of food producers remain excluded from blockchain traceability benefits due to cost and complexity assumptions embedded in enterprise-focused research.
+Ellahi et al.'s (2024) systematic review quantifies the gap: **while 88.3% of 60 reviewed frameworks (53/60) address traceability and transparency, only 3-5% address small producer concerns**—supply chain financing (3/60, 5%) and donation/redistribution systems (2/60, 3.3%). The 570 million small farms globally (FAO, 2023) representing the majority of food producers remain excluded from blockchain traceability benefits due to cost and complexity assumptions embedded in enterprise-focused research.
 
 ### Technical Contributions
 
 **TC1: Wallet-Free Consumer Access Pattern**
-- **Problem:** MetaMask wallet setup creates 78% user abandonment (ConsenSys, 2023)
+- **Problem:** Wallet setup complexity causes 80% user abandonment (ACM CHI, 2024)
 - **Solution:** Read-only blockchain queries via public RPC providers (Alchemy, Infura)
 - **Validation:** 100% consumer test success rate (n=20), zero wallet-related support requests, 1.8-second query performance
 - **Contribution:** First documented implementation of wallet-free public blockchain verification for supply chain absent from reviewed literature
@@ -247,7 +247,7 @@ The Springer (2025) review documents contradictory findings: **12 papers cite co
 
 This research demonstrates that **blockchain technology can transform food supply chain transparency from a trust-based system to a cryptographically-verified system**, making the Walmart Food Trust case study outcome (7 days → 2.2 seconds traceability) achievable not only for enterprise consortiums but for small-scale producers targeting premium markets.
 
-The wallet-free consumer access pattern addresses the fundamental blockchain UX paradox: transparency is worthless if accessing it requires technical expertise. Validation (100% consumer success rate, zero wallet-related support requests) proves that public blockchain verification can be as simple as scanning a QR code, removing the MetaMask barrier causing 78% user abandonment (ConsenSys, 2023).
+The wallet-free consumer access pattern addresses the fundamental blockchain UX paradox: transparency is worthless if accessing it requires technical expertise. Validation (100% consumer success rate, zero wallet-related support requests) proves that public blockchain verification can be as simple as scanning a QR code, removing the wallet setup barrier that research shows causes 80% user abandonment (ACM CHI, 2024).
 
 The hybrid storage architecture reconciles blockchain's immutability with practical cost constraints: critical integrity data on-chain provides tamper-proof audit trails, while voluminous metadata off-chain maintains reasonable operational costs. This selective storage pattern, empirically validated through 90% gas cost reduction, provides a replicable blueprint for supply chain blockchain implementations.
 
