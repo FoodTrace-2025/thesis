@@ -193,8 +193,11 @@ This document contains all learning resources, tutorials, documentation links, a
 
 **Thesis Writing Guide:**
 
-- **Location:** `@docs/planning/thesis-outline.md`
-- **Content:** 942 lines, complete chapter breakdown, writing timeline (Weeks 10-12)
+- **Structure Reference:** `@docs/planning/thesis-structure-oamk.md`
+  - Content: OAMK requirements table, complete chapter breakdown, individual contribution tracking
+- **Writing Standards:** `@docs/planning/thesis-writing-standards-grade5.md`
+  - Content: Grade 5 writing standards, source verification protocols, writing timeline (Weeks 10-12)
+- **Original (Archived):** `@docs/planning/thesis-outline.md` (deprecated, use split files above)
 
 **Citation Management:**
 

@@ -1,0 +1,11 @@
+# Claude Code Performance Optimization
+
+# Exclude large files from automatic context loading
+
+# TODO: Add after Week 2 PRD sharding (when docs/prd/epic-\*.md files are created)
+
+# Waiting for: @po shard docs/prd.md (see docs/planning/action-plan.md lines 114-117)
+
+docs/prd.md
+docs/brief.md
+docs/thesis-word
