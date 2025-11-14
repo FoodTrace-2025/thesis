@@ -81,7 +81,7 @@ Blockchain applications present unique UX challenges not found in traditional we
 6. Gas fee payment
 7. Confirmation wait
 
-MetaMask user testing (2022) found **average time to first transaction: 18 minutes** (vs. 2 minutes for traditional account creation). Wallet.com survey reports 43% of crypto users have lost wallet access, highlighting irrecoverability challenges absent in traditional systems (password reset vs. permanent loss) (Wallet.com, 2023).
+Blockchain wallet onboarding requires **substantially longer time than traditional account creation** due to seed phrase generation, secure backup procedures, and network configuration steps. Kaspersky (2023) survey found that **32% of cryptocurrency owners have lost access to a crypto-related account at some point**, highlighting irrecoverability challenges absent in traditional systems (password reset vs. permanent loss).
 
 ### 2.3.2 Wallet-Free Access Pattern
 

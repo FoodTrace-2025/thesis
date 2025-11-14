@@ -79,8 +79,8 @@ Query performance of 1.8 seconds outperformed IBM Food Trust's 2.2-second Hyperl
 
 **UX Challenges Quantified:**
 - Academic research (ACM CHI, 2024): 80% of users abandoned hardware wallets after trial due to setup complexity
-- MetaMask (2022): 18 minutes average time to first transaction vs 2 minutes traditional web apps
-- Wallet.com (2023): 43% of crypto users lost wallet access permanently
+- Kaspersky (2023): 32% of cryptocurrency owners have lost access to crypto accounts, highlighting irrecoverability challenges
+- Wallet onboarding requires substantially longer time than traditional account creation due to seed phrase management and multi-step authentication
 
 **Pattern 1: Custodial Wallets for Business Users**
 
@@ -164,7 +164,7 @@ Ellahi et al.'s (2024) systematic review quantifies the gap: **while 88.3% of 60
 - **Contribution:** First documented implementation of wallet-free public blockchain verification for supply chain absent from reviewed literature
 
 **TC2: Custodial Wallet Abstraction for Business Users**
-- **Problem:** 18-minute average time to first blockchain transaction vs 2 minutes for web apps
+- **Problem:** Blockchain wallet setup requires complex multi-step process (seed phrase backup, network configuration) substantially longer than traditional web authentication
 - **Solution:** Server-side key management with email/password authentication, AES-256 encryption
 - **Validation:** 2-minute onboarding time matching traditional web apps
 - **Trade-off:** Sacrifices decentralization for accessibility (appropriate for enterprise trust model)
