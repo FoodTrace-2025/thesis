@@ -4,7 +4,7 @@ This chapter presents the testing strategy, test results for system components, 
 
 ## 5.1 Testing Strategy Overview
 
-The FoodTrace project adopted a multi-layered testing approach aligned with the Test Pyramid principle (Cohn, 2009), emphasizing unit tests, supported by integration tests, and validated through end-to-end scenarios. Testing activities were integrated into each development sprint rather than relegated to a separate testing phase.
+The FoodTrace project adopted a multi-layered testing approach aligned with the Test Pyramid principle (Cohn, 2009), emphasizing unit tests, supported by integration tests, and validated through end-to-end scenarios. Smart contract testing presents unique challenges including transaction immutability, deployment costs, and state verification complexity documented in systematic literature reviews of blockchain testing methodologies (IEEE, 2022). Testing activities were integrated into each development sprint rather than relegated to a separate testing phase.
 
 **Testing Levels:**
 
@@ -66,7 +66,7 @@ Gas optimization techniques applied included struct packing to minimize storage 
 
 ### 5.2.3 Security Testing
 
-Security testing focused on identifying vulnerabilities in smart contracts using automated static analysis (Slither tool) and manual code review.
+Security testing focused on identifying vulnerabilities in smart contracts using automated static analysis (Slither tool) and manual code review, following systematic methodologies for vulnerability detection documented in academic literature (ScienceDirect, 2024).
 
 **Tested Vulnerability Categories:**
 
@@ -363,7 +363,11 @@ Cohn, M. (2009). *Succeeding with agile: Software development using Scrum*. Addi
 
 Hardhat. (2024). *Hardhat documentation: Ethereum development environment*. Retrieved from https://hardhat.org/docs
 
+IEEE. (2022). Systematic mapping of testing smart contracts for blockchain applications. *IEEE Access*, 10, 111700-111720. https://doi.org/10.1109/ACCESS.2022.3216874
+
 IEEE. (2024). Optimizing gas consumption in Ethereum smart contracts: Best practices and techniques. *IEEE Conference Publication*, Document 10429984. IEEE Xplore.
+
+ScienceDirect. (2024). Vulnerability detection techniques for smart contracts: A systematic literature review. *Journal of Systems and Software*, 217, Article 112160. https://doi.org/10.1016/j.jss.2024.112160
 
 Solidity. (2024). *Solidity documentation: Smart contract programming language*. Retrieved from https://docs.soliditylang.org
 

@@ -12,7 +12,7 @@ The FoodTrace system deploys three Solidity smart contracts to Ethereum Sepolia 
 
 The ProductRegistry contract serves as the core ledger for product registration and ownership tracking. The contract implements OpenZeppelin's AccessControl library for role-based permissions (OpenZeppelin, 2024), allowing only verified producers to register products while enabling public read access for consumers. Each product stores critical data on-chain: product ID (auto-incremented counter), creator address, registration timestamp, and current status (Active, Transferred, or Sold).
 
-Key design decisions prioritize gas cost optimization while maintaining immutability, applying best practices from systematic reviews documenting 27+ gas-efficient patterns for smart contract development (Springer, 2025). Product names and descriptions stored as Keccak-256 hashes (bytes32) referencing off-chain metadata in Supabase PostgreSQL, reducing gas consumption from ~100,000 to ~60,000 per registration through data structure optimization. The contract emits ProductRegistered events upon successful registration, enabling efficient off-chain indexing for the consumer query interface without additional storage costs.
+Key design decisions prioritize gas cost optimization while maintaining immutability, applying best practices from systematic reviews documenting 27+ gas-efficient patterns for smart contract development (Springer, 2025). Scalability challenges remain a critical concern for blockchain-based food supply chains, with systematic surveys documenting throughput limitations, storage constraints, and transaction latency issues across Layer 1 implementations (IEEE Access, 2024). The implementation addresses these constraints through hybrid storage architecture and Layer 2 deployment considerations for production scale. Product names and descriptions stored as Keccak-256 hashes (bytes32) referencing off-chain metadata in Supabase PostgreSQL, reducing gas consumption from ~100,000 to ~60,000 per registration through data structure optimization. The contract emits ProductRegistered events upon successful registration, enabling efficient off-chain indexing for the consumer query interface without additional storage costs.
 
 **Contract Address (Sepolia):** [PENDING_DEPLOYMENT_WEEK_4]
 
@@ -26,9 +26,9 @@ Access control restricts trace record creation to authorized supply chain roles 
 
 ### 4.1.3 SensorData Contract
 
-The SensorData contract records IoT sensor readings (temperature, humidity) for cold chain monitoring, following blockchain-IoT integration architectures demonstrated for food traceability systems using integrated consensus mechanisms (Tsang et al., 2019). Each reading stores product ID, sensor type, reading value (int256 with two decimal precision), timestamp, and sensor device ID. The contract implements alert thresholds (8°C warning, 10°C critical for temperature) and emits AlertTriggered events when readings exceed safe ranges.
+The SensorData contract records IoT sensor readings (temperature, humidity) for cold chain monitoring, following blockchain-IoT integration architectures demonstrated for food traceability systems using integrated consensus mechanisms (Tsang et al., 2019). Systematic reviews of IoT-blockchain integration identify hybrid architectures combining edge computing with blockchain immutability as optimal patterns for addressing resource constraints and scalability challenges in food supply chain applications (MDPI, 2024). Each reading stores product ID, sensor type, reading value (int256 with two decimal precision), timestamp, and sensor device ID. The contract implements alert thresholds (8°C warning, 10°C critical for temperature) and emits AlertTriggered events when readings exceed safe ranges.
 
-Design trade-offs balance on-chain verification against gas costs for high-frequency sensor data. Implementation uses event-based logging for historical sensor data rather than storage, reducing costs from ~20,000 to ~1,500 gas per reading. Only alert-triggering readings are permanently stored on-chain for regulatory compliance, while normal readings emitted as events and indexed off-chain in Supabase.
+Design trade-offs balance on-chain verification against gas costs for high-frequency sensor data. Implementation uses event-based logging for historical sensor data rather than storage, reducing costs from ~20,000 to ~1,500 gas per reading. Research demonstrates that gas optimization techniques including data structure optimization and storage pattern redesign achieve 21-23% cost reductions in smart contract operations (Springer, 2025). Only alert-triggering readings are permanently stored on-chain for regulatory compliance, while normal readings emitted as events and indexed off-chain in Supabase.
 
 **Contract Address (Sepolia):** [PENDING_DEPLOYMENT_WEEK_4]
 
@@ -195,6 +195,10 @@ Consensys. (2023). *Web3 user research report: Barriers to blockchain adoption*.
 Ethereum.org. (2024). *Ethereum development documentation: Gas optimization best practices*. Retrieved from https://ethereum.org/en/developers/docs/
 
 Hardhat. (2024). *Hardhat documentation: Ethereum development environment*. Retrieved from https://hardhat.org/docs
+
+IEEE Access. (2024). A survey of blockchain based systems: Scalability issues and solutions, applications and future challenges. *IEEE Access*, Document 10546932. https://doi.org/10.1109/ACCESS.2024.3408868
+
+MDPI. (2024). Exploring IoT and Blockchain: A comprehensive survey on security, integration strategies, applications and future research directions. *Future Internet*, 16(12), 174.
 
 Next.js. (2024). *Next.js 14 documentation: The React framework for production*. Vercel. Retrieved from https://nextjs.org/docs
 

@@ -15,7 +15,7 @@ Food safety exemplifies traceability urgency. WHO (2022) reports 600 million peo
 
 ### 2.1.2 IBM Food Trust: Real-World Impact
 
-IBM Food Trust, launched in 2018 on Hyperledger Fabric, demonstrates blockchain's practical viability for supply chain traceability. The consortium includes 500+ participants (Walmart, Carrefour, Nestlé) tracking 25+ million products across 11,000+ suppliers (Kamath, 2018).
+IBM Food Trust, launched in 2018 on Hyperledger Fabric, demonstrates blockchain's practical viability for supply chain traceability. The consortium includes 500+ participants (Walmart, Carrefour, Nestlé) tracking 25+ million products across 11,000+ suppliers (Kamath, 2018). Empirical case studies analyzing blockchain adoption in food supply chains document performance improvements, transparency enhancements, and operational challenges encountered during real-world implementations (Taylor & Francis, 2024).
 
 **Key Achievement:** Walmart's 2016 mango contamination investigation required **7 days** to trace product origin using paper records. After implementing IBM Food Trust, the same query completed in **2.2 seconds**—a 350,000× speed improvement (Walmart, 2019). This rapid traceability enabled surgical recalls: during the 2019 romaine lettuce recall, Walmart identified the contaminated farm in 2.2 seconds rather than issuing blanket recalls affecting innocent producers.
 
@@ -63,6 +63,8 @@ Zhao et al. (2019) conducted a systematic review of 71 blockchain agri-food valu
 
 **Recommendation:** Zhao et al. (2019) conclude that platform selection should balance transparency requirements against performance constraints. Public chains suit consumer-facing verification scenarios, while permissioned chains better serve business confidentiality requirements (Zhao et al., 2019, p. 95).
 
+Recent systematic reviews analyzing blockchain adoption in food supply chains examined 31 conceptual works, 10 implementation works, and 39 case studies, documenting that blockchain implementation enhances food safety through immutable traceability records while facing challenges including scalability, data quality, and integration complexity (Wiley, 2024). Empirical case studies demonstrate quantified benefits including 20% cost savings in inventory management, 66.7% reduction in stockout incidents, and 25% decline in administrative staff costs for blockchain-based food traceability systems (Springer, 2025).
+
 **Platform Selection Decision:** Based on this academic consensus, this thesis selects **Ethereum** for proof-of-concept to demonstrate public verifiability and consumer-facing transparency. The choice addresses the research gap identified by Ellahi et al. (2024): while 88.3% of blockchain food supply chain frameworks focus on traceability and transparency optimization, only 3-5% address small producer financing and humanitarian concerns such as donation/redistribution systems. Ethereum's public blockchain enables independent consumer verification without trusting consortium governance—critical for demonstrating wallet-free access patterns and small producer feasibility. The detailed platform selection justification, including educational feasibility and timeline constraints, appears in Chapter 3 Methodology.
 
 ---
@@ -98,6 +100,8 @@ For supply chain consumer verification, requiring wallet installation defeats ac
 - Zero setup, zero cost, browser-based access via QR code scanning
 
 This hybrid approach provides security for business operations (wallet signatures authenticate data sources) while maintaining accessibility for consumers (no installation barriers). Read-only queries impose zero cost (RPC providers absorb infrastructure costs), zero setup (works in any browser), and mobile-friendly access (60-70% of QR scans occur on mobile devices).
+
+Consumer acceptance research examining 715 Greek consumers found high valuation for QR codes with blockchain-based traceability information, with consumers demonstrating willingness to pay price premiums for traceable food products where QR codes enable direct verification of authenticity claims (British Food Journal, 2024). Emerging Web3 identity solutions integrating zero-knowledge proofs achieve 12.5-second proof generation times while reducing compliance costs by 40% through automated verification, demonstrating technical feasibility for privacy-preserving consumer authentication patterns (ACM Transactions on the Web, 2024).
 
 **Limitations:** Read-only access prevents consumers from writing to blockchain (acceptable for verification use case), and centralization risk exists (RPC providers can censor queries, though multiple providers mitigate this risk through redundancy).
 
@@ -156,9 +160,19 @@ The research acknowledges limitations (testnet deployment, simulated sensors, li
 
 ## References for Chapter 2
 
+ACM Transactions on the Web. (2024). Web3-based identity and KYC innovations for next-generation FinTech. *ACM Transactions on the Web*. https://doi.org/10.1145/3771991
+
+British Food Journal. (2024). Consumers' valuation of blockchain-based food traceability: role of consumer ethnocentrism and communication via QR codes. *British Food Journal*, 126(13), 72-93. https://doi.org/10.1108/BFJ-09-2023-0812
+
 Buterin, V. (2014). *Ethereum: A next-generation smart contract and decentralized application platform*. Ethereum Foundation. https://ethereum.org/whitepaper
 
 IEEE. (2023). Performance and scalability analysis of Ethereum and Hyperledger Fabric. *IEEE Access*, 11, 70018-70035. https://doi.org/10.1109/ACCESS.2023.3291618
+
+Springer. (2025). Digital transformation of food supply chain management using blockchain: A systematic literature review towards food safety and traceability. *Business & Information Systems Engineering*. https://doi.org/10.1007/s12599-025-00948-0
+
+Wiley. (2024). Blockchain implementation for food safety in supply chain: A review. *Comprehensive Reviews in Food Science and Food Safety*, 23(5). https://doi.org/10.1111/1541-4337.70002
+
+Taylor & Francis. (2024). The impact of blockchain adoption on supply chain performance: Evidence from food industry. *International Journal of Production Research*. https://doi.org/10.1080/00207543.2024.2414375
 
 Buterin, V. (2017). The meaning of decentralization. *Medium*. https://medium.com/@VitalikButerin/the-meaning-of-decentralization-a0c92b76a274
 

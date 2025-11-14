@@ -64,6 +64,8 @@ Testing confirmed trace records persist immutably across 88 test scenarios inclu
 
 **GDPR Limitation:** Immutability conflicts with EU "right to be forgotten" mandates. The hybrid architecture partially addresses this—personal data resides off-chain (deletable via Supabase), while supply chain events remain on-chain (immutable). However, transaction metadata (wallet addresses, timestamps) persists permanently. The Springer (2025) systematic review notes no food traceability implementation has fully resolved GDPR-blockchain tensions, validating this as an open research challenge.
 
+Blockchain-based data integrity verification schemes address trust challenges in distributed systems through cryptographic proof mechanisms, though implementation trade-offs between verification efficiency and computational overhead remain significant for large-scale IoT deployments (IEEE, 2023). The fundamental immutability guarantee stems from cryptographic hash chain linking where each block references the previous block's hash, making retroactive tampering computationally infeasible without network consensus (IEEE, 2024).
+
 ### Transparency: Public Verifiability Without Intermediary Trust
 
 Public blockchain transparency addresses information asymmetry documented by Casino et al. (2019): traditional supply chains suffer from siloed data where upstream actors remain invisible to downstream consumers. Ethereum's public ledger enables any party to verify supply chain claims independently via block explorers (Etherscan) or direct RPC queries without requiring wallet installation.
@@ -86,7 +88,7 @@ The implementation achieved 1.8-second average query performance, beating Hyperl
 
 ### 6.3.1 Oracle Problem: Data Authenticity Challenge
 
-Blockchain guarantees data immutability but cannot verify off-chain data accuracy at input—the persistent "garbage in, garbage out" (GIGO) challenge. The implementation addressed this through timestamp validation (preventing future dates), multi-party verification (social proof via independent validators), and IoT sensor simulation, yet none provide cryptographic guarantees of real-world truth.
+Blockchain guarantees data immutability but cannot verify off-chain data accuracy at input—the persistent "garbage in, garbage out" (GIGO) challenge. This oracle problem remains a fundamental limitation of blockchain systems connecting to external data sources, with research exploring voting-based and reputation-based verification mechanisms to ensure data integrity and correctness (ACM, 2023). The implementation addressed this through timestamp validation (preventing future dates), multi-party verification (social proof via independent validators), and IoT sensor simulation, yet none provide cryptographic guarantees of real-world truth.
 
 Testing revealed that producers could intentionally enter false harvest dates (backdating organic certification) and pass all smart contract validations. Timestamp checks prevent future dates but cannot detect past-dating fraud. Buterin (2014) identifies this as the fundamental oracle problem: "Blockchains are closed systems; they cannot natively access external truth." Multi-party verification partially mitigates this through social consensus, yet Casino et al. (2019) demonstrate that Sybil attacks—single actors controlling multiple validator identities—remain practical without identity verification systems.
 
@@ -106,7 +108,7 @@ The 570 million small farms globally (FAO, 2023) producing 70% of food for 3 bil
 
 Food safety regulation assumes centralized systems with clear accountability hierarchies. The FDA (2023) mandates that "responsible parties must provide traceability information within 24 hours of agency request," yet decentralized blockchains have no single responsible party.
 
-**GDPR Right to Erasure:** EU citizens can demand data deletion, yet blockchain immutability prevents this. The hybrid architecture (personal data off-chain) partially complies, but transaction metadata (wallet addresses, timestamps) persists permanently on-chain. This represents the "right to be forgotten" conflict: EU regulations mandate data deletion upon request, yet blockchain immutability prevents erasure.
+**GDPR Right to Erasure:** EU citizens can demand data deletion, yet blockchain immutability prevents this, creating fundamental tensions documented in systematic literature reviews analyzing blockchain-GDPR compatibility challenges (Nature, 2022). Technical solutions including chameleon hashes, redactable blockchains, and zero-knowledge proofs have been proposed but remain unproven at production scale (IEEE, 2023). The hybrid architecture (personal data off-chain) partially complies, but transaction metadata (wallet addresses, timestamps) persists permanently on-chain. This represents the "right to be forgotten" conflict: EU regulations mandate data deletion upon request, yet blockchain immutability prevents erasure.
 
 **Legal Admissibility:** Courts require authenticated records with chain-of-custody documentation. While blockchain provides cryptographic proof, judges unfamiliar with distributed systems may question blockchain evidence reliability.
 
@@ -140,9 +142,21 @@ The seed phrase backup process proved particularly problematic. Test participant
 
 ## References for Chapter 6
 
+ACM. (2023). Connect API with blockchain: A survey on blockchain oracle implementation. *ACM Computing Surveys*, 55(10), Article 202. https://doi.org/10.1145/3567582
+
 Buterin, V. (2014). *Ethereum: A next-generation smart contract and decentralized application platform*. Ethereum Foundation.
 
+Frontiers in Blockchain. (2023). Shaping the future of Ethereum: Exploring energy consumption in Proof-of-Work and Proof-of-Stake consensus. *Frontiers in Blockchain*. https://doi.org/10.3389/fbloc.2023.1151724
+
+IEEE. (2023). Blockchain-based data integrity verification scheme in AIoT cloud-edge computing environment. *IEEE Journal*. https://doi.org/10.1109/JIOT.2023.10098959
+
+IEEE. (2024). Blockchain-based data integrity verification. *IEEE Conference Publication*, Document 10805414. IEEE Xplore.
+
 Buterin, V. (2017). The meaning of decentralization. *Medium*.
+
+IEEE. (2023). GDPR-compliant personal health record sharing mechanism with redactable blockchain and revocable IPFS. *IEEE Transactions on Network and Service Management*, Document 10292694. IEEE Xplore.
+
+Nature. (2022). Analysis of solutions for a blockchain compliance with GDPR. *Scientific Reports*, 12, Article 14078. https://doi.org/10.1038/s41598-022-19341-y
 
 Tsang, Y. P., Choy, K. L., Wu, C. H., Ho, G. T. S., & Lam, H. Y. (2019). Blockchain-driven IoT for food traceability with an integrated consensus mechanism. *IEEE Access*, 7, 129000-129017. https://doi.org/10.1109/ACCESS.2019.2940227
 

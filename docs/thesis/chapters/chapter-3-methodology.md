@@ -2,7 +2,7 @@
 
 ## 3.1 Development Approach
 
-This project follows agile development methodology with iterative development cycles, test-driven development, and systematic quality gates aligned with blockchain-specific development best practices. The ABCDE (Agile Block Chain DApp Engineering) framework guides implementation, separating development activities into two flows—smart contract development and off-chain software development—each performed iteratively with integration activities every 2-3 iterations (Marchesi et al., 2020). Development utilizes AI-assisted tooling (Claude Code IDE) following OAMK guidelines on generative AI usage in studies. AI tools support code scaffolding, documentation generation, and workflow automation.
+This project follows agile development methodology with iterative development cycles, test-driven development, and systematic quality gates aligned with blockchain-specific development best practices. The ABCDE (Agile Block Chain DApp Engineering) framework guides implementation, separating development activities into two flows—smart contract development and off-chain software development—each performed iteratively with integration activities every 2-3 iterations (Marchesi et al., 2020). Systematic literature reviews characterize blockchain-based software engineering from perspectives including theoretical foundations, development processes, architectural models, and role definitions, identifying unique challenges including transaction immutability, decentralized deployment, and consensus mechanism dependencies that differentiate blockchain development from conventional software engineering (ACM Computing Surveys, 2023). Development utilizes AI-assisted tooling (Claude Code IDE) following OAMK guidelines on generative AI usage in studies. AI tools support code scaffolding, documentation generation, and workflow automation.
 
 However, all technical decisions—blockchain architecture design, smart contract security patterns, Web3 integration strategies, and platform selection trade-offs—were researched, analyzed, and validated by the development team through literature review and comparative analysis documented in Chapter 2. The learning focus remains on Ethereum fundamentals, Solidity security patterns, supply chain traceability architecture, and Web3 accessibility challenges.
 
@@ -86,7 +86,7 @@ The system employs hybrid data storage balancing blockchain immutability with of
 
 **Off-Chain Data (Supabase PostgreSQL):** Product metadata (name, description, photos), rich text content (quality notes, location descriptions), cached blockchain data for fast queries, and user authentication.
 
-**Cryptographic Linking:** SHA-256 hashes stored on-chain reference off-chain metadata, enabling verification of data integrity without storing full content on blockchain. Future implementations could extend this pattern using zero-knowledge proofs for selective disclosure, enabling privacy-preserving verification of organic certifications or temperature compliance without revealing exact values (MDPI, 2023).
+**Cryptographic Linking:** SHA-256 hashes stored on-chain reference off-chain metadata, enabling verification of data integrity without storing full content on blockchain. This hybrid architecture follows patterns demonstrated in three-tier storage frameworks combining blockchain with IPFS for IoT security and privacy, achieving scalability through off-chain data management while maintaining on-chain verification (ACM, 2023). Future implementations could extend this pattern using zero-knowledge proofs for selective disclosure, enabling privacy-preserving verification of organic certifications or temperature compliance without revealing exact values (MDPI, 2023).
 
 **Rationale:** Storing all data on-chain incurs prohibitive gas costs (1KB costs ~640,000 gas = €20-30 on mainnet) and creates immutability constraints preventing description edits. Storing all data off-chain eliminates immutability benefits and prevents independent verification. The hybrid approach stores critical data on-chain for immutability while maintaining flexible metadata off-chain, achieving cost efficiency while preserving traceability integrity.
 
@@ -188,6 +188,10 @@ All collected data organized in `docs/metrics/` for thesis reference, directly i
 ---
 
 ## References for Chapter 3
+
+ACM. (2023). Three-tier storage framework based on TBchain and IPFS for protecting IoT security and privacy. *ACM Transactions on Internet Technology*, 23(3), Article 37. https://doi.org/10.1145/3549910
+
+ACM Computing Surveys. (2023). Engineering blockchain-based software systems: Foundations, survey, and future directions. *ACM Computing Surveys*, 55(6). https://doi.org/10.1145/3530813
 
 Hardhat. (2024). *Hardhat documentation: Ethereum development environment*. Retrieved from https://hardhat.org/docs
 
