@@ -20,7 +20,7 @@ This thesis addresses this gap by demonstrating how Ethereum public blockchain c
 
 The central problem addressed is: **How can blockchain technology be made accessible to mainstream users while preserving its core benefits of decentralization, transparency, and immutability?**
 
-This manifests in food supply chain traceability through interconnected challenges: (1) User experience barriers—cryptocurrency wallet setup requires seed phrase management, network configuration, and irrecoverable key storage that deters mainstream adoption (academic research analyzing wallet UX identifies these as primary abandonment factors); (2) Cost-prohibitive transaction fees—Ethereum mainnet gas costs averaged $0.20-$2 per transaction in early 2025 (Crypto.com Gas Dashboard, 2025), though peak congestion historically reached $2-10, exceeding small producer margins; (3) Oracle problem—blockchain ensures data immutability but cannot verify off-chain data accuracy ("garbage in, garbage out"); and (4) Platform selection complexity—when to use public blockchain (Ethereum) vs permissioned alternatives (Hyperledger Fabric).
+This manifests in food supply chain traceability through interconnected challenges: (1) User experience barriers—cryptocurrency wallet setup requires seed phrase management, network configuration, and irrecoverable key storage that deters mainstream adoption (academic research analyzing wallet UX identifies these as primary abandonment factors); (2) Cost-prohibitive transaction fees—Ethereum mainnet gas costs range from $0.20-$2 per transaction under normal conditions, though peak congestion historically reached $2-10, exceeding small producer margins; (3) Oracle problem—blockchain ensures data immutability but cannot verify off-chain data accuracy ("garbage in, garbage out"); and (4) Platform selection complexity—when to use public blockchain (Ethereum) vs permissioned alternatives (Hyperledger Fabric).
 
 ---
 
@@ -74,8 +74,6 @@ This thesis progresses through seven chapters: **Chapter 1** (current) establish
 Buterin, V. (2014). _Ethereum: A next-generation smart contract and decentralized application platform_. Ethereum Foundation. https://ethereum.org/whitepaper
 
 Consensys. (2023). _Web3 User Research: Barriers to Blockchain Adoption_. Consensys Research Reports.
-
-Crypto.com. (2025). _Ethereum Gas Tracker Dashboard_. Retrieved from https://crypto.com/price/ethereum-gas
 
 Food and Agriculture Organization (FAO). (2023). _Small family farms country factsheet_. Retrieved from https://www.fao.org/family-farming
 

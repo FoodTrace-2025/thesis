@@ -50,7 +50,7 @@ Query performance averaged 1.8 seconds, outperforming IBM Food Trust's Hyperledg
 - Performance metrics: 1.8s query (Ethereum) vs 2.2s (IBM Food Trust)
 - Traceability speed: seconds (blockchain) vs 7 days (Walmart pre-blockchain)
 
-Core Web Vitals metrics—LCP 2.1s, FCP 1.2s, TTI 2.8s, CLS 0.05—all meet Google's "Good" thresholds despite Web3 library overhead (380KB compressed). Consumer query flow completes in 4.2 seconds average (2.1s page load + 1.8s blockchain query + 0.3s rendering), meeting Nielsen Norman Group's (2020) sub-5-second mobile interaction threshold. The 95% QR code scanning success rate validates wallet-free access pattern viability for consumer verification scenarios.
+Core Web Vitals metrics—LCP 2.1s, FCP 1.2s, TTI 2.8s, CLS 0.05—all meet Google's "Good" thresholds despite Web3 library overhead (380KB compressed). Consumer query flow completes in 4.2 seconds average (2.1s page load + 1.8s blockchain query + 0.3s rendering), meeting mobile usability best practices for fast interaction times (Nielsen Norman Group, 2020). The 95% QR code scanning success rate validates wallet-free access pattern viability for consumer verification scenarios.
 
 ---
 
@@ -66,7 +66,7 @@ Testing confirmed trace records persist immutably across 88 test scenarios inclu
 
 ### Transparency: Public Verifiability Without Intermediary Trust
 
-Public blockchain transparency addresses information asymmetry documented by Casino et al. (2021): traditional supply chains suffer from siloed data where upstream actors remain invisible to downstream consumers. Ethereum's public ledger enables any party to verify supply chain claims independently via block explorers (Etherscan) or direct RPC queries without requiring wallet installation.
+Public blockchain transparency addresses information asymmetry documented by Casino et al. (2019): traditional supply chains suffer from siloed data where upstream actors remain invisible to downstream consumers. Ethereum's public ledger enables any party to verify supply chain claims independently via block explorers (Etherscan) or direct RPC queries without requiring wallet installation.
 
 Consumer query testing validated that non-technical users successfully verified complete product journeys in 4.2 seconds average without creating accounts. The 95% QR code scanning success rate demonstrates practical viability of trustless verification—consumers cryptographically validate product history without relying on producer honesty or third-party auditors. Zhao et al.'s (2019) systematic review identifies transparency as blockchain's primary value proposition, documenting how public blockchains enable consumer trust through independent verification without intermediary reliance.
 
@@ -88,7 +88,7 @@ The implementation achieved 1.8-second average query performance, beating Hyperl
 
 Blockchain guarantees data immutability but cannot verify off-chain data accuracy at input—the persistent "garbage in, garbage out" (GIGO) challenge. The implementation addressed this through timestamp validation (preventing future dates), multi-party verification (social proof via independent validators), and IoT sensor simulation, yet none provide cryptographic guarantees of real-world truth.
 
-Testing revealed that producers could intentionally enter false harvest dates (backdating organic certification) and pass all smart contract validations. Timestamp checks prevent future dates but cannot detect past-dating fraud. Buterin (2014) identifies this as the fundamental oracle problem: "Blockchains are closed systems; they cannot natively access external truth." Multi-party verification partially mitigates this through social consensus, yet Casino et al. (2021) demonstrate that Sybil attacks—single actors controlling multiple validator identities—remain practical without identity verification systems.
+Testing revealed that producers could intentionally enter false harvest dates (backdating organic certification) and pass all smart contract validations. Timestamp checks prevent future dates but cannot detect past-dating fraud. Buterin (2014) identifies this as the fundamental oracle problem: "Blockchains are closed systems; they cannot natively access external truth." Multi-party verification partially mitigates this through social consensus, yet Casino et al. (2019) demonstrate that Sybil attacks—single actors controlling multiple validator identities—remain practical without identity verification systems.
 
 IoT sensor data integration compounds this challenge. While the simulator demonstrates architecture for recording temperature data on-chain, real deployment requires trusting sensor hardware accuracy and tamper-resistance. Zhao et al. (2019) document challenges with IoT sensor integration including device reliability, network connectivity, and physical security vulnerabilities. Hardware security modules (HSMs) address this through hardware-attested measurements but add $50-200 per sensor—prohibitive for small-scale deployments. The oracle problem introduces an unavoidable trade-off: pure software verification (cheap but gameable) versus hardware security (trustworthy but expensive).
 
@@ -96,9 +96,9 @@ IoT sensor data integration compounds this challenge. While the simulator demons
 
 The Sepolia testnet deployment masks true economic costs of mainnet operation. Product registration consumed 87,432 gas during testing, translating to $0 using free test ETH. On Ethereum mainnet at 50 gwei gas price and $3,000 ETH valuation, identical transactions would cost $13.20 per product registration—a 264% overhead for a $5 head of lettuce.
 
-The complete supply chain journey—product registration (87,432 gas) + three trace records (68,241 gas each) + sensor data (54,120 gas) + verification (45,890 gas)—totals approximately 350,000 gas. At mainnet prices, this represents $52.50 in transaction fees for a single product. This cost structure restricts applicability to products retailing above $50 (organic specialty items, artisan foods, luxury goods) where transaction costs remain below 5% of product value. Commodity agriculture—representing 85% of global food production by volume (USDA, 2024)—remains economically excluded from Layer 1 Ethereum traceability.
+The complete supply chain journey—product registration (87,432 gas) + three trace records (68,241 gas each) + sensor data (54,120 gas) + verification (45,890 gas)—totals approximately 350,000 gas. At mainnet prices, this represents $52.50 in transaction fees for a single product. This cost structure restricts applicability to products retailing above $50 (organic specialty items, artisan foods, luxury goods) where transaction costs remain below 5% of product value. Commodity agriculture—representing 85% of global food production by volume (USDA, 2023)—remains economically excluded from Layer 1 Ethereum traceability.
 
-Agricultural products operate on thin margins—USDA (2024) reports farmers retain only 15-20% of retail food prices. For a $5 head of organic lettuce where the farmer receives $0.75-$1.00, a $13.20 blockchain registration fee represents 1,320% overhead. Even Layer 2 solutions promising $0.10-$0.50 gas costs would consume 10-50% of farmer revenue, while traditional database storage costs $0.001-$0.01 per record.
+Agricultural products operate on thin margins—USDA (2023) reports farmers retain only 15-20% of retail food prices. For a $5 head of organic lettuce where the farmer receives $0.75-$1.00, a $13.20 blockchain registration fee represents 1,320% overhead. Even Layer 2 solutions promising $0.10-$0.50 gas costs would consume 10-50% of farmer revenue, while traditional database storage costs $0.001-$0.01 per record.
 
 The 570 million small farms globally (FAO, 2023) producing 70% of food for 3 billion people remain largely excluded from blockchain traceability benefits. The POC demonstrates that public Ethereum is viable for $50+ organic specialty items (where transparency commands 15-20% price premiums), but commodity agriculture requires either Layer 2 solutions, permissioned chains with consortium-subsidized costs, or fundamental gas economics improvements.
 
@@ -144,7 +144,7 @@ Buterin, V. (2014). *Ethereum: A next-generation smart contract and decentralize
 
 Buterin, V. (2017). The meaning of decentralization. *Medium*.
 
-Casino, F., Dasaklis, T. K., & Patsakis, C. (2021). A systematic literature review of blockchain-based applications: Current status, classification and open issues. *Telematics and Informatics*, 61, 101597.
+Casino, F., Dasaklis, T. K., & Patsakis, C. (2019). A systematic literature review of blockchain-based applications: Current status, classification and open issues. *Telematics and Informatics*, 61, 101597.
 
 Consensys. (2023). *Web3 user research report: Barriers to blockchain adoption*. ConsenSys AG.
 
@@ -160,9 +160,7 @@ Nielsen Norman Group. (2020). *Mobile usability guidelines*.
 
 Springer. (2025). Digital transformation of food supply chain management using blockchain: A systematic literature review. *Business & Information Systems Engineering*.
 
-USDA. (2024). *Agricultural price and margin statistics*.
-
-Wang, Y., et al. (2024). Performance comparison of blockchain platforms for supply chain applications. *IEEE Access*, 12, 15234-15249.
+USDA. (2023). *Agricultural price and margin statistics*.
 
 Wood, G. (2014). *Ethereum: A secure decentralised generalised transaction ledger* (Yellow Paper).
 
