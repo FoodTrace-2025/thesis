@@ -1,13 +1,13 @@
 # Product Requirements Document (PRD)
 
-## FoodTrace - Blockchain Food Supply Chain Traceability System
+## FoodTrace - Blockchain-Based Food Supply Chain Traceability System
 
-**Version:** 1.2
-**Date:** November 14, 2025
-**Status:** Ready for Review
-**Project Type:** Bachelor's Thesis (OAMK University of Applied Sciences)
-**Team:** Sam Chou (Blockchain Lead), TaiSheng Chen (Backend/Integration), YiLing Chen (UI/UX Lead)
-**Timeline:** 12 weeks (9 weeks development + 3 weeks thesis writing)
+**Version:** 1.2\
+**Date:** November 14, 2025\
+**Status:** Ready for Review\
+**Project Type:** Bachelor's Thesis (OAMK University of Applied Sciences)\
+**Team:** Sam Chou (Blockchain Lead), TaiSheng Chen (Backend/Integration Lead), YiLing Chen (UI/UX Lead)\
+**Timeline:** 12 weeks (9 weeks development + 3 weeks thesis writing)\
 
 ---
 
