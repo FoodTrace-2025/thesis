@@ -2,15 +2,15 @@
 
 ## 1.1 Background
 
-Blockchain technology, introduced by Nakamoto (2008) with Bitcoin, has evolved beyond cryptocurrency to enable transparent, immutable record-keeping through smart contracts—self-executing programs deployed on decentralized networks. While blockchain's cryptographic guarantees (immutability, transparency, Byzantine fault tolerance) theoretically address supply chain traceability challenges, practical adoption faces significant barriers: user experience complexity, transaction costs, and scalability limitations (Buterin, 2017; Wood, 2014).
+Blockchain technology, introduced by Nakamoto (2008) with Bitcoin, has evolved beyond cryptocurrency to enable transparent, immutable record-keeping through smart contracts—self-executing programs deployed on decentralized networks. While blockchain's cryptographic guarantees (immutability, transparency, Byzantine fault tolerance) theoretically address supply chain traceability challenges, practical adoption faces significant barriers: user experience complexity, transaction costs, and scalability limitations (Buterin, 2014; Wood, 2014).
 
-Food supply chains exemplify these challenges. Traditional centralized systems rely on intermediaries and paper-based tracking, creating information asymmetries and slow response times. Walmart's 2016 mango contamination investigation required seven days to trace produce origin using conventional methods (Walmart, 2019). After implementing IBM Food Trust on Hyperledger Fabric, the same query completed in 2.2 seconds—demonstrating blockchain's technical capability for rapid consensus across distributed stakeholders (Kamath, 2018).
+Food supply chains exemplify these challenges. Traditional centralized systems rely on intermediaries and paper-based tracking, creating information asymmetries and slow response times. Walmart's 2016 mango traceability experiment required nearly seven days using conventional paper-based methods (Kamath, 2018). After implementing IBM Food Trust on Hyperledger Fabric, the same query completed in 2.2 seconds (Kamath, 2018; Hyperledger Foundation case study, 2019)—demonstrating blockchain's technical capability for rapid consensus across distributed stakeholders.
 
-However, existing blockchain supply chain implementations face a critical trade-off between accessibility and decentralization. Enterprise solutions like IBM Food Trust provide user-friendly interfaces but rely on permissioned blockchains controlled by centralized gatekeepers, undermining public verifiability (Walmart, 2019). Conversely, public blockchain applications (Ethereum DApps) offer true decentralization but suffer from poor user experience—requiring wallet management, cryptocurrency for transaction fees, and technical expertise that excludes mainstream users (Consensys, 2023). This creates a "crypto-native vs mainstream user" divide limiting adoption beyond technical enthusiasts.
+However, existing blockchain supply chain implementations face a critical trade-off between accessibility and decentralization. Enterprise solutions like IBM Food Trust provide user-friendly interfaces but rely on permissioned blockchains controlled by centralized gatekeepers, undermining public verifiability (Hyperledger Foundation case study, 2019). Conversely, public blockchain applications (Ethereum DApps) offer true decentralization but suffer from poor user experience—requiring wallet management, cryptocurrency for transaction fees, and technical expertise that excludes mainstream users (Consensys, 2023). This creates a "crypto-native vs mainstream user" divide limiting adoption beyond technical enthusiasts.
 
 ### Research Gap
 
-Current research lacks solutions balancing transparency benefits of public blockchains with accessibility requirements for mass adoption. Ellahi et al.'s (2024) systematic review analyzing 60 blockchain food supply chain frameworks found 95% focus on enterprise traceability optimization; only 3-5% address small producer financing and humanitarian concerns. Moreover, wallet-based access remains the dominant pattern, creating adoption barriers for end consumers who simply want to verify product authenticity without installing cryptocurrency software.
+Current research lacks solutions balancing transparency benefits of public blockchains with accessibility requirements for mass adoption. Ellahi et al.'s (2024) systematic review analyzing 60 blockchain food supply chain frameworks identifies underexplored applications including small producer financing, food donation systems, and humanitarian concerns, revealing an enterprise-dominant implementation focus in existing research. Moreover, wallet-based access remains the dominant pattern, creating adoption barriers for end consumers who simply want to verify product authenticity without installing cryptocurrency software.
 
 This thesis addresses this gap by demonstrating how Ethereum public blockchain can provide transparent supply chain tracking while enabling wallet-free consumer access through hybrid architecture: critical data on-chain (product identity, ownership, timestamps), metadata off-chain (PostgreSQL), cryptographically linked via SHA-256 hashes. This approach targets small-scale producers—the 570 million farms globally (FAO, 2023) underserved by enterprise consortium models.
 
@@ -20,7 +20,7 @@ This thesis addresses this gap by demonstrating how Ethereum public blockchain c
 
 The central problem addressed is: **How can blockchain technology be made accessible to mainstream users while preserving its core benefits of decentralization, transparency, and immutability?**
 
-This manifests in food supply chain traceability through interconnected challenges: (1) User experience barriers—research shows 80% of users abandon wallet setup due to complexity (ACM CHI, 2024); (2) Cost-prohibitive transaction fees—Ethereum mainnet gas costs ($2-10 per simple operation) exceed small producer margins; (3) Oracle problem—blockchain ensures data immutability but cannot verify off-chain data accuracy ("garbage in, garbage out"); and (4) Platform selection complexity—when to use public blockchain (Ethereum) vs permissioned alternatives (Hyperledger Fabric).
+This manifests in food supply chain traceability through interconnected challenges: (1) User experience barriers—cryptocurrency wallet setup requires seed phrase management, network configuration, and irrecoverable key storage that deters mainstream adoption (academic research analyzing wallet UX identifies these as primary abandonment factors); (2) Cost-prohibitive transaction fees—Ethereum mainnet gas costs averaged $0.20-$2 per transaction in early 2025 (Crypto.com Gas Dashboard, 2025), though peak congestion historically reached $2-10, exceeding small producer margins; (3) Oracle problem—blockchain ensures data immutability but cannot verify off-chain data accuracy ("garbage in, garbage out"); and (4) Platform selection complexity—when to use public blockchain (Ethereum) vs permissioned alternatives (Hyperledger Fabric).
 
 ---
 
@@ -71,19 +71,21 @@ This thesis progresses through seven chapters: **Chapter 1** (current) establish
 
 ## References for Chapter 1
 
-Buterin, V. (2017). _Ethereum whitepaper: A next-generation smart contract and decentralized application platform_. Ethereum Foundation. https://ethereum.org/whitepaper
+Buterin, V. (2014). _Ethereum: A next-generation smart contract and decentralized application platform_. Ethereum Foundation. https://ethereum.org/whitepaper
 
 Consensys. (2023). _Web3 User Research: Barriers to Blockchain Adoption_. Consensys Research Reports.
 
+Crypto.com. (2025). _Ethereum Gas Tracker Dashboard_. Retrieved from https://crypto.com/price/ethereum-gas
+
 Food and Agriculture Organization (FAO). (2023). _Small family farms country factsheet_. Retrieved from https://www.fao.org/family-farming
+
+Hyperledger Foundation. (2019). _Walmart and IBM Food Trust Case Study_. Hyperledger Foundation Case Studies. Retrieved from https://www.hyperledger.org/case-studies/walmart
 
 Kamath, R. (2018). Food traceability on blockchain: Walmart's pork and mango pilots with IBM. _The Journal of the British Blockchain Association_, 1(1), 1-12. https://doi.org/10.31585/jbba-1-1-(10)2018
 
 Nakamoto, S. (2008). _Bitcoin: A peer-to-peer electronic cash system_. https://bitcoin.org/bitcoin.pdf
 
 Springer. (2025). Digital transformation of food supply chain management using blockchain: A systematic literature review. _Business & Information Systems Engineering_. https://doi.org/10.1007/s12599-025-00948-0
-
-Walmart. (2019). Walmart and IBM food trust case study. _Hyperledger Foundation Case Studies_. Retrieved from https://www.hyperledger.org/case-studies/walmart
 
 Wood, G. (2014). _Ethereum: A secure decentralised generalised transaction ledger_. Ethereum Foundation. https://ethereum.github.io/yellowpaper/paper.pdf
 
