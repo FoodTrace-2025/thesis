@@ -1,4 +1,4 @@
-# CHAPTER 4: IMPLEMENTATION
+# Chapter 4: Implementation
 
 This chapter describes the technical implementation of the FoodTrace blockchain food traceability system across smart contracts, backend infrastructure, frontend interfaces, and production deployment.
 

@@ -1,10 +1,10 @@
-# CHAPTER 6: DISCUSSION
+# Chapter 7: Discussion
 
 This chapter interprets test results, evaluates blockchain advantages against traditional approaches, and honestly assesses implementation limitations.
 
 ---
 
-## 6.1 Interpretation of Results
+## 7.1 Interpretation of Results
 
 ### Test Coverage and Research Objectives Validation
 
@@ -54,7 +54,7 @@ Core Web Vitals metrics—LCP 2.1s, FCP 1.2s, TTI 2.8s, CLS 0.05—all meet Goog
 
 ---
 
-## 6.2 Advantages of Blockchain Approach
+## 7.2 Advantages of Blockchain Approach
 
 ### Immutability: Cryptographic Guarantee Against Data Tampering
 
@@ -84,9 +84,9 @@ The implementation achieved 1.8-second average query performance, beating Hyperl
 
 ---
 
-## 6.3 Limitations & Challenges
+## 7.3 Limitations & Challenges
 
-### 6.3.1 Oracle Problem: Data Authenticity Challenge
+### 7.3.1 Oracle Problem: Data Authenticity Challenge
 
 Blockchain guarantees data immutability but cannot verify off-chain data accuracy at input—the persistent "garbage in, garbage out" (GIGO) challenge. This oracle problem remains a fundamental limitation of blockchain systems connecting to external data sources, with research exploring voting-based and reputation-based verification mechanisms to ensure data integrity and correctness (ACM, 2023). The implementation addressed this through timestamp validation (preventing future dates), multi-party verification (social proof via independent validators), and IoT sensor simulation, yet none provide cryptographic guarantees of real-world truth.
 
@@ -94,7 +94,7 @@ Testing revealed that producers could intentionally enter false harvest dates (b
 
 IoT sensor data integration compounds this challenge. While the simulator demonstrates architecture for recording temperature data on-chain, real deployment requires trusting sensor hardware accuracy and tamper-resistance. Zhao et al. (2019) document challenges with IoT sensor integration including device reliability, network connectivity, and physical security vulnerabilities. Hardware security modules (HSMs) address this through hardware-attested measurements but add $50-200 per sensor—prohibitive for small-scale deployments. The oracle problem introduces an unavoidable trade-off: pure software verification (cheap but gameable) versus hardware security (trustworthy but expensive).
 
-### 6.3.2 Economic Viability for Low-Margin Products
+### 7.3.2 Economic Viability for Low-Margin Products
 
 The Sepolia testnet deployment masks true economic costs of mainnet operation. Product registration consumed 87,432 gas during testing, translating to $0 using free test ETH. On Ethereum mainnet at 50 gwei gas price and $3,000 ETH valuation, identical transactions would cost $13.20 per product registration—a 264% overhead for a $5 head of lettuce.
 
@@ -104,7 +104,7 @@ Agricultural products operate on thin margins—USDA (2023) reports farmers reta
 
 The 570 million small farms globally (FAO, 2023) producing 70% of food for 3 billion people remain largely excluded from blockchain traceability benefits. The POC demonstrates that public Ethereum is viable for $50+ organic specialty items (where transparency commands 15-20% price premiums), but commodity agriculture requires either Layer 2 solutions, permissioned chains with consortium-subsidized costs, or fundamental gas economics improvements.
 
-### 6.3.3 GDPR and Regulatory Compliance Conflicts
+### 7.3.3 GDPR and Regulatory Compliance Conflicts
 
 Food safety regulation assumes centralized systems with clear accountability hierarchies. The FDA (2023) mandates that "responsible parties must provide traceability information within 24 hours of agency request," yet decentralized blockchains have no single responsible party.
 
@@ -116,7 +116,7 @@ Food safety regulation assumes centralized systems with clear accountability hie
 
 The Springer (2025) systematic review identifies regulatory uncertainty as the primary barrier to blockchain food traceability adoption in Europe: 68% of surveyed enterprises cite "unclear legal frameworks" as blocking production deployment.
 
-### 6.3.4 IoT Simulation Versus Real Hardware
+### 7.3.4 IoT Simulation Versus Real Hardware
 
 The software-based IoT simulator enabled reproducible testing and architectural validation without hardware costs, yet real IoT integration introduces challenges absent from the POC. Production blockchain-IoT systems require addressing device management, network reliability, and physical security challenges documented in food traceability implementations (Tsang et al., 2019).
 
@@ -130,7 +130,7 @@ The software-based IoT simulator enabled reproducible testing and architectural 
 
 Real IoT deployment introduces significant development time (months) and hardware costs ($150-$300+ per product)—feasible for shipping containers ($50,000+ value) but prohibitive for individual vegetables.
 
-### 6.3.5 User Experience Barriers
+### 7.3.5 User Experience Barriers
 
 **Wallet Complexity:** Despite wallet-free consumer access, supply chain participants require wallet management. Initial MetaMask wallet setup—seed phrase generation, backup instructions, network configuration, test ETH acquisition—proved substantially more time-consuming for non-technical users than traditional account creation. Empirical research analyzing thousands of cryptocurrency wallet reviews documents that wallet complexity including seed phrase management presents significant adoption barriers for non-technical users, with both novice and experienced users struggling with UX issues that can lead to irreversible monetary losses (Voskobojnikov et al., 2021).
 
@@ -140,7 +140,7 @@ The seed phrase backup process proved particularly problematic. Test participant
 
 ---
 
-## References for Chapter 6
+## References for Chapter 7
 
 ACM. (2023). Connect API with blockchain: A survey on blockchain oracle implementation. *ACM Computing Surveys*, 55(10), Article 202. https://doi.org/10.1145/3567582
 

@@ -1,8 +1,8 @@
-# Chapter 5: Testing and Evaluation
+# Chapter 6: Results and Testing
 
 This chapter presents the testing strategy, test results for system components, performance evaluation, and honest analysis of system limitations.
 
-## 5.1 Testing Strategy Overview
+## 6.1 Testing Strategy Overview
 
 The FoodTrace project adopted a multi-layered testing approach aligned with the Test Pyramid principle (Cohn, 2009), emphasizing unit tests, supported by integration tests, and validated through end-to-end scenarios. Smart contract testing presents unique challenges including transaction immutability, deployment costs, and state verification complexity documented in systematic literature reviews of blockchain testing methodologies (IEEE, 2022). Testing activities were integrated into each development sprint rather than relegated to a separate testing phase.
 
@@ -18,9 +18,9 @@ The FoodTrace project adopted a multi-layered testing approach aligned with the 
 
 ---
 
-## 5.2 Smart Contract Testing Results
+## 6.2 Smart Contract Testing Results
 
-### 5.2.1 Test Coverage Analysis
+### 6.2.1 Test Coverage Analysis
 
 The smart contract test suite achieved comprehensive coverage across all three deployed contracts, significantly exceeding the 70% minimum target.
 
@@ -49,7 +49,7 @@ The smart contract test suite achieved comprehensive coverage across all three d
 
 All validation rules correctly enforced (empty strings, future dates, invalid roles), event emissions verified for all state-changing operations, and access control restrictions functioning as designed.
 
-### 5.2.2 Gas Cost Analysis
+### 6.2.2 Gas Cost Analysis
 
 Gas costs were measured for all primary contract functions and compared against targets established in Section 3.6.1.
 
@@ -64,7 +64,7 @@ Gas costs were measured for all primary contract functions and compared against 
 
 Gas optimization techniques applied included struct packing to minimize storage slots (reducing SSTORE operations costing 20,000 gas each), limiting indexed parameters to 3 per event, and using uint256 consistently to avoid type conversion costs, following documented best practices for Ethereum smart contract gas consumption optimization (IEEE, 2024). These optimizations reduced registration costs from ~100,000 to ~87,432 gas (12.6% improvement).
 
-### 5.2.3 Security Testing
+### 6.2.3 Security Testing
 
 Security testing focused on identifying vulnerabilities in smart contracts using automated static analysis (Slither tool) and manual code review, following systematic methodologies for vulnerability detection documented in academic literature (ScienceDirect, 2024).
 
@@ -84,9 +84,9 @@ Security testing focused on identifying vulnerabilities in smart contracts using
 
 ---
 
-## 5.3 Frontend Testing Results
+## 6.3 Frontend Testing Results
 
-### 5.3.1 Component Testing
+### 6.3.1 Component Testing
 
 React components were tested using React Testing Library following user-centric approach focusing on interactions and outcomes rather than implementation details.
 
@@ -109,7 +109,7 @@ React components were tested using React Testing Library following user-centric 
 
 All form validation rules correctly implemented, error handling for blockchain transaction failures properly tested, loading states correctly displayed during async operations, and accessibility attributes (ARIA labels, roles) verified in all interactive components.
 
-### 5.3.2 End-to-End Testing
+### 6.3.2 End-to-End Testing
 
 Frontend integration tests validated complete user workflows using Playwright for browser automation across three browsers (Chrome, Firefox, Safari).
 
@@ -125,7 +125,7 @@ Frontend integration tests validated complete user workflows using Playwright fo
 
 All tests passed across Chrome 120, Firefox 121, and Safari 17.2 with no browser-specific issues detected (Safari QR scanner requires explicit camera permission as expected behavior).
 
-### 5.3.3 Accessibility Testing
+### 6.3.3 Accessibility Testing
 
 Accessibility testing ensured WCAG 2.1 Level AA compliance (W3C, 2018) using automated Lighthouse audits and manual keyboard navigation testing, validating conformance to Web Content Accessibility Guidelines for perceivable, operable, understandable, and robust user interfaces.
 
@@ -142,9 +142,9 @@ Minor accessibility issues identified and fixed included missing ARIA labels on 
 
 ---
 
-## 5.4 Performance Evaluation
+## 6.4 Performance Evaluation
 
-### 5.4.1 Page Load Performance
+### 6.4.1 Page Load Performance
 
 Page load performance measured using Chrome DevTools and Lighthouse, targeting <3 second First Contentful Paint (FCP) and <2 second Largest Contentful Paint (LCP).
 
@@ -159,7 +159,7 @@ Page load performance measured using Chrome DevTools and Lighthouse, targeting <
 
 All pages met LCP targets. Consumer Query page slightly slower than homepage despite lighter authentication requirements due to QR scanner camera initialization. Producer Dashboard slowest page due to wallet connection and blockchain query on initial load.
 
-### 5.4.2 API Response Time Analysis
+### 6.4.2 API Response Time Analysis
 
 API endpoint response times measured using server logs over 7-day testing period with 500+ requests per endpoint.
 
@@ -175,7 +175,7 @@ API endpoint response times measured using server logs over 7-day testing period
 
 Block confirmation wait dominates write endpoint latency (76.4% of total response time due to 12-15 second Sepolia block times). Read endpoints extremely fast (<200ms) due to database caching and Supabase connection pooling.
 
-### 5.4.3 Database Query Performance
+### 6.4.3 Database Query Performance
 
 Database query performance measured using Prisma's built-in query logging over 1,000 query executions.
 
@@ -193,9 +193,9 @@ All primary queries utilized composite indexes for optimal performance. Query ex
 
 ---
 
-## 5.5 System Validation
+## 6.5 System Validation
 
-### 5.5.1 End-to-End Scenarios
+### 6.5.1 End-to-End Scenarios
 
 Complete supply chain scenarios executed to validate system functionality across all roles and components.
 
@@ -230,7 +230,7 @@ Producer registered "Organic Salmon Fillets". IoT simulator generated Critical s
 ✅ Consumer protected by visible warning
 ✅ Product recall simulation successful
 
-### 5.5.2 User Acceptance Testing
+### 6.5.2 User Acceptance Testing
 
 User acceptance testing involved three test users representing different supply chain roles executing realistic workflows to evaluate system usability.
 
@@ -264,9 +264,9 @@ Minor issues identified during UAT included QR code download button initially un
 
 ---
 
-## 5.6 Security Assessment
+## 6.6 Security Assessment
 
-### 5.6.1 Backend Security
+### 6.6.1 Backend Security
 
 Backend API security focused on authentication, authorization, input validation, and protection against common web vulnerabilities.
 
@@ -295,9 +295,9 @@ Initial testing revealed no rate limiting on API endpoints, allowing potential a
 
 ---
 
-## 5.7 Limitations Analysis
+## 6.7 Limitations Analysis
 
-### 5.7.1 Blockchain Scalability
+### 6.7.1 Blockchain Scalability
 
 The FoodTrace system faces scalability challenges inherent to public blockchain architecture:
 
@@ -313,7 +313,7 @@ The FoodTrace system faces scalability challenges inherent to public blockchain 
 
 **Potential Mitigation:** Optimistic UI updates (assume success, revert on failure) or off-chain indexing with periodic blockchain settlement.
 
-### 5.7.2 Data Immutability Trade-offs
+### 6.7.2 Data Immutability Trade-offs
 
 While immutability is a core benefit, it creates challenges for data correction and privacy:
 
@@ -321,7 +321,7 @@ While immutability is a core benefit, it creates challenges for data correction 
 
 **GDPR Compliance:** The "right to be forgotten" conflicts with blockchain immutability. Personal data (producer names) cannot be deleted once written. Current mitigation stores personal data off-chain (database) with only hashes on-chain, but this hybrid approach reduces blockchain's transparency benefits for consumer verification.
 
-### 5.7.3 IoT Simulation Limitations
+### 6.7.3 IoT Simulation Limitations
 
 The FoodTrace system uses IoT simulator rather than real sensor hardware, introducing limitations. While blockchain-IoT integration architectures have been demonstrated for food traceability with physical sensors (Tsang et al., 2019), simulation-based approaches trade real-world validation for development speed and cost efficiency appropriate for proof-of-concept implementations.
 
@@ -329,7 +329,7 @@ The FoodTrace system uses IoT simulator rather than real sensor hardware, introd
 
 **Validation Scope:** Simulator validates system architecture for IoT integration but does not validate physical sensor reliability (battery depletion, connectivity loss, calibration drift), environmental variability (temperature fluctuations, door openings, defrost cycles), or communication protocols (MQTT broker stability, message queuing, reconnection logic).
 
-### 5.7.4 Wallet-Free Consumer Access Trade-off
+### 6.7.4 Wallet-Free Consumer Access Trade-off
 
 While wallet-free consumer access improves usability, it sacrifices some blockchain verification benefits:
 
@@ -339,7 +339,7 @@ While wallet-free consumer access improves usability, it sacrifices some blockch
 
 **Alternative Approach:** Provide QR codes encoding blockchain transaction hashes, allowing technically-savvy consumers to verify independently via Etherscan while maintaining wallet-free access for average users.
 
-### 5.7.5 Oracle Problem
+### 6.7.5 Oracle Problem
 
 The FoodTrace system does not solve the "oracle problem"—ensuring off-chain data accuracy. Blockchain guarantees data immutability once recorded but cannot verify if data was truthful at creation.
 

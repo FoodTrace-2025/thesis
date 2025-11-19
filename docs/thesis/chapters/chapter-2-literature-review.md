@@ -1,6 +1,6 @@
-# CHAPTER 2: LITERATURE REVIEW
+# Chapter 2: Literature Review
 
-**Target Length:** 1,500 words (~5 pages)
+**Target Length:** 2,200-2,700 words (~8-10 pages)
 **Focus:** Justification for design choices + research gap positioning
 
 ---
@@ -9,7 +9,11 @@
 
 ### 2.1.1 Traditional Supply Chain Challenges
 
-Supply chains involve multiple independent parties (suppliers, manufacturers, distributors, retailers) coordinating through fragmented systems. Traditional approaches face systemic challenges: **data silos** (proprietary databases create information asymmetry), **manual verification** (paper certificates easily forged), and **slow traceability** (Gartner, 2023, identifies lack of end-to-end visibility as a primary operational challenge in supply chain management).
+Supply chains involve multiple independent parties (suppliers, manufacturers, distributors, retailers) coordinating through fragmented systems.
+Traditional approaches face systemic challenges:
+**data silos** (proprietary databases create information asymmetry)
+**manual verification** (paper certificates easily forged)
+**slow traceability** (Gartner, 2023, identifies lack of end-to-end visibility as a primary operational challenge in supply chain management).
 
 Food safety exemplifies traceability urgency. WHO (2022) reports 600 million people fall ill from contaminated food annually, with $110 billion in economic losses. When contamination occurs, rapid batch identification is critical: the 2006 spinach E. coli outbreak caused $350 million in losses and 5 deaths, exacerbated by slow traceability (FDA, 2023).
 
@@ -33,15 +37,15 @@ The choice between public (Ethereum) and permissioned (Hyperledger Fabric) block
 
 The architectural differences between Ethereum and Hyperledger Fabric create distinct trade-offs across trust models, performance characteristics, and economic viability.
 
-| Criterion | Ethereum (Public) | Hyperledger Fabric (Permissioned) |
-|-----------|-------------------|-----------------------------------|
-| **Trust Model** | Public verification via Etherscan; permissionless access | Consortium trust required; controlled membership |
-| **Performance** | 30-50 TPS (Layer 1); 12s block time | 2,000-3,500 TPS; 0.5s latency |
-| **Cost Structure** | Variable gas fees ($0.50-$50 per tx) | Fixed infrastructure costs; no per-tx fees |
-| **Privacy** | All transactions publicly visible | Private channels and data collections |
-| **Deployment** | Individual deployment; no coordination needed | Requires consortium agreements; multi-party setup |
+| Criterion                 | Ethereum (Public)                                        | Hyperledger Fabric (Permissioned)                   |
+| ------------------------- | -------------------------------------------------------- | --------------------------------------------------- |
+| **Trust Model**           | Public verification via Etherscan; permissionless access | Consortium trust required; controlled membership    |
+| **Performance**           | 30-50 TPS (Layer 1); 12s block time                      | 2,000-3,500 TPS; 0.5s latency                       |
+| **Cost Structure**        | Variable gas fees ($0.50-$50 per tx)                     | Fixed infrastructure costs; no per-tx fees          |
+| **Privacy**               | All transactions publicly visible                        | Private channels and data collections               |
+| **Deployment**            | Individual deployment; no coordination needed            | Requires consortium agreements; multi-party setup   |
 | **Regulatory Compliance** | Immutability conflicts with GDPR "right to be forgotten" | Supports controlled data deletion (GDPR-compatible) |
-| **Best Use Case** | B2C transparency; consumer-facing verification | B2B consortiums; enterprise privacy requirements |
+| **Best Use Case**         | B2C transparency; consumer-facing verification           | B2B consortiums; enterprise privacy requirements    |
 
 **Table 2.1** Key architectural differences between Ethereum and Hyperledger Fabric for food traceability (sources: Casino et al., 2019; Zhao et al., 2019; IBM Food Trust, 2023)
 
@@ -69,9 +73,55 @@ Recent systematic reviews analyzing blockchain adoption in food supply chains ex
 
 ---
 
-## 2.3 Web3 User Experience Challenges
+## 2.3 Smart Contract Design Patterns for Food Traceability
 
-### 2.3.1 Wallet Complexity as Adoption Barrier
+**[TO BE WRITTEN DURING WEEK 3-4 - After smart contracts are implemented]**
+
+**Note:** This section corresponds to **Chapter 4: Smart Contract Development** (main contribution). The literature review here provides the foundation for smart contract design decisions.
+
+**Purpose:** Review academic research on smart contract design patterns, access control mechanisms, gas optimization techniques, and security considerations for supply chain applications.
+
+**Planned subsections:**
+
+- 2.3.1 Product Registration and Data Storage Patterns (hybrid architecture, event emission)
+- 2.3.2 Role-Based Access Control in Supply Chains (OpenZeppelin patterns)
+- 2.3.3 Gas Optimization Techniques (storage vs memory, struct packing, event logging)
+- 2.3.4 Security Considerations and Vulnerabilities (reentrancy, oracle problem, upgradability)
+
+**Citations needed:** Find 4-6 REAL academic papers (IEEE, ACM, Springer) on smart contract design patterns using WebSearch before writing.
+
+**Writing approach:** Search for papers → Verify DOI → Show citations for approval → Write section with verified sources only.
+
+---
+
+## 2.4 Web3 Integration and UX Challenges
+
+**Note:** This section corresponds to **Chapter 5: System Implementation** (Backend + Frontend + IoT). The literature review here provides the foundation for supporting system components.
+
+### 2.4.1 Custodial Wallet Patterns for Enterprise Blockchain
+
+**[TO BE WRITTEN DURING WEEK 5-6 - After backend is implemented]**
+
+**Purpose:** Review custodial wallet architectures, private key management, and enterprise blockchain authentication patterns. This subsection corresponds to Chapter 5.1 (Backend Development).
+
+**Planned content:**
+
+- Email/password authentication vs MetaMask patterns
+- Private key encryption and storage (AES-256)
+- IBM Food Trust custodial wallet model
+- Trade-offs: centralization vs UX accessibility
+
+**Citations needed:** Find 2-3 sources - can include technical documentation (OpenZeppelin, IBM Food Trust) alongside academic papers on enterprise blockchain UX.
+
+**Writing approach:** Mix academic papers with industry technical documentation (clearly labeled as such).
+
+---
+
+### 2.4.2 Wallet-Free Consumer Access
+
+**Purpose:** Review blockchain UX challenges and wallet-free access patterns for consumer-facing applications. This subsection corresponds to Chapter 5.2 (Frontend Development - Consumer Interface).
+
+**Wallet Complexity as Adoption Barrier:**
 
 Blockchain applications present unique UX challenges not found in traditional web applications. Cryptocurrency wallet setup presents significant adoption barriers including seed phrase management, private key storage, and network configuration complexity. Traditional web authentication requires email/password entry; blockchain authentication requires a complex seven-step workflow:
 
@@ -85,16 +135,18 @@ Blockchain applications present unique UX challenges not found in traditional we
 
 Blockchain wallet onboarding requires **substantially longer time than traditional account creation** due to seed phrase generation, secure backup procedures, and network configuration steps. Empirical research analyzing 45,821 mobile wallet app reviews documents that users frequently experience irreversible monetary losses due to seed phrase mismanagement, with wallet complexity presenting significant adoption barriers for both novice and experienced users (Voskobojnikov et al., 2021). These irrecoverability challenges are absent in traditional systems where password reset mechanisms prevent permanent account loss.
 
-### 2.3.2 Wallet-Free Access Pattern
+**Wallet-Free Access Pattern:**
 
 For supply chain consumer verification, requiring wallet installation defeats accessibility goals. The solution: **read-only blockchain queries** without wallet requirement. This **dual-access pattern** separates user types by authentication requirements:
 
 **Business Users (Producer/Distributor/Retailer):**
+
 - Require wallet authentication for write operations
 - Sign transactions to record supply chain events (product registration, transfers, sensor data)
 - Pay gas fees for blockchain state changes
 
 **Consumers:**
+
 - Access blockchain data via read-only queries (no wallet required)
 - Query product information through public RPC providers such as Alchemy or Infura
 - Zero setup, zero cost, browser-based access via QR code scanning
@@ -107,9 +159,28 @@ Consumer acceptance research examining 715 Greek consumers found high valuation 
 
 ---
 
-## 2.4 Research Gaps and Thesis Positioning
+### 2.4.3 IoT-Blockchain Integration
 
-### 2.4.1 Identified Gaps in Literature
+**[TO BE WRITTEN DURING WEEK 5-6 - After IoT simulator is implemented]**
+
+**Purpose:** Review blockchain-IoT integration architectures, sensor data recording patterns, and hybrid data approaches. This subsection corresponds to Chapter 5.3 (IoT Simulator Implementation).
+
+**Planned content:**
+
+- Blockchain-IoT integration architectures (edge computing, MQTT protocols)
+- Sensor data recording patterns (event-based vs storage-based)
+- Hybrid data approach (normal readings = events, critical alerts = storage)
+- IoT simulation for academic POCs (validity, cost-benefit analysis)
+
+**Citations needed:** Find 2-3 REAL academic papers on IoT-blockchain integration for food traceability.
+
+**Writing approach:** Search → Verify → Approve → Write with verified sources.
+
+---
+
+## 2.5 Research Gaps and Thesis Positioning
+
+### 2.5.1 Identified Gaps in Literature
 
 **Gap 1: User Accessibility in Public Blockchains**
 
@@ -123,93 +194,104 @@ Academic papers often assume access to physical IoT sensors (DHT22, GPS modules,
 
 Most research uses full on-chain storage (expensive, scalability challenges) or full off-chain storage (defeats blockchain immutability benefits). Limited research explores hybrid approaches: critical data on-chain (product ID, timestamps, ownership), metadata off-chain (descriptions, images), cryptographically linked (SHA-256 hashes verify off-chain data integrity).
 
-### 2.4.2 Thesis Contributions
+### 2.5.2 Thesis Contributions
 
 This thesis addresses identified gaps through several technical contributions:
 
 **TC1: Wallet-Free Consumer Access Pattern**
+
 - Demonstrates read-only blockchain queries via public RPC (Alchemy)
 - QR code → product ID → blockchain lookup without wallet installation
 - Mobile-first progressive disclosure UI (critical information first, technical details collapsed)
 
 **TC2: IoT Simulation Methodology for Academic POCs**
+
 - Validates software-based IoT simulation without physical hardware
 - Three scenario presets (Normal/Warning/Critical) generate realistic data
 - Database + blockchain dual recording demonstrates production-ready architecture
 - Documents cost savings (€150-200 hardware) and development time reduction (3 weeks)
 
 **TC3: Hybrid Data Architecture**
+
 - Critical data on-chain: product ID, ownership transfers, timestamps (immutable)
 - Metadata off-chain: descriptions, images, detailed sensor logs (PostgreSQL/Supabase)
 - Cryptographic linking: SHA-256 hashes verify off-chain data integrity
 - Gas cost reduction: 90% savings vs full on-chain storage
 
 **TC4: Small Producer Feasibility Analysis**
+
 - Addresses enterprise bias in current research (Ellahi et al., 2024)
 - Demonstrates Ethereum public blockchain viability for small-scale producers
 - Evaluates barriers: gas costs, technical complexity, setup requirements
 - Compares with traditional centralized database approach
 
-### 2.4.3 Field Positioning
+### 2.5.3 Field Positioning
 
 This thesis positions within the public blockchain research stream while addressing the underserved small producer segment (only 3-5% of frameworks in Ellahi et al. 2024 systematic review). By demonstrating wallet-free consumer access and IoT simulation viability, this work contributes pragmatic approaches for blockchain traceability adoption beyond enterprise consortiums.
 
-The research acknowledges limitations (testnet deployment, simulated sensors, limited scale testing) appropriate for proof-of-concept validation while establishing architectural patterns enabling future production deployment (see Chapter 6 Discussion for production recommendations).
+The research acknowledges limitations (testnet deployment, simulated sensors, limited scale testing) appropriate for proof-of-concept validation while establishing architectural patterns enabling future production deployment (see Chapter 7 Discussion for production recommendations).
 
 ---
 
 ## References for Chapter 2
 
-ACM Transactions on the Web. (2024). Web3-based identity and KYC innovations for next-generation FinTech. *ACM Transactions on the Web*. https://doi.org/10.1145/3771991
+ACM Transactions on the Web. (2024). Web3-based identity and KYC innovations for next-generation FinTech. _ACM Transactions on the Web_. https://doi.org/10.1145/3771991
 
-British Food Journal. (2024). Consumers' valuation of blockchain-based food traceability: role of consumer ethnocentrism and communication via QR codes. *British Food Journal*, 126(13), 72-93. https://doi.org/10.1108/BFJ-09-2023-0812
+British Food Journal. (2024). Consumers' valuation of blockchain-based food traceability: role of consumer ethnocentrism and communication via QR codes. _British Food Journal_, 126(13), 72-93. https://doi.org/10.1108/BFJ-09-2023-0812
 
-Buterin, V. (2014). *Ethereum: A next-generation smart contract and decentralized application platform*. Ethereum Foundation. https://ethereum.org/whitepaper
+Buterin, V. (2014). _Ethereum: A next-generation smart contract and decentralized application platform_. Ethereum Foundation. https://ethereum.org/whitepaper
 
-IEEE. (2023). Performance and scalability analysis of Ethereum and Hyperledger Fabric. *IEEE Access*, 11, 70018-70035. https://doi.org/10.1109/ACCESS.2023.3291618
+IEEE. (2023). Performance and scalability analysis of Ethereum and Hyperledger Fabric. _IEEE Access_, 11, 70018-70035. https://doi.org/10.1109/ACCESS.2023.3291618
 
-Springer. (2025). Digital transformation of food supply chain management using blockchain: A systematic literature review towards food safety and traceability. *Business & Information Systems Engineering*. https://doi.org/10.1007/s12599-025-00948-0
+Springer. (2025). Digital transformation of food supply chain management using blockchain: A systematic literature review towards food safety and traceability. _Business & Information Systems Engineering_. https://doi.org/10.1007/s12599-025-00948-0
 
-Wiley. (2024). Blockchain implementation for food safety in supply chain: A review. *Comprehensive Reviews in Food Science and Food Safety*, 23(5). https://doi.org/10.1111/1541-4337.70002
+Wiley. (2024). Blockchain implementation for food safety in supply chain: A review. _Comprehensive Reviews in Food Science and Food Safety_, 23(5). https://doi.org/10.1111/1541-4337.70002
 
-Taylor & Francis. (2024). The impact of blockchain adoption on supply chain performance: Evidence from food industry. *International Journal of Production Research*. https://doi.org/10.1080/00207543.2024.2414375
+Taylor & Francis. (2024). The impact of blockchain adoption on supply chain performance: Evidence from food industry. _International Journal of Production Research_. https://doi.org/10.1080/00207543.2024.2414375
 
-Buterin, V. (2017). The meaning of decentralization. *Medium*. https://medium.com/@VitalikButerin/the-meaning-of-decentralization-a0c92b76a274
+Buterin, V. (2017). The meaning of decentralization. _Medium_. https://medium.com/@VitalikButerin/the-meaning-of-decentralization-a0c92b76a274
 
-Buterin, V., & Griffith, V. (2017). Casper the friendly finality gadget. *arXiv preprint arXiv:1710.09437*.
+Buterin, V., & Griffith, V. (2017). Casper the friendly finality gadget. _arXiv preprint arXiv:1710.09437_.
 
-Casino, F., Dasaklis, T. K., & Patsakis, C. (2019). A systematic literature review of blockchain-based applications: Current status, classification and open issues. *Telematics and Informatics*, 61, 101597.
+Casino, F., Dasaklis, T. K., & Patsakis, C. (2019). A systematic literature review of blockchain-based applications: Current status, classification and open issues. _Telematics and Informatics_, 61, 101597.
 
-FDA. (2023). *FSMA Rule 204: Food traceability requirements*. U.S. Food and Drug Administration. https://www.fda.gov/food/food-safety-modernization-act-fsma/fsma-final-rule-requirements-additional-traceability-records-certain-foods
+FDA. (2023). _FSMA Rule 204: Food traceability requirements_. U.S. Food and Drug Administration. https://www.fda.gov/food/food-safety-modernization-act-fsma/fsma-final-rule-requirements-additional-traceability-records-certain-foods
 
-Voskobojnikov, A., Wiese, O., Mehrabi Koushki, M., Roth, V., & Beznosov, K. (2021). The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. *CHI '21: CHI Conference on Human Factors in Computing Systems*. https://doi.org/10.1145/3411764.3445407
+Voskobojnikov, A., Wiese, O., Mehrabi Koushki, M., Roth, V., & Beznosov, K. (2021). The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. _CHI '21: CHI Conference on Human Factors in Computing Systems_. https://doi.org/10.1145/3411764.3445407
 
-Gartner. (2023). *Supply chain technology trends: Top 10 priorities for 2024*. Gartner Research.
+Gartner. (2023). _Supply chain technology trends: Top 10 priorities for 2024_. Gartner Research.
 
-IBM. (2023). *IBM Food Trust case studies and technical documentation*. IBM Blockchain. https://www.ibm.com/blockchain/solutions/food-trust
+IBM. (2023). _IBM Food Trust case studies and technical documentation_. IBM Blockchain. https://www.ibm.com/blockchain/solutions/food-trust
 
-Kamath, R. (2018). Food traceability on blockchain: Walmart's pork and mango pilots with IBM. *The Journal of the British Blockchain Association*, 1(1), 1-12. https://doi.org/10.31585/jbba-1-1-(10)2018
+Kamath, R. (2018). Food traceability on blockchain: Walmart's pork and mango pilots with IBM. _The Journal of the British Blockchain Association_, 1(1), 1-12. https://doi.org/10.31585/jbba-1-1-(10)2018
 
-Lamport, L., Shostak, R., & Pease, M. (1982). The Byzantine Generals Problem. *ACM Transactions on Programming Languages and Systems*, 4(3), 382-401. https://doi.org/10.1145/357172.357176
+Lamport, L., Shostak, R., & Pease, M. (1982). The Byzantine Generals Problem. _ACM Transactions on Programming Languages and Systems_, 4(3), 382-401. https://doi.org/10.1145/357172.357176
 
-Nakamoto, S. (2008). *Bitcoin: A peer-to-peer electronic cash system*. https://bitcoin.org/bitcoin.pdf
+Nakamoto, S. (2008). _Bitcoin: A peer-to-peer electronic cash system_. https://bitcoin.org/bitcoin.pdf
 
-Saberi, S., Kouhizadeh, M., Sarkis, J., & Shen, L. (2019). Blockchain technology and its relationships to sustainable supply chain management. *International Journal of Production Research*, 57(7), 2117-2135.
+Saberi, S., Kouhizadeh, M., Sarkis, J., & Shen, L. (2019). Blockchain technology and its relationships to sustainable supply chain management. _International Journal of Production Research_, 57(7), 2117-2135.
 
-ScienceDirect. (2024). Optimization of agrifood supply chains using Hyperledger Fabric blockchain technology. *Computers in Industry*. https://doi.org/10.1016/j.compind.2024.104185
+ScienceDirect. (2024). Optimization of agrifood supply chains using Hyperledger Fabric blockchain technology. _Computers in Industry_. https://doi.org/10.1016/j.compind.2024.104185
 
-Walmart. (2019). *Walmart and IBM Food Trust case study*. Hyperledger Foundation Case Studies. https://www.hyperledger.org/case-studies/walmart
+Walmart. (2019). _Walmart and IBM Food Trust case study_. Hyperledger Foundation Case Studies. https://www.hyperledger.org/case-studies/walmart
 
-Wood, G. (2014). *Ethereum: A secure decentralised generalised transaction ledger* (Yellow Paper). Ethereum Foundation. https://ethereum.github.io/yellowpaper/paper.pdf
+Wood, G. (2014). _Ethereum: A secure decentralised generalised transaction ledger_ (Yellow Paper). Ethereum Foundation. https://ethereum.github.io/yellowpaper/paper.pdf
 
-World Health Organization. (2022). *Food safety fact sheet*. https://www.who.int/news-room/fact-sheets/detail/food-safety
+World Health Organization. (2022). _Food safety fact sheet_. https://www.who.int/news-room/fact-sheets/detail/food-safety
 
-Ellahi, R. M., Wood, L. C., & Bekhit, A. E. A. (2024). Blockchain-driven food supply chains: A systematic review for unexplored opportunities. *Applied Sciences*, 14(19), 8944. https://doi.org/10.3390/app14198944
+Ellahi, R. M., Wood, L. C., & Bekhit, A. E. A. (2024). Blockchain-driven food supply chains: A systematic review for unexplored opportunities. _Applied Sciences_, 14(19), 8944. https://doi.org/10.3390/app14198944
 
-Zhao, G., Liu, S., Lopez, C., Lu, H., Elgueta, S., Chen, H., & Boshkoska, B. M. (2019). Blockchain technology in agri-food value chain management: A synthesis of applications, challenges and future research directions. *Computers in Industry*, 109, 83-99. https://doi.org/10.1016/j.compind.2019.04.002
+Zhao, G., Liu, S., Lopez, C., Lu, H., Elgueta, S., Chen, H., & Boshkoska, B. M. (2019). Blockchain technology in agri-food value chain management: A synthesis of applications, challenges and future research directions. _Computers in Industry_, 109, 83-99. https://doi.org/10.1016/j.compind.2019.04.002
 
-Zheng, Z., Xie, S., Dai, H., Chen, X., & Wang, H. (2018). Blockchain challenges and opportunities: A survey. *International Journal of Web and Grid Services*, 14(4), 352-375.
+Zheng, Z., Xie, S., Dai, H., Chen, X., & Wang, H. (2018). Blockchain challenges and opportunities: A survey. _International Journal of Web and Grid Services_, 14(4), 352-375.
 
 ---
 
-**Word Count:** ~1,500 words (Target: 1,500 | Original: 6,398 | Reduction: 77%)
+**Word Count:** ~2,900 words (Target: 2,200-2,700 words after Sections 2.3-2.4 are written during Week 3-6)
+
+**Current Status:**
+
+- Sections 2.1-2.2: Complete (~1,400 words)
+- Section 2.3 (Smart Contracts): Placeholder - to be written Week 3-4 (~600-800 words)
+- Section 2.4 (Web3+IoT): Partially complete (2.4.2 written ~500 words, 2.4.1 and 2.4.3 to be written Week 5-6 ~400-600 words)
+- Section 2.5 (Research Gaps): Complete (~1,000 words)

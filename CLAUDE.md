@@ -21,7 +21,7 @@ session: 15
 
 **IMPORTANT:** Chapter files are **TEMPLATES/SCAFFOLDING** created in advance. Actual thesis content will be written **DURING development** (Weeks 3-12) as features are implemented.
 
-- **Chapter Templates** → docs/thesis/chapters/\*.md (7 chapters, reference structure only)
+- **Chapter Templates** → docs/thesis/chapters/\*.md (8 chapters, reference structure only)
 - **OAMK Requirements** → docs/thesis/requirements/\*.md (structure, writing standards)
   - These provide the outline/structure for the final thesis
   - Content will be filled incrementally during development
@@ -29,7 +29,7 @@ session: 15
 
 ### Session History
 
-- **Session Archive** → .claude/sessions/session-history.md (Sessions 1-14 archive)
+- **Session Archive** → .claude/sessions/session-history.md (Sessions 1-15 archive)
 
 ### Archived Documents (2025-11-13 - Planning Phase)
 
@@ -57,21 +57,22 @@ Planning documents created during Sessions 1-7 but never used for development. A
 
 ## Current Session Status
 
-- **Last Updated**: 2025-11-14 (Session 15)
-- **Project Status**: Week 0 Complete, PRD v1.2 Finalized, Ready for Week 2
-- **Project Completion**: ~17% (Brief ✅, PRD v1.2 ✅, Citations ✅, Epic hours refined ✅)
+- **Last Updated**: 2025-11-14 (Session 16)
+- **Project Status**: Week 0 Complete, Thesis Structure Finalized (8 chapters), Ready for Week 2
+- **Project Completion**: ~19% (Brief ✅, PRD v1.2 ✅, Thesis structure ✅, Literature Review reorganized ✅)
 - **Active Stage**: Week 2 Planning - Ready for Epic Sharding + Architecture
 - **Next Priority**: Begin Week 2 BMAD workflow - Epic sharding, Architecture document creation
-- **Recent Changes**: Session 14 archived - PRD verification complete, all epic hours refined to realistic estimates
+- **Recent Changes**: Session 15 archived - Thesis restructured to 8 chapters, Literature Review reorganized to 5 sections (bachelor standard)
 - **Blockers**: None
-- **Ready for**: Week 2 BMAD workflow (Epic sharding + Architecture creation) + Supervisor review
+- **Ready for**: Week 2 BMAD workflow (Epic sharding + Architecture creation) + Next weekly professor meeting
 
-### Current Session Achievements (Session 15 - 2025-11-14)
+### Current Session Achievements (Session 16 - 2025-11-14)
 
-✅ **Session Documentation Updated**: Archived Session 14 comprehensive achievements to session-history.md
-✅ **Project Status Incremented**: Updated session number (14 → 15), completion percentage (16% → 17%)
-✅ **Documentation Cleanup**: Maintained focused context in CLAUDE.md, full history preserved in archive
-✅ **Ready State Confirmed**: PRD v1.2 finalized with realistic epic hours, ready for Week 2 BMAD workflow
+✅ **Session Documentation Updated**: Archived Session 15 (thesis restructuring) to session-history.md
+✅ **8-Chapter Thesis Structure**: Smart Contracts elevated to main Chapter 4, supporting systems in Chapter 5
+✅ **Literature Review Reorganized**: 5-section structure (bachelor standard), Section 2.3 pure smart contracts, Section 2.4 merged Web3+IoT
+✅ **Cross-References Verified**: 15 references updated across chapters 2-8, all section numbering consistent
+✅ **Architecture Alignment**: IoT correctly positioned as UI/API layer (not blockchain pattern) based on PRD architecture analysis
 
 ### Development Approach
 
@@ -79,9 +80,9 @@ Planning documents created during Sessions 1-7 but never used for development. A
 
 - **NOW (Week 0-2)**: Create chapter templates/structure for reference
 - **DURING (Weeks 3-12)**: Write actual content as features are implemented
-  - Week 3-4: Smart contracts → Update Chapter 4 (Implementation)
-  - Week 5-7: Frontend development → Update Chapter 4 (Implementation)
-  - Week 8-9: Testing → Update Chapter 5 (Testing & Evaluation)
+  - Week 3-4: Smart contracts → Write Section 2.3 + Update Chapter 4 (Smart Contracts)
+  - Week 5-7: Backend/Frontend/IoT → Write Section 2.4 + Update Chapter 5 (System Implementation)
+  - Week 8-9: Testing → Update Chapter 6 (Results & Testing)
   - Week 10-12: Final writing → Complete all chapters with real data
 - **RESULT**: Thesis reflects actual work done, not hypothetical plans
 
@@ -378,9 +379,9 @@ When updating this file after each session:
 
 ---
 
-**Last Session:** Nov 14, 2025 (Session 14 Complete) - PRD verification, epic hour refinement (+20-30h), academic framing
+**Last Session:** Nov 14, 2025 (Session 15 Complete) - Thesis restructuring (8 chapters), Literature Review reorganization (5 sections)
 **Next Session:** Week 2 workflow - Epic sharding, Architecture creation
-**Status:** ✅ Week 0 Complete - PRD v1.2 finalized (epic hours 121.5-145.5h, realistic estimates), Ready for BMAD workflow
-**Session History:** See .claude/sessions/session-history.md for Sessions 1-14 detailed archive
+**Status:** ✅ Week 0 Complete - Thesis structure finalized (Smart Contracts main chapter), Ready for BMAD workflow
+**Session History:** See .claude/sessions/session-history.md for Sessions 1-15 detailed archive
 
 _This CLAUDE.md file is the AI assistant's primary context document. Update after each significant milestone._

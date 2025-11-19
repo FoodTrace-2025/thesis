@@ -24,10 +24,11 @@ Based on OAMK thesis template "Thesis Report G22.docx" (also known as 110625 tem
 | **1. Introduction**              | 3-4 pages   | Sam                  | 🔜 Week 10    |
 | **2. Literature Review**         | 8-10 pages  | All (divide topics)  | 🔜 Week 10    |
 | **3. Methodology**               | 5-6 pages   | TaiSheng             | 🔜 Week 10    |
-| **4. Implementation**            | 10-12 pages | All (by role)        | 🔜 Week 10-11 |
-| **5. Results & Testing**         | 7-9 pages   | TaiSheng + YiLing    | 🔜 Week 11    |
-| **6. Discussion**                | 5-6 pages   | Sam                  | 🔜 Week 11    |
-| **7. Conclusion**                | 3-4 pages   | Team (collaborative) | 🔜 Week 12    |
+| **4. Smart Contract Development**| 4-5 pages   | Sam                  | 🔜 Week 10-11 |
+| **5. System Implementation**     | 5-6 pages   | TaiSheng + YiLing    | 🔜 Week 10-11 |
+| **6. Results & Testing**         | 7-9 pages   | TaiSheng + YiLing    | 🔜 Week 11    |
+| **7. Discussion**                | 5-6 pages   | Sam                  | 🔜 Week 11    |
+| **8. Conclusion**                | 3-4 pages   | Team (collaborative) | 🔜 Week 12    |
 | **References**                   | 2-3 pages   | All                  | 🔜 Throughout |
 | **Appendices** (Optional)        | Variable    | All                  | 🔜 Week 12    |
 
@@ -39,11 +40,11 @@ Based on OAMK thesis template "Thesis Report G22.docx" (also known as 110625 tem
 
 | Team Member       | Sections Owned                                                                                           | Target Pages    | Actual Pages    |
 | ----------------- | -------------------------------------------------------------------------------------------------------- | --------------- | --------------- |
-| **Sam Chou**      | Ch 1 (Introduction), Ch 3.3 (Platform Selection), Ch 4.1 (Smart Contracts), Ch 6 (Discussion)            | 18-20 pages     | _To be counted_ |
-| **TaiSheng Chen** | Ch 3 (Methodology - lead), Ch 4.2 (Backend), Ch 5 (Results & Testing - lead)                             | 16-18 pages     | _To be counted_ |
-| **YiLing Chen**   | Ch 2.4-2.5 (IoT + Web3 Literature), Ch 4.3 (Frontend), Ch 5.3 (User Acceptance Testing)                  | 15-17 pages     | _To be counted_ |
-| **Collaborative** | Abstract (0.5 pages), Ch 2.1-2.3 (divide topics), Ch 7 (Conclusion - divide subsections), Quality Review | 8-10 pages      | _To be counted_ |
-| **TOTAL**         | All chapters                                                                                             | **60-65 pages** | _Final count_   |
+| **Sam Chou**      | Ch 1 (Introduction), Ch 3.3 (Platform Selection), Ch 4 (Smart Contracts), Ch 7 (Discussion)              | 17-19 pages     | _To be counted_ |
+| **TaiSheng Chen** | Ch 3 (Methodology - lead), Ch 5.1 (Backend), Ch 6 (Results & Testing - lead)                             | 17-19 pages     | _To be counted_ |
+| **YiLing Chen**   | Ch 2.5-2.6 (IoT + Web3 Literature), Ch 5.2-5.3 (Frontend + IoT Sim), Ch 6.3 (User Testing)               | 16-18 pages     | _To be counted_ |
+| **Collaborative** | Abstract (0.5 pages), Ch 2.1-2.3 (divide topics), Ch 8 (Conclusion - divide subsections), Quality Review | 10-12 pages     | _To be counted_ |
+| **TOTAL**         | All chapters                                                                                             | **60-68 pages** | _Final count_   |
 
 **Notes:**
 - Each member owns ~15-20 pages individually to meet OAMK equal contribution requirements
@@ -277,81 +278,88 @@ Brief overview of each chapter (one paragraph per chapter).
 ## Chapter 2: LITERATURE REVIEW (8-10 pages)
 
 **Owner:** All (divide topics)
-**Purpose:** Review existing research on blockchain, food traceability, and related technologies
+**Purpose:** Review existing research to provide foundation for implementation chapters
 
-### 2.1 Food Supply Chain Traceability (Sam - 2.5 pages)
+**Note:** Chapter 2 structure corresponds to implementation:
+- Section 2.3 → Chapter 4 (Smart Contracts - main contribution)
+- Section 2.4 → Chapter 5 (System Implementation - supporting components)
 
-**Topics:**
-- Traditional traceability systems (barcodes, RFID, centralized databases)
-- Current challenges in food supply chains
-- Food safety regulations (EU, FDA requirements)
-- Case studies: Walmart + IBM Food Trust, Nestlé, Carrefour
-
-**Key Sources:**
-- Academic papers on food safety
-- Industry reports (McKinsey, Deloitte)
-- Government regulations
-
-### 2.2 Blockchain Technology (Sam - 2.5 pages)
+### 2.1 Blockchain in Supply Chain Management (~2 pages) ✅ Complete
 
 **Topics:**
-- Blockchain fundamentals (distributed ledger, consensus, immutability)
-- Types of blockchains: Public vs Private (Ethereum vs Hyperledger Fabric)
-- Smart contracts (definition, use cases, benefits)
-- Ethereum architecture (accounts, transactions, gas, EVM)
-- Consensus mechanisms (Proof of Work, Proof of Stake)
+- Traditional supply chain challenges (data silos, slow traceability, manual verification)
+- Food safety urgency (WHO statistics, contamination case studies)
+- IBM Food Trust case study (Walmart mango traceability: 7 days → 2.2 seconds)
+- Real-world validation and limitations
 
 **Key Sources:**
-- Ethereum whitepaper
-- Academic papers on blockchain (Springer, IEEE)
-- Technical documentation
+- Gartner (2023) - supply chain visibility challenges
+- WHO (2022) - food safety statistics
+- Kamath (2018) - IBM Food Trust technical architecture
+- Taylor & Francis (2024) - blockchain adoption case studies
 
-### 2.3 Blockchain in Food Supply Chains (TaiSheng - 2.5 pages)
+### 2.2 Ethereum vs Hyperledger Fabric (~1.5 pages) ✅ Complete
 
 **Topics:**
-- Literature review: Blockchain food traceability research (2020-2025)
-- **Critical:** Ethereum vs Hyperledger Fabric comparison
-  - Springer 2025 systematic review (24 papers each)
-  - Use cases for each platform
-  - Performance comparisons
-  - Decision factors (transparency vs privacy)
-- Existing implementations:
-  - IBM Food Trust (Hyperledger Fabric)
-  - VeChain (food tracking)
-  - OriginTrail (supply chain)
-- Research gaps (what hasn't been solved yet)
+- Comparative analysis (trust model, performance, cost, privacy, regulatory compliance)
+- Academic consensus on platform selection (Zhao et al. 2019 systematic review)
+- Platform selection decision: Ethereum for POC (public verifiability, consumer-facing transparency)
+- Detailed justification in Chapter 3 Methodology
 
 **Key Sources:**
-- Springer 2025: "Digital Transformation of Food Supply Chain Management Using Blockchain"
-- IEEE papers on Hyperledger Fabric food traceability
-- ScienceDirect optimization studies
+- Zhao et al. (2019) - systematic review of 71 blockchain agri-food papers
+- Springer (2025) - digital transformation systematic review
+- IEEE (2023) - performance comparisons
+- Wiley (2024) - implementation challenges
 
-### 2.4 IoT Integration with Blockchain (YiLing - 1.5 pages)
+### 2.3 Smart Contract Design Patterns (~2 pages) 🔨 To be written Week 3-4
+
+**Corresponds to:** Chapter 4 Smart Contract Development (main contribution)
+
+**Planned subsections:**
+- 2.3.1 Product Registration and Data Storage Patterns (hybrid architecture, event emission)
+- 2.3.2 Role-Based Access Control in Supply Chains (OpenZeppelin patterns)
+- 2.3.3 Gas Optimization Techniques (storage vs memory, struct packing, event logging)
+- 2.3.4 Security Considerations and Vulnerabilities (reentrancy, oracle problem, upgradability)
+
+**Key Sources:** Find 4-6 REAL academic papers (IEEE, ACM, Springer) using WebSearch before writing
+
+### 2.4 Web3 Integration and UX Challenges (~2.5 pages) ⚠️ Partially complete
+
+**Corresponds to:** Chapter 5 System Implementation (Backend + Frontend + IoT)
+
+**Subsections:**
+- 2.4.1 Custodial Wallet Patterns 🔨 To be written Week 5-6
+  - Email/password authentication vs MetaMask
+  - Private key encryption (AES-256)
+  - IBM Food Trust custodial wallet model
+  - Corresponds to: Chapter 5.1 Backend Development
+
+- 2.4.2 Wallet-Free Consumer Access ✅ Complete
+  - Wallet complexity as adoption barrier (Voskobojnikov et al. 2021)
+  - Dual-access pattern (business users = wallet, consumers = read-only)
+  - QR code verification patterns
+  - Corresponds to: Chapter 5.2 Frontend Development - Consumer Interface
+
+- 2.4.3 IoT-Blockchain Integration 🔨 To be written Week 5-6
+  - Blockchain-IoT integration architectures
+  - Sensor data recording patterns (event-based vs storage-based)
+  - IoT simulation for academic POCs
+  - Corresponds to: Chapter 5.3 IoT Simulator Implementation
+
+**Key Sources:** Mix academic papers with technical documentation (OpenZeppelin, Wagmi docs) clearly labeled as industry standards
+
+### 2.5 Research Gaps and Thesis Positioning (~1.5 pages) ✅ Complete
 
 **Topics:**
-- IoT in supply chain monitoring
-- Temperature and humidity sensors
-- IoT + Blockchain integration patterns
-- MQTT protocol for data transmission
-- Case studies: IoT-enabled food tracking systems
+- Gap 1: User Accessibility in Public Blockchains (wallet-free patterns, mobile-first design)
+- Gap 2: IoT Simulation for Academic POCs (cost-benefit, migration path)
+- Gap 3: Hybrid Storage Architectures (critical on-chain, metadata off-chain)
+- Thesis contributions TC1-TC4 addressing identified gaps
+- Field positioning within public blockchain research stream
 
 **Key Sources:**
-- Academic papers on IoT + blockchain integration
-- MQTT documentation
-- Industry IoT case studies
-
-### 2.5 Web3 Technologies & User Interfaces (YiLing - 1 page)
-
-**Topics:**
-- Web3 wallets (MetaMask, Rainbow Wallet)
-- Web3 libraries (Wagmi, Viem, Ethers.js)
-- User experience challenges in blockchain apps
-- Wallet-free access patterns (for consumers)
-
-**Key Sources:**
-- Web3 documentation
-- UX research papers on blockchain interfaces
-- Accessibility studies
+- Ellahi et al. (2024) - systematic review identifying 88.3% traceability focus, only 3-5% small producer focus
 
 ---
 
@@ -465,73 +473,89 @@ Brief overview of each chapter (one paragraph per chapter).
 
 ---
 
-## Chapter 4: IMPLEMENTATION (10-12 pages)
+## Chapter 4: SMART CONTRACT DEVELOPMENT (4-5 pages)
 
-**Owner:** All (divide by role)
-**Purpose:** Describe what was built and how
+**Owner:** Sam (Blockchain Lead)
+**Purpose:** Detail the core blockchain implementation - smart contracts architecture, design decisions, security patterns, and deployment
+
+**Narrative Correspondence:** References Section 2.4 (Smart Contract Design Patterns - to be written Week 3-4) throughout
 
 **Note:** Keep code snippets concise (max 15 lines). Move detailed code to Appendix A.
 
-### 4.1 Smart Contract Development (Sam - 4-5 pages)
+### 4.1 Contract Architecture Overview (Sam - 0.5 page)
 
-#### 4.1.1 Contract Architecture (1.5 pages)
+### 4.2 ProductRegistry Contract (Sam - 1 page)
 
-- Contract structure overview
-- Main contracts:
-  - `FoodTraceRegistry.sol` - Core registration
-  - `TraceRecords.sol` - Supply chain tracking
-  - `IOTSensorData.sol` - Sensor data storage
-  - `AccessControl.sol` - Role-based permissions
-- Data structures (structs, mappings, arrays)
-- Events for frontend listening
+- Product registration ledger
+- On-chain data structure (ID, creator, timestamp, status)
+- Hash-based metadata storage (Keccak-256)
+- Event emission for indexing
+- Gas optimization: ~88,432 gas per registration
 
-**Include code snippets** (key functions with explanations)
+**Include code snippet:** Key registration function
 
-#### 4.1.2 Role-Based Access Control (1 page)
+### 4.3 TraceRecords Contract (Sam - 1 page)
+
+- Supply chain event recording
+- Chronological ordering enforcement
+- Role-based access control
+- Hash-based location/notes storage
+- Gas optimization: ~72,156 gas per record
+
+**Include code snippet:** Trace record function
+
+### 4.4 SensorData Contract (Sam - 0.75 page)
+
+- IoT sensor data recording
+- Alert threshold implementation (8°C warning, 10°C critical)
+- Event vs storage trade-offs
+- Gas optimization: ~45,234 gas per reading
+
+### 4.5 Role-Based Access Control (Sam - 0.75 page)
 
 - OpenZeppelin AccessControl implementation
-- Four roles: Producer, Distributor, Retailer, Consumer (read-only)
-- Permission matrix (who can do what)
+- Four roles: PRODUCER, DISTRIBUTOR, RETAILER, ADMIN
+- Permission matrix
 - Security considerations
 
-**Include code snippet:** Role assignment logic
+**References:** Section 2.4.2 on RBAC patterns
 
-#### 4.1.3 Product Registration & Tracking (1 page)
+### 4.6 Security Hardening (Sam - 0.5 page)
 
-- `registerProduct()` function implementation
-- Unique product ID generation (hashing strategy)
-- Metadata storage (on-chain vs off-chain decision)
-- QR code linkage
+- Reentrancy protection
+- Access control modifiers
+- Input validation
+- Timestamp validation
+- Integer overflow prevention
 
-**Include code snippet:** Product registration function
+**References:** Section 2.4.4 on security best practices
 
-#### 4.1.4 Trace Record Management (1 page)
+### 4.7 Testing and Coverage (Sam - 0.5 page)
 
-- `addTraceRecord()` function
-- Timestamping strategy
-- Location tracking
-- Actor verification
+- Hardhat + Chai + Mocha framework
+- Coverage >70%
+- Test categories (unit, integration, security)
 
-**Include code snippet:** Add trace record function
+### 4.8 Deployment and Verification (Sam - 0.5 page)
 
-#### 4.1.5 IoT Sensor Data Integration (1 page)
+- Hardhat deployment scripts
+- Gas price optimization (20-30 gwei)
+- Etherscan verification
+- Contract addresses documentation
 
-- Sensor data structure
-- Data validation (temperature/humidity ranges)
-- Alert thresholds
-- Historical data queries
+---
 
-#### 4.1.6 Testing & Deployment (1 page)
+## Chapter 5: SYSTEM IMPLEMENTATION (5-6 pages)
 
-- Hardhat testing framework
-- Test coverage achieved ([X]%)
-- Gas optimization techniques used
-- Sepolia testnet deployment process
-- Contract verification on Etherscan
+**Owners:** TaiSheng (Backend - 5.1), YiLing (Frontend - 5.2, IoT - 5.3)
+**Purpose:** Detail the supporting system components connecting users to smart contracts
 
-**Include:** Contract addresses, transaction hashes
+**Narrative Correspondence:**
+- Section 2.3 (Web3 UX) → Frontend
+- Section 2.5 (IoT Integration - to be written) → IoT Simulator
+- Section 2.6 (Web3 Technologies - to be written) → Backend
 
-### 4.2 Backend Development (TaiSheng - 2.5-3 pages)
+### 5.1 Backend Development (TaiSheng - 2-2.5 pages)
 
 #### 4.2.1 Next.js API Routes (1 page)
 
@@ -639,7 +663,7 @@ Brief overview of each chapter (one paragraph per chapter).
 
 ---
 
-## Chapter 5: RESULTS & TESTING (7-9 pages)
+## Chapter 6: RESULTS & TESTING (7-9 pages)
 
 **Owner:** TaiSheng + YiLing
 **Purpose:** Present findings, test results, performance analysis
@@ -718,7 +742,7 @@ Brief overview of each chapter (one paragraph per chapter).
 
 ---
 
-## Chapter 6: DISCUSSION (5-6 pages)
+## Chapter 7: DISCUSSION (5-6 pages)
 
 **Owner:** Sam
 **Purpose:** Interpret results, analyze implications, critical reflection
@@ -778,7 +802,7 @@ If deploying in production:
 
 ---
 
-## Chapter 7: CONCLUSION (3-4 pages)
+## Chapter 8: CONCLUSION (3-4 pages)
 
 **Owner:** Team (collaborative)
 **Purpose:** Summarize work, answer research questions, suggest future work

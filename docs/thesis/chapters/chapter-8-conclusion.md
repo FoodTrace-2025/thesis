@@ -1,6 +1,6 @@
-# CHAPTER 7: CONCLUSION
+# Chapter 8: Conclusion
 
-## 7.1 Summary of Work
+## 8.1 Summary of Work
 
 This thesis developed and evaluated a proof-of-concept blockchain-based food supply chain traceability system addressing the fundamental research question: **"How can blockchain technology be made accessible to mainstream users while preserving its core benefits of decentralization, transparency, and immutability?"**
 
@@ -10,7 +10,7 @@ The hybrid data architecture balanced blockchain immutability with practical cos
 
 ---
 
-## 7.2 Research Questions Answered
+## 8.2 Research Questions Answered
 
 ### RQ1: How suitable is Ethereum blockchain technology for food supply chain traceability in proof-of-concept implementations?
 
@@ -151,7 +151,7 @@ Systematic surveys of blockchain scalability document Layer 2 protocols achievin
 
 ---
 
-## 7.3 Field Impact & Contributions
+## 8.3 Field Impact & Contributions
 
 ### Research Gap Addressed
 
@@ -211,7 +211,7 @@ The Springer (2025) review documents contradictory findings: **12 papers cite co
 
 ---
 
-## 7.4 Future Work
+## 8.4 Future Work
 
 ### Short-Term (3-6 Months)
 
@@ -245,7 +245,7 @@ The Springer (2025) review documents contradictory findings: **12 papers cite co
 
 ---
 
-## 7.5 Final Remarks
+## 8.5 Final Remarks
 
 This research demonstrates that **blockchain technology can transform food supply chain transparency from a trust-based system to a cryptographically-verified system**, making the Walmart Food Trust case study outcome (7 days → 2.2 seconds traceability) achievable not only for enterprise consortiums but for small-scale producers targeting premium markets.
 
@@ -275,7 +275,7 @@ The question is now *"How do we scale this technology equitably?"*—and that re
 
 ---
 
-## References for Chapter 7
+## References for Chapter 8
 
 Ellahi, R. M., Wood, L. C., & Bekhit, A. E. A. (2024). Blockchain-driven food supply chains: A systematic review for unexplored opportunities. *Applied Sciences*, 14(19), 8944. https://doi.org/10.3390/app14198944
 
