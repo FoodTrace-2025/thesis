@@ -4,15 +4,15 @@
 
 Blockchain technology, introduced by Nakamoto (2008) with Bitcoin, has evolved beyond cryptocurrency to enable transparent, immutable record-keeping through smart contracts—self-executing programs deployed on decentralized networks. While blockchain's cryptographic guarantees (immutability, transparency, Byzantine fault tolerance) theoretically address supply chain traceability challenges, practical adoption faces significant barriers: user experience complexity, transaction costs, and scalability limitations (Buterin, 2014; Wood, 2014).
 
-Food supply chains exemplify these challenges. Traditional centralized systems rely on intermediaries and paper-based tracking, creating information asymmetries and slow response times. Walmart's 2016 mango traceability experiment required nearly seven days using conventional paper-based methods (Kamath, 2018). After implementing IBM Food Trust on Hyperledger Fabric, the same query completed in 2.2 seconds (Kamath, 2018; Hyperledger Foundation case study, 2019)—demonstrating blockchain's technical capability for rapid consensus across distributed stakeholders.
+Food supply chains exemplify these challenges. Traditional centralized systems rely on intermediaries and paper-based tracking, creating information asymmetries and slow response times. Blockchain implementations like IBM Food Trust have demonstrated dramatic traceability improvements, reducing query times from days to seconds (Kamath, 2018)—showing blockchain's capability for rapid consensus across distributed stakeholders.
 
-However, existing blockchain supply chain implementations face a critical trade-off between accessibility and decentralization. Enterprise solutions like IBM Food Trust provide user-friendly interfaces but rely on permissioned blockchains controlled by centralized gatekeepers, undermining public verifiability (Hyperledger Foundation case study, 2019). Conversely, public blockchain applications (Ethereum DApps) offer true decentralization but suffer from poor user experience—requiring wallet management, cryptocurrency for transaction fees, and technical expertise that excludes mainstream users, with empirical research documenting that both novice and experienced users struggle with wallet complexity leading to frustration and dangerous errors (Voskobojnikov et al., 2021). This creates a "crypto-native vs mainstream user" divide limiting adoption beyond technical enthusiasts.
+However, existing blockchain supply chain implementations face a critical trade-off between accessibility and decentralization. Enterprise solutions like IBM Food Trust provide user-friendly interfaces but rely on permissioned blockchains controlled by centralized gatekeepers, undermining public verifiability (Hyperledger Foundation case study, 2019). Conversely, public blockchain applications (Ethereum DApps) offer true decentralization but suffer from wallet complexity barriers that exclude mainstream users (Voskobojnikov et al., 2021). This creates a "crypto-native vs mainstream user" divide limiting adoption beyond technical enthusiasts.
 
-### Research Gap
+### 1.1.1 Research Gap
 
-Current research lacks solutions balancing transparency benefits of public blockchains with accessibility requirements for mass adoption. Ellahi et al.'s (2024) systematic review analyzing 60 blockchain food supply chain frameworks identifies underexplored applications including small producer financing, food donation systems, and humanitarian concerns, revealing an enterprise-dominant implementation focus in existing research. Moreover, wallet-based access remains the dominant pattern, creating adoption barriers for end consumers who simply want to verify product authenticity without installing cryptocurrency software.
+Current research lacks solutions balancing transparency benefits of public blockchains with accessibility requirements for mass adoption. Recent systematic reviews reveal an enterprise-dominant focus with limited attention to small producer needs and consumer accessibility (Ellahi et al., 2024). Moreover, wallet-based access remains the dominant pattern, creating adoption barriers for end consumers who simply want to verify product authenticity without installing cryptocurrency software.
 
-This thesis addresses this gap by demonstrating how Ethereum public blockchain can provide transparent supply chain tracking while enabling wallet-free consumer access through hybrid architecture: critical data on-chain (product identity, ownership, timestamps), metadata off-chain (PostgreSQL), cryptographically linked via SHA-256 hashes. This approach targets small-scale producers—the 570 million farms globally (FAO, 2023) underserved by enterprise consortium models.
+This thesis addresses this gap by demonstrating how Ethereum public blockchain can enable transparent supply chain tracking with wallet-free consumer access, targeting the 570 million small-scale farms globally (FAO, 2023) underserved by enterprise consortium models.
 
 ---
 
@@ -20,7 +20,12 @@ This thesis addresses this gap by demonstrating how Ethereum public blockchain c
 
 The central problem addressed is: **How can blockchain technology be made accessible to mainstream users while preserving its core benefits of decentralization, transparency, and immutability?**
 
-This manifests in food supply chain traceability through interconnected challenges: (1) User experience barriers—cryptocurrency wallet setup requires seed phrase management, network configuration, and irrecoverable key storage that deters mainstream adoption, with empirical research documenting that wallet complexity presents significant barriers for both novice and experienced users, leading to frustration and irreversible monetary losses (Voskobojnikov et al., 2021); (2) Cost-prohibitive transaction fees—Ethereum mainnet gas costs vary significantly based on network congestion, with transaction fees often exceeding economic viability for low-margin products; (3) Oracle problem—blockchain ensures data immutability but cannot verify off-chain data accuracy ("garbage in, garbage out"); and (4) Platform selection complexity—when to use public blockchain (Ethereum) vs permissioned alternatives (Hyperledger Fabric).
+This manifests in food supply chain traceability through interconnected challenges:
+
+- User experience barriers—wallet setup and management complexity deters mainstream adoption
+- Cost-prohibitive transaction fees—Ethereum mainnet gas costs vary significantly based on network congestion, with transaction fees often exceeding economic viability for low-margin products
+- Oracle problem—blockchain ensures data immutability but cannot verify off-chain data accuracy ("garbage in, garbage out")
+- Platform selection complexity—when to use public blockchain (Ethereum) vs permissioned alternatives (Hyperledger Fabric)
 
 ---
 
@@ -30,11 +35,23 @@ This manifests in food supply chain traceability through interconnected challeng
 
 **"Design, implement, and evaluate a proof-of-concept blockchain-based food traceability system demonstrating how Ethereum smart contracts can provide transparent, immutable supply chain tracking while addressing mainstream accessibility through wallet-free consumer access and hybrid data architecture."**
 
-This objective emphasizes: (1) technical demonstration (smart contracts, Web3 architecture, hybrid storage), (2) accessibility innovation (wallet-free pattern), (3) real-world validation (4-role supply chain: Producer → Distributor → Retailer → Consumer), and (4) critical evaluation (performance analysis, limitations documentation).
+This objective emphasizes:
+
+- technical demonstration (smart contracts, Web3 architecture, hybrid storage)
+- accessibility innovation (wallet-free pattern)
+- real-world validation (4-role supply chain: Producer → Distributor → Retailer → Consumer)
+- critical evaluation (performance analysis, limitations documentation).
 
 ### 1.3.2 Specific Objectives
 
-This thesis implements: Solidity smart contracts with role-based access control (OpenZeppelin patterns) deployed to Ethereum Sepolia testnet; wallet-free consumer query interface enabling QR code product verification without cryptocurrency wallets; hybrid data architecture (on-chain: product ID, ownership, timestamps; off-chain: metadata in PostgreSQL/Supabase); Next.js Web3 application with Wagmi v2 integration for 4 supply chain roles; IoT sensor simulation pattern (temperature/humidity monitoring architecture without physical hardware); and comparative platform analysis (Ethereum vs Hyperledger Fabric trade-offs for food traceability).
+This thesis implements a proof-of-concept system with six key components:
+
+- smart contracts with role-based permissions deployed to Ethereum testnet
+- wallet-free consumer interface enabling product verification through QR codes
+- hybrid data storage balancing blockchain immutability with off-chain efficiency
+- web application supporting four supply chain roles (Producer, Distributor, Retailer, Consumer)
+- simulated IoT sensor integration for temperature and humidity monitoring
+- comparative analysis of public versus permissioned blockchain platforms for food traceability applications.
 
 ### 1.3.3 Research Questions
 
@@ -65,7 +82,14 @@ This **proof-of-concept (POC)** system uses Ethereum Sepolia testnet (not mainne
 
 ## 1.5 Thesis Structure
 
-This thesis progresses through seven chapters: **Chapter 1** (current) establishes blockchain technology context, research problem, and objectives. **Chapter 2** reviews literature on blockchain fundamentals, Ethereum vs Hyperledger Fabric, supply chain implementations, IoT integration, and Web3 UX patterns, synthesizing the Springer (2025) systematic review's finding of equal academic adoption (24 Ethereum, 24 Hyperledger papers). **Chapter 3** explains BMAD methodology, platform selection justification (why Ethereum for POC despite Hyperledger's enterprise advantages), technical architecture design, and testing approach. **Chapter 4** details smart contract implementation (Solidity + OpenZeppelin), backend development (Next.js API routes, Wagmi v2, Supabase), and frontend interfaces (4-role dashboards, QR codes, responsive design). **Chapter 5** presents test results (>70% coverage target), performance analysis (gas costs, transaction times, query response), user acceptance testing, and comparative analysis vs traditional systems. **Chapter 6** interprets results, evaluates blockchain advantages, acknowledges limitations (scalability, oracle problem, GDPR conflicts), and recommends production deployment strategies. **Chapter 7** answers research questions, positions technical contributions within field gaps identified by Springer review, and proposes future work (Layer 2 scaling, real IoT sensors, Hyperledger migration for enterprise scenarios).
+This thesis progresses through eight chapters:
+**Chapter 1** establishes blockchain technology context, research problem, and objectives.
+**Chapter 2** reviews literature on blockchain fundamentals, Ethereum vs Hyperledger Fabric, smart contract design patterns, and Web3 UX challenges.
+**Chapter 3** explains BMAD methodology, platform selection justification, technical architecture design, and testing approach.
+**Chapter 4** details smart contract implementation (Solidity, OpenZeppelin, role-based access control, gas optimization).
+**Chapter 5** covers system implementation (backend API development, frontend interfaces, IoT simulator integration).
+**Chapter 6** presents test results (coverage analysis, performance metrics, gas cost measurements). **Chapter 7** discusses findings, evaluates blockchain advantages and limitations (scalability, oracle problem, GDPR conflicts), and recommends production deployment strategies.
+**Chapter 8** concludes by answering research questions, positioning technical contributions, and proposing future work (Layer 2 scaling, real IoT sensors, Hyperledger migration).
 
 ---
 
