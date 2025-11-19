@@ -16,13 +16,13 @@ The FoodTrace system deploys three interconnected Solidity smart contracts to Et
 
 The contract architecture prioritizes four key principles balancing technical constraints with business requirements:
 
-**1. Gas Cost Optimization:** Hybrid storage architecture stores critical traceability data on-chain (product IDs, timestamps, actor addresses, sensor alerts) while referencing off-chain metadata through Keccak-256 hashes. This pattern reduces gas consumption by 40-60% compared to storing full strings on-chain while preserving data integrity through cryptographic verification. Design decisions reference gas-efficient patterns documented in systematic reviews identifying 27+ optimization techniques for smart contract development (Springer, 2025).
+**1. Gas Cost Optimization:** Hybrid storage architecture stores critical traceability data on-chain (product IDs, timestamps, actor addresses, sensor alerts) while referencing off-chain metadata through Keccak-256 hashes. This pattern reduces gas consumption by 40-60% compared to storing full strings on-chain while preserving data integrity through cryptographic verification. Design decisions reference systematic reviews documenting gas-efficient patterns, with the Gas Consumption subcategory containing 27 optimization techniques for smart contract development (Empirical Software Engineering, 2025).
 
 **2. Role-Based Access Control:** OpenZeppelin AccessControl library implementation provides granular permissions preventing unauthorized contract interactions. Four roles (PRODUCER, DISTRIBUTOR, RETAILER, ADMIN) map to supply chain actors with specific function access rights. This security pattern follows established Ethereum development best practices (OpenZeppelin, 2024) and enables flexible permission management without contract redeployment.
 
 **3. Event-Driven Architecture:** All state-changing operations emit events enabling efficient off-chain indexing without additional storage costs. The consumer query interface subscribes to ProductRegistered, TraceRecordAdded, and SensorAlertTriggered events through Alchemy RPC provider, building cached database views in Supabase for fast queries. This architecture pattern addresses blockchain query limitations while maintaining on-chain verification capability.
 
-**4. Security First:** Multiple defense layers protect against common vulnerabilities including reentrancy attacks (OpenZeppelin ReentrancyGuard), integer overflow (Solidity 0.8+ built-in checks), access control bypass (function modifiers), and timestamp manipulation (chronological ordering validation). Security measures reference patterns documented in systematic surveys identifying critical vulnerabilities across 50+ blockchain-based supply chain implementations (IEEE Access, 2024).
+**4. Security First:** Multiple defense layers protect against common vulnerabilities including reentrancy attacks (OpenZeppelin ReentrancyGuard), integer overflow (Solidity 0.8+ built-in checks), access control bypass (function modifiers), and timestamp manipulation (chronological ordering validation). Security measures reference patterns documented in comprehensive reviews identifying critical vulnerabilities across blockchain-based supply chain implementations (IEEE Access, 2023).
 
 ### Contract Relationships
 
@@ -46,7 +46,7 @@ Permission enforcement uses function modifiers: `onlyRole(PRODUCER_ROLE)` wraps 
 
 **Gas Optimization Strategies:**
 
-Initial contract design stored product names and descriptions as Solidity strings, consuming approximately 100,000 gas per registration for 100-character strings. Profiling with Hardhat gas reporter identified string storage as primary cost driver. Optimized design pivoted to hash-based storage: product metadata stored in Supabase PostgreSQL receives SHA-256 hash (computed off-chain in Next.js API route), hash stored on-chain as bytes32 (fixed 32-byte storage slot), reducing registration costs to approximately 60,000 gas (40% reduction). This design iteration validated the hybrid storage strategy documented in Chapter 3 Methodology while maintaining data integrity through cryptographic verification—consumers can validate off-chain metadata matches blockchain hash, detecting unauthorized modifications.
+Initial contract design stored product names and descriptions as Solidity strings, consuming approximately 100,000 gas per registration for 100-character strings. Profiling with Hardhat gas reporter identified string storage as primary cost driver. Optimized design pivoted to hash-based storage: product metadata stored in Supabase PostgreSQL receives SHA-256 hash (computed off-chain in Next.js API route), hash stored on-chain as bytes32 (fixed 32-byte storage slot), reducing registration costs to approximately 60,000 gas (40% reduction).
 
 **Key Functions:**
 
@@ -65,7 +65,7 @@ The TraceRecords contract extends ProductRegistry to record supply chain events 
 
 **Chronological Ordering Enforcement:**
 
-The contract maintains mapping(uint256 => TraceRecord[]) storing ordered array of trace records per product ID. addTraceRecord() function validates new timestamp occurs after the most recent existing record for the same product: `require(block.timestamp > lastRecord.timestamp, "Cannot backdate trace records")`. This validation prevents supply chain fraud scenarios where actors attempt to retroactively modify shipment dates or quality check results. However, the implementation acknowledges block.timestamp manipulation limitations (miners can adjust timestamps ±15 seconds)—this constraint is acceptable for supply chain traceability where hour-level precision suffices but would be inadequate for high-frequency trading applications.
+The contract maintains mapping(uint256 => TraceRecord[]) storing ordered array of trace records per product ID. addTraceRecord() function validates new timestamp occurs after the most recent existing record for the same product: `require(block.timestamp > lastRecord.timestamp, "Cannot backdate trace records")`. This validation prevents supply chain fraud scenarios where actors attempt to retroactively modify shipment dates or quality check results. The implementation acknowledges block.timestamp manipulation limitations (miners can adjust timestamps ±15 seconds), which is acceptable for supply chain traceability requiring hour-level precision.
 
 **Access Control and Supply Chain Roles:**
 
@@ -95,13 +95,13 @@ Initial design stored location and notes as Solidity strings, consuming approxim
 
 ### 4.2.3 Sensor Data Contract
 
-The SensorData contract records IoT sensor readings (temperature, humidity) for cold chain monitoring, following blockchain-IoT integration architectures demonstrated for food traceability systems (Tsang et al., 2019). Systematic reviews identify hybrid architectures combining edge computing with blockchain immutability as optimal patterns for addressing resource constraints and scalability challenges in food supply chain applications (MDPI, 2024). Each sensor reading stores product ID, sensor type enum (Temperature, Humidity), reading value (int256 with two decimal precision, e.g., 425 represents 4.25°C), timestamp, and sensor device ID (bytes32 hash identifying physical or simulated sensor).
+The SensorData contract records IoT sensor readings (temperature, humidity) for cold chain monitoring, following blockchain-IoT integration architectures demonstrated for food traceability systems (Tsang et al., 2019). Systematic reviews identify hybrid architectures combining edge computing with blockchain immutability as optimal patterns for addressing resource constraints and scalability challenges in food supply chain applications (Sensors, 2024). Each sensor reading stores product ID, sensor type enum (Temperature, Humidity), reading value (int256 with two decimal precision, e.g., 425 represents 4.25°C), timestamp, and sensor device ID (bytes32 hash identifying physical or simulated sensor).
 
 **Event-Based Logging vs Storage Trade-Off:**
 
-Initial contract design stored all sensor readings in mapping(uint256 => SensorReading[]) array, enabling on-chain query of complete temperature history. Gas profiling revealed unsustainable costs: 20,000 gas per reading × 24 readings/day × 30 days = 14.4M gas per product (~€400 at mainnet prices). Design iteration implemented hybrid approach: recordSensorData() emits SensorDataRecorded event (1,500 gas) without storage, off-chain indexer (Supabase triggers listening to Alchemy event stream) caches readings in PostgreSQL enabling fast queries. Only alert-triggering readings (temperature >8°C warning threshold or >10°C critical threshold) are permanently stored on-chain for regulatory compliance and dispute resolution, reducing average costs by 92% while maintaining audit trail for safety incidents.
+Initial contract design stored all sensor readings in mapping(uint256 => SensorReading[]) array, enabling on-chain query of complete temperature history. Gas profiling revealed unsustainable costs for storing all readings (~€400 per product at mainnet prices). Design iteration implemented hybrid approach: recordSensorData() emits SensorDataRecorded event (1,500 gas) without storage, off-chain indexer (Supabase triggers listening to Alchemy event stream) caches readings in PostgreSQL enabling fast queries. Only alert-triggering readings (temperature >8°C warning threshold or >10°C critical threshold) are permanently stored on-chain for regulatory compliance and dispute resolution, reducing average costs by 92% while maintaining audit trail for safety incidents.
 
-This design decision illustrates gas cost trade-offs forcing blockchain implementations to prioritize critical data. The POC accepts off-chain caching dependency (Supabase database could be deleted, losing non-alert sensor history) because temperature compliance matters more than complete historical records. Production implementations might store Merkle root hashes on-chain enabling verification of off-chain data without full storage costs—potential future enhancement discussed in Chapter 8.
+This design decision illustrates gas cost trade-offs forcing blockchain implementations to prioritize critical data. The POC accepts off-chain caching dependency because temperature compliance matters more than complete historical records.
 
 **Alert Threshold Implementation:**
 
@@ -165,23 +165,19 @@ Smart contract development revealed several unexpected challenges requiring desi
 
 ### What Would Be Done Differently
 
-Reflecting on the implementation process, three improvements would strengthen future iterations:
+Reflecting on the implementation process, two improvements would strengthen future iterations:
 
 **Improvement 1 - Earlier Gas Profiling:** Gas optimization occurred reactively (implement naively, profile costs, refactor) rather than proactively (research patterns first, implement efficiently). Earlier integration of gas reporter in Week 1 learning phase would reduce rework and prevent over-engineering solutions for low-cost operations.
 
 **Improvement 2 - Upgradeable Contract Patterns:** Current contracts use immutable deployment—bugs require redeployment and data migration. OpenZeppelin's proxy patterns (TransparentUpgradeableProxy, UUPS) enable bug fixes without losing on-chain data. Trade-off: increased complexity and additional attack surface. For POC, immutability acceptable; for production, upgradeability essential.
 
-**Improvement 3 - Layer 2 Deployment Consideration:** Sepolia testnet deployment demonstrates Ethereum Layer 1 patterns but doesn't address mainnet scalability. Early prototyping on Polygon zkEVM or Optimism (Layer 2 networks with lower gas costs) would provide more realistic cost modeling for production deployment. Lesson: testnet selection should match target production environment characteristics, not just "works on any Ethereum network."
-
 ### Production Deployment Considerations
 
 Transitioning from POC to production requires addressing several constraints identified during implementation:
 
-**Gas Cost Economics:** Measured costs (€0.06 per product journey) scale linearly with volume. 10,000 products/month = €600/month blockchain costs, potentially prohibitive for small producer cooperatives. Production deployment should evaluate Layer 2 solutions (90% cost reduction) or migrate to Hyperledger Fabric (zero transaction costs, discussed in Chapter 3 Platform Selection).
+**Gas Cost Economics:** Measured costs (€0.06 per product journey) scale linearly with volume. Production deployment should evaluate Layer 2 solutions (90% cost reduction) or migrate to Hyperledger Fabric (zero transaction costs, discussed in Chapter 3).
 
-**Oracle Problem:** Smart contracts cannot verify sensor data authenticity—malicious actors could submit fake temperature readings. Production systems require trusted oracle integration (Chainlink) or hardware security modules (HSMs) in IoT devices signing data with private keys validated on-chain. This constraint acknowledged in Chapter 7 Limitations.
-
-**Regulatory Compliance:** GDPR "right to be forgotten" conflicts with blockchain immutability—EU citizens can request personal data deletion, but blockchain transactions are permanent. Production deployment requires legal analysis and potentially privacy-preserving patterns (zero-knowledge proofs, off-chain personal data with on-chain commitments).
+**Oracle Problem:** Smart contracts cannot verify sensor data authenticity—malicious actors could submit fake readings. Production systems require trusted oracle integration (Chainlink) or hardware security modules (HSMs) in IoT devices. This constraint acknowledged in Chapter 7 Limitations.
 
 ---
 
@@ -217,19 +213,19 @@ Next chapter (Chapter 5: System Implementation) describes the Web3 integration, 
 
 **References for Chapter 4**
 
-[Note: Maintain full reference list from original chapter, add any new citations]
+A systematic review on smart contracts security design patterns. (2025). *Empirical Software Engineering*, Springer. https://doi.org/10.1007/s10664-025-10646-w
+
+Blockchain and Internet of Things Technologies for Food Traceability in Olive Oil Supply Chains. (2024). *Sensors*, 24(24), 8189. https://doi.org/10.3390/s24248189
+
+Blockchain Technology to Support Agri-Food Supply Chains: A Comprehensive Review. (2023). *IEEE Access*, Document 10187146. https://doi.org/10.1109/ACCESS.2023.3297722
 
 Ethereum.org. (2024). *Gas optimization best practices*. Retrieved from https://ethereum.org/en/developers/docs/gas/
 
 Hardhat. (2024). *Hardhat documentation: Ethereum development environment*. Retrieved from https://hardhat.org/docs
 
-IEEE Access. (2024). Blockchain-based traceability systems in agri-food supply chain management: A comprehensive survey. *IEEE Access*, 12, Article 145823.
-
-MDPI. (2024). Blockchain-IoT integration for food supply chain traceability: A systematic review. *Sensors*, 24(3), 1245. https://doi.org/10.3390/s24031245
+IEEE. (2024). Feasibility of test-driven development in agile blockchain smart contract development: A comprehensive analysis. *IEEE Conference Publication*, Document 10742781. IEEE Xplore.
 
 OpenZeppelin. (2024). *OpenZeppelin Contracts documentation: Secure smart contract library*. Retrieved from https://docs.openzeppelin.com/contracts
-
-Springer. (2025). Gas-efficient smart contract patterns: A systematic analysis. *Journal of Systems and Software*, 198, Article 111234.
 
 Tsang, Y. P., Choy, K. L., Wu, C. H., Ho, G. T. S., Lam, H. Y., & Tang, V. (2019). An intelligent model for assuring food quality in managing a multi-temperature food distribution centre. *Food Control*, 90, 81-97. https://doi.org/10.1016/j.foodcont.2018.02.030
 
