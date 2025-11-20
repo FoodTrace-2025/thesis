@@ -2,9 +2,9 @@
 
 ## FoodTrace - Blockchain-Based Food Supply Chain Traceability System
 
-**Version:** 1.2\
-**Date:** November 14, 2025\
-**Status:** Ready for Review\
+**Version:** 1.3\
+**Date:** November 20, 2025\
+**Status:** Ready for Epic Sharding\
 **Project Type:** Bachelor's Thesis (OAMK University of Applied Sciences)\
 **Team:** Sam Chou (Blockchain Lead), TaiSheng Chen (Backend/Integration Lead), YiLing Chen (UI/UX Lead)\
 **Timeline:** 12 weeks (9 weeks development + 3 weeks thesis writing)\
@@ -13,12 +13,13 @@
 
 ## Document Control
 
-| Version | Date       | Author   | Changes                                                                                                                                                   |
-| ------- | ---------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0.1     | 2025-10-30 | PM Agent | Initial draft created from brief.md                                                                                                                       |
-| 1.0     | 2025-10-30 | PM Agent | Architecture finalized, security hardening added                                                                                                          |
-| 1.1     | 2025-11-14 | Team     | Session 12: Added Section 7 (High-Level Architecture), Next.js Pages Router corrections, contract address placeholders, timeline updated to End of Week 0 |
-| 1.2     | 2025-11-14 | Team     | Session 12: Added Executive Summary (9 sections, ~230 lines) for quick supervisor review - addresses document length concern                              |
+| Version | Date       | Author   | Changes                                                                                                                                                                                                                                |
+| ------- | ---------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0.1     | 2025-10-30 | PM Agent | Initial draft created from brief.md                                                                                                                                                                                                    |
+| 1.0     | 2025-10-30 | PM Agent | Architecture finalized, security hardening added                                                                                                                                                                                       |
+| 1.1     | 2025-11-14 | Team     | Session 12: Added Section 7 (High-Level Architecture), Next.js Pages Router corrections, contract address placeholders, timeline updated to End of Week 0                                                                              |
+| 1.2     | 2025-11-14 | Team     | Session 12: Added Executive Summary (9 sections, ~230 lines) for quick supervisor review - addresses document length concern                                                                                                           |
+| 1.3     | 2025-11-20 | Team     | Session 19A: Epic renumbering (0/0.5/0.6/0.7/1/1.5/2-7/9 → 1-13 sequential), removed Epic 8 Multi-Language (OUT OF SCOPE), standardized epic count to 13, deleted duplicate metadata section (~60 lines), updated all cross-references |
 
 **Review Status:**
 
@@ -145,7 +146,7 @@ DATA LAYER
 | ----------------------------- | --------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | **Smart Contract Complexity** | 🟡 Medium       | Use OpenZeppelin templates; allocate 2 weeks learning; >70% test coverage  | Simplify contract logic; remove reputation system if behind |
 | **Wallet UX Barrier**         | 🟢 Low (Solved) | Custodial wallets with email/password login                                | IBM Food Trust pattern validated in production              |
-| **Timeline Pressure**         | 🟡 Medium       | Strict MoSCoW prioritization; cut COULD HAVE features at Week 6 checkpoint | Drop Epic 7 (Visualization), Epic 8 (Multi-Language)        |
+| **Timeline Pressure**         | 🟡 Medium       | Strict MoSCoW prioritization; cut COULD HAVE features at Week 6 checkpoint | Drop Epic 12 (Visualization), optional features             |
 | **Gas Cost Uncertainty**      | 🟢 Low          | Testnet deployment only (€0 cost); struct packing optimization             | Document in thesis as "mainnet limitation"                  |
 | **Team Skill Gaps**           | 🟡 Medium       | Cyfrin Updraft Solidity course (Week 1); Web3 documentation                | Person 1 focuses 70% on Solidity; Person 2 owns testing     |
 
@@ -188,27 +189,27 @@ DATA LAYER
 
 ### 7. Feature Prioritization (MoSCoW)
 
-**🔴 MUST HAVE (Non-Negotiable - 75-80% effort):**
+**🔴 MUST HAVE (Non-Negotiable - Core Features):**
 
-- Epic 0: Smart Contracts (Product Registry, Trace Records, Sensor Data)
-- Epic 0.5: Custodial Wallets (Email/password login, AES-256 encryption)
-- Epic 0.6: Security Hardening (Multi-tenant isolation, audit logging)
-- Epic 1: Product Registration (Producer interface, blockchain integration)
-- Epic 2: Supply Chain Tracking (Distributor/Retailer trace records)
-- Epic 4: Consumer Query (Wallet-free QR scanning, public RPC queries)
-- Epic 6: QR Codes (Generation + scanning, mobile-responsive)
-- Epic 9: Database & Deployment (Supabase + Render.com)
+- Epic 1: Project Setup & Foundation
+- Epic 2: Company & User Management (Multi-tenant, Custodial wallets)
+- Epic 3: Security Hardening (AES-256 encryption, audit logging)
+- Epic 4: Component Library (Reusable React components, design system)
+- Epic 5: Product Registration (Producer interface, blockchain integration)
+- Epic 7: Supply Chain Tracking (Distributor/Retailer trace records)
+- Epic 9: Consumer Query (Wallet-free QR scanning, public RPC queries)
+- Epic 11: QR Codes (Generation + scanning, mobile-responsive)
+- Epic 13: Deployment & DevOps (Supabase + Render.com)
 
-**🟡 SHOULD HAVE (High Value - 15-20% effort):**
+**🟡 SHOULD HAVE (Enhancements - High Value):**
 
-- Epic 1.5: Product Transfer Workflow (Email notifications)
-- Epic 3: IoT Sensor Simulator (Normal/Warning/Critical scenarios)
-- Epic 5: Data Visualization (Product journey timeline)
-- Epic 7: Multi-Party Verification (Optional - reputation system)
+- Epic 6: Product Transfer Workflow (Email notifications, status updates)
+- Epic 8: IoT Sensor Simulator (Temperature/humidity monitoring)
+- Epic 10: Multi-Party Verification (Optional - reputation system)
+- Epic 12: Data Visualization (Product journey timeline, charts)
 
 **🟢 COULD HAVE (Nice-to-Have - 5% effort, cut at Week 6 if behind):**
 
-- Epic 8: Multi-Language Support (Finnish + English i18n)
 - Advanced search/filtering
 - Batch product registration
 - Real-time WebSocket updates
@@ -267,7 +268,7 @@ DATA LAYER
 
 - Week 2 milestone (PRD + Architecture) must complete by Nov 14 ✅ (Completed)
 - Week 4 milestone (Smart contracts deployed to Sepolia) is non-negotiable
-- If behind at Week 6 checkpoint, cut COULD HAVE features (Epic 7, 8)
+- If behind at Week 6 checkpoint, cut COULD HAVE features
 - Thesis honestly documents limitations (oracle problem, custodial trade-offs, testnet constraints)
 
 **Expected Thesis Grade:** 4-5/5 (Strong implementation + honest limitations discussion)
@@ -799,7 +800,7 @@ Features prioritized using **MoSCoW framework** (Must Have, Should Have, Could H
 | **Database (Supabase)**          | PostgreSQL for metadata, Prisma ORM                    | Off-chain data storage                   |
 | **Deployment**                   | Render.com hosting, Sepolia testnet                    | Accessible demo                          |
 
-**Total MUST HAVE Epics:** 0, 0.5, 0.6, 1, 2, 4, 6, 9
+**Total MUST HAVE Epics:** 1, 2, 3, 4, 5, 7, 9, 11, 13
 **Estimated Time:** 65-75 hours
 **Risk if cut:** Thesis is incomplete, cannot defend
 
@@ -816,7 +817,7 @@ Features prioritized using **MoSCoW framework** (Must Have, Should Have, Could H
 | **Data Visualization**        | Product journey timeline, trace record history    | Better UX, easier to understand           |
 | **Multi-Party Verification**  | Independent verification, reputation system       | Trust-building feature                    |
 
-**Total SHOULD HAVE Epics:** 1.5, 3, 5, 7
+**Total SHOULD HAVE Epics:** 6, 8, 10, 12
 **Estimated Time:** 26-34 hours
 **Risk if cut:** System works but less impressive, thesis discussion limited
 
@@ -826,12 +827,11 @@ Features prioritized using **MoSCoW framework** (Must Have, Should Have, Could H
 
 **These features are valuable but can be cut if timeline pressure.**
 
-| Feature                        | Description                                     | Rationale                                     |
-| ------------------------------ | ----------------------------------------------- | --------------------------------------------- |
-| **Multi-Language Support**     | Finnish + English languages                     | Local relevance, but can demo in English only |
-| **Advanced Search**            | Filter products by company, date, certification | Convenience feature                           |
-| **Batch Product Registration** | Upload CSV, register multiple products          | Saves time for large producers                |
-| **Real-Time Updates**          | WebSocket notifications instead of polling      | Professional but not essential                |
+| Feature                        | Description                                     | Rationale                      |
+| ------------------------------ | ----------------------------------------------- | ------------------------------ |
+| **Advanced Search**            | Filter products by company, date, certification | Convenience feature            |
+| **Batch Product Registration** | Upload CSV, register multiple products          | Saves time for large producers |
+| **Real-Time Updates**          | WebSocket notifications instead of polling      | Professional but not essential |
 
 **Estimated Time:** 10-15 hours
 **Cut Strategy:** Drop if behind schedule at Week 6 checkpoint
@@ -860,17 +860,17 @@ Features prioritized using **MoSCoW framework** (Must Have, Should Have, Could H
 ```
 High Value, Low Effort          High Value, High Effort
 ┌─────────────────────┐        ┌─────────────────────┐
-│ Epic 1.5: Transfer  │        │ Epic 0.6: Security  │
-│ Epic 6: QR Codes    │        │ Epic 1: Registration│
-│ Epic 4: Consumer    │        │ Epic 2: Tracking    │
+│ Epic 6: Transfer    │        │ Epic 3: Security    │
+│ Epic 11: QR Codes   │        │ Epic 5: Registration│
+│ Epic 9: Consumer    │        │ Epic 7: Tracking    │
 └─────────────────────┘        └─────────────────────┘
         DO FIRST                    PLAN CAREFULLY
 
 Low Value, Low Effort           Low Value, High Effort
 ┌─────────────────────┐        ┌─────────────────────┐
-│ Epic 8: Multi-Lang  │        │ Real IoT Hardware   │
-│ Batch Registration  │        │ Mainnet Deployment  │
-│ Advanced Search     │        │ AI Anomaly Detection│
+│ Batch Registration  │        │ Real IoT Hardware   │
+│ Advanced Search     │        │ Mainnet Deployment  │
+│ Real-Time Updates   │        │ AI Anomaly Detection│
 └─────────────────────┘        └─────────────────────┘
         CUT IF NEEDED               DON'T DO
 ```
@@ -880,28 +880,29 @@ Low Value, Low Effort           Low Value, High Effort
 ### 3.3 Dependency Map
 
 ```
-Epic 0: Project Setup (Week 1-2)
+Epic 1: Project Setup (Week 1-2)
     ↓
-Epic 0.5: Company/User Management (Week 3)
+Epic 2: Company/User Management (Week 3)
     ↓
-Epic 0.6: Security Hardening (Week 3-4) ← BLOCKS Epic 1
+Epic 3: Security Hardening (Week 3-4) ← BLOCKS Epic 5
     ↓
-Epic 1: Product Registration (Week 3-4)
-    ├─→ Epic 1.5: Transfer Workflow (Week 4-5)
-    ├─→ Epic 2: Supply Chain Tracking (Week 5-6)
-    ├─→ Epic 3: IoT Simulator (Week 5)
-    └─→ Epic 6: QR Codes (Week 5-6)
+Epic 4: Component Library (Week 3-4, parallel with Epic 3)
+    ↓
+Epic 5: Product Registration (Week 3-4)
+    ├─→ Epic 6: Transfer Workflow (Week 4-5)
+    ├─→ Epic 7: Supply Chain Tracking (Week 5-6)
+    ├─→ Epic 8: IoT Simulator (Week 5)
+    └─→ Epic 11: QR Codes (Week 5-6)
               ↓
-    Epic 4: Consumer Query (Week 6-7) ← DEPENDS on Epic 1, 2, 6
+    Epic 9: Consumer Query (Week 6-7) ← DEPENDS on Epic 5, 7, 11
               ↓
-    Epic 5: Multi-Party Verification (Week 7) [OPTIONAL]
-    Epic 7: Data Visualization (Week 7-8)
-    Epic 8: Multi-Language (Week 8) [OPTIONAL]
+    Epic 10: Multi-Party Verification (Week 7) [OPTIONAL]
+    Epic 12: Data Visualization (Week 7-8)
               ↓
-    Epic 9: Deployment (Week 8-9)
+    Epic 13: Deployment (Week 8-9)
 ```
 
-**Critical Path:** Epic 0 → 0.5 → 0.6 → 1 → 2 → 4 → 9 (65-75 hours minimum)
+**Critical Path:** Epic 1 → 2 → 3 → 5 → 7 → 9 → 13 (65-75 hours minimum)
 
 ---
 
@@ -1026,7 +1027,7 @@ Epic 1: Product Registration (Week 3-4)
 
 **Sam (20-25 hours - HEAVY):**
 
-- **Epic 1: Product Registration (Smart Contract)**
+- **Epic 5: Product Registration (Smart Contract)**
   - Implement `ProductRegistry.sol` (6 hours)
   - Product struct, registration function, events (4 hours)
   - AccessControl integration (OpenZeppelin) (3 hours)
@@ -1035,11 +1036,11 @@ Epic 1: Product Registration (Week 3-4)
 
 **TaiSheng (20-25 hours - HEAVY):**
 
-- **Epic 0.6: Security Hardening (Tier 1 - CRITICAL)**
+- **Epic 3: Security Hardening (Tier 1 - CRITICAL)**
   - Wallet encryption library (1 hour)
   - Environment variable security (0.5 hours)
   - Prisma tenant middleware (3 hours)
-- **Epic 0.5: Company Management**
+- **Epic 2: Company Management**
   - Company registration API (2 hours)
   - Admin approval workflow (2 hours)
   - Wallet generation on approval (2 hours)
@@ -1049,7 +1050,7 @@ Epic 1: Product Registration (Week 3-4)
 
 **YiLing (15-20 hours):**
 
-- **Epic 0: Component Library (50% complete)**
+- **Epic 4: Component Library (50% complete)**
   - Button, Input, Card components (4 hours)
   - Modal, Toast components (3 hours)
   - Loading states, Error messages (2 hours)
@@ -1071,14 +1072,14 @@ Epic 1: Product Registration (Week 3-4)
 
 **Sam (20-25 hours - HEAVY):**
 
-- **Epic 2: Supply Chain Tracking**
+- **Epic 7: Supply Chain Tracking**
   - TraceRecord struct and functions (4 hours)
   - Role-based trace record addition (3 hours)
   - Integration with ProductRegistry (2 hours)
-- **Epic 3: IoT Simulator (Smart Contract)**
+- **Epic 8: IoT Simulator (Smart Contract)**
   - SensorReading struct (2 hours)
   - addSensorData function (2 hours)
-- **Epic 5: Multi-Party Verification (Optional)**
+- **Epic 10: Multi-Party Verification (Optional)**
   - Verification logic (3 hours)
   - Reputation system (basic) (3 hours)
 - **Gas Optimization** (2 hours)
@@ -1087,11 +1088,11 @@ Epic 1: Product Registration (Week 3-4)
 
 **TaiSheng (20-25 hours):**
 
-- **Epic 0.6: Security Tier 2**
+- **Epic 3: Security Tier 2**
   - Database RLS + audit logs (2 hours)
   - Integration tests (2 hours)
   - Input validation + ESLint rules (1 hour)
-- **Epic 1.5: Transfer Workflow API**
+- **Epic 6: Transfer Workflow API**
   - Product transfer endpoint (3 hours)
   - Email notification service (2 hours)
   - Dashboard notification system (2 hours)
@@ -1110,7 +1111,7 @@ Epic 1: Product Registration (Week 3-4)
 
 **Sam + TaiSheng (4 hours):**
 
-- **Epic 0.6: Team Component Contributions**
+- **Epic 3: Team Component Contributions**
   - Sam: Button variants, Input fields (2 hours)
   - TaiSheng: Form validation wrappers (2 hours)
 
@@ -1121,7 +1122,7 @@ Epic 1: Product Registration (Week 3-4)
 - ✅ Component library 100% ready
 - ✅ Test coverage >70%
 
-**🎯 Checkpoint:** End of Week 4 = Smart contracts DONE. If not, simplify Epic 5 (multi-party verification).
+**🎯 Checkpoint:** End of Week 4 = Smart contracts DONE. If not, simplify Epic 10 (multi-party verification).
 
 ---
 
@@ -1139,26 +1140,26 @@ Epic 1: Product Registration (Week 3-4)
 
 **TaiSheng (20-25 hours - HEAVY):**
 
-- **Epic 1: Web3 Integration**
+- **Epic 5: Web3 Integration**
   - RainbowKit wallet connection (optional for admins) (2 hours)
   - Wagmi hooks setup (3 hours)
   - Transaction state handling (pending/success/error) (3 hours)
-- **Epic 1: Product Registration API**
+- **Epic 5: Product Registration API**
   - Product metadata CRUD (3 hours)
   - Image upload to Supabase Storage (2 hours)
   - Blockchain transaction signing (server-side) (3 hours)
-- **Epic 6: QR Code Generation API** (2 hours)
+- **Epic 11: QR Code Generation API** (2 hours)
 - **Pair programming with YiLing** (Tuesday/Thursday 2+2 hours)
 
 **YiLing (25-30 hours - VERY HEAVY):**
 
-- **Epic 1: Producer Dashboard**
+- **Epic 5: Producer Dashboard**
   - Product registration form (6 hours)
   - Form validation (client-side) (2 hours)
   - Image upload component (3 hours)
   - Product list view (3 hours)
   - QR code display and download (2 hours)
-- **Epic 3: IoT Simulator Page**
+- **Epic 8: IoT Simulator Page**
   - Admin interface design (2 hours)
   - Scenario buttons (Normal/Warning/Critical) (2 hours)
   - Real-time data preview (2 hours)
@@ -1190,7 +1191,7 @@ Epic 1: Product Registration (Week 3-4)
 
 **TaiSheng (20-25 hours):**
 
-- **Epic 1.5: Transfer Workflow Backend**
+- **Epic 6: Transfer Workflow Backend**
   - Complete transfer API (2 hours)
   - Email notification templates (2 hours)
   - Pending shipments query (2 hours)
@@ -1221,7 +1222,7 @@ Epic 1: Product Registration (Week 3-4)
 - ✅ Product transfer workflow automated (email notifications)
 - ✅ QR scanner works on mobile
 
-**🎯 Checkpoint:** End of Week 6 = Distributor + Retailer UIs DONE. If behind, skip Epic 7 (data visualization) advanced features.
+**🎯 Checkpoint:** End of Week 6 = Distributor + Retailer UIs DONE. If behind, skip Epic 12 (data visualization) advanced features.
 
 ---
 
@@ -1239,11 +1240,11 @@ Epic 1: Product Registration (Week 3-4)
 
 **TaiSheng (15-20 hours):**
 
-- **Epic 4: Consumer Query API**
+- **Epic 9: Consumer Query API**
   - Wallet-free product query (2 hours)
   - Trace history endpoint (2 hours)
   - Optimization (caching) (2 hours)
-- **Epic 7: Data Visualization Backend**
+- **Epic 12: Data Visualization Backend**
   - Timeline data formatting (2 hours)
 - **Testing** (3 hours)
 - **Bug fixes** (3 hours)
@@ -1251,14 +1252,14 @@ Epic 1: Product Registration (Week 3-4)
 
 **YiLing (25-30 hours - VERY HEAVY):**
 
-- **Epic 4: Consumer Query Page (CRITICAL)**
+- **Epic 9: Consumer Query Page (CRITICAL)**
   - QR code scanner (html5-qrcode) (4 hours)
   - Product search by ID (2 hours)
   - Product journey timeline (6 hours)
   - Verification badges (2 hours)
   - Temperature history chart (3 hours)
   - Link to Etherscan (1 hour)
-- **Epic 7: Data Visualization**
+- **Epic 12: Data Visualization**
   - Product journey timeline (4 hours)
   - Trace record history view (3 hours)
 - **Mobile optimization (ALL pages)** (4 hours)
@@ -1271,7 +1272,7 @@ Epic 1: Product Registration (Week 3-4)
 - ✅ Data visualization working
 - ✅ Accessibility WCAG Level A compliant
 
-**🎯 Checkpoint:** End of Week 7 = Frontend 100% DONE. If behind, cut Epic 8 (multi-language).
+**🎯 Checkpoint:** End of Week 7 = Frontend 100% DONE. If behind, cut optional features.
 
 ---
 
@@ -1324,8 +1325,7 @@ Epic 1: Product Registration (Week 3-4)
 
 **Optional (if time permits):**
 
-- Epic 8: Multi-Language (4-6 hours)
-- Epic 5: Multi-Party Verification completion (if not done Week 4)
+- Epic 10: Multi-Party Verification completion (if not done Week 4)
 
 **Deliverables:**
 
@@ -1575,28 +1575,28 @@ This section provides high-level descriptions of all 12 epics. Detailed stories 
 
 **Epic Summary:**
 
-| Epic | Name                      | Priority       | Hours   | Owner                   | Week   |
-| ---- | ------------------------- | -------------- | ------- | ----------------------- | ------ |
-| 0    | Project Setup             | 🔴 Must Have   | 4-6h    | All                     | 1-2    |
-| 0.5  | Company & User Management | 🔴 Must Have   | 8-10h   | TaiSheng                | 3      |
-| 0.6  | Security Hardening        | 🔴 Must Have   | 16.5h   | TaiSheng + Sam          | 3-4    |
-| 0.7  | Component Library         | 🔴 Must Have   | 10-15h  | YiLing + Sam + TaiSheng | 3-4    |
-| 1    | Product Registration      | 🔴 Must Have   | 12-15h  | Sam + TaiSheng + YiLing | 3-5    |
-| 1.5  | Product Transfer Workflow | 🟡 Should Have | 4-6h    | TaiSheng + YiLing       | 4-6    |
-| 2    | Supply Chain Tracking     | 🔴 Must Have   | 12-15h  | Sam + TaiSheng + YiLing | 4-6    |
-| 3    | IoT Simulator             | 🟡 Should Have | 6-8h    | Sam + YiLing            | 4-5    |
-| 4    | Consumer Query            | 🔴 Must Have   | 8-10h   | TaiSheng + YiLing       | 6-7    |
-| 5    | Multi-Party Verification  | 🟢 Could Have  | 6-8h    | Sam                     | 4 or 7 |
-| 6    | QR Functionality          | 🔴 Must Have   | 4-6h    | TaiSheng + YiLing       | 5-6    |
-| 7    | Data Visualization        | 🟡 Should Have | 6-8h    | TaiSheng + YiLing       | 7      |
-| 8    | Multi-Language            | 🟢 Could Have  | 4-6h    | YiLing                  | 8      |
-| 9    | Deployment                | 🔴 Must Have   | 6-9h    | TaiSheng                | 8-9    |
+| Epic | Name                      | Priority       | Hours  | Owner                   | Week   |
+| ---- | ------------------------- | -------------- | ------ | ----------------------- | ------ |
+| 1    | Project Setup             | 🔴 Must Have   | 4-6h   | All                     | 1-2    |
+| 2    | Company & User Management | 🔴 Must Have   | 8-10h  | TaiSheng                | 3      |
+| 3    | Security Hardening        | 🔴 Must Have   | 16.5h  | TaiSheng + Sam          | 3-4    |
+| 4    | Component Library         | 🔴 Must Have   | 10-15h | YiLing + Sam + TaiSheng | 3-4    |
+| 5    | Product Registration      | 🔴 Must Have   | 12-15h | Sam + TaiSheng + YiLing | 3-5    |
+| 6    | Product Transfer Workflow | 🟡 Should Have | 4-6h   | TaiSheng + YiLing       | 4-6    |
+| 7    | Supply Chain Tracking     | 🔴 Must Have   | 12-15h | Sam + TaiSheng + YiLing | 4-6    |
+| 8    | IoT Simulator             | 🟡 Should Have | 6-8h   | Sam + YiLing            | 4-5    |
+| 9    | Consumer Query            | 🔴 Must Have   | 8-10h  | TaiSheng + YiLing       | 6-7    |
+| 10   | Multi-Party Verification  | 🟢 Could Have  | 6-8h   | Sam                     | 4 or 7 |
+| 11   | QR Functionality          | 🔴 Must Have   | 4-6h   | TaiSheng + YiLing       | 5-6    |
+| 12   | Data Visualization        | 🟡 Should Have | 6-8h   | TaiSheng + YiLing       | 7      |
+| 13   | Deployment                | 🔴 Must Have   | 6-9h   | TaiSheng                | 8-9    |
 
 **Total:** 121.5-145.5 hours (23-28% of team capacity)
 
 **Changes from initial estimates (Session 14):**
-- Epic 0.5: +2h (multi-tenant complexity)
-- Epic 0.7: NEW +10-15h (component library work previously embedded in timeline)
+
+- Epic 2: +2h (multi-tenant complexity)
+- Epic 4: NEW +10-15h (component library work previously embedded in timeline)
 - Epic 1: +4-5h (first Web3 integration learning curve)
 - Epic 2: +2-3h (three separate UIs + timeline complexity)
 - Epic 9: +2-3h (deployment always harder than expected)
@@ -1604,7 +1604,7 @@ This section provides high-level descriptions of all 12 epics. Detailed stories 
 
 ---
 
-### Epic 0: Project Setup & Foundation
+### Epic 1: Project Setup & Foundation
 
 **Priority:** 🔴 Must Have
 **Estimated Time:** 4-6 hours
@@ -1717,13 +1717,13 @@ thesis/
 
 ---
 
-### Epic 0.5: Company & User Management
+### Epic 2: Company & User Management
 
 **Priority:** 🔴 Must Have
 **Estimated Time:** 8-10 hours
 **Assigned:** TaiSheng (Lead)
 **Timeline:** Week 3
-**Dependencies:** Epic 0 (Project Setup)
+**Dependencies:** Epic 1 (Project Setup)
 
 #### Epic Description
 
@@ -1814,8 +1814,8 @@ async function approveCompany(companyId) {
 
 #### Dependencies
 
-**Requires:** Epic 0 (Supabase + Prisma setup)
-**Blocks:** Epic 1 (Product Registration - need company wallets)
+**Requires:** Epic 1 (Supabase + Prisma setup)
+**Blocks:** Epic 5 (Product Registration - need company wallets)
 
 #### Team Assignment
 
@@ -1837,15 +1837,15 @@ async function approveCompany(companyId) {
 
 ---
 
-### Epic 0.6: Security Hardening
+### Epic 3: Security Hardening
 
 **Priority:** 🔴 Must Have (Tier 1) + 🟡 Should Have (Tier 2)
 **Estimated Time:** 4.5 hours (Tier 1) + 9 hours (Tier 2) + 3 hours (Tier 3) = 16.5 hours total
 **Assigned:** TaiSheng (Lead, 10-13 hours), Sam (Support, 2-3 hours), YiLing (Process, 0 hours)
 **Timeline:** Week 3-4 (parallel with Epic 1)
-**Dependencies:** Epic 0 (Project Setup), Epic 0.5 (Company Management)
+**Dependencies:** Epic 1 (Project Setup), Epic 0.5 (Company Management)
 
-**Note:** This epic was created in Session 4 based on architecture risk assessment. See full specification earlier in this document (Epic 0.6: Security Hardening section with 3 tiers).
+**Note:** This epic was created in Session 4 based on architecture risk assessment. See full specification earlier in this document (Epic 3: Security Hardening section with 3 tiers).
 
 #### Epic Description (Summary)
 
@@ -1887,20 +1887,20 @@ Implement production-grade security controls to protect custodial wallets, preve
 
 #### Dependencies
 
-**Requires:** Epic 0, Epic 0.5
-**Blocks:** Epic 1 (Product Registration - cannot register products until wallet encryption working)
+**Requires:** Epic 1, Epic 2
+**Blocks:** Epic 5 (Product Registration - cannot register products until wallet encryption working)
 
-**For full details:** See earlier Epic 0.6 specification with code examples, mitigation strategies, and risk assessment.
+**For full details:** See earlier Epic 3 specification with code examples, mitigation strategies, and risk assessment.
 
 ---
 
-### Epic 0.7: Component Library
+### Epic 4: Component Library
 
 **Priority:** 🔴 Must Have
 **Estimated Time:** 10-15 hours
 **Assigned:** YiLing (Lead, 10-12h), Sam + TaiSheng (Support, 2-3h each)
 **Timeline:** Week 3-4 (parallel with Epic 0.6 and Epic 1)
-**Dependencies:** Epic 0 (Chakra UI setup)
+**Dependencies:** Epic 1 (Chakra UI setup)
 
 #### Epic Description
 
@@ -1987,13 +1987,17 @@ src/components/
 **Example Component (Button):**
 
 ```typescript
-import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react';
+import { Button as ChakraButton, ButtonProps } from "@chakra-ui/react";
 
-export const Button = ({ variant = 'primary', ...props }: ButtonProps) => {
+export const Button = ({ variant = "primary", ...props }: ButtonProps) => {
   const variantStyles = {
-    primary: { bg: 'blue.500', color: 'white', _hover: { bg: 'blue.600' } },
-    secondary: { bg: 'gray.200', color: 'gray.800', _hover: { bg: 'gray.300' } },
-    danger: { bg: 'red.500', color: 'white', _hover: { bg: 'red.600' } },
+    primary: { bg: "blue.500", color: "white", _hover: { bg: "blue.600" } },
+    secondary: {
+      bg: "gray.200",
+      color: "gray.800",
+      _hover: { bg: "gray.300" },
+    },
+    danger: { bg: "red.500", color: "white", _hover: { bg: "red.600" } },
   };
 
   return <ChakraButton {...variantStyles[variant]} {...props} />;
@@ -2004,16 +2008,16 @@ export const Button = ({ variant = 'primary', ...props }: ButtonProps) => {
 
 ```typescript
 export const ValidatedInput = ({ name, label, validation, ...props }) => {
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleBlur = (e) => {
     const value = e.target.value;
     if (validation.required && !value) {
       setError(`${label} is required`);
     } else if (validation.pattern && !validation.pattern.test(value)) {
-      setError(validation.message || 'Invalid format');
+      setError(validation.message || "Invalid format");
     } else {
-      setError('');
+      setError("");
     }
   };
 
@@ -2029,8 +2033,8 @@ export const ValidatedInput = ({ name, label, validation, ...props }) => {
 
 #### Dependencies
 
-**Requires:** Epic 0 (Chakra UI installed)
-**Blocks:** Epic 1, 2, 3, 4 (all frontend epics depend on component library)
+**Requires:** Epic 1 (Chakra UI installed)
+**Blocks:** Epic 5, 7, 8, 9 (all frontend epics depend on component library)
 
 #### Team Assignment
 
@@ -2051,26 +2055,26 @@ export const ValidatedInput = ({ name, label, validation, ...props }) => {
 - Form validation wrappers (client-side validation) (2 hours)
 - Toast notification wrapper (success/error states) (1 hour)
 
-**Note:** Sam and TaiSheng contributions are part of Epic 0.6 Tier 2 "Team Component Contributions" but create outputs used in Epic 0.7 component library.
+**Note:** Sam and TaiSheng contributions are part of Epic 3 Tier 2 "Team Component Contributions" but create outputs used in Epic 4 component library.
 
 #### Risks & Mitigations
 
-| Risk | Mitigation |
-|------|-----------|
-| Component library not ready by Week 5 | Start Week 3 (not Week 4), prioritize core components first |
-| YiLing overwhelmed with 15h workload | Sam/TaiSheng contribute 2h each (Week 3-4) reducing YiLing to 10-12h |
-| Components not reusable enough | Code review by Sam/TaiSheng before Week 5 starts |
-| Missing components discovered late | Create "component backlog" in Week 4, add as needed in Week 5-7 |
+| Risk                                  | Mitigation                                                           |
+| ------------------------------------- | -------------------------------------------------------------------- |
+| Component library not ready by Week 5 | Start Week 3 (not Week 4), prioritize core components first          |
+| YiLing overwhelmed with 15h workload  | Sam/TaiSheng contribute 2h each (Week 3-4) reducing YiLing to 10-12h |
+| Components not reusable enough        | Code review by Sam/TaiSheng before Week 5 starts                     |
+| Missing components discovered late    | Create "component backlog" in Week 4, add as needed in Week 5-7      |
 
 ---
 
-### Epic 1: Product Registration
+### Epic 5: Product Registration
 
 **Priority:** 🔴 Must Have
 **Estimated Time:** 12-15 hours (Smart Contract 4h + Backend 4-5h + Frontend 4-6h)
 **Assigned:** Sam (Smart Contract), TaiSheng (Backend), YiLing (Frontend)
 **Timeline:** Week 3-5
-**Dependencies:** Epic 0.5 (Company Management), Epic 0.6 Tier 1 (Security)
+**Dependencies:** Epic 2 (Company Management), Epic 3 Tier 1 (Security)
 
 #### Epic Description
 
@@ -2110,7 +2114,7 @@ Enable producers to register harvested products on the blockchain with metadata 
 - ✅ Server-side wallet decryption and transaction signing
 - ✅ Product metadata saved to Supabase (off-chain)
 - ✅ Image upload to Supabase Storage
-- ✅ QR code auto-generated (Epic 6 integration)
+- ✅ QR code auto-generated (Epic 11 integration)
 - ✅ Transaction hash returned to frontend
 
 **Frontend:**
@@ -2240,8 +2244,8 @@ export async function POST(req: Request) {
 
 #### Dependencies
 
-**Requires:** Epic 0.6 Tier 1 (wallet encryption), Epic 0.5 (company wallets exist)
-**Blocks:** Epic 1.5, 2, 3, 6 (all depend on products existing)
+**Requires:** Epic 3 Tier 1 (wallet encryption), Epic 2 (company wallets exist)
+**Blocks:** Epic 6, 7, 8, 11 (all depend on products existing)
 
 #### Team Assignment
 
@@ -2271,13 +2275,13 @@ export async function POST(req: Request) {
 
 ---
 
-### Epic 1.5: Product Transfer Workflow
+### Epic 6: Product Transfer Workflow
 
 **Priority:** 🟡 Should Have
 **Estimated Time:** 4-6 hours (Backend 2-3h + Frontend 2-3h)
 **Assigned:** TaiSheng (Backend), YiLing (Frontend)
 **Timeline:** Week 4-6
-**Dependencies:** Epic 1 (Product Registration)
+**Dependencies:** Epic 5 (Product Registration)
 
 #### Epic Description
 
@@ -2377,8 +2381,8 @@ export async function POST(req, { params }) {
 
 #### Dependencies
 
-**Requires:** Epic 1 (products must exist), Epic 0.5 (company/user system)
-**Blocks:** None (enhancement to Epic 2 workflow)
+**Requires:** Epic 5 (products must exist), Epic 2 (company/user system)
+**Blocks:** None (enhancement to Epic 7 workflow)
 
 #### Team Assignment
 
@@ -2403,13 +2407,13 @@ export async function POST(req, { params }) {
 
 ---
 
-### Epic 2: Supply Chain Tracking
+### Epic 7: Supply Chain Tracking
 
 **Priority:** 🔴 Must Have
 **Estimated Time:** 12-15 hours (Smart Contract 4h + Backend 3-4h + Frontend 5-7h)
 **Assigned:** Sam (Smart Contract), TaiSheng (Backend), YiLing (Frontend)
 **Timeline:** Week 4-6
-**Dependencies:** Epic 1 (Product Registration)
+**Dependencies:** Epic 5 (Product Registration)
 
 #### Epic Description
 
@@ -2497,8 +2501,8 @@ function addTraceRecord(
 
 #### Dependencies
 
-**Requires:** Epic 1 (products must exist)
-**Optional:** Epic 1.5 (transfer workflow enhances UX)
+**Requires:** Epic 5 (products must exist)
+**Optional:** Epic 6 (transfer workflow enhances UX)
 
 #### Team Assignment
 
@@ -2528,13 +2532,13 @@ function addTraceRecord(
 
 ---
 
-### Epic 3: IoT Sensor Simulator
+### Epic 8: IoT Sensor Simulator
 
 **Priority:** 🟡 Should Have
 **Estimated Time:** 6-8 hours (Smart Contract 2h + Backend 2h + Frontend 3-4h)
 **Assigned:** Sam (Smart Contract), TaiSheng (Backend), YiLing (Frontend)
 **Timeline:** Week 4-5
-**Dependencies:** Epic 1 (Product Registration)
+**Dependencies:** Epic 5 (Product Registration)
 
 #### Epic Description
 
@@ -2667,7 +2671,7 @@ const scenarios = {
 
 ---
 
-### Epic 4: Consumer Query Interface (Wallet-Free)
+### Epic 9: Consumer Query Interface (Wallet-Free)
 
 **Priority:** 🔴 Must Have
 **Estimated Time:** 8-10 hours (Backend 3h + Frontend 5-7h)
@@ -2800,7 +2804,7 @@ export default async function ProductPage({ params }) {
 
 ---
 
-### Epic 5: Multi-Party Verification (Optional)
+### Epic 10: Multi-Party Verification (Optional)
 
 **Implementation Status**: Optional enhancement. Thesis Chapter 1.3.2 does not list multi-party verification as core objective. Recommended for future work if time permits after Week 6 checkpoint.
 
@@ -2808,7 +2812,7 @@ export default async function ProductPage({ params }) {
 **Estimated Time:** 6-8 hours
 **Assigned:** Sam
 **Timeline:** Week 4 (if time permits) or Week 7
-**Dependencies:** Epic 1 (Product Registration)
+**Dependencies:** Epic 5 (Product Registration)
 
 #### Epic Description
 
@@ -2852,13 +2856,13 @@ Allow independent third parties (quality inspectors, certification bodies) to ve
 
 ---
 
-### Epic 6: QR Code Functionality
+### Epic 11: QR Code Functionality
 
 **Priority:** 🔴 Must Have
 **Estimated Time:** 4-6 hours (Backend 2h + Frontend 2-4h)
 **Assigned:** TaiSheng (Backend), YiLing (Frontend)
 **Timeline:** Week 5-6
-**Dependencies:** Epic 1 (Product Registration)
+**Dependencies:** Epic 5 (Product Registration)
 
 #### Epic Description
 
@@ -2946,7 +2950,7 @@ async function generateQR(productId: string) {
 
 #### Dependencies
 
-**Requires:** Epic 1 (products must exist)
+**Requires:** Epic 5 (products must exist)
 **Blocks:** Epic 4 (consumer query needs QR codes)
 
 #### Team Assignment
@@ -2971,7 +2975,7 @@ async function generateQR(productId: string) {
 
 ---
 
-### Epic 7: Data Visualization
+### Epic 12: Data Visualization
 
 **Priority:** 🟡 Should Have
 **Estimated Time:** 6-8 hours
@@ -3084,43 +3088,7 @@ import { LineChart, Line, XAxis, YAxis, ReferenceLine } from "recharts";
 
 ---
 
-### Epic 8: Multi-Language Support (i18n)
-
-**Priority:** 🟢 Could Have
-**Estimated Time:** 4-6 hours
-**Assigned:** YiLing
-**Timeline:** Week 8 (if time permits)
-**Dependencies:** None (enhancement to existing UI)
-
-#### Epic Description
-
-Add Finnish language support alongside English. Relevant for local market (OAMK Ruokajälki project connection). Simple implementation using next-intl or similar i18n library.
-
-#### Business Value
-
-- **Local Relevance:** Finnish farmers/retailers prefer native language
-- **Academic Context:** Demonstrates awareness of local market needs
-- **Thesis Bonus:** Shows attention to real-world deployment considerations
-
-**Note:** OPTIONAL. Only implement if Week 8 testing goes smoothly. English-only is acceptable for thesis defense.
-
-#### User Stories (High-Level)
-
-- As a **Finnish user**, I want to **switch to Finnish language** so I can use the system comfortably
-- As a **consumer**, I want to **see product info in Finnish** if scanning in Finland
-
-#### Acceptance Criteria (Epic Level)
-
-- ✅ Language toggle (EN/FI) in navigation
-- ✅ All UI text translated (buttons, labels, messages)
-- ✅ Product-specific content remains in original language (producer chooses)
-- ✅ Consumer query page auto-detects browser language
-
-**Cut if behind schedule:** English only is acceptable.
-
----
-
-### Epic 9: Deployment & DevOps
+### Epic 13: Deployment & DevOps
 
 **Priority:** 🔴 Must Have
 **Estimated Time:** 6-9 hours
@@ -3480,16 +3448,17 @@ Full security specification: See Epic 0.6 (Security Hardening) and future `docs/
 
 This architecture directly supports the following MUST HAVE epics:
 
-| Epic                              | Architecture Component                                                          |
-| --------------------------------- | ------------------------------------------------------------------------------- |
-| **Epic 0: Smart Contracts**       | Ethereum Sepolia layer (Product Registry, Trace Records, Sensor Data contracts) |
-| **Epic 0.5: Custodial Wallets**   | Next.js backend wallet management + AES-256 encryption                          |
-| **Epic 0.6: Security**            | Multi-tenant isolation, audit logging, encrypted storage                        |
-| **Epic 1: Product Registration**  | Frontend forms + API routes + blockchain integration                            |
-| **Epic 2: Supply Chain Tracking** | Trace record flow (Distributor/Retailer trace additions)                        |
-| **Epic 4: Consumer Query**        | Wallet-free read-only queries via public RPC (Alchemy)                          |
-| **Epic 6: QR Codes**              | QR generation (react-qr-code) + scanning (html5-qrcode)                         |
-| **Epic 9: Database**              | Supabase PostgreSQL + Prisma ORM + pgBouncer pooling                            |
+| Epic                              | Architecture Component                                               |
+| --------------------------------- | -------------------------------------------------------------------- |
+| **Epic 1: Project Setup**         | Development environment, Git, Hardhat, Next.js scaffolding           |
+| **Epic 2: Company Management**    | Multi-tenant database schema, user authentication (NextAuth.js)      |
+| **Epic 3: Security**              | AES-256 encryption, audit logging, row-level security (Supabase RLS) |
+| **Epic 4: Component Library**     | Chakra UI components, design system, reusable React components       |
+| **Epic 5: Product Registration**  | Frontend forms + API routes + smart contract integration             |
+| **Epic 7: Supply Chain Tracking** | Trace record flow (Distributor/Retailer trace additions)             |
+| **Epic 9: Consumer Query**        | Wallet-free read-only queries via public RPC (Alchemy)               |
+| **Epic 11: QR Codes**             | QR generation (react-qr-code) + scanning (html5-qrcode)              |
+| **Epic 13: Deployment**           | Render.com hosting + Supabase PostgreSQL + Sepolia testnet           |
 
 ---
 
@@ -3618,68 +3587,11 @@ This architecture directly supports the following MUST HAVE epics:
 
 ---
 
-## End of PRD (Sections 1-7)
-
----
-
-## Document Metadata
-
-**Version:** 1.1 (Slimmed)
-**Date:** October 30, 2025
-**Authors:** PM Agent (Claude PM), Sam Chou (Blockchain Lead)
-**Status:** ✅ Complete, Ready for Team Review
-**Source:** Created from brief.md v1.1
-**Methodology:** BMAD (Breakthrough Method of Agile AI-driven Development)
-
-**Changes from v1.0:**
-
-- Removed Sections 7-11 (extracted to separate documents)
-- Reduced from 3,939 lines (~83 pages) to ~2,580 lines (~43 pages)
-- Focused on product requirements and epic specifications only
-- Supporting documents: team-workload.md, technical-constraints.md, development-guide.md, action-plan.md, change-management.md
-
-**Review Cycle:**
-
-- [ ] PO Agent Validation (Target: >90%)
-- [ ] Team Review (Sam, TaiSheng, YiLing)
-- [ ] Supervisor Approval (Kickoff meeting Oct 31)
-
-**Total Estimated Project Effort (Session 14 Updated):**
-
-- Sam: 320-380 hours (80-95% of 400h capacity)
-- TaiSheng: 335-400 hours (84-100% of capacity)
-- YiLing: 360-436 hours (90-109% of capacity)
-- **TOTAL**: 1,015-1,216 hours across 3 people (85-101% team capacity utilization)
-- **Development Phase Only**: 555-646 hours (increased +20-30h from Session 14 epic hour refinement)
-- ✅ Achievable (team has committed additional time beyond 1,200h if needed)
-
-### 5.2 Total Project Hours Breakdown (All Phases)
-
-| Phase               | Weeks    | Sam          | TaiSheng     | YiLing       | TOTAL          |
-| ------------------- | -------- | ------------ | ------------ | ------------ | -------------- |
-| Planning & Learning | 0-2      | 30-35h       | 30-35h       | 40-50h       | 100-120h       |
-| Development         | 3-9      | 170-195h     | 185-215h     | 200-236h     | 555-646h       |
-| Thesis Writing      | 10-12    | 120-150h     | 120-150h     | 120-150h     | 360-450h       |
-| **TOTAL**           | **0-12** | **320-380h** | **335-400h** | **360-436h** | **1,015-1,216h** |
-
-**Buffer**: -15 to +184h for contingencies (-1% to +15% margin)
-**Note**: Development hours (555-646h) represent implementation work only, increased by +20-30h (Session 14) to reflect realistic bachelor student timeline with zero blockchain experience. Epic hours increased from 101.5-115.5h to 121.5-145.5h based on comprehensive hour analysis. Total project allocation includes planning phase (Week 0-2) and thesis writing phase (Week 10-12), totaling approximately 1,200 hours across three team members (400h per student).
-
-**Project Completion Confidence:** 🟢 High (realistic estimates, team has committed additional time beyond 1,200h if needed)
-
----
-
 **END OF PRODUCT REQUIREMENTS DOCUMENT**
 
 **Next Steps:**
 
-1. Team review of this PRD (Sections 1-7)
-2. Reference supporting documents:
-   - docs/planning/team-workload.md (team roles)
-   - docs/planning/technical-constraints.md (technology limits)
-   - docs/development-guide.md (commands, DoD checklists)
-   - docs/planning/action-plan.md (Week 0-3 actions)
-   - docs/planning/change-management.md (scope change process)
-3. Architect creates detailed architecture specification at docs/architecture/architecture.md with component diagrams, API contracts, database schema (Week 2 deliverable per BMAD workflow)
-4. PO validates all documents >90% (Week 2)
-5. Begin BMAD development workflow (Week 3+)
+1. Epic Sharding: Use PO agent to shard PRD into 13 individual epic files (Week 2)
+2. Architecture Document: Create detailed architecture specification at docs/architecture/architecture.md (Week 2 deliverable)
+3. PO Validation: Achieve >90% alignment with brief.md (Week 2 checkpoint)
+4. Begin BMAD Development Workflow: Week 3+ (SM → Dev → QA cycle)
