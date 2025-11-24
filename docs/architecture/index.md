@@ -22,7 +22,7 @@ The FoodTrace architecture is organized into **14 focused, lean files** optimize
   - Next.js 14.2.15, Solidity ^0.8.20, Hardhat, Supabase, Prisma, Wagmi v2
 - **[coding-standards.md](coding-standards.md)** (9.6 KB) - Coding conventions, linting rules, ADR decisions
   - ESLint config, TypeScript strict mode, Solidity style guide
-- **[unified-project-structure.md](unified-project-structure.md)** (11 KB) - Folder structure, file organization
+- **[source-tree.md](source-tree.md)** (11 KB) - Folder structure, file organization
   - Monorepo layout, component organization, test location
 - **[testing-strategy.md](testing-strategy.md)** (11 KB) - Test types, coverage targets, quality gates
   - Test Pyramid, >70% coverage, Hardhat testing, React Testing Library
@@ -76,7 +76,7 @@ The FoodTrace architecture is organized into **14 focused, lean files** optimize
 docs/architecture/
 ├── tech-stack.md                      (6.6 KB) ← Dev always loads
 ├── coding-standards.md                (9.6 KB) ← Dev always loads
-├── unified-project-structure.md      (11 KB)  ← Dev always loads
+├── source-tree.md                    (11 KB)  ← Dev always loads
 ├── testing-strategy.md               (11 KB)
 ├── data-models.md                    (9.4 KB) ← Backend stories
 ├── database-schema.md                (11 KB)  ← Backend stories
@@ -108,7 +108,7 @@ docs/architecture/
 3. Creates story file in `docs/stories/` with Dev Notes referencing these files
 
 ### Development (Dev Agent)
-1. Loads 3 always-files: tech-stack.md, coding-standards.md, unified-project-structure.md
+1. Loads 3 always-files: tech-stack.md, coding-standards.md, source-tree.md
 2. Loads story file (contains all architecture details from SM)
 3. **Does NOT** load epic or architecture files (info already in story)
 
@@ -125,7 +125,7 @@ docs/architecture/
 **Dev Agent Always Loads (3 files):**
 - tech-stack.md
 - coding-standards.md
-- unified-project-structure.md
+- source-tree.md
 
 ---
 

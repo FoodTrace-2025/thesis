@@ -1,4 +1,4 @@
-# Unified Project Structure
+# Source Tree
 
 **Purpose:** Define folder structure, file organization, and monorepo layout for FoodTrace.
 
