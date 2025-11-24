@@ -1,6 +1,6 @@
 # Chapter 6: Results and Testing
 
-This chapter presents testing results, performance evaluation, and system limitations analysis.
+This chapter presents the testing results and performance evaluation of the FoodTrace proof-of-concept system. It begins with an overview of the testing strategy following the Test Pyramid principle (Section 6.1), reports smart contract testing results including code coverage, gas cost measurements, and security analysis (Section 6.2), presents frontend testing results covering component tests, end-to-end workflows, and accessibility compliance (Section 6.3), evaluates system performance including page load times, API response latency, and database query optimization (Section 6.4), and documents end-to-end system validation demonstrating complete supply chain workflows from producer to consumer (Section 6.5). These results provide empirical evidence for addressing the research questions established in Chapter 1.
 
 ## 6.1 Testing Strategy Overview
 

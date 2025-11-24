@@ -1,5 +1,7 @@
 # Chapter 8: Conclusion
 
+This final chapter synthesizes the findings of this thesis and positions the FoodTrace proof-of-concept within the broader blockchain food traceability research landscape. It summarizes the work performed across six development phases from literature review to performance validation (Section 8.1), provides evidence-based answers to the five research questions posed in Chapter 1 regarding Ethereum's suitability, blockchain advantages and limitations, transparency-privacy trade-offs, user experience solutions, and small producer feasibility (Section 8.2), articulates the thesis's contributions to the research field including wallet-free consumer access patterns and Layer 2 cost analysis absent from current literature (Section 8.3), acknowledges project limitations and threats to validity (Section 8.4), and proposes future research directions including Layer 2 production deployment, zero-knowledge proofs for GDPR compliance, and real IoT sensor integration (Section 8.5). The chapter concludes by reflecting on how this work advances understanding of blockchain accessibility for mainstream food supply chain stakeholders.
+
 ## 8.1 Summary of Work
 
 This thesis developed and evaluated a proof-of-concept blockchain-based food supply chain traceability system addressing the fundamental research question: **"How can blockchain technology be made accessible to mainstream users while preserving its core benefits of decentralization, transparency, and immutability?"**

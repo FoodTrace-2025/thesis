@@ -1,5 +1,7 @@
 # Chapter 1: INTRODUCTION
 
+This chapter establishes the foundation for this thesis by introducing blockchain technology's application in food supply chain traceability. It begins with the background and research gap addressing the accessibility-decentralization trade-off in blockchain implementations (Section 1.1), defines the central problem of mainstream blockchain adoption (Section 1.2), and outlines the research objectives and questions guiding this proof-of-concept system (Section 1.3). The chapter concludes by specifying the scope and limitations of this educational project (Section 1.4) and providing an overview of the eight-chapter thesis structure (Section 1.5).
+
 ## 1.1 Background
 
 Blockchain technology, introduced by Nakamoto (2008) with Bitcoin, has evolved beyond cryptocurrency to enable transparent, immutable record-keeping through smart contracts—self-executing programs deployed on decentralized networks. While blockchain's cryptographic guarantees (immutability, transparency, Byzantine fault tolerance) theoretically address supply chain traceability challenges, practical adoption faces significant barriers: user experience complexity, transaction costs, and scalability limitations (Buterin, 2014; Wood, 2014).
@@ -8,11 +10,7 @@ Food supply chains exemplify these challenges. Traditional centralized systems r
 
 However, existing blockchain supply chain implementations face a critical trade-off between accessibility and decentralization. Enterprise solutions like IBM Food Trust provide user-friendly interfaces but rely on permissioned blockchains controlled by centralized gatekeepers, undermining public verifiability (Hyperledger Foundation case study, 2019). Conversely, public blockchain applications (Ethereum DApps) offer true decentralization but suffer from wallet complexity barriers that exclude mainstream users (Voskobojnikov et al., 2021). This creates a "crypto-native vs mainstream user" divide limiting adoption beyond technical enthusiasts.
 
-### 1.1.1 Research Gap
-
-Current research lacks solutions balancing transparency benefits of public blockchains with accessibility requirements for mass adoption. Recent systematic reviews reveal an enterprise-dominant focus with limited attention to small producer needs and consumer accessibility (Ellahi et al., 2024). Moreover, wallet-based access remains the dominant pattern, creating adoption barriers for end consumers who simply want to verify product authenticity without installing cryptocurrency software.
-
-This thesis addresses this gap by demonstrating how Ethereum public blockchain can enable transparent supply chain tracking with wallet-free consumer access, targeting the 570 million small-scale farms globally (FAO, 2023) underserved by enterprise consortium models.
+Current research lacks solutions balancing transparency benefits of public blockchains with accessibility requirements for mass adoption. Recent systematic reviews reveal an enterprise-dominant focus with limited attention to small producer needs and consumer accessibility (Ellahi et al., 2024). Moreover, wallet-based access remains the dominant pattern, creating adoption barriers for end consumers who simply want to verify product authenticity without installing cryptocurrency software. This thesis addresses this gap by demonstrating how Ethereum public blockchain can enable transparent supply chain tracking with wallet-free consumer access, targeting the 570 million small-scale farms globally (FAO, 2023) underserved by enterprise consortium models.
 
 ---
 

@@ -1,5 +1,7 @@
 # Chapter 4: Smart Contract Development
 
+This chapter details the blockchain layer implementation of the FoodTrace system, focusing on the Solidity smart contracts deployed to Ethereum Sepolia testnet. It begins with the overall contract architecture and design principles emphasizing gas optimization and security (Section 4.1), explains the implementation of the three core contracts—ProductRegistry, TraceRecords, and SensorData—including role-based access control and event-driven communication (Section 4.2), analyzes security considerations and mitigation strategies for common vulnerabilities (Section 4.3), and documents the testing approach and deployment process to Sepolia testnet (Section 4.4). This chapter demonstrates how the smart contracts translate the theoretical concepts from Chapter 2 into functional code.
+
 **Target Length:** 2,800-3,000 words (~4-5 pages)
 **Owner:** Sam (Blockchain Lead)
 **Purpose:** Detail the core blockchain implementation - smart contracts architecture, design decisions, security patterns, and deployment

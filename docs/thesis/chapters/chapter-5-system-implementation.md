@@ -1,5 +1,7 @@
 # Chapter 5: System Implementation
 
+This chapter describes the implementation of the supporting system components that connect end users to the smart contracts detailed in Chapter 4. It covers the backend architecture including database schema design, API route implementation, and Web3 integration using Wagmi v2 (Section 5.1), explains the frontend development of four role-specific user interfaces built with Next.js and Chakra UI (Section 5.2), and details the IoT simulator implementation providing realistic sensor data for cold chain monitoring (Section 5.3). Together, these components demonstrate how blockchain technology can be made accessible to mainstream users while maintaining the transparency and immutability benefits established in the literature review.
+
 **Target Length:** 2,200-2,700 words (~5-6 pages)
 **Owners:** TaiSheng (Backend), YiLing (Frontend + IoT Simulator)
 **Purpose:** Detail the supporting system components connecting users to smart contracts - backend API, Web3 integration, frontend interfaces, and IoT simulation
