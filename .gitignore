@@ -292,7 +292,21 @@ storybook-static/
 # =============================================================================
 # QA gates and assessments are generated during development
 # Keep them in version control for team visibility
-# No specific ignores needed for BMAD
+
+# BMAD backup files (created during updates)
+*.bak
+
+# =============================================================================
+# CLAUDE CODE & AI TOOLS
+# =============================================================================
+# Claude Code local settings (user-specific)
+.claude/settings.local.json
+
+# AI debug logs
+.ai/
+
+# Windows null device artifact
+nul
 
 # =============================================================================
 # THESIS-SPECIFIC
