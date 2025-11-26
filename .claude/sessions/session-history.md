@@ -4,6 +4,45 @@ This file contains archived session achievements for historical reference.
 
 ---
 
+## Session 29 (2025-11-26) - Development Workflow Finalized & First Stories Completed
+
+### Session 29 Achievements
+
+✅ **Workflow Decisions Finalized**: Researched BMAD vs industry TDD best practices, chose "tests alongside code" (not strict TDD) for pragmatic team learning
+✅ **Documentation Created**: New `docs/workflow-decisions.md` documenting testing approach, QA guidelines, story sizing (XS/S/M only, split if >8h)
+✅ **Story 1.1 Complete**: Created Supabase account, configured DATABASE_URL + DIRECT_URL with pgbouncer (port 6543)
+✅ **Story 1.2 Complete**: Created Alchemy account, configured SEPOLIA_RPC_URL for Sepolia testnet RPC access
+✅ **Epic 1 Progress**: 2/11 manual setup stories completed (Supabase + Alchemy accounts)
+✅ **Environment Setup**: .env.local configured with database and RPC credentials, ready for team sharing via Discord
+
+**Key Decisions:**
+- Tests alongside code (not strict TDD) - pragmatic for learning team
+- QA review for ~40% of stories (contracts/security: Epic 3, 5, 6, 10)
+- Discord sharing acceptable for thesis POC credentials (testnet, short project)
+
+**Files Created:**
+- docs/workflow-decisions.md (full workflow documentation)
+- docs/stories/1.1.story.md (Supabase setup - DONE)
+- docs/stories/1.2.story.md (Alchemy setup - DONE)
+
+**Impact:** Development workflow documented and first two stories completed. Ready to continue with Story 1.3 (Etherscan API Key).
+
+---
+
+## Session 28 (2025-11-25) - BMAD Workflow Clarification & Epic Finalization
+
+### Session 28 Achievements
+
+✅ **BMAD Workflow Clarification**: Confirmed SM = Scrum Master (Bob), not "Story Manager" - creates stories from epics during development
+✅ **Development Cycle Understanding**: Verified PM only involved in planning phase (PRD creation), not in SM→Dev→QA development cycle
+✅ **Story Creation Process**: Clarified Scrum Master reads sharded epic files + architecture, drafts detailed stories with tasks for Dev agent
+✅ **Session 26 Continued**: Completed final 4 epic updates (Epic 10-13) from previous session - all 67 fixes applied across 13 epics
+✅ **Documentation Updated**: Session 27 archived to session-history.md, CLAUDE.md updated with current session achievements
+
+**Impact:** BMAD development workflow fully understood. Ready for Week 3 SM→Dev→QA cycle starting from Epic 1.
+
+---
+
 ## Session 27 (2025-11-24) - Thesis Chapter Structure Enhancement & BMAD Updates
 
 ### Session 27 Achievements

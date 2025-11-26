@@ -3,8 +3,8 @@ doc-id: thesis-project-context
 title: FoodTrace Thesis Project Context
 purpose: AI agent entry point and navigation hub
 auto-generated: false
-last-updated: 2025-11-20
-session: 26
+last-updated: 2025-11-26
+session: 30
 ---
 
 # FoodTrace Thesis - Project Context
@@ -58,22 +58,18 @@ Planning documents created during Sessions 1-7 but never used for development. A
 
 ## Current Session Status
 
-- **Last Updated**: 2025-11-25 (Session 28)
-- **Project Status**: Week 2 Complete - BMAD Workflow Ready
-- **Project Completion**: ~35% (Brief ✅, PRD v1.3 sharded ✅, Architecture sharded ✅, All 13 epics at 95%+ validation ✅)
-- **Active Stage**: Ready for Week 3 Development
-- **Next Priority**: Begin Week 3 - SM agent story creation from Epic 1 using `/sm *draft`
-- **Recent Changes**: BMAD workflow clarification - Scrum Master creates stories, PM not involved in dev cycle
+- **Last Updated**: 2025-11-26 (Session 30)
+- **Project Status**: Week 3 In Progress - Epic 1 Stories Active
+- **Project Completion**: ~37% (Brief ✅, PRD v1.3 sharded ✅, Architecture sharded ✅, All 13 epics at 95%+ validation ✅, Workflow decisions ✅, Stories 1.1-1.2 ✅)
+- **Active Stage**: Continue Epic 1 story creation
+- **Next Priority**: Create Story 1.3 (Etherscan API Key) using SM agent
+- **Recent Changes**: Completed Stories 1.1 (Supabase) and 1.2 (Alchemy) - environment partially configured
 - **Blockers**: None
-- **Ready for**: Week 3 development cycle (SM → Dev → QA → repeat)
+- **Ready for**: Story 1.3-1.11 creation and completion
 
-### Current Session Achievements (Session 28 - 2025-11-25)
+### Current Session Achievements (Session 30 - 2025-11-26)
 
-✅ **BMAD Workflow Clarification**: Confirmed SM = Scrum Master (Bob), not "Story Manager" - creates stories from epics during development
-✅ **Development Cycle Understanding**: Verified PM only involved in planning phase (PRD creation), not in SM→Dev→QA development cycle
-✅ **Story Creation Process**: Clarified Scrum Master reads sharded epic files + architecture, drafts detailed stories with tasks for Dev agent
-✅ **Session 26 Continued**: Completed final 4 epic updates (Epic 10-13) from previous session - all 67 fixes applied across 13 epics
-✅ **Documentation Updated**: Session 27 archived to session-history.md, CLAUDE.md updated with current session achievements
+_Session in progress - achievements will be logged here_
 
 ### Development Approach
 
@@ -145,6 +141,24 @@ Planning documents created during Sessions 1-7 but never used for development. A
 
 ---
 
+## Development Workflow (Session 29)
+
+**Full details:** `docs/workflow-decisions.md`
+
+**Summary:**
+1. SM creates small stories (2-4 hour scope) from epics
+2. Human approves → Dev implements with tests alongside → Human verifies
+3. QA review for contracts/security stories only (~40% of stories)
+4. Git commit after each completed story
+5. Smart contracts: Write tests alongside code (not strict TDD)
+
+**Key decisions:**
+- Stories sized XS/S/M only (split if >8 hours)
+- No strict TDD - tests written alongside implementation
+- QA focus: Epic 3, 5, 6, 10 (security + contracts)
+
+---
+
 ## Current Priorities
 
 ### **Immediate (Week 0 - Current):**
@@ -186,6 +200,7 @@ Planning documents created during Sessions 1-7 but never used for development. A
 /home/kala/Documents/GitHub/thesis/docs/architecture.md              (✅ Monolithic Architecture - reference)
 /home/kala/Documents/GitHub/thesis/docs/architecture/                (✅ 14 BMAD-named files - SM/Dev agents read)
 /home/kala/Documents/GitHub/thesis/docs/architecture/index.md        (✅ Architecture file index & BMAD workflow guide)
+/home/kala/Documents/GitHub/thesis/docs/workflow-decisions.md        (✅ Development workflow, testing approach, QA guidelines - Session 29)
 
 # Thesis Requirements (OAMK Standards)
 /home/kala/Documents/GitHub/thesis/docs/thesis/requirements/oamk-structure.md (✅ OAMK thesis structure)
@@ -201,7 +216,7 @@ Planning documents created during Sessions 1-7 but never used for development. A
 /home/kala/Documents/GitHub/thesis/docs/thesis/chapters/chapter-7-conclusion.md
 
 # Session Archive
-/home/kala/Documents/GitHub/thesis/.claude/sessions/session-history.md (✅ Sessions 1-27)
+/home/kala/Documents/GitHub/thesis/.claude/sessions/session-history.md (✅ Sessions 1-29)
 
 # Archived Planning (2025-11-13)
 /home/kala/Documents/GitHub/thesis/docs/archive/planning-phase/README.md (📦 Index of archived docs)
@@ -384,9 +399,9 @@ When updating this file after each session:
 
 ---
 
-**Last Session:** Nov 25, 2025 (Session 28 Complete) - BMAD workflow clarified (SM = Scrum Master, creates stories from epics)
-**Next Session:** Week 3 - Story creation from Epic 1 using SM agent (`/sm *draft`)
-**Status:** ✅ Week 2 Complete - All 13 epics at 95%+ validation, BMAD workflow understood, Ready for SM→Dev→QA cycle
-**Session History:** See .claude/sessions/session-history.md for Sessions 1-27 detailed archive
+**Last Session:** Nov 26, 2025 (Session 29 Complete) - Stories 1.1 (Supabase) and 1.2 (Alchemy) completed, workflow decisions documented
+**Next Session:** Continue with Story 1.3 (Etherscan API Key) - Epic 1 progress 2/11
+**Status:** ✅ Week 3 Active - First two setup stories completed, environment partially configured
+**Session History:** See .claude/sessions/session-history.md for Sessions 1-29 detailed archive
 
 _This CLAUDE.md file is the AI assistant's primary context document. Update after each significant milestone._
