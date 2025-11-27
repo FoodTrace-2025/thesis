@@ -4,7 +4,7 @@
 **Estimated Time:** 4.5 hours (Tier 1) + 9 hours (Tier 2) + 3 hours (Tier 3) = 16.5 hours total
 **Assigned:** TaiSheng (Lead, 10-13 hours), Sam (Support, 2-3 hours), YiLing (Process, 0 hours)
 **Timeline:** Week 3-4 (parallel with Epic 4 Component Library)
-**Dependencies:** Epic 1 (Project Setup), Epic 2 (Company & User Management)
+**Dependencies:** Epic 1 (Project Setup), Story 2.1 (Company/User Prisma models)
 
 **Note:** This epic was created in Session 4 based on architecture risk assessment. See full specification earlier in this document (Epic 3: Security Hardening section with 3 tiers).
 
@@ -21,7 +21,7 @@ Implement production-grade security controls to protect custodial wallets, preve
 
 #### User Prerequisites (Manual Tasks - Complete First)
 
-**IMPORTANT:** This epic depends on Epic 1 WALLET_ENCRYPTION_KEY and Epic 2 wallet generation working correctly. Verify .env.local contains:
+**IMPORTANT:** This epic depends on Epic 1 WALLET_ENCRYPTION_KEY and Story 2.1 (Prisma Company/User models). Verify .env.local contains:
 
 ```bash
 WALLET_ENCRYPTION_KEY="[64-char hex from Epic 1]"
@@ -242,7 +242,7 @@ model AuditLog {
 
 #### Dependencies
 
-**Requires:** Epic 1 (WALLET_ENCRYPTION_KEY), Epic 2 (Wallet generation working)
+**Requires:** Epic 1 (WALLET_ENCRYPTION_KEY), Story 2.1 (Company/User Prisma models for tenant middleware)
 **Blocks:** Epic 5 (Product Registration - wallet encryption must work before product blockchain transactions)
 **Parallel:** Epic 4 (Component Library - YiLing starts Epic 4 while TaiSheng/Sam work on Epic 3)
 

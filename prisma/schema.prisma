@@ -1,5 +1,6 @@
 // FoodTrace Database Schema
-// Full schema will be implemented in Epic 2
+// Epic 2: Company & User Management
+// Updated: Session 31 - Added Prisma enums for type safety
 
 generator client {
   provider = "prisma-client-js"
@@ -7,12 +8,107 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // URL configured in prisma.config.ts for Prisma 7.x
 }
 
-// Placeholder model to verify connection works
-// Will be replaced with full schema (companies, users, products, etc.) in Epic 2
-model HealthCheck {
-  id        String   @id @default(uuid())
-  status    String
-  checkedAt DateTime @default(now())
+// =============================================================================
+// Enums - Type-safe values for status, type, and role fields
+// =============================================================================
+
+enum CompanyStatus {
+  PENDING   // Awaiting PLATFORM_ADMIN approval
+  APPROVED  // Approved, wallet generated
+  REJECTED  // Rejected by PLATFORM_ADMIN
+}
+
+enum CompanyType {
+  PRODUCER    // Farms, manufacturers - register products
+  DISTRIBUTOR // Logistics, warehouses - transport products
+  RETAILER    // Stores, markets - sell to consumers
+}
+
+enum UserRole {
+  PLATFORM_ADMIN  // Developers - manage platform, approve companies
+  COMPANY_ADMIN   // Company owner - manage company users
+  PRODUCER        // Farm worker - register products, record harvests
+  DISTRIBUTOR     // Driver/warehouse - receive, ship products
+  RETAILER        // Store clerk - receive, sell products
+}
+
+// =============================================================================
+// Company Model
+// Multi-tenant company entity for supply chain participants
+// =============================================================================
+model Company {
+  id                  String        @id @default(cuid())
+  name                String
+  email               String        @unique
+  domain              String        // e.g., "hirsimakifarm.fi" - used for email validation
+  status              CompanyStatus @default(PENDING)
+  type                CompanyType
+  rejectionReason     String?   // Reason if rejected by admin
+
+  // Wallet fields - populated on approval (requires Epic 3.1 encryption)
+  encryptedPrivateKey String?   // AES-256-GCM encrypted private key
+  walletAddress       String?   @unique // Ethereum address (0x...)
+
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  approvedAt          DateTime? // Set when status changes to APPROVED
+
+  // Relations
+  users               User[]
+  auditLogs           AuditLog[]
+
+  @@index([status])
+}
+
+// =============================================================================
+// User Model
+// User accounts within companies
+// =============================================================================
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String    // bcrypt hash (10-12 rounds)
+  name         String
+  role         UserRole  // Type-safe enum
+
+  // Company relation - nullable for PLATFORM_ADMIN (no company affiliation)
+  companyId    String?
+  company      Company?  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime  @default(now())
+
+  // Relations
+  auditLogs    AuditLog[]
+
+  @@index([companyId])
+}
+
+// =============================================================================
+// AuditLog Model
+// Track all significant operations for security and compliance
+// Actions: CREATE_COMPANY | APPROVE_COMPANY | REJECT_COMPANY | CREATE_USER |
+//          CREATE_WALLET | ENCRYPT_KEY | DECRYPT_KEY | TRANSFER_PRODUCT | etc.
+// =============================================================================
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String   // Action type (see above)
+  details   Json?    // Additional context (walletAddress, productId, error, etc.)
+
+  // Actor - who performed the action (nullable for system actions)
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+
+  // Target company (nullable for cross-company or system actions)
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+
+  timestamp DateTime @default(now())
+
+  // Composite indexes for efficient queries
+  @@index([companyId, timestamp])
+  @@index([userId, timestamp])
+  @@index([action, timestamp])
 }

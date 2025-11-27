@@ -8,21 +8,23 @@
 
 #### Epic Description
 
-Implement multi-tenant company registration and user management system. Platform admins can approve/reject company applications. Approved companies get custodial Ethereum wallets automatically generated. Company admins can create user accounts for employees (producers, distributors, retailers).
+Implement multi-tenant company registration and user management system. **Simplified POC Flow (Session 31):** Platform admins (developers) manually create companies and approve them. Approved companies get custodial Ethereum wallets automatically generated. Platform admins create the first COMPANY_ADMIN user, who can then create employee accounts.
+
+**Note:** Self-registration was removed for POC simplicity. Companies are onboarded via B2B agreements, then PLATFORM_ADMIN sets them up manually.
 
 #### Business Value
 
 - **Multi-Tenant Foundation:** Enables multiple companies to use platform (realistic enterprise model)
-- **Onboarding Workflow:** Invitation-only prevents spam, manual approval ensures quality
-- **Audit Trail:** Know which user (within company) performed which action
+- **Controlled Onboarding:** B2B enterprise model - companies onboarded via agreements, not self-registration
+- **Audit Trail:** Know which user (within company) performed which action (database tracks userId, blockchain tracks company)
 - **Scalability:** Architecture supports 10, 100, 1000+ companies
 
-#### User Stories (High-Level)
+#### User Stories (High-Level) - Updated Session 31
 
-- As a **company representative**, I want to **apply to join FoodTrace** so I can use blockchain traceability
-- As a **platform admin**, I want to **review company applications** so I can prevent fraud
-- As a **platform admin**, I want to **approve companies via dashboard button** so they get blockchain wallets automatically
-- As a **company admin**, I want to **create user accounts for employees** so my team can use the system
+- As a **platform admin**, I want to **create company records** so I can onboard new B2B partners
+- As a **platform admin**, I want to **approve companies** so they get blockchain wallets automatically
+- As a **platform admin**, I want to **create the first COMPANY_ADMIN user** for approved companies
+- As a **company admin**, I want to **create user accounts for employees** with initial passwords
 - As a **company admin**, I want to **restrict users to company email domain** so only real employees get access
 
 #### User Prerequisites (Manual Tasks - Complete First)
@@ -46,24 +48,25 @@ WALLET_ENCRYPTION_KEY="[64-char hex from Epic 1]"
 - No additional external accounts needed
 - Epic 3 Tier 1 wallet encryption must be working before Epic 2 wallet generation
 
-#### Acceptance Criteria (Epic Level)
+#### Acceptance Criteria (Epic Level) - Updated Session 31
 
-**Company Registration & Approval:**
+**Company Management (PLATFORM_ADMIN):**
 
-- ✅ Company registration form (name, email, domain, type: Producer/Distributor/Retailer)
-- ✅ Platform admin portal shows pending company applications in list view
-- ✅ Platform admin dashboard has "Approve Company" button (calls /api/admin/companies/:id/approve)
-- ✅ Admin can reject companies with notes, rejection reason displayed to applicant
-- ✅ Rejected companies can view rejection reason and reapply with corrections
+- ✅ PLATFORM_ADMIN can create company records via admin UI (name, email, domain, type)
+- ✅ New companies created with status: PENDING (no wallet yet)
+- ✅ Platform admin portal shows all companies in list view (with status filter)
+- ✅ Platform admin dashboard has "Approve Company" button
+- ✅ Admin can reject companies with rejection reason
 - ✅ Approved companies automatically get encrypted Ethereum wallet generated server-side
 - ✅ Wallet generation uses Epic 3 Tier 1 encryption (AES-256-GCM with WALLET_ENCRYPTION_KEY)
 
 **User Management:**
 
-- ✅ Company admin can create user accounts for employees
+- ✅ PLATFORM_ADMIN can create first COMPANY_ADMIN user for approved companies
+- ✅ COMPANY_ADMIN can create employee user accounts with initial passwords
 - ✅ Email domain validation enforced: email.endsWith(`@${company.domain}`)
 - ✅ Users login with email + password (NextAuth.js authentication)
-- ✅ Role-based access control implemented (PLATFORM_ADMIN, COMPANY_ADMIN, PRODUCER, DISTRIBUTOR, RETAILER)
+- ✅ Role-based access control using Prisma enums (PLATFORM_ADMIN, COMPANY_ADMIN, PRODUCER, DISTRIBUTOR, RETAILER)
 
 **Error Handling & Security:**
 
@@ -73,21 +76,41 @@ WALLET_ENCRYPTION_KEY="[64-char hex from Epic 1]"
 
 #### Technical Approach
 
-**Database Schema (Prisma):**
+**Database Schema (Prisma) - Updated with Enums (Session 31):**
 
 ```prisma
+enum CompanyStatus {
+  PENDING    // Awaiting approval
+  APPROVED   // Approved, wallet generated
+  REJECTED   // Rejected by admin
+}
+
+enum CompanyType {
+  PRODUCER     // Farms, manufacturers
+  DISTRIBUTOR  // Logistics, warehouses
+  RETAILER     // Stores, markets
+}
+
+enum UserRole {
+  PLATFORM_ADMIN  // Developers - manage platform
+  COMPANY_ADMIN   // Company owner - manage company users
+  PRODUCER        // Farm worker - register products
+  DISTRIBUTOR     // Driver/warehouse - transport products
+  RETAILER        // Store clerk - sell products
+}
+
 model Company {
-  id                  String   @id @default(cuid())
+  id                  String        @id @default(cuid())
   name                String
-  email               String   @unique
-  domain              String   // "hirsimakifarm.fi"
-  status              String   // "PENDING" | "APPROVED" | "REJECTED"
-  type                String   // "PRODUCER" | "DISTRIBUTOR" | "RETAILER"
+  email               String        @unique
+  domain              String        // "hirsimakifarm.fi"
+  status              CompanyStatus @default(PENDING)
+  type                CompanyType
 
-  encryptedPrivateKey String?  // One wallet per company
-  walletAddress       String?  // Ethereum address
+  encryptedPrivateKey String?       // One wallet per company (AES-256-GCM encrypted)
+  walletAddress       String?       // Ethereum address (0x...)
 
-  createdAt           DateTime @default(now())
+  createdAt           DateTime      @default(now())
   approvedAt          DateTime?
   users               User[]
 }
@@ -95,19 +118,21 @@ model Company {
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
-  passwordHash String
-  role         String   // "COMPANY_ADMIN" | "PRODUCER" | etc.
-  companyId    String?
+  passwordHash String   // bcrypt hash
+  role         UserRole
+  companyId    String?  // Nullable for PLATFORM_ADMIN
   company      Company? @relation(fields: [companyId], references: [id])
 }
 ```
 
-**API Endpoints:**
+**API Endpoints (Simplified for POC):**
 
-- `POST /api/companies/apply` - Company registration
-- `GET /api/admin/companies/pending` - List pending applications
+- `POST /api/admin/companies` - PLATFORM_ADMIN creates company
+- `GET /api/admin/companies` - List all companies (with status filter)
 - `POST /api/admin/companies/:id/approve` - Approve company (generates wallet)
-- `POST /api/companies/users` - Company admin creates user
+- `POST /api/admin/companies/:id/reject` - Reject company (with reason)
+- `POST /api/admin/users` - PLATFORM_ADMIN creates COMPANY_ADMIN user
+- `POST /api/companies/users` - COMPANY_ADMIN creates employee users
 - `POST /api/auth/login` - Email/password authentication
 
 **Wallet Generation Flow:**
@@ -208,9 +233,54 @@ if (!validateEmailDomain(userEmail, company.domain)) {
 
 | Risk                                        | Mitigation                                                     |
 | ------------------------------------------- | -------------------------------------------------------------- |
-| Fake company registrations                  | Manual admin approval required, verify company details offline |
 | User creates account with non-company email | Email domain validation enforced: email.endsWith(domain)       |
 | Wallet generation fails                     | Retry logic with exponential backoff, audit log failure entry  |
 | WALLET_ENCRYPTION_KEY not in .env.local     | Epic 1 prerequisite check, fail fast with clear error message  |
 | Epic 3 Tier 1 not complete                  | Block Epic 2 start until Epic 3 Tier 1 encryption working     |
-| Admin approves malicious company            | Manual verification process, ability to revoke approval later  |
+| Company wallets need Sepolia ETH            | Get from faucet after wallet generation                        |
+
+#### Simplified User Flow (Session 31)
+
+**Phase 1: Setup (PLATFORM_ADMIN - developers)**
+```
+1. PLATFORM_ADMIN creates Company record:
+   - Name: "Hirsimaki Farm Ltd"
+   - Email: contact@hirsimakifarm.fi
+   - Domain: hirsimakifarm.fi
+   - Type: PRODUCER
+   → Saved with status: PENDING (no wallet yet)
+
+2. PLATFORM_ADMIN approves Company:
+   → System generates wallet via ethers.Wallet.createRandom()
+   → Private key encrypted with WALLET_ENCRYPTION_KEY
+   → Status: APPROVED, wallet fields populated
+
+3. PLATFORM_ADMIN creates first user:
+   - Email: admin@hirsimakifarm.fi
+   - Role: COMPANY_ADMIN
+   - Password: (set by PLATFORM_ADMIN)
+
+4. Get Sepolia ETH from faucet for company wallet
+```
+
+**Phase 2: Company Setup (COMPANY_ADMIN)**
+```
+1. Login with admin@hirsimakifarm.fi
+
+2. Create employee accounts:
+   - worker1@hirsimakifarm.fi (role: PRODUCER)
+   - worker2@hirsimakifarm.fi (role: PRODUCER)
+   - Set initial passwords for each
+```
+
+**Phase 3: Operations (Employees)**
+```
+1. PRODUCER logs in → registers products, records harvests
+2. DISTRIBUTOR logs in → receives products, records shipments
+3. RETAILER logs in → receives products, marks sold, generates QR
+```
+
+**Wallet Architecture:**
+- **Deployer Wallet** (PRIVATE_KEY in .env) - Deploy smart contracts only
+- **Company Wallets** - Auto-generated per company for blockchain transactions
+- **WALLET_ENCRYPTION_KEY** - Encrypts company wallet private keys in database
