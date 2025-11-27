@@ -379,6 +379,165 @@ Authorization: Session cookie
 
 ---
 
+## Admin Endpoints
+
+### POST /api/admin/companies
+
+**Purpose:** Create a new company record (B2B partner onboarding)
+
+**Authentication:** Required (PLATFORM_ADMIN role) - Implemented in Story 2.5
+
+**Request:**
+```http
+POST /api/admin/companies
+Content-Type: application/json
+Authorization: Session cookie
+
+{
+  "name": "Hirsimaki Farm Ltd",
+  "email": "contact@hirsimakifarm.fi",
+  "domain": "hirsimakifarm.fi",
+  "type": "PRODUCER"
+}
+```
+
+**Validation Rules:**
+- `name`: Required, 2-255 characters
+- `email`: Required, valid email format, must end with `@{domain}`
+- `domain`: Required, 2-100 characters
+- `type`: Required, one of: PRODUCER, DISTRIBUTOR, RETAILER
+
+**Response 201 Created:**
+```json
+{
+  "success": true,
+  "company": {
+    "id": "clxyz123...",
+    "name": "Hirsimaki Farm Ltd",
+    "email": "contact@hirsimakifarm.fi",
+    "domain": "hirsimakifarm.fi",
+    "type": "PRODUCER",
+    "status": "PENDING",
+    "createdAt": "2025-11-27T12:00:00.000Z"
+  }
+}
+```
+
+**Response 400 Bad Request:**
+```json
+{
+  "error": "Validation failed",
+  "code": "VALIDATION_ERROR",
+  "details": [
+    { "field": "email", "message": "Company email must match the company domain" }
+  ]
+}
+```
+
+**Response 409 Conflict:**
+```json
+{
+  "error": "Company with this email already exists",
+  "code": "DUPLICATE_ERROR"
+}
+```
+
+---
+
+### GET /api/admin/companies
+
+**Purpose:** List all companies with optional status filter
+
+**Authentication:** Required (PLATFORM_ADMIN role) - Implemented in Story 2.5
+
+**Request:**
+```http
+GET /api/admin/companies?status=PENDING
+```
+
+**Query Parameters:**
+- `status` (optional): Filter by CompanyStatus (PENDING, APPROVED, REJECTED)
+
+**Response 200 OK:**
+```json
+{
+  "success": true,
+  "companies": [
+    {
+      "id": "clxyz123...",
+      "name": "Hirsimaki Farm Ltd",
+      "email": "contact@hirsimakifarm.fi",
+      "domain": "hirsimakifarm.fi",
+      "type": "PRODUCER",
+      "status": "PENDING",
+      "walletAddress": null,
+      "createdAt": "2025-11-27T12:00:00.000Z"
+    }
+  ],
+  "count": 1
+}
+```
+
+---
+
+### POST /api/admin/companies/:id/approve
+
+**Purpose:** Approve a pending company and generate blockchain wallet
+
+**Authentication:** Required (PLATFORM_ADMIN role)
+
+**Dependencies:** Epic 3 Tier 1 (Wallet Encryption)
+
+**Request:**
+```http
+POST /api/admin/companies/clxyz123/approve
+```
+
+**Response 200 OK:**
+```json
+{
+  "success": true,
+  "company": {
+    "id": "clxyz123...",
+    "status": "APPROVED",
+    "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+    "approvedAt": "2025-11-27T14:00:00.000Z"
+  }
+}
+```
+
+---
+
+### POST /api/admin/companies/:id/reject
+
+**Purpose:** Reject a pending company with reason
+
+**Authentication:** Required (PLATFORM_ADMIN role)
+
+**Request:**
+```http
+POST /api/admin/companies/clxyz123/reject
+Content-Type: application/json
+
+{
+  "reason": "Incomplete business documentation"
+}
+```
+
+**Response 200 OK:**
+```json
+{
+  "success": true,
+  "company": {
+    "id": "clxyz123...",
+    "status": "REJECTED",
+    "rejectionReason": "Incomplete business documentation"
+  }
+}
+```
+
+---
+
 ## Error Responses
 
 **Standard Error Format:**
@@ -396,6 +555,7 @@ Authorization: Session cookie
 - `403 Forbidden`: Insufficient permissions (wrong role)
 - `404 Not Found`: Resource not found
 - `405 Method Not Allowed`: Wrong HTTP method
+- `409 Conflict`: Resource already exists (duplicate)
 - `429 Too Many Requests`: Rate limit exceeded
 - `500 Internal Server Error`: Server error
 - `503 Service Unavailable`: Service temporarily down
@@ -405,6 +565,7 @@ Authorization: Session cookie
 - `AUTH_ERROR`: Authentication failed
 - `AUTHZ_ERROR`: Authorization failed
 - `NOT_FOUND`: Resource not found
+- `DUPLICATE_ERROR`: Resource already exists
 - `BLOCKCHAIN_ERROR`: Blockchain transaction failed
 - `DATABASE_ERROR`: Database operation failed
 - `RATE_LIMIT_ERROR`: Too many requests

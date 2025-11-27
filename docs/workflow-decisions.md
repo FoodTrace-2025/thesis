@@ -111,29 +111,28 @@ Frontend tasks can have tests after implementation:
 |------|-------|-------|---------|
 | **XS** | 1-2 | Single config/file | Setup ESLint rules |
 | **S** | 2-4 | Single component/function | Create contract skeleton |
-| **M** | 4-8 | Feature with tests | Product registration flow |
-| **L** | 8+ | **TOO BIG - SPLIT** | Never create L stories |
+| **M** | 4+ | **TOO BIG - SPLIT** | Never create M+ stories |
 
 ### Splitting Large Stories
 
-If a story exceeds 8 hours estimated:
+If a story exceeds 4 hours estimated:
 
 1. Identify natural boundaries (contract vs API vs UI)
 2. Split by acceptance criteria groups
 3. Each sub-story should be independently testable
 4. First story should establish foundation, later stories add features
 
-**Example - Epic 5 (Product Registration) split:**
+**Example - Large Feature split:**
 
 ```
-Original: "Implement product registration" (~20 hours)
+Original: "Implement full feature" (~16 hours)
 
 Split into:
-- Story 5.1: ProductRegistry contract skeleton + basic tests (S: 3h)
-- Story 5.2: registerProduct function + security tests (M: 5h)
-- Story 5.3: API route /api/products/register (S: 4h)
-- Story 5.4: ProductRegistrationForm UI component (M: 6h)
-- Story 5.5: Integration + E2E test for full flow (S: 3h)
+- Story X.1: Contract skeleton + basic tests (S: 3h)
+- Story X.2: Core function + security tests (S: 4h)
+- Story X.3: API route integration (S: 3h)
+- Story X.4: UI component (S: 4h)
+- Story X.5: Integration + E2E test (XS: 2h)
 ```
 
 ### Estimation Notes
@@ -162,10 +161,10 @@ Split into:
 ### Target QA Coverage
 
 **~40% of stories** should have QA involvement, focused on:
-- All of Epic 3 (Security Hardening)
-- All of Epic 5-6 (Product Registration, Transfer Workflow)
-- All of Epic 10 (Multi-party Verification)
-- Selected stories from Epic 7-8 (complex tracking logic)
+- All security-related stories (authentication, encryption, key management)
+- All smart contract stories (immutable once deployed)
+- Complex integration stories (multiple failure points)
+- Stories with data integrity implications
 
 ### QA Command Reference
 
@@ -212,24 +211,6 @@ Split into:
 
 ---
 
-## Epic 1 Story Breakdown
-
-Based on workflow decisions, Epic 1 should be split into:
-
-| Story | Title | Size | QA? |
-|-------|-------|------|-----|
-| 1.1 | External Service Account Setup | XS | No |
-| 1.2 | Initialize Next.js + TypeScript Project | S | No |
-| 1.3 | Configure Hardhat + Local Network | S | No |
-| 1.4 | Configure Prisma + Supabase Connection | S | No |
-| 1.5 | Configure Chakra UI + Base Layout | S | No |
-| 1.6 | Deploy Hello World Contract to Sepolia | S | No |
-| 1.7 | Team Environment Verification | XS | No |
-
-**Note:** Epic 1 is setup/infrastructure - no QA needed.
-
----
-
 ## References
 
 - BMAD User Guide: `.bmad-core/user-guide.md`
@@ -240,4 +221,4 @@ Based on workflow decisions, Epic 1 should be split into:
 
 ---
 
-**Last Updated:** 2025-11-26 (Session 29)
+**Last Updated:** 2025-11-27 (Session 32)

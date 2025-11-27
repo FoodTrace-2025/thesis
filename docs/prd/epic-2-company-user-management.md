@@ -127,13 +127,15 @@ model User {
 
 **API Endpoints (Simplified for POC):**
 
-- `POST /api/admin/companies` - PLATFORM_ADMIN creates company
-- `GET /api/admin/companies` - List all companies (with status filter)
-- `POST /api/admin/companies/:id/approve` - Approve company (generates wallet)
-- `POST /api/admin/companies/:id/reject` - Reject company (with reason)
-- `POST /api/admin/users` - PLATFORM_ADMIN creates COMPANY_ADMIN user
-- `POST /api/companies/users` - COMPANY_ADMIN creates employee users
+- `POST /api/admin/companies` - PLATFORM_ADMIN creates company (Auth: Story 2.5)
+- `GET /api/admin/companies` - List all companies with status filter (Auth: Story 2.5)
+- `POST /api/admin/companies/:id/approve` - Approve company, generates wallet (Auth: Story 2.5)
+- `POST /api/admin/companies/:id/reject` - Reject company with reason (Auth: Story 2.5)
+- `POST /api/admin/users` - PLATFORM_ADMIN creates COMPANY_ADMIN (Auth: Story 2.5)
+- `POST /api/companies/users` - COMPANY_ADMIN creates employees (Auth: Story 2.5)
 - `POST /api/auth/login` - Email/password authentication
+
+**Note:** Admin endpoints created without auth in Story 2.2-2.4. Auth added systematically in Story 2.5.
 
 **Wallet Generation Flow:**
 
@@ -183,6 +185,17 @@ export function validateEmailDomain(email: string, companyDomain: string): boole
 // Usage in API route:
 if (!validateEmailDomain(userEmail, company.domain)) {
   throw new Error(`Email must be from domain: ${company.domain}`);
+}
+```
+
+**Company Email Validation (Story 2.2):**
+
+```typescript
+// Company contact email MUST match company domain
+// If domain is "farm.fi", company email must be "something@farm.fi"
+// This is validated in the createCompanySchema Zod refinement
+if (!companyEmail.endsWith(`@${companyDomain}`)) {
+  throw new Error('Company email must match company domain');
 }
 ```
 

@@ -4,6 +4,61 @@ This file contains archived session achievements for historical reference.
 
 ---
 
+## Session 32 (2025-11-27) - Story 2.2 Complete & Workflow Guidelines Generalized
+
+### Session 32 Achievements
+
+✅ **Story 2.2 Complete**: Company Creation API - POST/GET /api/admin/companies endpoints with 10/10 tests passing
+✅ **Testing Infrastructure**: Jest 30 + ts-jest + next-test-api-route-handler configured, first API tests working
+✅ **Zod Validation**: Created company schema with email/domain refinement (Zod 4 `.issues` API)
+✅ **Prisma Singleton**: Created src/lib/prisma.ts preventing connection exhaustion in dev
+✅ **Workflow Generalized**: Removed Epic 1 breakdown, generalized QA coverage to category-based guidance
+✅ **Story Sizing Updated**: Max 4 hours (was 8h) - one story = one session for context preservation
+
+**Files Created:**
+- src/lib/prisma.ts (Prisma client singleton)
+- src/lib/validation/company.ts (Zod schemas)
+- src/lib/auth/requireAdmin.ts (Auth stub for Story 2.5)
+- src/pages/api/admin/companies/index.ts (POST + GET handlers)
+- src/pages/api/admin/companies/index.test.ts (10 tests)
+- jest.config.js (Jest configuration)
+
+**Key Technical Notes:**
+- Zod 4 uses `.issues` not `.errors` for validation errors
+- AuditLog uses `userId: null` until auth implemented (Story 2.5)
+- Story sizing: XS (1-2h), S (2-4h), M+ = TOO BIG - SPLIT
+
+**Impact:** First API story complete with full test coverage. Workflow guidelines now general/reusable (no epic-specific content). Ready for Story 2.3 (Approve/Reject API) or Story 3.1 (Wallet Encryption).
+
+---
+
+## Session 31 (2025-11-27) - Database Schema Enhancement & Epic 2 Flow Clarification
+
+### Session 31 Achievements
+
+✅ **Prisma Enums Implemented**: Added CompanyStatus, CompanyType, UserRole enums for type safety (replaced String types)
+✅ **Epic 2 Flow Simplified**: Updated documentation to reflect B2B enterprise model (PLATFORM_ADMIN creates companies, no self-registration)
+✅ **Story 2.1 Complete**: Database schema done with native PostgreSQL enums, status marked as Done
+✅ **Wallet Architecture Clarified**: Documented three wallet types (Deployer, WALLET_ENCRYPTION_KEY, Company Wallets)
+✅ **User Tracking Decision**: Off-chain (database tracks userId), On-chain (blockchain tracks company wallet)
+✅ **Role Documentation**: Clarified PLATFORM_ADMIN vs COMPANY_ADMIN roles and workflow
+
+**Key Technical Decisions:**
+- Prisma Enums over Strings: Better type safety for stable, well-defined values
+- Domain index: Skipped (won't query by domain)
+- isActive field: Skipped for POC simplicity
+- Password flow: COMPANY_ADMIN sets initial password (simpler than random generation)
+- Company creation: Two-step (create PENDING → approve → generate wallet)
+
+**Files Modified:**
+- prisma/schema.prisma (added 3 enums, updated field types)
+- docs/stories/2.1.story.md (status: Done, completion notes added)
+- docs/prd/epic-2-company-user-management.md (simplified user flow documented)
+
+**Impact:** Database foundation complete with type-safe enums. Epic 2 documentation reflects realistic B2B enterprise model. Ready to continue with Story 3.1 (Wallet Encryption) or Story 2.2 (Company API).
+
+---
+
 ## Session 30 (2025-11-27) - Epic 1 Complete: Full Project Foundation Deployed
 
 ### Session 30 Achievements

@@ -39,7 +39,7 @@ The FoodTrace architecture is organized into **14 focused, lean files** optimize
   - PostgreSQL schema, composite indexes, Row Level Security
 - **[backend-architecture.md](backend-architecture.md)** (11 KB) - API Routes, server-side logic
   - Next.js API Routes structure, authentication, blockchain integration
-- **[api-spec.md](api-spec.md)** (8.9 KB) - REST endpoints, request/response formats
+- **[rest-api-spec.md](rest-api-spec.md)** (8.9 KB) - REST endpoints, request/response formats
   - POST /api/products, GET /api/trace, authentication headers
 - **[external-apis.md](external-apis.md)** (7.1 KB) - Third-party integrations
   - Supabase, Alchemy RPC, Etherscan, SendGrid email
@@ -81,7 +81,7 @@ docs/architecture/
 ├── data-models.md                    (9.4 KB) ← Backend stories
 ├── database-schema.md                (11 KB)  ← Backend stories
 ├── backend-architecture.md           (11 KB)  ← Backend stories
-├── api-spec.md                       (8.9 KB) ← Backend stories
+├── rest-api-spec.md                  (8.9 KB) ← Backend stories
 ├── external-apis.md                  (7.1 KB) ← Backend stories
 ├── frontend-architecture.md          (9.4 KB) ← Frontend stories
 ├── components.md                     (11 KB)  ← Frontend stories

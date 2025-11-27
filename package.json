@@ -16,7 +16,9 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.4.0",
@@ -25,7 +27,8 @@
     "next": "14.2.15",
     "react": "^18",
     "react-dom": "^18",
-    "viem": "^2.40.3"
+    "viem": "^2.40.3",
+    "zod": "^4.1.13"
   },
   "ts-node": {
     "compilerOptions": {
@@ -34,14 +37,18 @@
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
     "hardhat": "^2.22.0",
+    "jest": "^30.2.0",
+    "next-test-api-route-handler": "^5.0.3",
     "prettier": "^3.7.0",
     "prisma": "^7.0.1",
+    "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.6",
     "typescript": "^5"
