@@ -1,0 +1,18 @@
+// FoodTrace Database Schema
+// Full schema will be implemented in Epic 2
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Placeholder model to verify connection works
+// Will be replaced with full schema (companies, users, products, etc.) in Epic 2
+model HealthCheck {
+  id        String   @id @default(uuid())
+  status    String
+  checkedAt DateTime @default(now())
+}

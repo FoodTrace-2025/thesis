@@ -1,0 +1,49 @@
+{
+  "name": "foodtrace",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "compile": "hardhat compile",
+    "test:contracts": "hardhat test",
+    "node": "hardhat node",
+    "deploy:local": "tsx --require ./node_modules/hardhat/register.js scripts/deploy.ts --network localhost",
+    "deploy:sepolia": "TS_NODE_PROJECT='tsconfig.hardhat.json' npx hardhat run --network sepolia scripts/deploy.ts",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.4.0",
+    "@prisma/client": "^7.0.1",
+    "dotenv": "^17.2.3",
+    "next": "14.2.15",
+    "react": "^18",
+    "react-dom": "^18",
+    "viem": "^2.40.3"
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.15",
+    "hardhat": "^2.22.0",
+    "prettier": "^3.7.0",
+    "prisma": "^7.0.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5"
+  }
+}

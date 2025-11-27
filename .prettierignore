@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+build/
+
+# Hardhat artifacts
+artifacts/
+cache/
+typechain-types/
+
+# Prisma generated
+generated/
+
+# Package files
+package-lock.json
+
+# Misc
+*.md
