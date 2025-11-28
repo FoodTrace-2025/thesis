@@ -3,8 +3,8 @@ doc-id: thesis-project-context
 title: FoodTrace Thesis Project Context
 purpose: AI agent entry point and navigation hub
 auto-generated: false
-last-updated: 2025-11-27
-session: 33
+last-updated: 2025-11-28
+session: 34
 ---
 
 # FoodTrace Thesis - Project Context
@@ -30,7 +30,7 @@ session: 33
 
 ### Session History
 
-- **Session Archive** → .claude/sessions/session-history.md (Sessions 1-33 archive)
+- **Session Archive** → .claude/sessions/session-history.md (Sessions 25-34 archive, last 10 kept)
 
 ### Archived Documents (2025-11-13 - Planning Phase)
 
@@ -58,23 +58,23 @@ Planning documents created during Sessions 1-7 but never used for development. A
 
 ## Current Session Status
 
-- **Last Updated**: 2025-11-27 (Session 33)
-- **Project Status**: Week 3 - Epic 2 in progress, Story 3.1 Done
-- **Project Completion**: ~52% (Brief ✅, PRD ✅, Architecture ✅, Epic 1 ✅, Stories 2.1-2.2 ✅, Story 3.1 ✅)
-- **Active Stage**: Story 2.3 ready (unblocked by Story 3.1 wallet encryption)
-- **Next Priority**: Story 2.3 (Company Approve/Reject API) - now has wallet encryption dependency
-- **Recent Changes**: Story 3.1 complete with QA review, wallet encryption implemented
+- **Last Updated**: 2025-11-28 (Session 34)
+- **Project Status**: Week 3 - Epic 2 in progress, Stories 2.1-2.3 Done, Story 3.1 Done
+- **Project Completion**: ~55% (Brief ✅, PRD ✅, Architecture ✅, Epic 1 ✅, Stories 2.1-2.3 ✅, Story 3.1 ✅)
+- **Active Stage**: Story 2.4 ready (Company Reject API)
+- **Next Priority**: Story 2.4 (Company Reject API) or Story 2.5 (Admin Authentication)
+- **Recent Changes**: Story 2.3 complete with QA review, TypeScript fixes applied
 - **Blockers**: None
-- **Ready for**: Story 2.3 (Company Approve/Reject with wallet generation)
+- **Ready for**: Story 2.4 (Company Reject) or Story 2.5 (Admin Auth)
 
-### Current Session Achievements (Session 33 - 2025-11-27)
+### Current Session Achievements (Session 34 - 2025-11-28)
 
-✅ Story 3.1 Complete: Wallet Encryption Utility - AES-256-GCM, 14 tests, 100% coverage
-✅ Dependency Analysis: Confirmed Story 3.1 blocks Story 2.3 (wallet encryption required)
-✅ Security QA PASS: NIST-compliant IV, CSPRNG, auth tag verification, no vulnerabilities
-✅ QA Infrastructure: Created docs/qa/gates/ and first gate file
+✅ Story 2.3 Complete: Company Approve API with wallet generation (viem + AES-256-GCM encryption)
+✅ Security QA Review PASS: Wallet generation (CSPRNG), encryption, no data exposure, OWASP compliant
+✅ TypeScript Fixes: Prisma 7 (removed directUrl) + Zod 4 (errorMap→error) migration fixes
+✅ Test Organization Decision: Keep co-located pattern (tests next to source files)
+✅ 12 Tests Passing: 89.47% statement coverage, 75% branch coverage (exceeds >80% target)
 ✅ Full BMAD Cycle: SM→Dev→QA completed for security-critical story
-✅ Story 2.3 Unblocked: Wallet encryption available for Company Approve/Reject API
 
 ### Development Approach
 
@@ -195,7 +195,7 @@ Planning documents created during Sessions 1-7 but never used for development. A
 /home/kala/Documents/GitHub/thesis/docs/thesis/chapters/chapter-7-conclusion.md
 
 # Session Archive
-/home/kala/Documents/GitHub/thesis/.claude/sessions/session-history.md (✅ Sessions 1-33)
+/home/kala/Documents/GitHub/thesis/.claude/sessions/session-history.md (✅ Sessions 25-34, last 10 kept)
 
 # Archived Planning (2025-11-13)
 /home/kala/Documents/GitHub/thesis/docs/archive/planning-phase/README.md (📦 Index of archived docs)
@@ -344,21 +344,24 @@ npx prisma studio             # Open database GUI
 
 ## Auto-Update Instructions (For `/recap` command)
 
+**Full specification:** `~/.claude/commands/recap.md` (authoritative source)
+
 When updating this file after each session:
 
 1. Update "Last Updated" date in YAML frontmatter and Current Session Status
 2. Update "Current Session Achievements" → Add new session summary (5-6 bullet points max)
 3. Move previous session to .claude/sessions/session-history.md (compress to 20-30 lines)
-4. Update "Active Stage" and "Next Priority"
-5. Do NOT modify Project Overview, Tech Stack, Timeline, Key Decisions sections
-6. Keep this file under 200 lines (high-level only, details in supporting docs)
-7. NO `@` symbols in file references (use plain paths only)
+4. **Keep only last 10 sessions** in session-history.md (delete older sessions)
+5. Update "Active Stage" and "Next Priority"
+6. Do NOT modify Project Overview, Tech Stack, Timeline, Key Decisions sections
+7. Keep this file under 200 lines (high-level only, details in supporting docs)
+8. NO `@` symbols in file references (use plain paths only)
 
 ---
 
-**Last Session:** Nov 27, 2025 (Session 33 Complete) - Story 3.1 done with QA review, wallet encryption implemented
-**Next Session:** Story 2.3 (Company Approve/Reject API with wallet generation)
-**Status:** ✅ Story 3.1 Done - Wallet encryption complete, Story 2.3 unblocked and ready
-**Session History:** See .claude/sessions/session-history.md for Sessions 1-33 detailed archive
+**Last Session:** Nov 28, 2025 (Session 34 Complete) - Story 2.3 done with QA review, TypeScript fixes applied
+**Next Session:** Story 2.4 (Company Reject API) or Story 2.5 (Admin Authentication)
+**Status:** ✅ Story 2.3 Done - Company Approve API complete with wallet generation
+**Session History:** See .claude/sessions/session-history.md for Sessions 25-34 (last 10 kept)
 
 _This CLAUDE.md file is the AI assistant's primary context document. Update after each significant milestone._

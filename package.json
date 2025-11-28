@@ -15,6 +15,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
+    "db:seed": "tsx prisma/seed.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "jest",
@@ -22,9 +23,14 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.4.0",
+    "@prisma/adapter-pg": "^7.0.1",
     "@prisma/client": "^7.0.1",
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "next": "14.2.15",
+    "next-auth": "^4.24.13",
+    "pg": "^8.16.3",
     "react": "^18",
     "react-dom": "^18",
     "viem": "^2.40.3",
@@ -35,10 +41,14 @@
       "module": "commonjs"
     }
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^20",
+    "@types/pg": "^8.15.6",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

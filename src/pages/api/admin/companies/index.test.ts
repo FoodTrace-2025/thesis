@@ -10,6 +10,23 @@ import { testApiHandler } from 'next-test-api-route-handler';
 import * as handler from './index';
 import { prisma } from '@/lib/prisma';
 
+// Mock NextAuth - must be before handler import
+jest.mock('next-auth', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({})),
+  getServerSession: jest.fn(() =>
+    Promise.resolve({
+      user: {
+        id: 'admin-user-id',
+        email: 'admin@foodtrace.local',
+        name: 'Platform Admin',
+        role: 'PLATFORM_ADMIN',
+        companyId: null,
+      },
+    })
+  ),
+}));
+
 // Mock Prisma
 jest.mock('@/lib/prisma', () => ({
   prisma: {

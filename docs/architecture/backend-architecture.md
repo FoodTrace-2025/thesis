@@ -9,8 +9,96 @@
 **Runtime:** Node.js 18.x LTS
 **Framework:** Next.js API Routes (Pages Router)
 **Authentication:** NextAuth.js v4 with JWT sessions
-**Database ORM:** Prisma Client
+**Database ORM:** Prisma Client v7 (with PostgreSQL adapter)
 **Blockchain Client:** Viem (server-side wallet client)
+
+---
+
+## Prisma 7 Configuration (Breaking Change)
+
+**Important:** Prisma 7 introduced a breaking change requiring driver adapters for client instantiation. The project uses the PostgreSQL adapter pattern.
+
+**Required Packages:**
+```bash
+npm install @prisma/adapter-pg pg @types/pg
+```
+
+**Client Configuration:**
+```typescript
+// src/lib/prisma.ts
+import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+
+// Create PostgreSQL connection pool (singleton)
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+  pool: Pool | undefined;
+};
+
+// Reuse pool across hot reloads
+const pool =
+  globalForPrisma.pool ??
+  new Pool({
+    connectionString: process.env.DATABASE_URL,
+  });
+
+// Create Prisma client with PostgreSQL adapter (required for Prisma 7)
+const adapter = new PrismaPg(pool);
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    adapter,
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  });
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
+  globalForPrisma.pool = pool;
+}
+```
+
+**Seed Script Pattern (Prisma 7):**
+```typescript
+// prisma/seed.ts
+import { config } from 'dotenv';
+import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+
+config({ path: '.env.local' });
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
+
+// ... seed logic ...
+
+// Cleanup: disconnect both prisma and pool
+await prisma.$disconnect();
+await pool.end();
+```
+
+**Prisma Config (prisma.config.ts):**
+```typescript
+import { config } from "dotenv";
+import { defineConfig, env } from "prisma/config";
+
+config({ path: ".env.local" });
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: {
+    path: "prisma/migrations",
+    seed: "npx tsx prisma/seed.ts",
+  },
+  datasource: {
+    url: env("DATABASE_URL"),
+  },
+});
+```
+
+**Reference:** [Prisma 7 Upgrade Guide](https://www.prisma.io/docs/orm/more/upgrade-guides/upgrading-versions/upgrading-to-prisma-7)
 
 ---
 
@@ -406,4 +494,4 @@ export const authOptions = {
 
 ---
 
-**Last Updated:** 2025-11-20 (Week 0 Complete)
+**Last Updated:** 2025-11-28 (Session 35 - Added Prisma 7 adapter documentation)

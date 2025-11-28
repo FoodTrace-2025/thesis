@@ -49,9 +49,9 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ApiResponse>
 ) {
-  // TODO: Add PLATFORM_ADMIN authentication in Story 2.5
-  // For now, using stub that allows all requests
-  await requirePlatformAdmin(req, res);
+  // Validate PLATFORM_ADMIN session
+  const session = await requirePlatformAdmin(req, res);
+  if (!session) return; // Auth failed, response already sent
 
   // 1. Method validation (POST only)
   if (req.method !== 'POST') {
@@ -133,7 +133,7 @@ export default async function handler(
         data: {
           action: 'REJECT_COMPANY',
           companyId: id,
-          userId: null, // Auth not implemented yet - see Story 2.5
+          userId: session.user.id,
           details: {
             reason,
           },

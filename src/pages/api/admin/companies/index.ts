@@ -66,12 +66,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ApiResponse>
 ) {
-  // TODO: Add PLATFORM_ADMIN authentication in Story 2.5
-  // For now, using stub that allows all requests
-  await requirePlatformAdmin(req, res);
+  // Validate PLATFORM_ADMIN session
+  const session = await requirePlatformAdmin(req, res);
+  if (!session) return; // Auth failed, response already sent
 
   if (req.method === 'POST') {
-    return handlePost(req, res);
+    return handlePost(req, res, session.user.id);
   }
 
   if (req.method === 'GET') {
@@ -87,7 +87,8 @@ export default async function handler(
  */
 async function handlePost(
   req: NextApiRequest,
-  res: NextApiResponse<ApiResponse>
+  res: NextApiResponse<ApiResponse>,
+  userId: string
 ) {
   try {
     // 1. Validate request body
@@ -142,7 +143,7 @@ async function handlePost(
         data: {
           action: 'CREATE_COMPANY',
           companyId: company.id,
-          userId: null, // Auth not implemented yet - see Story 2.5
+          userId,
           details: {
             companyName: name,
             companyEmail: email,
