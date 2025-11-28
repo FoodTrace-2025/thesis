@@ -137,39 +137,45 @@ model User {
 
 **Note:** Admin endpoints created without auth in Story 2.2-2.4. Auth added systematically in Story 2.5.
 
-**Wallet Generation Flow:**
+**Wallet Generation Flow (Updated Session 34 - viem):**
 
 ```typescript
-// src/lib/wallet.ts (uses Epic 3 Tier 1 encryption)
-import crypto from 'crypto';
-import { ethers } from 'ethers';
+// src/pages/api/admin/companies/[id]/approve.ts
+// Uses viem (native to Wagmi/RainbowKit ecosystem) instead of ethers.js
+import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
+import { encryptWalletKey, getEncryptionKey } from '@/lib/crypto';
 
 async function approveCompany(companyId: string) {
-  // Generate new Ethereum wallet
-  const wallet = ethers.Wallet.createRandom();
+  // Generate new Ethereum wallet using viem
+  const privateKey = generatePrivateKey();
+  const account = privateKeyToAccount(privateKey);
 
   // Encrypt private key using Epic 3 Tier 1 encryption
-  const encryptedKey = encryptWalletKey(wallet.privateKey, process.env.WALLET_ENCRYPTION_KEY);
+  const encryptionKey = getEncryptionKey();
+  const encryptedKey = encryptWalletKey(privateKey, encryptionKey);
 
-  // Store in database
-  await db.company.update({
-    where: { id: companyId },
-    data: {
-      status: "APPROVED",
-      encryptedPrivateKey: encryptedKey,
-      walletAddress: wallet.address,
-      approvedAt: new Date(),
-    },
-  });
+  // Atomic update with Prisma transaction
+  await db.$transaction(async (tx) => {
+    // Update company
+    await tx.company.update({
+      where: { id: companyId },
+      data: {
+        status: "APPROVED",
+        encryptedPrivateKey: encryptedKey,
+        walletAddress: account.address,
+        approvedAt: new Date(),
+      },
+    });
 
-  // Audit log entry
-  await db.auditLog.create({
-    data: {
-      action: "COMPANY_APPROVED",
-      companyId: companyId,
-      userId: adminUserId,
-      details: { walletAddress: wallet.address },
-    },
+    // Audit log entry
+    await tx.auditLog.create({
+      data: {
+        action: "APPROVE_COMPANY",
+        companyId: companyId,
+        userId: null, // Set by auth in Story 2.5
+        details: { walletAddress: account.address },
+      },
+    });
   });
 }
 ```
@@ -202,9 +208,9 @@ if (!companyEmail.endsWith(`@${companyDomain}`)) {
 **Technical Dependencies:**
 
 - **NextAuth.js v4** - Email/password authentication, JWT session management
-- **crypto** (Node.js built-in) - Wallet encryption/decryption (or use Epic 3 library)
-- **email-validator** package - Enhanced email validation (npm install email-validator)
-- **ethers.js** - Ethereum wallet generation (Wallet.createRandom())
+- **crypto** (Node.js built-in) - Wallet encryption/decryption (Epic 3 library)
+- **viem** - Ethereum wallet generation (generatePrivateKey + privateKeyToAccount) - already installed, native to Wagmi/RainbowKit ecosystem
+- **zod** - Request validation (already installed)
 
 #### Dependencies
 
@@ -247,10 +253,11 @@ if (!companyEmail.endsWith(`@${companyDomain}`)) {
 | Risk                                        | Mitigation                                                     |
 | ------------------------------------------- | -------------------------------------------------------------- |
 | User creates account with non-company email | Email domain validation enforced: email.endsWith(domain)       |
-| Wallet generation fails                     | Retry logic with exponential backoff, audit log failure entry  |
-| WALLET_ENCRYPTION_KEY not in .env.local     | Epic 1 prerequisite check, fail fast with clear error message  |
+| Wallet generation fails                     | Transaction rollback, return 500 error, admin can manually retry |
+| WALLET_ENCRYPTION_KEY not in .env.local     | getEncryptionKey() throws clear error, fail fast               |
 | Epic 3 Tier 1 not complete                  | Block Epic 2 start until Epic 3 Tier 1 encryption working     |
 | Company wallets need Sepolia ETH            | Get from faucet after wallet generation                        |
+| Double-approve attempt                      | Return 409 Conflict, only PENDING companies can be approved    |
 
 #### Simplified User Flow (Session 31)
 
@@ -264,7 +271,7 @@ if (!companyEmail.endsWith(`@${companyDomain}`)) {
    → Saved with status: PENDING (no wallet yet)
 
 2. PLATFORM_ADMIN approves Company:
-   → System generates wallet via ethers.Wallet.createRandom()
+   → System generates wallet via viem (generatePrivateKey + privateKeyToAccount)
    → Private key encrypted with WALLET_ENCRYPTION_KEY
    → Status: APPROVED, wallet fields populated
 

@@ -239,31 +239,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 ## Server-Side Blockchain Integration
 
-**Wallet Management:**
+**Wallet Management (Updated Session 34 - viem + Story 3.1 encryption):**
 
 ```typescript
-// lib/walletManager.ts
-import CryptoJS from 'crypto-js';
-import { ethers } from 'ethers';
+// lib/wallet.ts - Uses viem (native to Wagmi/RainbowKit ecosystem)
+import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
+import { createWalletClient, http } from 'viem';
+import { sepolia } from 'viem/chains';
+import { encryptWalletKey, decryptWalletKey, getEncryptionKey } from '@/lib/crypto';
 
-export async function decryptWallet(encryptedKey: string): Promise<string> {
-  const key = process.env.WALLET_ENCRYPTION_KEY!;
-  const decrypted = CryptoJS.AES.decrypt(encryptedKey, key).toString(CryptoJS.enc.Utf8);
+// Generate new wallet for company approval
+export function generateCompanyWallet() {
+  const privateKey = generatePrivateKey();
+  const account = privateKeyToAccount(privateKey);
+  const encryptionKey = getEncryptionKey();
+  const encryptedPrivateKey = encryptWalletKey(privateKey, encryptionKey);
 
-  // Never log private key
-  logger.info({ operation: 'decrypt_wallet' }, 'Wallet decrypted');
-
-  return decrypted;
+  return {
+    walletAddress: account.address,
+    encryptedPrivateKey,
+  };
 }
 
-export async function signTransaction(txData: any, companyId: string) {
-  const company = await prisma.company.findUnique({ where: { id: companyId } });
-  const privateKey = await decryptWallet(company.encryptedPrivateKey);
+// Decrypt wallet for signing transactions
+export function getCompanyWalletClient(encryptedPrivateKey: string) {
+  const encryptionKey = getEncryptionKey();
+  const privateKey = decryptWalletKey(encryptedPrivateKey, encryptionKey);
 
-  const wallet = new ethers.Wallet(privateKey);
-  const signedTx = await wallet.signTransaction(txData);
+  if (!privateKey) {
+    throw new Error('Failed to decrypt wallet');
+  }
 
-  return signedTx;
+  const account = privateKeyToAccount(privateKey as `0x${string}`);
+
+  return createWalletClient({
+    account,
+    chain: sepolia,
+    transport: http(process.env.SEPOLIA_RPC_URL),
+  });
 }
 ```
 

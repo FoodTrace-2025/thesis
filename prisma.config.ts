@@ -13,6 +13,6 @@ export default defineConfig({
   },
   datasource: {
     url: env("DATABASE_URL"),
-    directUrl: env("DIRECT_URL"), // Direct connection for migrations (bypasses pgBouncer)
+    // Note: directUrl removed in Prisma 7 - CLI auto-handles direct connections for migrations
   },
 });

@@ -106,23 +106,24 @@ export const publicClient = createPublicClient({
 **URL:** `https://sepolia.infura.io/v3/[PROJECT_ID]`
 **Free Tier:** 100,000 requests/day
 
-**Fallback Strategy:**
+**Fallback Strategy (Updated Session 34 - viem):**
 ```typescript
-const providers = [
-  new ethers.JsonRpcProvider(process.env.ALCHEMY_RPC_URL),      // Primary
-  new ethers.JsonRpcProvider(process.env.INFURA_RPC_URL),       // Fallback #1
-  new ethers.JsonRpcProvider('https://rpc.sepolia.org')         // Fallback #2
-];
+import { createPublicClient, http, fallback } from 'viem';
+import { sepolia } from 'viem/chains';
 
-export async function queryWithFallback(contractMethod: Function) {
-  for (const provider of providers) {
-    try {
-      return await contractMethod(provider);
-    } catch (error) {
-      console.warn(`Provider failed, trying next: ${error.message}`);
-    }
-  }
-  throw new Error('All RPC providers failed');
+// Viem supports built-in fallback transport
+export const publicClient = createPublicClient({
+  chain: sepolia,
+  transport: fallback([
+    http(process.env.ALCHEMY_RPC_URL),           // Primary
+    http(process.env.INFURA_RPC_URL),            // Fallback #1
+    http('https://rpc.sepolia.org'),             // Fallback #2
+  ]),
+});
+
+// Usage example
+export async function getBlockNumber() {
+  return await publicClient.getBlockNumber();
 }
 ```
 

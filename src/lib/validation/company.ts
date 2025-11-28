@@ -23,7 +23,7 @@ export const createCompanySchema = z
       .min(2, 'Domain must be at least 2 characters')
       .max(100, 'Domain must be at most 100 characters'),
     type: z.nativeEnum(CompanyType, {
-      errorMap: () => ({ message: 'Type must be one of: PRODUCER, DISTRIBUTOR, RETAILER' }),
+      error: 'Type must be one of: PRODUCER, DISTRIBUTOR, RETAILER',
     }),
   })
   .refine((data) => data.email.endsWith(`@${data.domain}`), {

@@ -238,11 +238,12 @@
 
 3. **Approve Company**
    - Backend flow:
-     a. Generate Ethereum wallet (ethers.Wallet.createRandom())
-     b. Encrypt private key (AES-256-GCM)
-     c. Store encrypted key + wallet address in database
+     a. Generate Ethereum wallet (viem: generatePrivateKey + privateKeyToAccount)
+     b. Encrypt private key (AES-256-GCM via lib/crypto)
+     c. Store encrypted key + wallet address in database (atomic transaction)
      d. Update company status to APPROVED
-     e. Send email to company admin (login credentials, next steps)
+     e. Create audit log entry
+     f. Send email to company admin (login credentials, next steps)
 
 4. **Company Login**
    - Company admin logs in with email + password
