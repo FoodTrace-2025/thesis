@@ -42,3 +42,20 @@ export const companyStatusFilterSchema = z
  * Type inference for createCompanySchema input
  */
 export type CreateCompanyInput = z.infer<typeof createCompanySchema>;
+
+/**
+ * Schema for rejecting a company
+ * Story 2.4: Company Reject API
+ * Validates: reason (mandatory, 1-500 characters)
+ */
+export const rejectCompanySchema = z.object({
+  reason: z
+    .string()
+    .min(1, 'Rejection reason is required')
+    .max(500, 'Rejection reason must be at most 500 characters'),
+});
+
+/**
+ * Type inference for rejectCompanySchema input
+ */
+export type RejectCompanyInput = z.infer<typeof rejectCompanySchema>;
