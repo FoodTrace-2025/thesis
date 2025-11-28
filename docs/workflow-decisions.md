@@ -211,6 +211,44 @@ Split into:
 
 ---
 
+## Story Document Conventions
+
+### Change Log Purpose
+
+**IMPORTANT:** The Change Log tracks changes to the **story document itself**, NOT implementation status.
+
+| Track in Change Log | Track in Dev Agent Record |
+|---------------------|---------------------------|
+| Scope changes (tasks added/removed) | Implementation details |
+| Acceptance criteria modifications | Test results and coverage |
+| Section additions (QA Results, Dev Record) | Debug log references |
+| Deferrals to other stories | Completion notes |
+| Prerequisite changes | File list created/modified |
+
+### Correct Change Log Entry Examples
+
+```markdown
+## Change Log
+
+| Date | Version | Description | Author |
+|------|---------|-------------|--------|
+| 2025-11-28 | 1.0 | Initial story creation | Bob (SM) |
+| 2025-11-28 | 1.1 | Added Task 5 to scope after dev feedback | Bob (SM) |
+| 2025-11-28 | 1.2 | Added Dev Agent Record section (completion notes, file list) | James (Dev) |
+| 2025-11-28 | 1.3 | Added QA Results section with security findings | Sarah (QA) |
+```
+
+### Incorrect Change Log Entry Examples
+
+```markdown
+❌ WRONG - These describe implementation, not document changes:
+| 2025-11-28 | 1.1 | Implementation complete: NextAuth.js v4, bcrypt... | James (Dev) |
+| 2025-11-28 | 1.2 | QA review PASS: Security-critical review... | Sarah (QA) |
+| 2025-11-28 | 1.3 | All 58 tests passing | James (Dev) |
+```
+
+---
+
 ## References
 
 - BMAD User Guide: `.bmad-core/user-guide.md`
@@ -221,4 +259,4 @@ Split into:
 
 ---
 
-**Last Updated:** 2025-11-27 (Session 32)
+**Last Updated:** 2025-11-28 (Session 35)
