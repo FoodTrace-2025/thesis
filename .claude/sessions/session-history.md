@@ -4,6 +4,37 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 35 (2025-11-28) - Epic 2 Complete: Stories 2.4-2.5 & Admin Authentication
+
+### Session 35 Achievements
+
+✅ **Story 2.4 Complete**: Company Reject API - POST /api/admin/companies/:id/reject with Zod validation (1-500 char reason)
+✅ **Story 2.5 Complete**: Admin Authentication - NextAuth.js v4 with CredentialsProvider, bcrypt, JWT 24h sessions
+✅ **Prisma 7 Breaking Change Fixed**: Added @prisma/adapter-pg for PostgreSQL adapter pattern (seed.ts + lib/prisma.ts)
+✅ **Security QA Review PASS**: OWASP compliance, EXCELLENT rating for authentication implementation
+✅ **58 Tests Passing**: 8 new auth tests + 50 existing (requirePlatformAdmin now validates real sessions)
+✅ **Epic 2 Complete**: All 5 stories done (2.1-2.5) - Company & User Management fully implemented
+✅ **Documentation Fix**: Corrected Change Log usage (tracks document revisions, not implementation status)
+✅ **Workflow Guidelines Updated**: Added Story Document Conventions section to workflow-decisions.md
+
+**Files Created:**
+- src/pages/api/auth/[...nextauth].ts (93 lines - NextAuth.js configuration)
+- src/pages/api/auth/auth.test.ts (170 lines - 8 authentication tests)
+- src/types/next-auth.d.ts (27 lines - TypeScript type augmentation)
+- prisma/seed.ts (59 lines - PLATFORM_ADMIN seed with PostgreSQL adapter)
+- docs/stories/2.5.story.md (Story documentation with QA results)
+
+**Files Modified:**
+- src/lib/auth/requireAdmin.ts (real session validation replaces stub)
+- src/lib/prisma.ts (Prisma 7 PostgreSQL adapter pattern)
+- All admin endpoint files + tests (auth integration + NextAuth mock)
+- docs/architecture/backend-architecture.md (Prisma 7 documentation)
+- docs/workflow-decisions.md (Story Document Conventions section)
+
+**Impact:** Epic 2 complete. Admin can now authenticate and manage companies (create, approve, reject). Ready for Epic 3 (Smart Contracts).
+
+---
+
 ## Session 34 (2025-11-28) - Story 2.3 Complete: Company Approve API with QA Review
 
 ### Session 34 Achievements
@@ -14,16 +45,6 @@ This file contains the last 10 session achievements for historical reference.
 ✅ **Test Organization Decision**: Keep co-located pattern (tests next to source files) - appropriate for project size
 ✅ **12 Tests Passing**: 89.47% statement coverage, 75% branch coverage (exceeds >80% target)
 ✅ **Full BMAD Cycle**: SM→Dev→QA completed for security-critical story
-
-**Files Created:**
-- src/pages/api/admin/companies/[id]/approve.ts (167 lines - API implementation)
-- src/pages/api/admin/companies/[id]/approve.test.ts (227 lines - 12 tests)
-- docs/qa/gates/2.3-company-approve-api.md (QA gate report)
-
-**Files Modified:**
-- prisma.config.ts (removed Prisma 7 directUrl property)
-- src/lib/validation/company.ts (Zod 4 errorMap→error)
-- docs/stories/2.3.story.md (status: Done, QA results added)
 
 **Impact:** Company Approve API complete with full security review. Story 2.4 (Company Reject) and Story 2.5 (Admin Auth) ready as next priorities.
 
@@ -40,12 +61,6 @@ This file contains the last 10 session achievements for historical reference.
 ✅ **Full BMAD Cycle**: SM→Dev→QA cycle completed for first security-critical story
 ✅ **Story 2.3 Unblocked**: Wallet encryption now available for Company Approve/Reject API
 
-**Files Created:**
-- src/lib/crypto/index.ts (barrel export)
-- src/lib/crypto/wallet-encryption.ts (137 lines - AES-256-GCM implementation)
-- src/lib/crypto/wallet-encryption.test.ts (198 lines - 14 unit tests)
-- docs/qa/gates/3.1-wallet-encryption.yml (QA gate file)
-
 **Impact:** First security-critical story complete with full QA review. Story 2.3 (Company Approve/Reject) now unblocked.
 
 ---
@@ -60,10 +75,6 @@ This file contains the last 10 session achievements for historical reference.
 ✅ **Prisma Singleton**: Created src/lib/prisma.ts preventing connection exhaustion in dev
 ✅ **Workflow Generalized**: Removed Epic 1 breakdown, generalized QA coverage to category-based guidance
 ✅ **Story Sizing Updated**: Max 4 hours (was 8h) - one story = one session for context preservation
-
-**Files Created:**
-- src/lib/prisma.ts, src/lib/validation/company.ts, src/lib/auth/requireAdmin.ts
-- src/pages/api/admin/companies/index.ts, index.test.ts, jest.config.js
 
 **Impact:** First API story complete with full test coverage. Ready for Story 2.3 or Story 3.1.
 
@@ -150,17 +161,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 25 (2025-11-20) - BMAD Structure Completion: PRD + Architecture Sharding & Verification
-
-### Session 25 Achievements
-
-✅ **PRD Epic Sharding Complete**: 13 individual epic files matching BMAD pattern
-✅ **Architecture BMAD Transformation**: Created 14 BMAD-named files (tech-stack.md, coding-standards.md, etc.)
-✅ **Cleaned Up Intermediate Files**: Deleted 14 numbered architecture files, eliminated 60% duplicate content
-✅ **BMAD Structure Verified**: 13 PRD epics + 14 architecture files, 81% token reduction achieved
-
-**Impact:** Week 2 BMAD structure milestone complete. Ready for Week 3 development workflow.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions. Older sessions (1-24) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (26-35). Older sessions (1-25) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
