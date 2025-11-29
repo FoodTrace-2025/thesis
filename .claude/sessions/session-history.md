@@ -4,6 +4,25 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 37 (2025-11-29) - Story 3.2 Complete: Prisma Tenant Client with QA PASS
+
+### Session 37 Achievements
+
+✅ **Epic 3 Updated**: Fixed outdated `$use` middleware code → Prisma 7 `$extends` Client Extensions
+✅ **Story 3.2 Complete**: Prisma Tenant Client - createTenantClient() factory with automatic companyId filtering
+✅ **Security QA PASS**: Full security review - no vulnerabilities, 100% test coverage (24 tests)
+✅ **User + AuditLog Isolation**: Both models filtered by companyId (defense in depth)
+✅ **82 Total Tests Passing**: 24 new tenant client tests + 58 existing tests
+
+**Files Created:**
+- src/lib/prisma/tenant-client.ts (Prisma $extends Client Extensions factory)
+- src/lib/prisma/tenant-client.test.ts (24 comprehensive tenant isolation tests)
+- src/lib/prisma/index.ts (barrel export)
+
+**Impact:** Epic 3 Tier 1 complete. Multi-tenant isolation implemented at ORM level. Defense-in-depth foundation ready.
+
+---
+
 ## Session 36 (2025-11-29) - Completion Metrics Corrected to Honest 20%
 
 ### Session 36 Achievements
@@ -135,17 +154,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 28 (2025-11-25) - BMAD Workflow Clarification & Epic Finalization
-
-### Session 28 Achievements
-
-✅ **BMAD Workflow Clarification**: Confirmed SM = Scrum Master (Bob), creates stories from epics
-✅ **Development Cycle Understanding**: PM only in planning phase, not in SM→Dev→QA cycle
-✅ **Story Creation Process**: SM reads sharded epic files + architecture, drafts stories for Dev
-✅ **Session 26 Continued**: Completed final 4 epic updates (Epic 10-13) - all 67 fixes applied
-
-**Impact:** BMAD development workflow fully understood. Ready for Week 3 SM→Dev→QA cycle.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (28-37). Older sessions (1-27) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (29-37). Older sessions (1-28) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md

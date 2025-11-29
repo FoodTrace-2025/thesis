@@ -88,8 +88,8 @@ WALLET_ENCRYPTION_KEY="[64-char hex from Epic 1]"
 
 **Tier 2 Acceptance Criteria (SHOULD HAVE - 9 hours):**
 
-- ✅ Supabase RLS policies enabled on Company, User, Product tables
-- ✅ RLS policy test: Direct SQL query respects company isolation
+- ⏸️ Supabase RLS policies enabled on Company, User, Product tables - **DEFERRED** (requires non-superuser DB role)
+- ⏸️ RLS policy test: Direct SQL query respects company isolation - **DEFERRED**
 - ✅ Audit log model added to Prisma schema (action, userId, companyId, timestamp, details)
 - ✅ Audit logging implemented for wallet operations (CREATE_WALLET, ENCRYPT_KEY, DECRYPT_KEY, TRANSFER_PRODUCT)
 - ✅ Input validation library integrated (Zod) with schema validation on all API endpoints
