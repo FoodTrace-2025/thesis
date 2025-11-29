@@ -4,6 +4,19 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 36 (2025-11-29) - Completion Metrics Corrected to Honest 20%
+
+### Session 36 Achievements
+
+✅ **Metrics Audit**: Analyzed all 13 epics, found ~103-134 hours total implementation work
+✅ **Completion Corrected**: Changed misleading 60% to honest 20% in CLAUDE.md
+✅ **Breakdown Documented**: Planning 100%, Implementation 17% (2/13 epics), Thesis Writing 0%
+✅ **Core Work Identified**: Epics 5-9 contain the hard blockchain features (~50h)
+
+**Impact:** Honest project tracking. No more inflated metrics creating false comfort.
+
+---
+
 ## Session 35 (2025-11-28) - Epic 2 Complete: Stories 2.4-2.5 & Admin Authentication
 
 ### Session 35 Achievements
@@ -135,30 +148,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 27 (2025-11-24) - Thesis Chapter Structure Enhancement & BMAD Updates
-
-### Session 27 Achievements
-
-✅ **BMAD Method Updated**: Updated to v4.44.3, renamed unified-project-structure.md to source-tree.md
-✅ **Gitignore Enhanced**: Added .claude/settings.local.json, *.bak files, .ai/ folder
-✅ **Chapter 1 Structure Fixed**: Removed standalone subsection 1.1.1, merged into section 1.1
-✅ **Chapter Introductions Added**: Added introductory paragraphs to all 8 chapters per professor feedback
-
-**Impact:** Thesis chapters follow proper academic structure. BMAD aligned with v4.44.3 conventions.
-
----
-
-## Session 26 (2025-11-20) - Epic Quality Enhancement: All 13 Epics Updated to 95%+ PO Validation
-
-### Session 26 Achievements
-
-✅ **Epic 10-13 Updated**: Multi-Party Verification, QR Code, Data Visualization, Deployment & DevOps
-✅ **All 13 Epics Complete**: 67 total fixes applied, average 30 acceptance criteria per epic (was ~10)
-✅ **CRITICAL**: Resolved circular dependency (Epic 5 generates QR codes, Epic 11 scans only)
-✅ **BMAD Validation**: User Prerequisites, Technical Approach code examples, Dependencies corrected
-
-**Impact:** All 13 epic files now at 95%+ PO validation quality. Ready for SM agent to create stories.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (26-35). Older sessions (1-25) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (28-37). Older sessions (1-27) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md

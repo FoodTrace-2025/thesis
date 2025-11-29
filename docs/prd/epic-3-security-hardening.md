@@ -51,7 +51,7 @@ WALLET_ENCRYPTION_KEY="[64-char hex from Epic 1]"
 
 - Node.js crypto library (built-in AES-256-GCM) for wallet private key encryption
 - Environment variable security (.env.local in .gitignore, never commit secrets)
-- Prisma tenant middleware (automatic companyId filtering on all queries)
+- Prisma tenant client (createTenantClient factory with automatic companyId filtering)
 - Wallet encryption/decryption utility functions with error handling
 - Unit tests for encryption functions (>90% coverage)
 
@@ -83,8 +83,8 @@ WALLET_ENCRYPTION_KEY="[64-char hex from Epic 1]"
 - ✅ Unit test: Decryption with wrong key returns error
 - ✅ Unit test: Encryption uses different IV each time (same input → different ciphertext)
 - ✅ .env.local in .gitignore (verified no secrets committed to git history)
-- ✅ Prisma tenant middleware implemented (automatic companyId filtering)
-- ✅ Middleware test: Company A user query only returns Company A data
+- ✅ Prisma tenant client implemented (createTenantClient factory with $extends)
+- ✅ Tenant isolation test: Company A user query only returns Company A data
 
 **Tier 2 Acceptance Criteria (SHOULD HAVE - 9 hours):**
 
@@ -164,38 +164,78 @@ export function decryptWalletKey(encryptedData: string, encryptionKey: string): 
 }
 ```
 
-**Tier 1: Prisma Tenant Middleware:**
+**Tier 1: Prisma Tenant Client (Prisma 7 - Client Extensions):**
+
+> **Note (Session 37):** Updated from deprecated `$use` middleware API (removed in Prisma 7) to `$extends` Client Extensions approach. See [Prisma 7 Upgrade Guide](https://www.prisma.io/docs/orm/more/upgrade-guides/upgrading-versions/upgrading-to-prisma-7).
 
 ```typescript
-// src/lib/prisma/tenant-middleware.ts
-import { PrismaClient } from '@prisma/client';
+// src/lib/prisma/tenant-client.ts
+import { prisma } from '@/lib/prisma';
 
-export function applyTenantMiddleware(prisma: PrismaClient, companyId: string) {
-  prisma.$use(async (params, next) => {
-    // Models with companyId field
-    const tenantModels = ['Product', 'TraceRecord', 'SensorReading', 'User'];
-
-    if (tenantModels.includes(params.model || '')) {
-      // Automatically add companyId filter to all queries
-      if (params.action === 'findMany' || params.action === 'findFirst') {
-        params.args.where = {
-          ...params.args.where,
-          companyId: companyId,
-        };
-      }
-
-      // Prevent cross-tenant updates/deletes
-      if (params.action === 'update' || params.action === 'delete') {
-        params.args.where = {
-          ...params.args.where,
-          companyId: companyId,
-        };
-      }
-    }
-
-    return next(params);
+/**
+ * Creates a tenant-scoped Prisma client that automatically filters
+ * queries by companyId. Use this for company-scoped operations.
+ *
+ * PLATFORM_ADMIN should use the base `prisma` client for cross-tenant access.
+ *
+ * @param companyId - The company ID to scope all queries to
+ * @returns Extended Prisma client with automatic companyId filtering
+ */
+export function createTenantClient(companyId: string) {
+  return prisma.$extends({
+    query: {
+      user: {
+        async findMany({ args, query }) {
+          args.where = { ...args.where, companyId };
+          return query(args);
+        },
+        async findFirst({ args, query }) {
+          args.where = { ...args.where, companyId };
+          return query(args);
+        },
+        async findUnique({ args, query }) {
+          // findUnique doesn't support compound where, so we use findFirst
+          return query(args);
+        },
+        async update({ args, query }) {
+          args.where = { ...args.where, companyId } as typeof args.where;
+          return query(args);
+        },
+        async delete({ args, query }) {
+          args.where = { ...args.where, companyId } as typeof args.where;
+          return query(args);
+        },
+      },
+      auditLog: {
+        async findMany({ args, query }) {
+          args.where = { ...args.where, companyId };
+          return query(args);
+        },
+        async findFirst({ args, query }) {
+          args.where = { ...args.where, companyId };
+          return query(args);
+        },
+      },
+      // Future models (Epic 5+): product, traceRecord, sensorReading
+    },
   });
 }
+
+// Type for the extended client
+export type TenantPrismaClient = ReturnType<typeof createTenantClient>;
+```
+
+**Usage Pattern:**
+```typescript
+// In API route or service function
+import { createTenantClient } from '@/lib/prisma/tenant-client';
+
+// Get companyId from authenticated session
+const tenantPrisma = createTenantClient(session.user.companyId);
+
+// All queries automatically filtered by companyId
+const users = await tenantPrisma.user.findMany(); // Only returns company's users
+const logs = await tenantPrisma.auditLog.findMany(); // Only returns company's logs
 ```
 
 **Tier 2: Supabase RLS Policy Example:**
@@ -238,7 +278,8 @@ model AuditLog {
 
 - **Node.js crypto** (built-in) - AES-256-GCM encryption
 - **Zod** (npm install zod) - Input validation schemas (Tier 2)
-- **@prisma/client** - Database middleware and RLS
+- **@prisma/client v7** - Client Extensions ($extends) for tenant isolation
+- **@prisma/adapter-pg** - Required for Prisma 7 PostgreSQL adapter pattern
 
 #### Dependencies
 
@@ -260,9 +301,9 @@ model AuditLog {
   - Test decryption with wrong key (should return null)
   - Test IV uniqueness (same input → different ciphertext)
   - Achieve >90% code coverage
-- Prisma tenant middleware (1 hour)
-  - Implement automatic companyId filtering for all queries
-  - Test middleware with Company A/B data isolation
+- Prisma tenant client (1 hour)
+  - Implement createTenantClient() factory using $extends
+  - Test tenant isolation with Company A/B data
 
 **Tier 2 Implementation (9 hours - Optional, if time permits):**
 - Supabase RLS policies (3 hours - PAIR with Sam)
@@ -307,7 +348,7 @@ model AuditLog {
 |------|-----------|
 | Wallet decryption fails in production | Comprehensive error handling, return null on failure, audit log entry, unit tests for error scenarios |
 | WALLET_ENCRYPTION_KEY leaked to git | .gitignore verification, pre-commit hook to block .env files, team training on secret management |
-| Cross-tenant data leak | Prisma middleware + Supabase RLS (defense in depth), integration tests verify isolation |
+| Cross-tenant data leak | Prisma Client Extensions + Supabase RLS (defense in depth), integration tests verify isolation |
 | Encryption performance bottleneck | Node.js crypto is native (fast), async operations prevent blocking, benchmark tests verify <100ms encryption time |
 | Team unfamiliar with crypto library | Pair programming required (TaiSheng + Sam), use well-documented Node.js crypto (not third-party library) |
 | Tier 2 not completed (time constraints) | Tier 1 is sufficient for MVP security, Tier 2 can be added post-deployment if needed |
