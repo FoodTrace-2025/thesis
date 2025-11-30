@@ -76,10 +76,10 @@ thesis/
 ├── contracts/           # Solidity smart contracts
 ├── test/                # Smart contract tests
 ├── src/                 # Next.js application
-│   ├── app/             # App router pages
+│   ├── pages/           # Pages router (routes + API)
 │   ├── components/      # React components
 │   ├── lib/             # Utilities, Web3 hooks
-│   └── styles/          # CSS/Tailwind
+│   └── styles/          # Global styles
 ├── public/              # Static assets
 ├── docs/                # Documentation
 ├── hardhat.config.ts    # Hardhat configuration

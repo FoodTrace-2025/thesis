@@ -23,11 +23,11 @@
 ## Active Documents (Not Archived)
 
 Still in use for thesis writing:
-- `docs/prd.md` - Contains 12 epic definitions (may reference in thesis Chapter 3-4)
+- `docs/prd.md` - Contains 13 epic definitions (may reference in thesis Chapter 3-4)
 - `docs/thesis/chapters/*.md` - Active thesis chapter templates
 - `docs/thesis/requirements/oamk-structure.md` - Thesis requirements
 - `docs/thesis/requirements/writing-standards-grade5.md` - Writing standards
-- `.claude/sessions/session-history.md` - Work archive (Sessions 1-11)
+- `.claude/sessions/session-history.md` - Work archive (last 10 sessions kept)
 
 ## Why Archive Instead of Delete?
 
