@@ -28,10 +28,10 @@ async function main() {
 
   // Create or update PLATFORM_ADMIN user
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@foodtrace.local' },
+    where: { email: 'admin@foodtrace.app' },
     update: { passwordHash },
     create: {
-      email: 'admin@foodtrace.local',
+      email: 'admin@foodtrace.app',
       passwordHash,
       name: 'Platform Admin',
       role: 'PLATFORM_ADMIN',

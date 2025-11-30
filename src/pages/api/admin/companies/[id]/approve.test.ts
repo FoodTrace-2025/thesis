@@ -18,7 +18,7 @@ jest.mock('next-auth', () => ({
     Promise.resolve({
       user: {
         id: 'admin-user-id',
-        email: 'admin@foodtrace.local',
+        email: 'admin@foodtrace.app',
         name: 'Platform Admin',
         role: 'PLATFORM_ADMIN',
         companyId: null,
