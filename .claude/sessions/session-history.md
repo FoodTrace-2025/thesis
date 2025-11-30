@@ -4,6 +4,21 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 42 (2025-11-30) - Epic 5 Rewritten, Stories 5.2/5.3 Created
+
+### Session 42 Achievements
+
+✅ **Story 5.2 Review**: Identified critical issues (ethers.js vs viem, missing PRODUCER_ROLE granting)
+✅ **Epic 5 Rewritten**: Complete rewrite with correct viem code samples, fixed story breakdown
+✅ **Story 5.2 Created**: Backend Prerequisites - Product model, PRODUCER_ROLE granting, env vars (2-3h)
+✅ **Story 5.3 Created**: Product Registration API - viem, server-side signing, database save (4-5h)
+✅ **Documentation Audit**: Fixed outdated patterns in 7 files (ethers.js → viem, ALCHEMY_RPC_URL → SEPOLIA_RPC_URL)
+✅ **Env Var Standardization**: All docs now use SEPOLIA_RPC_URL, PRIVATE_KEY, NEXT_PUBLIC_PRODUCT_REGISTRY_ADDRESS
+
+**Impact:** Epic 5 documentation corrected. Story 5.2/5.3 ready for implementation.
+
+---
+
 ## Session 41 (2025-11-30) - Story 5.1 Deployed, Story 5.2 Drafted
 
 ### Session 41 Achievements
@@ -161,19 +176,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 32 (2025-11-27) - Story 2.2 Complete & Workflow Guidelines Generalized
-
-### Session 32 Achievements
-
-✅ **Story 2.2 Complete**: Company Creation API - POST/GET /api/admin/companies endpoints with 10/10 tests passing
-✅ **Testing Infrastructure**: Jest 30 + ts-jest + next-test-api-route-handler configured, first API tests working
-✅ **Zod Validation**: Created company schema with email/domain refinement (Zod 4 `.issues` API)
-✅ **Prisma Singleton**: Created src/lib/prisma.ts preventing connection exhaustion in dev
-✅ **Workflow Generalized**: Removed Epic 1 breakdown, generalized QA coverage to category-based guidance
-✅ **Story Sizing Updated**: Max 4 hours (was 8h) - one story = one session for context preservation
-
-**Impact:** First API story complete with full test coverage. Ready for Story 2.3 or Story 3.1.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (32-41). Older sessions (1-31) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (33-42). Older sessions (1-32) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
