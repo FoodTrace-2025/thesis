@@ -4,11 +4,11 @@ import { extendTheme } from '@chakra-ui/react';
 const theme = extendTheme({
   colors: {
     brand: {
-      primary: '#2F7D32',    // Green - main actions
-      secondary: '#6DBE45',  // Green - success/positive
-      accent: '#FFA94D',     // Orange - warnings/highlights
-      dark: '#6B7280',       // Dark gray - text
-      light: '#F9FBFD',      // Light gray - backgrounds
+      primary: '#3182CE',    // Green - main actions
+      secondary: '#38A169',  // Green - success/positive
+      accent: '#DD6B20',     // Orange - warnings/highlights
+      dark: '#1A202C',       // Dark gray - text
+      light: '#F7FAFC',      // Light gray - backgrounds
     },
   },
   fonts: {

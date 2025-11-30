@@ -1,218 +1,69 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  Flex,
-  FormControl,
-  FormLabel,
-  Heading,
-  Input,
-  Link,
-  SimpleGrid,
-  Text,
-  VStack,
-  HStack,
-  Divider,
-  useBreakpointValue,
-} from "@chakra-ui/react";
-import Head from "next/head";
+// src/pages/index.tsx - Story 4.1 demo page
+import { Box, Heading, Text, Button, VStack, HStack } from "@chakra-ui/react";
+import { Layout } from "@/components/layout";
+import { LoadingSpinner } from "@/components/ui";
 
-function RoleCard({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+export default function DemoPage() {
   return (
-    <Box
-      bg="white"
-      borderRadius="xl"
-      borderWidth="1px"
-      borderColor="gray.200"
-      boxShadow="sm"
-      p={8}
-      display="flex"
-      flexDirection="column"
-      alignItems="flex-start"
-      justifyContent="flex-start"
-      gap={4}
-    >
-      {/* Top green square, can be replaced with an icon later */}
-      <Box
-        w="56px"
-        h="56px"
-        borderRadius="md"
-        bg="brand.primary"
-      />
+    <Layout>
+      <VStack spacing={8} align="stretch">
+        <Heading>FoodTrace Component Demo</Heading>
 
-      <Box>
-        <Text fontWeight="semibold" color="gray.800" mb={1}>
-          {title}
-        </Text>
-        <Text fontSize="sm" color="gray.600">
-          {description}
-        </Text>
-      </Box>
-    </Box>
-  );
-}
+        {/* Theme Colors Display */}
+        <Box>
+          <Text fontWeight="bold" mb={2}>
+            Theme Colors:
+          </Text>
+          <HStack spacing={4} align="stretch">
+            <Box
+              flex="1"
+              bg="brand.primary"
+              color="white"
+              p={4}
+              borderRadius="md"
+            >
+              Primary (Blue)
+            </Box>
+            <Box
+              flex="1"
+              bg="brand.secondary"
+              color="white"
+              p={4}
+              borderRadius="md"
+            >
+              Secondary (Green)
+            </Box>
+            <Box
+              flex="1"
+              bg="brand.accent"
+              color="white"
+              p={4}
+              borderRadius="md"
+            >
+              Accent (Orange)
+            </Box>
+          </HStack>
+        </Box>
 
-export default function LoginPage() {
-  const isMobile = useBreakpointValue({ base: true, md: false });
+        {/* LoadingSpinner display */}
+        <Box>
+          <Text fontWeight="bold" mb={2}>
+            Loading Spinner:
+          </Text>
+          <LoadingSpinner text="Loading data..." />
+        </Box>
 
-  return (
-    <>
-      <Head>
-        <title>FoodChain Login</title>
-      </Head>
-
-      <Flex
-        minH="100vh"
-        bg="#FFF6DA"
-        align="center"
-        justify="center"
-        px={{ base: 4, md: 8 }}
-        py={{ base: 8, md: 12 }}
-      >
-        <Flex
-          w="100%"
-          maxW="1120px"
-          bg="transparent"
-          gap={{ base: 8, md: 12 }}
-          direction={{ base: "column", md: "row" }}
-        >
-          {/* role selection section */}
-          <Box
-            flex="1"
-            bg="#E9F6E2"
-            borderRadius="xl"
-            p={{ base: 6, md: 10 }}
-          >
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-              <RoleCard
-                title="Producer"
-                description="Create batch and QR code"
-              />
-              <RoleCard
-                title="Transporter"
-                description="Upload transport and data"
-              />
-              <RoleCard
-                title="Retailer"
-                description="Manage inventory and sales"
-              />
-              <RoleCard
-                title="Consumer"
-                description="Verify food origin and safety"
-              />
-            </SimpleGrid>
-          </Box>
-
-          {/* right side login form section */}
-          <Box
-            flex="1"
-            bg="white"
-            borderRadius="xl"
-            boxShadow="sm"
-            p={{ base: 6, md: 10 }}
-          >
-            <VStack align="stretch" spacing={6}>
-              <Box textAlign="center">
-                <Heading
-                  as="h1"
-                  fontSize="2xl"
-                  mb={1}
-                  color="brand.primary"
-                >
-                  FoodChain
-                </Heading>
-                <Text fontWeight="semibold" color="brand.primary">
-                  Welcome Back!
-                </Text>
-              </Box>
-
-              <VStack align="stretch" spacing={4}>
-                <FormControl>
-                  <FormLabel fontSize="sm" color="gray.700">
-                    Email
-                  </FormLabel>
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    bg="#FFFDFB"
-                    borderColor="gray.200"
-                    _focus={{
-                      borderColor: "brand.primary",
-                      boxShadow: "0 0 0 1px",
-                    }}
-                  />
-                </FormControl>
-
-                <FormControl>
-                  <FormLabel fontSize="sm" color="gray.700">
-                    Password
-                  </FormLabel>
-                  <Input
-                    type="password"
-                    placeholder="Enter your password"
-                    bg="#FFFDFB"
-                    borderColor="gray.200"
-                    _focus={{
-                      borderColor: "brand.primary",
-                      boxShadow: "0 0 0 1px",
-                    }}
-                  />
-                </FormControl>
-
-                <HStack justify="space-between" fontSize="sm">
-                  <Checkbox colorScheme="green">
-                    Remember me
-                  </Checkbox>
-                  <Link color="#EA580C" fontWeight="medium">
-                    Forgot password?
-                  </Link>
-                </HStack>
-
-                <Button
-                  mt={2}
-                  color="white"
-                  bg="#2F7D32" 
-                  _hover={{ bg: "#27672A" }}
-                  size="md"
-                  w="100%"
-                >
-                  Login
-                </Button>
-
-                {/* Google sign-in button */}
-                <Button
-                  variant="outline"
-                  borderColor="gray.200"
-                  bg="#F5F7FB"
-                  _hover={{ bg: "#E9EDF7" }}
-                  size="md"
-                  w="100%"
-                >
-                  {/* This can be replaced with a real Google icon later */}
-                  <Text>Sign in with Google</Text>
-                </Button>
-              </VStack>
-
-              <Divider />
-
-              <Box textAlign="center" fontSize="sm">
-                <Text as="span" color="gray.700" mr={1}>
-                  Don&apos;t have an account?
-                </Text>
-                <Link color="#EA580C" fontWeight="semibold">
-                  Sign up
-                </Link>
-              </Box>
-            </VStack>
-          </Box>
-        </Flex>
-      </Flex>
-    </>
+        {/* button display */}
+        <Box>
+          <Text fontWeight="bold" mb={2}>
+            Buttons:
+          </Text>
+          <HStack spacing={4}>
+            <Button>Primary Button</Button>
+            <Button variant="outline">Outline Button</Button>
+          </HStack>
+        </Box>
+      </VStack>
+    </Layout>
   );
 }

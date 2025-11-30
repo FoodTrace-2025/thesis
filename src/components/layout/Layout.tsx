@@ -19,7 +19,7 @@ export function Layout({ children }: LayoutProps) {
         <HStack maxW="1280px" mx="auto" px={{ base: 4, md: 8 }} spacing={4}>
           <Box w="32px" h="32px" borderRadius="full" bg="brand.primary" />
           <Text fontWeight="bold" color="brand.dark">
-            Food Chain
+            Food Trace
           </Text>
         </HStack>
       </Box>
