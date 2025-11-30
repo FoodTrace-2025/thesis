@@ -1,13 +1,17 @@
 // Company Approve API
 // Story 2.3: Company Approve API
+// Story 5.2: Add PRODUCER_ROLE granting on blockchain
 // POST /api/admin/companies/:id/approve - Approve a pending company and generate wallet
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Prisma } from '@prisma/client';
 import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts';
+import { createPublicClient, createWalletClient, http } from 'viem';
+import { sepolia } from 'viem/chains';
 import { prisma } from '@/lib/prisma';
 import { encryptWalletKey, getEncryptionKey } from '@/lib/crypto';
 import { requirePlatformAdmin } from '@/lib/auth/requireAdmin';
+import ProductRegistryABI from '@/../artifacts/contracts/ProductRegistry.sol/ProductRegistry.json';
 
 // Response types
 interface SuccessResponse {
@@ -25,6 +29,7 @@ interface SuccessResponse {
       createdAt: true;
     };
   }>;
+  roleGrantTxHash?: string; // Only for PRODUCER companies (Story 5.2)
 }
 
 interface ErrorResponse {
@@ -74,7 +79,7 @@ export default async function handler(
     // 3. Find company and validate status
     const company = await prisma.company.findUnique({
       where: { id },
-      select: { id: true, status: true },
+      select: { id: true, status: true, type: true }, // type needed for PRODUCER_ROLE check
     });
 
     if (!company) {
@@ -108,6 +113,62 @@ export default async function handler(
     const encryptionKey = getEncryptionKey();
     const encryptedPrivateKey = encryptWalletKey(privateKey, encryptionKey);
 
+    // 6b. Grant PRODUCER_ROLE on blockchain (PRODUCER companies only) - Story 5.2
+    let roleGrantTxHash: string | undefined;
+
+    if (company.type === 'PRODUCER') {
+      const deployerPrivateKey = process.env.PRIVATE_KEY;
+      const contractAddress = process.env.NEXT_PUBLIC_PRODUCT_REGISTRY_ADDRESS;
+      const rpcUrl = process.env.SEPOLIA_RPC_URL;
+
+      if (!deployerPrivateKey || !contractAddress || !rpcUrl) {
+        console.error('Missing blockchain configuration for PRODUCER_ROLE granting');
+        return res.status(500).json({
+          error: 'Blockchain configuration missing',
+          code: 'CONFIG_ERROR',
+        });
+      }
+
+      // Create deployer wallet client (has DEFAULT_ADMIN_ROLE on contract)
+      const deployerAccount = privateKeyToAccount(deployerPrivateKey as `0x${string}`);
+
+      const publicClient = createPublicClient({
+        chain: sepolia,
+        transport: http(rpcUrl),
+      });
+
+      const walletClient = createWalletClient({
+        account: deployerAccount,
+        chain: sepolia,
+        transport: http(rpcUrl),
+      });
+
+      // Grant PRODUCER_ROLE to the new company wallet
+      const hash = await walletClient.writeContract({
+        address: contractAddress as `0x${string}`,
+        abi: ProductRegistryABI.abi,
+        functionName: 'grantProducerRole',
+        args: [walletAddress],
+      });
+
+      // Wait for confirmation (1 block)
+      const receipt = await publicClient.waitForTransactionReceipt({
+        hash,
+        confirmations: 1,
+      });
+
+      if (receipt.status !== 'success') {
+        console.error('PRODUCER_ROLE granting transaction failed:', { hash, receipt });
+        return res.status(500).json({
+          error: 'Failed to grant blockchain role',
+          code: 'BLOCKCHAIN_ERROR',
+        });
+      }
+
+      roleGrantTxHash = hash;
+      console.log('PRODUCER_ROLE granted:', { walletAddress, txHash: hash });
+    }
+
     // 7. Atomic update: company + audit log
     const result = await prisma.$transaction(async (tx) => {
       // Update company with wallet and approval data
@@ -122,7 +183,7 @@ export default async function handler(
         select: companySelectFields,
       });
 
-      // Create audit log entry
+      // Create audit log entry for company approval
       await tx.auditLog.create({
         data: {
           action: 'APPROVE_COMPANY',
@@ -134,6 +195,22 @@ export default async function handler(
         },
       });
 
+      // Create audit log entry for PRODUCER_ROLE granting (Story 5.2)
+      if (roleGrantTxHash) {
+        await tx.auditLog.create({
+          data: {
+            action: 'GRANT_PRODUCER_ROLE',
+            companyId: id,
+            userId: session.user.id,
+            details: {
+              walletAddress,
+              transactionHash: roleGrantTxHash,
+              contractAddress: process.env.NEXT_PUBLIC_PRODUCT_REGISTRY_ADDRESS,
+            },
+          },
+        });
+      }
+
       return updatedCompany;
     });
 
@@ -141,6 +218,7 @@ export default async function handler(
     return res.status(200).json({
       success: true,
       company: result,
+      ...(roleGrantTxHash && { roleGrantTxHash }), // Include only for PRODUCER companies
     });
   } catch (error) {
     // Handle specific Prisma errors

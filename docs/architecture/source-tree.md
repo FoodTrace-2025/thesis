@@ -2,6 +2,8 @@
 
 **Purpose:** Define folder structure, file organization, and monorepo layout for FoodTrace.
 
+**Note:** This describes the target architecture. Current implementation may differ during development.
+
 ---
 
 ## Repository Layout

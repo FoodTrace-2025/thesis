@@ -486,7 +486,7 @@ GET /api/admin/companies?status=PENDING
 
 **Authentication:** Required (PLATFORM_ADMIN role)
 
-**Dependencies:** Epic 3 Tier 1 (Wallet Encryption)
+**Dependencies:** Epic 3 Tier 1 (Wallet Encryption), Epic 5 Story 5.2 (PRODUCER_ROLE granting)
 
 **Request:**
 ```http
@@ -501,10 +501,13 @@ POST /api/admin/companies/clxyz123/approve
     "id": "clxyz123...",
     "status": "APPROVED",
     "walletAddress": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
-    "approvedAt": "2025-11-27T14:00:00.000Z"
+    "approvedAt": "2025-11-27T14:00:00.000Z",
+    "roleGrantTxHash": "0x8a791620dd6260079bf849dc5567adc3f2fdc318..."
   }
 }
 ```
+
+**Note:** `roleGrantTxHash` is only included for PRODUCER companies (indicates PRODUCER_ROLE was granted on ProductRegistry contract).
 
 ---
 
@@ -605,4 +608,4 @@ Retry-After: 60
 
 ---
 
-**Last Updated:** 2025-11-20 (Week 0 Complete)
+**Last Updated:** 2025-11-30 (Added roleGrantTxHash to approve endpoint - Story 5.2)

@@ -90,7 +90,7 @@ import { sepolia } from 'viem/chains';
 
 export const publicClient = createPublicClient({
   chain: sepolia,
-  transport: http(process.env.ALCHEMY_RPC_URL),
+  transport: http(process.env.SEPOLIA_RPC_URL),
 });
 ```
 
@@ -115,7 +115,7 @@ import { sepolia } from 'viem/chains';
 export const publicClient = createPublicClient({
   chain: sepolia,
   transport: fallback([
-    http(process.env.ALCHEMY_RPC_URL),           // Primary
+    http(process.env.SEPOLIA_RPC_URL),           // Primary (Alchemy)
     http(process.env.INFURA_RPC_URL),            // Fallback #1
     http('https://rpc.sepolia.org'),             // Fallback #2
   ]),

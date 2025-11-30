@@ -91,7 +91,7 @@ docs/architecture/
 └── index.md                          (this file)
 ```
 
-**Total:** 14 BMAD-named files (~138 KB) vs 1 monolithic file (143 KB)
+**Total:** 15 files (14 content files + index) (~138 KB) vs 1 monolithic file (143 KB)
 
 **Token Efficiency:** SM agent loads 6-8 files (~60 KB) per story instead of entire 143 KB architecture
 

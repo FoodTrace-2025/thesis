@@ -35,8 +35,8 @@ npm run test   # All tests pass (Epic 1 smart contract tests >70% coverage)
 
 # Smart contracts deployed to Sepolia testnet
 # Verify contract addresses in .env.local:
-# - PRODUCT_REGISTRY_CONTRACT=0x...
-# - TRACE_RECORDS_CONTRACT=0x... (if separate contract)
+# - NEXT_PUBLIC_PRODUCT_REGISTRY_ADDRESS=0x...
+# - NEXT_PUBLIC_TRACE_RECORDS_ADDRESS=0x... (if separate contract)
 
 # Database schema migrated
 npx prisma migrate status  # All migrations applied
@@ -108,8 +108,8 @@ cat .env.example  # All required variables listed with descriptions
 - ✅ WALLET_ENCRYPTION_KEY: Same key used in Epic 3 (32-byte hex string)
 - ✅ NEXTAUTH_SECRET: Generated secret for NextAuth.js sessions
 - ✅ NEXTAUTH_URL: Production URL (https://foodtrace.onrender.com)
-- ✅ PRODUCT_REGISTRY_CONTRACT: Deployed Sepolia contract address
-- ✅ ALCHEMY_API_KEY: Alchemy Sepolia RPC API key (from Epic 1)
+- ✅ NEXT_PUBLIC_PRODUCT_REGISTRY_ADDRESS: Deployed Sepolia contract address
+- ✅ SEPOLIA_RPC_URL: Alchemy Sepolia RPC URL (from Epic 1)
 - ✅ SUPABASE_URL, SUPABASE_ANON_KEY: Supabase credentials (from Epic 1)
 - ✅ Email service credentials: SENDGRID_API_KEY or SUPABASE_SERVICE_ROLE_KEY (from Epic 2)
 - ✅ .env.example file updated with all variables (descriptions, no actual values)
@@ -192,9 +192,9 @@ services:
         generateValue: true  # Render.com auto-generates on first deploy
       - key: NEXTAUTH_URL
         value: https://foodtrace.onrender.com
-      - key: PRODUCT_REGISTRY_CONTRACT
+      - key: NEXT_PUBLIC_PRODUCT_REGISTRY_ADDRESS
         sync: false
-      - key: ALCHEMY_API_KEY
+      - key: SEPOLIA_RPC_URL
         sync: false
       - key: SUPABASE_URL
         sync: false
@@ -205,27 +205,35 @@ services:
 **Health Check Endpoint (API Route):**
 
 ```typescript
-// src/app/api/health/route.ts
-export async function GET() {
+// src/pages/api/health.ts (Pages Router)
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { createPublicClient, http } from 'viem';
+import { sepolia } from 'viem/chains';
+import { prisma } from '@/lib/prisma';
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     // Check database connection
-    await db.$queryRaw`SELECT 1`;
+    await prisma.$queryRaw`SELECT 1`;
 
-    // Check blockchain RPC connection
-    const provider = new ethers.JsonRpcProvider(process.env.ALCHEMY_RPC_URL);
-    await provider.getBlockNumber();
+    // Check blockchain RPC connection (viem)
+    const publicClient = createPublicClient({
+      chain: sepolia,
+      transport: http(process.env.SEPOLIA_RPC_URL),
+    });
+    await publicClient.getBlockNumber();
 
-    return Response.json({
+    return res.status(200).json({
       status: 'healthy',
       timestamp: new Date().toISOString(),
       database: 'connected',
       blockchain: 'connected',
     });
   } catch (error) {
-    return Response.json({
+    return res.status(500).json({
       status: 'unhealthy',
-      error: error.message,
-    }, { status: 500 });
+      error: (error as Error).message,
+    });
   }
 }
 ```
@@ -285,9 +293,9 @@ NEXTAUTH_SECRET="your-secret-here-use-openssl-rand-base64-32"
 NEXTAUTH_URL="http://localhost:3000"  # Production: https://foodtrace.onrender.com
 
 # Smart Contracts (Sepolia Testnet)
-PRODUCT_REGISTRY_CONTRACT="0x..."  # Deployed contract address
-ALCHEMY_API_KEY="your-alchemy-api-key"  # From Epic 1
-ALCHEMY_RPC_URL="https://eth-sepolia.g.alchemy.com/v2/YOUR_API_KEY"
+NEXT_PUBLIC_PRODUCT_REGISTRY_ADDRESS="0x..."  # Deployed contract address
+SEPOLIA_RPC_URL="https://eth-sepolia.g.alchemy.com/v2/YOUR_API_KEY"
+PRIVATE_KEY="0x..."  # Deployer wallet (for granting roles)
 
 # Supabase (Database & Storage)
 SUPABASE_URL="https://your-project.supabase.co"
