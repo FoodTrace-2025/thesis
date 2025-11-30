@@ -42,7 +42,7 @@ Establish development environment, tooling, and foundational infrastructure for 
 **User Prerequisites (Before Development Starts):**
 
 - ✅ Supabase account created, DATABASE_URL obtained and shared with team
-- ✅ Alchemy account created, ALCHEMY_RPC_URL obtained and shared with team
+- ✅ Alchemy account created, SEPOLIA_RPC_URL obtained and shared with team
 - ✅ Etherscan account created, ETHERSCAN_API_KEY obtained and shared with team
 - ✅ Sepolia testnet ETH obtained from faucets (minimum 0.5 ETH in team wallet)
 - ✅ WALLET_ENCRYPTION_KEY generated securely (via `openssl rand -hex 32`)
@@ -103,8 +103,8 @@ thesis/
 # Database (Supabase)
 DATABASE_URL="postgresql://user:pass@db.supabase.co:6543/postgres?pgbouncer=true"
 
-# Blockchain RPC (Alchemy)
-ALCHEMY_RPC_URL="https://eth-sepolia.g.alchemy.com/v2/YOUR_API_KEY"
+# Blockchain RPC (Alchemy Sepolia)
+SEPOLIA_RPC_URL="https://eth-sepolia.g.alchemy.com/v2/YOUR_API_KEY"
 
 # Contract Verification (Etherscan)
 ETHERSCAN_API_KEY="YOUR_ETHERSCAN_API_KEY"

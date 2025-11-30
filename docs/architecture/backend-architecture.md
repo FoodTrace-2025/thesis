@@ -384,7 +384,7 @@ export async function registerProductOnBlockchain(data: ProductData, companyId: 
   const walletClient = createWalletClient({
     account: privateKeyToAccount(privateKey),
     chain: sepolia,
-    transport: http(process.env.ALCHEMY_RPC_URL),
+    transport: http(process.env.SEPOLIA_RPC_URL),
   });
 
   // 3. Submit transaction

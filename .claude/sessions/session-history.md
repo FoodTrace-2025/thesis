@@ -4,6 +4,21 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 41 (2025-11-30) - Story 5.1 Deployed, Story 5.2 Drafted
+
+### Session 41 Achievements
+
+✅ **Build Fixes**: Resolved ESLint errors in tenant-client.test.ts and index.tsx
+✅ **Story 5.1 Complete**: ProductRegistry smart contract - 80 lines, OpenZeppelin AccessControl, 19 tests (100% coverage)
+✅ **QA Security Review PASS**: No vulnerabilities, proper access control, input validation
+✅ **Deployed to Sepolia**: Contract 0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646, verified on Etherscan
+✅ **Story 5.2 Drafted**: Product Registration API story created, TaiSheng unblocked
+✅ **Full BMAD Cycle**: SM→Dev→QA→Deploy completed for first smart contract story
+
+**Impact:** First smart contract deployed to Sepolia testnet. Epic 5 Story 5.1 complete.
+
+---
+
 ## Session 40 (2025-11-30) - Story 5.1 Complete: ProductRegistry Deployed to Sepolia
 
 ### Session 40 Achievements
@@ -161,18 +176,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 31 (2025-11-27) - Database Schema Enhancement & Epic 2 Flow Clarification
-
-### Session 31 Achievements
-
-✅ **Prisma Enums Implemented**: Added CompanyStatus, CompanyType, UserRole enums for type safety
-✅ **Epic 2 Flow Simplified**: Updated documentation to reflect B2B enterprise model (PLATFORM_ADMIN creates companies)
-✅ **Story 2.1 Complete**: Database schema done with native PostgreSQL enums
-✅ **Wallet Architecture Clarified**: Documented three wallet types (Deployer, WALLET_ENCRYPTION_KEY, Company Wallets)
-✅ **User Tracking Decision**: Off-chain (database tracks userId), On-chain (blockchain tracks company wallet)
-
-**Impact:** Database foundation complete with type-safe enums. Epic 2 documentation reflects realistic B2B model.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (31-40). Older sessions (1-30) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (32-41). Older sessions (1-31) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md

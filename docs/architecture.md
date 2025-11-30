@@ -2542,24 +2542,25 @@ Total: 2,134ms (p50 median)
 - **Infura:** 1,123ms average (fallback #1)
 - **Public Sepolia RPC:** 2,456ms average (fallback #2, unreliable)
 
-**Multi-Provider Fallback Strategy:**
+**Multi-Provider Fallback Strategy (viem):**
 ```typescript
 // lib/ethereum.ts
-const providers = [
-  new ethers.JsonRpcProvider(process.env.ALCHEMY_RPC_URL),      // Primary
-  new ethers.JsonRpcProvider(process.env.INFURA_RPC_URL),       // Fallback #1
-  new ethers.JsonRpcProvider('https://rpc.sepolia.org')         // Fallback #2
-];
+import { createPublicClient, http, fallback } from 'viem';
+import { sepolia } from 'viem/chains';
 
-export async function queryWithFallback(contractMethod: Function) {
-  for (const provider of providers) {
-    try {
-      return await contractMethod(provider);
-    } catch (error) {
-      console.warn(`Provider failed, trying next: ${error.message}`);
-    }
-  }
-  throw new Error('All RPC providers failed');
+// Viem supports built-in fallback transport with automatic retry
+export const publicClient = createPublicClient({
+  chain: sepolia,
+  transport: fallback([
+    http(process.env.SEPOLIA_RPC_URL),           // Primary (Alchemy)
+    http(process.env.INFURA_RPC_URL),            // Fallback #1
+    http('https://rpc.sepolia.org'),             // Fallback #2
+  ]),
+});
+
+// Usage: viem handles fallback automatically
+export async function getBlockNumber() {
+  return await publicClient.getBlockNumber();
 }
 ```
 
