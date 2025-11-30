@@ -19,13 +19,33 @@ jest.mock('@/lib/prisma', () => ({
 
 import { prisma } from '@/lib/prisma';
 
+// Query handler types for tenant client mocks
+interface QueryArgs {
+  where?: Record<string, unknown>;
+  data?: Record<string, unknown>;
+  orderBy?: Record<string, unknown>;
+}
+
+interface QueryHandler {
+  args: QueryArgs;
+  query: jest.Mock;
+}
+
+type QueryHandlers = Record<string, (handler: QueryHandler) => Promise<unknown>>;
+
+interface ExtendConfig {
+  query?: {
+    user?: QueryHandlers;
+    auditLog?: QueryHandlers;
+  };
+}
+
 describe('createTenantClient', () => {
   const COMPANY_A_ID = 'company-a-id';
   const COMPANY_B_ID = 'company-b-id';
 
-  let mockExtendedClient: any;
-  let userQueries: any;
-  let auditLogQueries: any;
+  let userQueries: QueryHandlers;
+  let auditLogQueries: QueryHandlers;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -35,7 +55,7 @@ describe('createTenantClient', () => {
     auditLogQueries = {};
 
     // Mock $extends to capture query definitions and return a mock client
-    (prisma.$extends as unknown as jest.Mock).mockImplementation((config: any) => {
+    (prisma.$extends as unknown as jest.Mock).mockImplementation((config: ExtendConfig) => {
       // Store the query functions for testing
       if (config.query?.user) {
         userQueries = config.query.user;
@@ -359,7 +379,7 @@ describe('createTenantClient', () => {
       createTenantClient(COMPANY_A_ID);
 
       const mockQuery = jest.fn().mockResolvedValue([]);
-      const args: any = {};
+      const args = {} as QueryArgs;
 
       await userQueries.findMany({ args, query: mockQuery });
 

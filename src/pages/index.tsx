@@ -13,7 +13,6 @@ import {
   VStack,
   HStack,
   Divider,
-  useBreakpointValue,
 } from "@chakra-ui/react";
 import Head from "next/head";
 
@@ -59,8 +58,6 @@ function RoleCard({
 }
 
 export default function LoginPage() {
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
   return (
     <>
       <Head>
