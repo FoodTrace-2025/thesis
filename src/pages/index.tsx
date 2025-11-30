@@ -38,7 +38,7 @@ function RoleCard({
       justifyContent="flex-start"
       gap={4}
     >
-      {/* 顶部绿色方块，可以以后换成图标 */}
+      {/* Top green square, can be replaced with an icon later */}
       <Box
         w="56px"
         h="56px"
@@ -69,7 +69,7 @@ export default function LoginPage() {
 
       <Flex
         minH="100vh"
-        bg="#FFF6DA" // 整体淡黄色背景，和 Figma 类似
+        bg="#FFF6DA"
         align="center"
         justify="center"
         px={{ base: 4, md: 8 }}
@@ -82,10 +82,10 @@ export default function LoginPage() {
           gap={{ base: 8, md: 12 }}
           direction={{ base: "column", md: "row" }}
         >
-          {/* 左侧角色卡片区域 */}
+          {/* role selection section */}
           <Box
             flex="1"
-            bg="#E9F6E2" // 淡绿色背景块
+            bg="#E9F6E2"
             borderRadius="xl"
             p={{ base: 6, md: 10 }}
           >
@@ -109,7 +109,7 @@ export default function LoginPage() {
             </SimpleGrid>
           </Box>
 
-          {/* 右侧登录表单区域 */}
+          {/* right side login form section */}
           <Box
             flex="1"
             bg="white"
@@ -177,7 +177,7 @@ export default function LoginPage() {
                 <Button
                   mt={2}
                   color="white"
-                  bg="#2F7D32" // 主绿色按钮
+                  bg="#2F7D32" 
                   _hover={{ bg: "#27672A" }}
                   size="md"
                   w="100%"
@@ -185,7 +185,7 @@ export default function LoginPage() {
                   Login
                 </Button>
 
-                {/* Google 登录按钮 */}
+                {/* Google sign-in button */}
                 <Button
                   variant="outline"
                   borderColor="gray.200"
@@ -194,7 +194,7 @@ export default function LoginPage() {
                   size="md"
                   w="100%"
                 >
-                  {/* 这里可以以后换成真正的 Google 图标 */}
+                  {/* This can be replaced with a real Google icon later */}
                   <Text>Sign in with Google</Text>
                 </Button>
               </VStack>
