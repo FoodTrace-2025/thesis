@@ -4,6 +4,27 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 40 (2025-11-30) - Story 5.1 Complete: ProductRegistry Deployed to Sepolia
+
+### Session 40 Achievements
+
+✅ **Build Fixes**: Resolved ESLint errors in tenant-client.test.ts and index.tsx (unused variables, any types)
+✅ **Story 5.1 Complete**: ProductRegistry smart contract - 80 lines Solidity, OpenZeppelin AccessControl
+✅ **19 Tests Passing**: 100% coverage (exceeds 70% target), comprehensive role/registration testing
+✅ **QA Security Review PASS**: No critical vulnerabilities, proper access control, input validation
+✅ **Deployed to Sepolia**: Contract 0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646, verified on Etherscan
+✅ **Story 5.2 Drafted**: Product Registration API story for TaiSheng (now unblocked)
+
+**Files Created:**
+- contracts/ProductRegistry.sol (80 lines - Solidity 0.8.20 with PRODUCER_ROLE)
+- test/ProductRegistry.test.ts (236 lines - 19 unit tests)
+- scripts/deploy-product-registry.ts (27 lines - deployment script)
+- docs/stories/5.1.story.md, docs/stories/5.2.story.md
+
+**Impact:** First smart contract deployed to testnet. Epic 5 Smart Contract track complete. Story 5.2 backend API unblocked.
+
+---
+
 ## Session 39 (2025-11-29) - Epic 4/5 Workflow Analysis, Story 4.1 Ready
 
 ### Session 39 Achievements
@@ -154,18 +175,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 30 (2025-11-27) - Epic 1 Complete: Full Project Foundation Deployed
-
-### Session 30 Achievements
-
-✅ **Story 1.10 Complete**: Development tooling - .nvmrc (Node 18.18.0), Prettier, enhanced tsconfig.json
-✅ **Story 1.11 Complete**: Deployed Lock.sol to Sepolia testnet, verified on Etherscan
-✅ **Epic 1 100% Complete**: All 11 stories done (Stories 1.1-1.11)
-✅ **Deployment Pipeline Working**: scripts/deploy.ts, tsconfig.hardhat.json, npm run deploy:sepolia
-✅ **Contract Verified**: 0x4ca471b394c0541b6cD55D5140f58bAB009d7F9f on Etherscan
-
-**Impact:** Project foundation complete. Next.js, Hardhat, Prisma, and deployment pipeline all working.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (30-39). Older sessions (1-29) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (31-40). Older sessions (1-30) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
