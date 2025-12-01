@@ -4,11 +4,15 @@ import { extendTheme } from '@chakra-ui/react';
 const theme = extendTheme({
   colors: {
     brand: {
-      primary: '#38A169',    // Green - main actions
-      secondary: '#3182CE',  // Blue - links/secondary actions
-      accent: '#DD6B20',     // Orange - warnings/highlights
-      dark: '#1A202C',       // Dark gray - text
-      light: '#F7FAFC',      // Light gray - backgrounds
+      primary: "#2F7D32",      // 主按钮、主操作（绿色）
+      primaryLight: "#6DBE45", // hover / icon 用的浅绿
+      accent: "#EA580C",       // 高亮 / 链接（例如 Forgot password）
+      dark: "#1F2937",         // 主要文字
+      muted: "#6B7280",        // 次要文字
+      border: "#D1D5DB",       // 输入框 / 卡片边框
+      surface: "#FFFFFF",      // 白色卡片
+      surfaceAlt: "#E9F6E2",   // 左边大块淡绿背景 / 选中
+      pageBg: "#FFF6DA",       // 页面淡黄背景
     },
   },
   fonts: {
@@ -24,9 +28,14 @@ const theme = extendTheme({
   components: {
     Button: {
       defaultProps: {
-        colorScheme: 'green',
+        colorScheme: "green",
+      },
+      baseStyle: {
+        borderRadius: "md",
+        fontWeight: "semibold",
       },
     },
+
     Input: {
       defaultProps: {
         focusBorderColor: 'green.500',
@@ -35,8 +44,11 @@ const theme = extendTheme({
     Card: {
       baseStyle: {
         container: {
-          borderRadius: 'md',
-          boxShadow: 'sm',
+          borderRadius: "md",
+          boxShadow: "sm",
+          bg: "brand.surface",
+          borderColor: "brand.border",
+          borderWidth: "1px",
         },
       },
     },
