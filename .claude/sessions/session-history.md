@@ -4,6 +4,21 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 46 (2025-12-01) - Story 4.1 Complete, Green Color Scheme
+
+### Session 46 Achievements
+
+✅ **Story 4.1 Code Review**: Reviewed YiLing's Chakra UI theme implementation - all ACs met
+✅ **Color Scheme Updated**: Primary changed from blue (#3182CE) to green (#38A169) per YiLing's design
+✅ **Theme Enhancements**: Added Input (focusBorderColor) and Card (borderRadius, boxShadow) overrides
+✅ **Documentation Sync**: Updated PRD, Epic 4, Story 4.1 with green-first color scheme
+✅ **Story 4.1 Complete**: Marked as Done, all 8 tasks checked, changelog updated
+✅ **Demo Page Enhanced**: Added Input and Card component demos to index.tsx
+
+**Impact:** Epic 4 Story 4.1 complete. Chakra UI theme foundation established with green primary color.
+
+---
+
 ## Session 45 (2025-11-30) - Story 5.3 Complete, Product Registration API
 
 ### Session 45 Achievements
@@ -147,17 +162,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 36 (2025-11-29) - Completion Metrics Corrected to Honest 20%
-
-### Session 36 Achievements
-
-✅ **Metrics Audit**: Analyzed all 13 epics, found ~103-134 hours total implementation work
-✅ **Completion Corrected**: Changed misleading 60% to honest 20% in CLAUDE.md
-✅ **Breakdown Documented**: Planning 100%, Implementation 17% (2/13 epics), Thesis Writing 0%
-✅ **Core Work Identified**: Epics 5-9 contain the hard blockchain features (~50h)
-
-**Impact:** Honest project tracking. No more inflated metrics creating false comfort.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (36-45). Older sessions (1-35) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (37-46). Older sessions (1-36) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
