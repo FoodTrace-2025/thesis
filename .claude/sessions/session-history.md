@@ -4,6 +4,21 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 50 (2025-12-01) - Story 2.7 Implementation, Story 2.8 Critical Review
+
+### Session 50 Achievements
+
+✅ **Story 2.7 Review**: Critical analysis - identified missing explicit test cases in Task 6
+✅ **Story 2.7 Updated**: Added 11 explicit test cases, QA Decision Note, dependency update
+✅ **Story 2.7 Implemented**: POST /api/companies/users endpoint with role-company type matching
+✅ **requireCompanyAdmin Middleware**: Created for COMPANY_ADMIN auth with company data
+✅ **11 Tests Passing**: All acceptance criteria covered (124 total tests, no regressions)
+✅ **Git Commit**: 79b3a6f pushed - feat(api): implement POST /api/companies/users endpoint
+
+**Impact:** Story 2.7 complete. COMPANY_ADMIN can now create employees via API.
+
+---
+
 ## Session 49 (2025-12-01) - Story 2.6 Implementation Complete
 
 ### Session 49 Achievements
@@ -136,25 +151,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 40 (2025-11-30) - Story 5.1 Complete: ProductRegistry Deployed to Sepolia
-
-### Session 40 Achievements
-
-✅ **Build Fixes**: Resolved ESLint errors in tenant-client.test.ts and index.tsx (unused variables, any types)
-✅ **Story 5.1 Complete**: ProductRegistry smart contract - 80 lines Solidity, OpenZeppelin AccessControl
-✅ **19 Tests Passing**: 100% coverage (exceeds 70% target), comprehensive role/registration testing
-✅ **QA Security Review PASS**: No critical vulnerabilities, proper access control, input validation
-✅ **Deployed to Sepolia**: Contract 0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646, verified on Etherscan
-✅ **Story 5.2 Drafted**: Product Registration API story for TaiSheng (now unblocked)
-
-**Files Created:**
-- contracts/ProductRegistry.sol (80 lines - Solidity 0.8.20 with PRODUCER_ROLE)
-- test/ProductRegistry.test.ts (236 lines - 19 unit tests)
-- scripts/deploy-product-registry.ts (27 lines - deployment script)
-- docs/stories/5.1.story.md, docs/stories/5.2.story.md
-
-**Impact:** First smart contract deployed to testnet. Epic 5 Smart Contract track complete. Story 5.2 backend API unblocked.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (40-49). Older sessions (1-39) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (41-50). Older sessions (1-40) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
