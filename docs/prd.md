@@ -1991,7 +1991,7 @@ import { Button as ChakraButton, ButtonProps } from "@chakra-ui/react";
 
 export const Button = ({ variant = "primary", ...props }: ButtonProps) => {
   const variantStyles = {
-    primary: { bg: "blue.500", color: "white", _hover: { bg: "blue.600" } },
+    primary: { bg: "green.500", color: "white", _hover: { bg: "green.600" } },
     secondary: {
       bg: "gray.200",
       color: "gray.800",

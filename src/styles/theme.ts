@@ -4,8 +4,8 @@ import { extendTheme } from '@chakra-ui/react';
 const theme = extendTheme({
   colors: {
     brand: {
-      primary: '#3182CE',    // Green - main actions
-      secondary: '#38A169',  // Green - success/positive
+      primary: '#38A169',    // Green - main actions
+      secondary: '#3182CE',  // Blue - links/secondary actions
       accent: '#DD6B20',     // Orange - warnings/highlights
       dark: '#1A202C',       // Dark gray - text
       light: '#F7FAFC',      // Light gray - backgrounds
@@ -27,7 +27,20 @@ const theme = extendTheme({
         colorScheme: 'green',
       },
     },
-     Container: {
+    Input: {
+      defaultProps: {
+        focusBorderColor: 'green.500',
+      },
+    },
+    Card: {
+      baseStyle: {
+        container: {
+          borderRadius: 'md',
+          boxShadow: 'sm',
+        },
+      },
+    },
+    Container: {
       baseStyle: {
         maxW: '1280px',
         px: { base: 4, md: 8 },

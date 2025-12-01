@@ -22,7 +22,7 @@ export default function DemoPage() {
               p={4}
               borderRadius="md"
             >
-              Primary (Blue)
+              Primary (Green)
             </Box>
             <Box
               flex="1"
@@ -31,7 +31,7 @@ export default function DemoPage() {
               p={4}
               borderRadius="md"
             >
-              Secondary (Green)
+              Secondary (Blue)
             </Box>
             <Box
               flex="1"
