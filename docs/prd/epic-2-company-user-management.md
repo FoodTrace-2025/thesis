@@ -1,8 +1,8 @@
 ### Epic 2: Company & User Management
 
 **Priority:** 🔴 Must Have
-**Estimated Time:** 8-10 hours
-**Assigned:** TaiSheng (Lead), YiLing (Support)
+**Estimated Time:** 20-24 hours (Backend 16-20h + Frontend 4h)
+**Assigned:** TaiSheng (Backend Lead), YiLing (Frontend - Story 2.8)
 **Timeline:** Week 3
 **Dependencies:** Epic 1 (Project Setup), Epic 3 Tier 1 (Wallet Encryption Working)
 
@@ -48,17 +48,23 @@ WALLET_ENCRYPTION_KEY="[64-char hex from Epic 1]"
 - No additional external accounts needed
 - Epic 3 Tier 1 wallet encryption must be working before Epic 2 wallet generation
 
-#### Acceptance Criteria (Epic Level) - Updated Session 31
+#### Acceptance Criteria (Epic Level) - Updated Session 48
 
-**Company Management (PLATFORM_ADMIN):**
+**Company Management (PLATFORM_ADMIN) - Backend APIs:**
 
-- ✅ PLATFORM_ADMIN can create company records via admin UI (name, email, domain, type)
+- ✅ PLATFORM_ADMIN can create company records via API (name, email, domain, type)
 - ✅ New companies created with status: PENDING (no wallet yet)
-- ✅ Platform admin portal shows all companies in list view (with status filter)
-- ✅ Platform admin dashboard has "Approve Company" button
-- ✅ Admin can reject companies with rejection reason
+- ✅ API returns all companies in list with optional status filter
+- ✅ API supports company approval with wallet generation
+- ✅ API supports company rejection with mandatory reason
 - ✅ Approved companies automatically get encrypted Ethereum wallet generated server-side
 - ✅ Wallet generation uses Epic 3 Tier 1 encryption (AES-256-GCM with WALLET_ENCRYPTION_KEY)
+
+**Company Management UI (Deferred to Epic 7):**
+
+- ⏳ Platform admin portal shows all companies in list view (with status filter)
+- ⏳ Platform admin dashboard has "Approve Company" button
+- ⏳ "Approve" and "Reject" buttons with confirmation modals
 
 **User Management:**
 
@@ -222,31 +228,21 @@ if (!companyEmail.endsWith(`@${companyDomain}`)) {
 
 #### Team Assignment
 
-**TaiSheng (6-7 hours - Backend Lead):**
+**TaiSheng (16-20 hours - Backend Lead):**
 
-- Company registration form + API (2 hours)
-  - POST /api/companies/apply endpoint
-  - Prisma Company model CRUD operations
-- Admin approval workflow backend (2 hours)
-  - GET /api/admin/companies/pending endpoint
-  - POST /api/admin/companies/:id/approve endpoint
-  - POST /api/admin/companies/:id/reject endpoint
-- Wallet generation on approval (integrates Epic 3 Tier 1 encryption) (1.5 hours)
-  - Call encryptWalletKey() from Epic 3
-  - Store encrypted key in database
-  - Audit log implementation
-- User creation by company admin (1.5 hours)
-  - POST /api/companies/users endpoint
-  - Email domain validation logic
-  - Role assignment (COMPANY_ADMIN, PRODUCER, etc.)
+- Story 2.1: Database Models (2-3 hours) ✅ Done
+- Story 2.2: Company Creation API (2-3 hours) ✅ Done
+- Story 2.3: Company Approve API (3-4 hours) ✅ Done
+- Story 2.4: Company Reject API (2 hours) ✅ Done
+- Story 2.5: Admin Authentication (4-5 hours) ✅ Done
+- Story 2.6: Create Company Admin User API (2-3 hours) - Ready
+- Story 2.7: Create Company Employee API (3-4 hours) - Ready
 
-**YiLing (2 hours - Frontend Support):**
+**YiLing (4 hours - Frontend):**
 
-- Platform admin approval UI (2 hours)
-  - Admin dashboard page (list pending companies)
-  - "Approve" and "Reject" buttons with confirmation modals
-  - Rejection reason text input
-  - Display rejection reason to rejected companies
+- Story 2.8: Platform Admin Dashboard UI (4 hours) - Ready
+
+**Note (Session 48):** Story 2.8 covers PLATFORM_ADMIN dashboard only (`/admin` route). Company user dashboards (COMPANY_ADMIN, PRODUCER, DISTRIBUTOR, RETAILER) are handled by Epic 12.
 
 #### Risks & Mitigations
 
@@ -258,6 +254,20 @@ if (!companyEmail.endsWith(`@${companyDomain}`)) {
 | Epic 3 Tier 1 not complete                  | Block Epic 2 start until Epic 3 Tier 1 encryption working     |
 | Company wallets need Sepolia ETH            | Get from faucet after wallet generation                        |
 | Double-approve attempt                      | Return 409 Conflict, only PENDING companies can be approved    |
+
+#### Dashboard Scope (Session 48)
+
+**Story 2.8 covers PLATFORM_ADMIN dashboard only:**
+
+- Company list view with status filter (PENDING/APPROVED/REJECTED)
+- Approve/Reject buttons with confirmation modals
+- Route: `/admin`
+
+**Deferred to Epic 12 (Business User Dashboards):**
+
+- COMPANY_ADMIN user management UI
+- PRODUCER/DISTRIBUTOR/RETAILER operational dashboards
+- Platform stats widget (optional)
 
 #### Simplified User Flow (Session 31)
 
