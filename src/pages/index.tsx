@@ -1,5 +1,5 @@
 // src/pages/index.tsx - Story 4.1 demo page
-import { Box, Heading, Text, Button, VStack, HStack, Input, Card, CardBody, CardHeader } from "@chakra-ui/react";
+import { Box, Heading, Text, Button, VStack, HStack, Input, Card, Checkbox, CardBody, CardHeader } from "@chakra-ui/react";
 import { Layout } from "@/components/layout";
 import { LoadingSpinner } from "@/components/ui";
 
@@ -31,7 +31,7 @@ export default function DemoPage() {
               p={4}
               borderRadius="md"
             >
-              Secondary (Blue)
+              Secondary (Light Green)
             </Box>
             <Box
               flex="1"
@@ -42,8 +42,54 @@ export default function DemoPage() {
             >
               Accent (Orange)
             </Box>
+            <Box
+              flex="1"
+              bg="brand.dark"
+              color="white"
+              p={4}
+              borderRadius="md"
+            >
+              Dark (Text)
+            </Box>
+            <Box
+              flex="1"
+              bg="brand.muted"
+              color="white"
+              p={4}
+              borderRadius="md"
+            >
+              Muted (Secondary Text)
+            </Box>
+            <Box
+              flex="1"
+              bg="brand.border"
+              color="white"
+              p={4}
+              borderRadius="md"
+            >
+              Border (Input/Card Border)
+            </Box>
+            <Box
+              flex="1"
+              bg="brand.surface"
+              color="black"
+              p={4}
+              borderRadius="md"
+            >
+              Surface (White Card)
+            </Box>
+            <Box
+              flex="1"
+              bg="brand.surfaceAlt"
+              color="white"
+              p={4}
+              borderRadius="md"
+            >
+              Surface Alt (Light Green Background)
+            </Box>
           </HStack>
         </Box>
+
 
         {/* Input display */}
         <Box>
@@ -90,3 +136,4 @@ export default function DemoPage() {
     </Layout>
   );
 }
+
