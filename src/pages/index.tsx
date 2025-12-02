@@ -99,6 +99,14 @@ export default function DemoPage() {
           <Input placeholder="Click to see green focus border" />
         </Box>
 
+        {/* Checkbox display */}
+        <Box>
+          <Text fontWeight="bold" mb={2}>
+            Checkbox (green check):
+          </Text>
+          <Checkbox>Check me</Checkbox>
+        </Box>
+
         {/* Card display */}
         <Box>
           <Text fontWeight="bold" mb={2}>
