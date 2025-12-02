@@ -4,15 +4,15 @@ import { extendTheme } from '@chakra-ui/react';
 const theme = extendTheme({
   colors: {
     brand: {
-      primary: "#2F7D32",      // 主按钮、主操作（绿色）
-      secondary: "#6DBE45", // hover / icon 用的浅绿
-      accent: "#EA580C",       // 高亮 / 链接（例如 Forgot password）
-      dark: "#1F2937",         // 主要文字
-      muted: "#6B7280",        // 次要文字
-      border: "#D1D5DB",       // 输入框 / 卡片边框
-      surface: "#FFFFFF",      // 白色卡片
-      surfaceAlt: "#E9F6E2",   // 左边大块淡绿背景 / 选中
-      pageBg: "#FFF6DA",       // 页面淡黄背景
+      primary: "#2F7D32",      // Primary buttons, main actions (green)
+      secondary: "#6DBE45",    // Hover states, icons (light green)
+      accent: "#EA580C",       // Highlights, links (e.g., Forgot password)
+      dark: "#1F2937",         // Primary text
+      muted: "#6B7280",        // Secondary text
+      border: "#D1D5DB",       // Input/card borders
+      surface: "#FFFFFF",      // White card backgrounds
+      surfaceAlt: "#E9F6E2",   // Light green background, selected states
+      pageBg: "#FFF6DA",       // Page background (cream/yellow)
     },
   },
   fonts: {
@@ -28,7 +28,7 @@ const theme = extendTheme({
   components: {
     Button: {
       defaultProps: {
-      variant: "solid",   // 不写 variant 时，默认就是绿色实心按钮
+        variant: "solid",   // Default to solid green button when no variant specified
       },
       baseStyle: {
         borderRadius: "md",
@@ -48,7 +48,7 @@ const theme = extendTheme({
           },
         },
         outline: {
-          bg: "brand.light",
+          bg: "brand.surface",
           color: "brand.dark",
           borderWidth: "1px",
           borderColor: "brand.border",
@@ -56,7 +56,7 @@ const theme = extendTheme({
             bg: "brand.surfaceAlt",
           },
           _disabled: {
-            bg: "brand.light",
+            bg: "brand.surface",
             opacity: 0.6,
             cursor: "not-allowed",
           },
@@ -66,7 +66,7 @@ const theme = extendTheme({
 
     Input: {
       defaultProps: {
-        bg: "brand.light",
+        bg: "brand.surface",
         borderColor: "brand.border",
         focusBorderColor: "brand.secondary",
       },
@@ -89,7 +89,7 @@ const theme = extendTheme({
           },
         },
         label: {
-          color: "brand.dark", // 文字颜色（可选）
+          color: "brand.dark", // Label text color
         },
       },
     },

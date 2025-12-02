@@ -7,7 +7,7 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   return (
-    <Flex direction="column" minH="100vh" bg="brand.light">
+    <Flex direction="column" minH="100vh" bg="brand.pageBg">
       {/* header */}
       <Box
         as="header"

@@ -34,8 +34,15 @@ function LoginContent() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     setError("");
+
+    // Client-side validation
+    if (!email.trim() || !password.trim()) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    setIsLoading(true);
 
     const result = await signIn("credentials", {
       email,
@@ -91,7 +98,7 @@ function LoginContent() {
 
             <Box as="form" onSubmit={handleSubmit}>
               <VStack align="stretch" spacing={4}>
-                <FormControl>
+                <FormControl isInvalid={!!error}>
                   <FormLabel fontSize="sm" color="brand.dark">
                     Email
                   </FormLabel>
@@ -103,7 +110,7 @@ function LoginContent() {
                   />
                 </FormControl>
 
-                <FormControl>
+                <FormControl isInvalid={!!error}>
                   <FormLabel fontSize="sm" color="brand.dark">
                     Password
                   </FormLabel>
@@ -117,7 +124,7 @@ function LoginContent() {
 
                 <HStack justify="space-between" fontSize="sm">
                   <Checkbox>Remember me</Checkbox>
-                  <Link color="brand.accent" fontWeight="medium">
+                  <Link href="#" color="brand.accent" fontWeight="medium">
                     Forgot password?
                   </Link>
                 </HStack>
