@@ -4,6 +4,21 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 52 (2025-12-02) - Story 4.2 Complete, Story 2.8 Task 0 Done
+
+### Session 52 Achievements
+
+✅ **Story 4.2 Code Review**: Identified YiLing's bugs (form submission, error display, unused code)
+✅ **Story 4.2 Bug Fixes**: Fixed type=submit, error display, removed role cards + Google button
+✅ **Story 2.8 Task 0**: Added SessionProvider to _app.tsx, created /dashboard stub with auth redirects
+✅ **Theme Bug Fix**: Translated Chinese comments, fixed brand.light undefined (4 occurrences)
+✅ **Story 4.2 Final Cleanup**: Added client-side validation, isInvalid prop, href accessibility
+✅ **Git Commits**: acfaf65 (Story 4.2 simplification), 11522b0 (final cleanup + theme fixes)
+
+**Impact:** Story 4.2 complete. Story 2.8 prerequisites (Task 0) done. Theme bugs fixed.
+
+---
+
 ## Session 51 (2025-12-01) - Story 2.8 Updated, Story 4.2 Parallel Development
 
 ### Session 51 Achievements
@@ -136,19 +151,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 42 (2025-11-30) - Epic 5 Rewritten, Stories 5.2/5.3 Created
-
-### Session 42 Achievements
-
-✅ **Story 5.2 Review**: Identified critical issues (ethers.js vs viem, missing PRODUCER_ROLE granting)
-✅ **Epic 5 Rewritten**: Complete rewrite with correct viem code samples, fixed story breakdown
-✅ **Story 5.2 Created**: Backend Prerequisites - Product model, PRODUCER_ROLE granting, env vars (2-3h)
-✅ **Story 5.3 Created**: Product Registration API - viem, server-side signing, database save (4-5h)
-✅ **Documentation Audit**: Fixed outdated patterns in 7 files (ethers.js → viem, ALCHEMY_RPC_URL → SEPOLIA_RPC_URL)
-✅ **Env Var Standardization**: All docs now use SEPOLIA_RPC_URL, PRIVATE_KEY, NEXT_PUBLIC_PRODUCT_REGISTRY_ADDRESS
-
-**Impact:** Epic 5 documentation corrected. Story 5.2/5.3 ready for implementation.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (42-51). Older sessions (1-41) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (43-52). Older sessions (1-42) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
