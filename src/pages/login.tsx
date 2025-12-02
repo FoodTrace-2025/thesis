@@ -14,28 +14,17 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent } from "react";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
-import { ErrorBoundary, LoadingSpinner } from "@/components/ui";
-
-
-// 左侧四个角色卡片
-type RoleCardProps = {
-  title: string;
-  description: string;
-  value: string;
-  selectedValue: string | null;
-  onSelect: (value: string) => void;
-};
-
+import { ErrorBoundary } from "@/components/ui";
 type RoleValue = "producer" | "distributor" | "retailer" | "consumer";
 
 function RoleCard(props: {
   title: string;
   description: string;
-  value: RoleValue;                // 这个卡片代表哪个角色
-  selectedRole: RoleValue;         // 当前选中的角色
+  value: RoleValue;
+  selectedRole: RoleValue;
   onSelect: (value: RoleValue) => void;
 }) {
   const { title, description, value, selectedRole, onSelect } = props;
@@ -44,7 +33,7 @@ function RoleCard(props: {
 
   return (
     <Box
-      bg={isSelected ? "brand.secondary" : "brand.surface"}   // 选中变浅绿，不选白
+      bg={isSelected ? "brand.secondary" : "brand.surface"}
       borderRadius="xl"
       borderWidth="1px"
       borderColor={isSelected ? "brand.secondary" : "brand.surfaceAlt"}
@@ -59,7 +48,6 @@ function RoleCard(props: {
       transition="all 0.15s ease-out"
       onClick={() => onSelect(value)}
     >
-      {/* 顶部方块：选中时变白 */}
       <Box
         w="56px"
         h="56px"
@@ -87,15 +75,6 @@ function RoleCard(props: {
 }
 
 export default function LoginPage() {
-  const [isLoadingPage, setIsLoadingPage] = useState(true);
-
-  useEffect(() => {
-    const t = setTimeout(() => setIsLoadingPage(false), 800);
-    return () => clearTimeout(t);
-  }, []);
-
-  if (isLoadingPage) return <LoadingSpinner text="Loading..." />;
-  
   return (
     <ErrorBoundary>
       <LoginContent />
@@ -104,18 +83,13 @@ export default function LoginPage() {
 }
 
 function LoginContent() {
-  // 选择的角色
   const [selectedRole, setSelectedRole] = useState<RoleValue>("producer");
-  // 表单状态
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // 错误 & 加载状态
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   const router = useRouter();
 
-  // 登录提交逻辑
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -132,7 +106,6 @@ function LoginContent() {
     if (result?.error) {
       setError("Invalid email or password");
     } else {
-      // 登录成功后的跳转
       router.push("/dashboard");
     }
   };
@@ -143,9 +116,8 @@ function LoginContent() {
         <title>FoodTrace Login</title>
       </Head>
 
-      {/* 整体淡黄背景 */}
       <Box
-        bg="brand.pageBg"     // 淡黄背景（FFF6DA）
+        bg="brand.pageBg"
         minH="100vh"
         display="flex"
         justifyContent="center"
@@ -154,7 +126,7 @@ function LoginContent() {
       >
          <Box
           borderRadius="xl"
-          overflow="hidden"       // 👈 必须，有它左绿区与右白区才不会“漏角”
+          overflow="hidden"
           boxShadow="md"
           w="100%"
           maxW="1120px"
@@ -162,7 +134,7 @@ function LoginContent() {
           flexDir={{ base: "column", md: "row" }}
         >
 
-          {/* 左侧角色介绍区域：大块淡绿背景 */}
+          {/* Role cards section */}
           <Box
             flex="1"
             bg="brand.surfaceAlt"
@@ -177,7 +149,7 @@ function LoginContent() {
                 onSelect={setSelectedRole}
               />
               <RoleCard
-                title="Distributor" // Story 里要求用 Distributor
+                title="Distributor"
                 description="Upload transport and data"
                 value="distributor"
                 selectedRole={selectedRole}
@@ -200,7 +172,7 @@ function LoginContent() {
             </SimpleGrid>
           </Box>
 
-          {/* 右侧登录表单区域：白色卡片 */}
+          {/* Login form section */}
           <Box
             flex="1"
             bg="brand.surface"
@@ -208,7 +180,6 @@ function LoginContent() {
             p={{ base: 6, md: 10 }}
           >
             <VStack align="stretch" spacing={6}>
-              {/* 顶部标题 */}
               <Box textAlign="center">
                 <Heading
                   as="h1"
@@ -223,7 +194,6 @@ function LoginContent() {
                 </Text>
               </Box>
 
-              {/* 表单区域 */}
               <Box as="form" onSubmit={handleSubmit}>
                 <VStack align="stretch" spacing={4}>
                   <FormControl>
@@ -257,8 +227,14 @@ function LoginContent() {
                     </Link>
                   </HStack>
 
-                  {/* Login 按钮：深绿 */}
+                  {error && (
+                    <Text color="red.500" fontSize="sm" textAlign="center">
+                      {error}
+                    </Text>
+                  )}
+
                   <Button
+                    type="submit"
                     mt={2}
                     w="100%"
                     size="md"
@@ -268,7 +244,6 @@ function LoginContent() {
                     Login
                   </Button>
 
-                  {/* Google 登录按钮：淡灰背景 + 边框 */}
                   <Button
                     w="100%"
                     size="md"
@@ -279,16 +254,6 @@ function LoginContent() {
                   </Button>
                 </VStack>
               </Box>
-
-              {/* 底部 Sign up 链接
-              <Box textAlign="center" fontSize="sm">
-                <Text as="span" color="brand.dark" mr={1}>
-                  Don&apos;t have an account?
-                </Text>
-                <Link color="brand.accent" fontWeight="semibold">
-                  Sign up
-                </Link>
-              </Box> */}
             </VStack>
           </Box>
         </Box>
