@@ -19,6 +19,7 @@ import {
 } from '@chakra-ui/react';
 import { ApproveModal } from './ApproveModal';
 import { RejectModal } from './RejectModal';
+import { AddAdminModal } from './AddAdminModal';
 
 // Company type matching API response
 interface Company {
@@ -73,6 +74,7 @@ export function CompanyList({ statusFilter }: CompanyListProps) {
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+  const [isAddAdminModalOpen, setIsAddAdminModalOpen] = useState(false);
 
   // Fetch companies from API
   const fetchCompanies = useCallback(async () => {
@@ -115,10 +117,16 @@ export function CompanyList({ statusFilter }: CompanyListProps) {
     setIsRejectModalOpen(true);
   };
 
+  const handleAddAdminClick = (company: Company) => {
+    setSelectedCompany(company);
+    setIsAddAdminModalOpen(true);
+  };
+
   const handleModalClose = () => {
     setSelectedCompany(null);
     setIsApproveModalOpen(false);
     setIsRejectModalOpen(false);
+    setIsAddAdminModalOpen(false);
   };
 
   const handleActionSuccess = () => {
@@ -220,6 +228,15 @@ export function CompanyList({ statusFilter }: CompanyListProps) {
                       </Button>
                     </HStack>
                   )}
+                  {company.status === 'APPROVED' && (
+                    <Button
+                      size="xs"
+                      colorScheme="teal"
+                      onClick={() => handleAddAdminClick(company)}
+                    >
+                      Add Admin
+                    </Button>
+                  )}
                 </Td>
               </Tr>
             ))}
@@ -236,6 +253,12 @@ export function CompanyList({ statusFilter }: CompanyListProps) {
       />
       <RejectModal
         isOpen={isRejectModalOpen}
+        onClose={handleModalClose}
+        company={selectedCompany}
+        onSuccess={handleActionSuccess}
+      />
+      <AddAdminModal
+        isOpen={isAddAdminModalOpen}
         onClose={handleModalClose}
         company={selectedCompany}
         onSuccess={handleActionSuccess}
