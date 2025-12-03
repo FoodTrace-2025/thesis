@@ -39,13 +39,61 @@ async function main() {
     },
   });
 
-  console.log('Seed complete!');
   console.log('---');
-  console.log('Admin user created:');
+  console.log('Admin user:');
   console.log(`  Email: ${admin.email}`);
   console.log('  Password: admin123');
   console.log(`  Role: ${admin.role}`);
+
+  // Create test users for DISTRIBUTOR and RETAILER roles
+  // (Story 5.4: Required for testing role-based dashboards)
+  // Uses existing companies if they exist, otherwise creates new ones
+  const testRoles = [
+    { domain: 'distributor.test', type: 'DISTRIBUTOR' as const, fallbackName: 'Test Distributor Co' },
+    { domain: 'cityretail.test', type: 'RETAILER' as const, fallbackName: 'Test Retail Store' },
+  ];
+
   console.log('---');
+  console.log('Test users for role-based dashboards:');
+
+  for (const roleData of testRoles) {
+    // Find existing company by domain or create new one
+    let company = await prisma.company.findFirst({
+      where: { domain: roleData.domain },
+    });
+
+    if (!company) {
+      // Create new company if none exists with this domain
+      company = await prisma.company.create({
+        data: {
+          name: roleData.fallbackName,
+          email: `contact@${roleData.domain}`,
+          domain: roleData.domain,
+          type: roleData.type,
+          status: 'APPROVED',
+        },
+      });
+      console.log(`  Created company: ${company.name}`);
+    }
+
+    // Create or update test user with role matching company type
+    const user = await prisma.user.upsert({
+      where: { email: `test@${roleData.domain}` },
+      update: { passwordHash },
+      create: {
+        email: `test@${roleData.domain}`,
+        passwordHash,
+        name: `Test ${roleData.type}`,
+        role: roleData.type,
+        companyId: company.id,
+      },
+    });
+
+    console.log(`  ${user.role}: test@${roleData.domain} / admin123`);
+  }
+
+  console.log('---');
+  console.log('Seed complete!');
 }
 
 main()

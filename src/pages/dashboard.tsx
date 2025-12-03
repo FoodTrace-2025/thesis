@@ -1,6 +1,6 @@
 // src/pages/dashboard.tsx
-// Story 2.8 Task 0: Stub dashboard page
-// Full implementation in Epic 12
+// Story 5.4: Role-based router
+// Redirects authenticated users to their role-specific dashboard
 
 import { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth';
@@ -11,41 +11,50 @@ import { Layout } from '@/components/layout';
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getServerSession(context.req, context.res, authOptions);
 
-  // Redirect to login if not authenticated
+  // Not authenticated → login
   if (!session) {
     return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
+      redirect: { destination: '/login', permanent: false },
     };
   }
 
-  // Redirect PLATFORM_ADMIN to /admin
-  if (session.user.role === 'PLATFORM_ADMIN') {
+  // Role-based redirects
+  const redirectMap: Record<string, string> = {
+    PRODUCER: '/producer/dashboard',
+    DISTRIBUTOR: '/distributor/dashboard',
+    RETAILER: '/retailer/dashboard',
+    PLATFORM_ADMIN: '/admin',
+    COMPANY_ADMIN: '/dashboard', // COMPANY_ADMIN stays on /dashboard for now (no dedicated page)
+  };
+
+  const destination = redirectMap[session.user.role] || '/login';
+
+  // Prevent infinite redirect for COMPANY_ADMIN
+  if (session.user.role === 'COMPANY_ADMIN') {
+    // COMPANY_ADMIN doesn't have a dedicated dashboard yet, show stub
     return {
-      redirect: {
-        destination: '/admin',
-        permanent: false,
+      props: {
+        userName: session.user.name || session.user.email,
+        userRole: session.user.role,
       },
     };
   }
 
-  // Business users see stub dashboard
   return {
-    props: {
-      userName: session.user.name || session.user.email,
-      userRole: session.user.role,
-    },
+    redirect: { destination, permanent: false },
   };
 }
+
+// This component only renders for COMPANY_ADMIN (no dedicated dashboard yet)
+// All other roles are redirected via getServerSideProps
 
 interface DashboardProps {
   userName: string;
   userRole: string;
 }
 
-export default function Dashboard({ userName, userRole }: DashboardProps) {
+export default function DashboardRouter({ userName, userRole }: DashboardProps) {
+  // Only COMPANY_ADMIN reaches here (others redirected)
   return (
     <Layout>
       <Box textAlign="center" py={20}>
@@ -55,7 +64,7 @@ export default function Dashboard({ userName, userRole }: DashboardProps) {
             Role: {userRole}
           </Text>
           <Text color="brand.dark" mt={4}>
-            Dashboard coming soon in Epic 12
+            Company Admin dashboard coming soon
           </Text>
         </VStack>
       </Box>

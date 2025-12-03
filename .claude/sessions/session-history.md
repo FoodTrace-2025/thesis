@@ -4,6 +4,21 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 59 (2025-12-03) - Story 5.4 Complete, Role-Based Dashboards
+
+### Session 59 Achievements
+
+✅ **Story 5.4 Implemented**: Role-based routing - /dashboard now redirects to role-specific dashboards
+✅ **Dashboard Stubs Created**: producer/dashboard, distributor/dashboard, retailer/dashboard pages
+✅ **Link/Button Pattern Fixed**: Story template corrected to use `Button as={NextLink}` pattern
+✅ **Seed.ts Extended**: Added DISTRIBUTOR and RETAILER test users for testing
+✅ **Manual Testing Verified**: All 11 acceptance criteria passed (4 role dashboards + role protection)
+✅ **124 Tests Passing**: No regressions, build successful
+
+**Impact:** Epic 5 Story 5.4 complete. Role-based routing foundation established for all business user dashboards.
+
+---
+
 ## Session 58 (2025-12-03) - Epic 3 Comprehensive Review
 
 ### Session 58 Achievements
@@ -139,18 +154,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 49 (2025-12-01) - Story 2.6 Implementation Complete
-
-### Session 49 Achievements
-
-✅ **Story 2.6 Review**: Critical analysis of readiness - identified gaps in test cases and QA documentation
-✅ **Story 2.6 Updated**: Added 11 explicit test cases to Task 5, added QA Decision Note
-✅ **Story 2.6 Implemented**: POST /api/admin/users endpoint with bcrypt, Zod validation, audit logging
-✅ **12 Tests Passing**: All acceptance criteria covered (113 total tests, no regressions)
-✅ **Git Commit**: e66c015 pushed - feat(api): implement POST /api/admin/users endpoint (Story 2.6)
-
-**Impact:** Story 2.6 complete. PLATFORM_ADMIN can now create COMPANY_ADMIN users via API.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (49-58). Older sessions (1-48) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (50-59). Older sessions (1-49) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
