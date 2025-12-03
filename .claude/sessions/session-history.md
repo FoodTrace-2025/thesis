@@ -4,6 +4,21 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 55 (2025-12-03) - Story 2.11 Complete, Login/Logout Header Buttons
+
+### Session 55 Achievements
+
+✅ **Story 2.11 Created**: Login/Logout Header Buttons story document
+✅ **Story 2.11 Implemented**: Session-aware header with Login/Logout buttons in Layout
+✅ **UX Fix**: Separated role text from Logout button (role is not an action)
+✅ **Role Label Mapping**: Added getRoleLabel() for friendly role display (PLATFORM_ADMIN → Platform Admin)
+✅ **Removed CONSUMER**: From role mapping (consumers don't login per Epic 9 wallet-free)
+✅ **Manual Testing**: All 9 acceptance criteria verified with Playwright browser testing
+
+**Impact:** All pages using Layout now have authentication UI. Users can login/logout from any page.
+
+---
+
 ## Session 54 (2025-12-02) - Story 2.10 Complete, Add Company Admin Form
 
 ### Session 54 Achievements
@@ -136,19 +151,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 45 (2025-11-30) - Story 5.3 Complete, Product Registration API
-
-### Session 45 Achievements
-
-✅ **Story 5.3 Complete**: Product Registration API - POST /api/products/register with blockchain integration
-✅ **requireProducer Middleware**: New auth middleware for PRODUCER role + APPROVED company validation
-✅ **Full Integration Test**: TX 0x4f5b0f7...757fad confirmed on Sepolia (blockchainId: 2)
-✅ **Test Data Cleanup**: Fixed user emails (producer@producer.farm, admin@foodtrace.app)
-✅ **QR Code URL Fixed**: Changed from non-existent NEXT_PUBLIC_APP_URL to existing NEXT_PUBLIC_BASE_URL
-✅ **Stories 2.6-2.7 Drafted**: User creation APIs for proper role hierarchy (COMPANY_ADMIN → employees)
-
-**Impact:** Epic 5 Stories 5.1-5.3 complete. Product registration working end-to-end with blockchain.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (45-54). Older sessions (1-44) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (46-55). Older sessions (1-45) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md

@@ -3,8 +3,8 @@ doc-id: thesis-project-context
 title: FoodTrace Thesis Project Context
 purpose: AI agent entry point and navigation hub
 auto-generated: false
-last-updated: 2025-12-02
-session: 54
+last-updated: 2025-12-03
+session: 55
 ---
 
 # FoodTrace Thesis - Project Context
@@ -32,7 +32,7 @@ session: 54
 
 ### Session History
 
-- **Session Archive** → .claude/sessions/session-history.md (Sessions 45-54 archive, last 10 kept)
+- **Session Archive** → .claude/sessions/session-history.md (Sessions 46-55 archive, last 10 kept)
 
 ### Archived Documents (2025-11-13 - Planning Phase)
 
@@ -60,26 +60,26 @@ Planning documents created during Sessions 1-7 but never used for development. A
 
 ## Current Session Status
 
-- **Last Updated**: 2025-12-02 (Session 54)
-- **Project Status**: Week 4 - Epic 1 ✅, Epic 2 ✅, Epic 3 Tier 1 ✅, Epic 4 Stories 4.1-4.2 ✅, Epic 5 Stories 5.1-5.3 ✅, Stories 2.6-2.10 ✅
+- **Last Updated**: 2025-12-03 (Session 55)
+- **Project Status**: Week 4 - Epic 1 ✅, Epic 2 ✅, Epic 3 Tier 1 ✅, Epic 4 Stories 4.1-4.2 ✅, Epic 5 Stories 5.1-5.3 ✅, Stories 2.6-2.11 ✅
 - **Project Completion**: ~40% (see breakdown below)
   - Planning Phase: 100% (Brief, PRD, Architecture)
-  - Implementation: 38% (2/13 epics + Epic 3 Tier 1 + Epic 4 Stories 4.1-4.2 + Epic 5 Stories 5.1-5.3 + Stories 2.6-2.10 complete)
+  - Implementation: 38% (2/13 epics + Epic 3 Tier 1 + Epic 4 Stories 4.1-4.2 + Epic 5 Stories 5.1-5.3 + Stories 2.6-2.11 complete)
   - Thesis Writing: 0% (templates only, content written during development)
-- **Active Stage**: Story 2.10 complete, admin can create companies AND company admins
+- **Active Stage**: Story 2.11 complete, Login/Logout buttons in header
 - **Next Priority**: Story 5.4 (TaiSheng) | Epic 4 remaining stories (4.3+)
-- **Recent Changes**: Story 2.10 complete - Add Company Admin form with default password
+- **Recent Changes**: Story 2.11 complete - Login/Logout header buttons with role display
 - **Blockers**: None
 - **Ready for**: Next story implementation
 
-### Current Session Achievements (Session 54 - 2025-12-02)
+### Current Session Achievements (Session 55 - 2025-12-03)
 
-✅ **Story 2.10 Created**: Add Company Admin form story document following 2.9 format
-✅ **Story 2.10 Implemented**: AddAdminModal component with Name, Email fields
-✅ **"Add Admin" Button**: Added to CompanyList ACTIONS column (APPROVED companies only)
-✅ **Default Password**: Hard-coded "admin123" for POC, documented in .env files
-✅ **Story Format Analysis**: Compared 2.1-2.5 vs 2.6-2.9 formats, chose concise format
-✅ **Manual Testing**: All 9 acceptance criteria verified (button visibility, toast, domain validation)
+✅ **Story 2.11 Created**: Login/Logout Header Buttons story document
+✅ **Story 2.11 Implemented**: Session-aware header with Login/Logout buttons in Layout
+✅ **UX Fix**: Separated role text from Logout button (role is not an action)
+✅ **Role Label Mapping**: Added getRoleLabel() for friendly role display
+✅ **Removed CONSUMER**: From role mapping (consumers don't login per Epic 9)
+✅ **Manual Testing**: All 9 acceptance criteria verified with Playwright browser testing
 
 ### Development Approach
 
@@ -203,7 +203,7 @@ Planning documents created during Sessions 1-7 but never used for development. A
 /home/kala/Documents/GitHub/thesis/docs/thesis/chapters/chapter-8-conclusion.md
 
 # Session Archive
-/home/kala/Documents/GitHub/thesis/.claude/sessions/session-history.md (✅ Sessions 45-54, last 10 kept)
+/home/kala/Documents/GitHub/thesis/.claude/sessions/session-history.md (✅ Sessions 46-55, last 10 kept)
 
 # Archived Planning (2025-11-13)
 /home/kala/Documents/GitHub/thesis/docs/archive/planning-phase/README.md (📦 Index of archived docs)
@@ -276,9 +276,9 @@ When updating this file after each session:
 
 ---
 
-**Last Session:** Dec 2, 2025 (Session 54) - Story 2.10 complete, admin can create company admins
+**Last Session:** Dec 3, 2025 (Session 55) - Story 2.11 complete, Login/Logout header buttons
 **Next Priority:** Story 5.4 (TaiSheng) | Epic 4 remaining stories (4.3+)
-**Status:** Implementation 40% complete (2/13 epics + Epic 3 Tier 1 + Epic 4 Stories 4.1-4.2 + Epic 5 Stories 5.1-5.3 + Stories 2.6-2.10)
-**Session History:** See .claude/sessions/session-history.md for Sessions 45-54 (last 10 kept)
+**Status:** Implementation 40% complete (2/13 epics + Epic 3 Tier 1 + Epic 4 Stories 4.1-4.2 + Epic 5 Stories 5.1-5.3 + Stories 2.6-2.11)
+**Session History:** See .claude/sessions/session-history.md for Sessions 46-55 (last 10 kept)
 
 _This CLAUDE.md file is the AI assistant's primary context document. Update after each significant milestone._

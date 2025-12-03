@@ -7,6 +7,17 @@ interface LayoutProps {
   children: ReactNode;
 }
 
+function getRoleLabel(role: string): string {
+  const roleLabels: Record<string, string> = {
+    PLATFORM_ADMIN: 'Platform Admin',
+    COMPANY_ADMIN: 'Company Admin',
+    PRODUCER: 'Producer',
+    DISTRIBUTOR: 'Distributor',
+    RETAILER: 'Retailer',
+  };
+  return roleLabels[role] || role;
+}
+
 export function Layout({ children }: LayoutProps) {
   const { data: session } = useSession();
 
@@ -29,13 +40,18 @@ export function Layout({ children }: LayoutProps) {
           <Spacer />
 
           {session ? (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => signOut({ callbackUrl: '/login' })}
-            >
-              {session.user.name || session.user.email} • Logout
-            </Button>
+            <HStack spacing={3}>
+              <Text fontSize="sm" color="brand.muted">
+                {getRoleLabel(session.user.role)}
+              </Text>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => signOut({ callbackUrl: '/login' })}
+              >
+                Logout
+              </Button>
+            </HStack>
           ) : (
             <Button as={NextLink} href="/login" variant="ghost" size="sm">
               Login
