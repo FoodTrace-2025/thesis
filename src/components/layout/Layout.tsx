@@ -1,11 +1,15 @@
 import { ReactNode } from 'react';
-import { Box, Flex, HStack, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Spacer, Text } from '@chakra-ui/react';
+import { useSession, signOut } from 'next-auth/react';
+import NextLink from 'next/link';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 export function Layout({ children }: LayoutProps) {
+  const { data: session } = useSession();
+
   return (
     <Flex direction="column" minH="100vh" bg="brand.pageBg">
       {/* header */}
@@ -21,6 +25,22 @@ export function Layout({ children }: LayoutProps) {
           <Text fontWeight="bold" color="brand.dark">
             Food Trace
           </Text>
+
+          <Spacer />
+
+          {session ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => signOut({ callbackUrl: '/login' })}
+            >
+              {session.user.name || session.user.email} • Logout
+            </Button>
+          ) : (
+            <Button as={NextLink} href="/login" variant="ghost" size="sm">
+              Login
+            </Button>
+          )}
         </HStack>
       </Box>
 
