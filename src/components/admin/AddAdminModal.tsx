@@ -83,7 +83,9 @@ export function AddAdminModal({ isOpen, onClose, company, onSuccess }: AddAdminM
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to create company admin');
+        // Extract specific error message from details if available
+        const errorMessage = data.details?.[0]?.message || data.error || 'Failed to create company admin';
+        throw new Error(errorMessage);
       }
 
       toast({

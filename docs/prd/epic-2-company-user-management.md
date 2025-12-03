@@ -60,11 +60,14 @@ WALLET_ENCRYPTION_KEY="[64-char hex from Epic 1]"
 - ✅ Approved companies automatically get encrypted Ethereum wallet generated server-side
 - ✅ Wallet generation uses Epic 3 Tier 1 encryption (AES-256-GCM with WALLET_ENCRYPTION_KEY)
 
-**Company Management UI (Deferred to Epic 7):**
+**Company Management UI (Stories 2.8-2.11 DONE):**
 
-- ⏳ Platform admin portal shows all companies in list view (with status filter)
-- ⏳ Platform admin dashboard has "Approve Company" button
-- ⏳ "Approve" and "Reject" buttons with confirmation modals
+- ✅ Platform admin portal shows all companies in list view (with status filter)
+- ✅ Platform admin dashboard has "Approve Company" button
+- ✅ "Approve" and "Reject" buttons with confirmation modals
+- ✅ Add Company form (Story 2.9)
+- ✅ Add Company Admin form (Story 2.10)
+- ✅ Login/Logout header buttons (Story 2.11)
 
 **User Management:**
 
@@ -235,12 +238,18 @@ if (!companyEmail.endsWith(`@${companyDomain}`)) {
 - Story 2.3: Company Approve API (3-4 hours) ✅ Done
 - Story 2.4: Company Reject API (2 hours) ✅ Done
 - Story 2.5: Admin Authentication (4-5 hours) ✅ Done
-- Story 2.6: Create Company Admin User API (2-3 hours) - Ready
-- Story 2.7: Create Company Employee API (3-4 hours) - Ready
+- Story 2.6: Create Company Admin User API (2-3 hours) ✅ Done
+- Story 2.7: Create Company Employee API (3-4 hours) ✅ Done
 
 **YiLing (4 hours - Frontend):**
 
-- Story 2.8: Platform Admin Dashboard UI (4 hours) - Ready
+- Story 2.8: Platform Admin Dashboard UI (4 hours) ✅ Done
+
+**Sam (Session 53-55 - Additional Stories):**
+
+- Story 2.9: Add Company Form ✅ Done
+- Story 2.10: Add Company Admin Form ✅ Done
+- Story 2.11: Login/Logout Header Buttons ✅ Done
 
 **Note (Session 48):** Story 2.8 covers PLATFORM_ADMIN dashboard only (`/admin` route). Company user dashboards (COMPANY_ADMIN, PRODUCER, DISTRIBUTOR, RETAILER) are handled by Epic 12.
 

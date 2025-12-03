@@ -86,7 +86,9 @@ export function AddCompanyModal({ isOpen, onClose, onSuccess }: AddCompanyModalP
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to create company');
+        // Extract specific error message from details if available
+        const errorMessage = data.details?.[0]?.message || data.error || 'Failed to create company';
+        throw new Error(errorMessage);
       }
 
       toast({
