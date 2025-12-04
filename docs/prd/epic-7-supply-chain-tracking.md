@@ -1,9 +1,9 @@
 ### Epic 7: Supply Chain Tracking
 
-**Updated: 2025-12-04 (Session 61)** - Aligned roles and API format with rest-api-spec.md
+**Updated: 2025-12-04 (Session 67)** - Split Stories 7.6-7.7 into 7.6-7.10 for better testability
 
 **Priority:** 🔴 Must Have
-**Estimated Time:** 12-15 hours (Smart Contract 4h + Backend 3-4h + Frontend 5-7h)
+**Estimated Time:** 22-24 hours (Smart Contract 4h + Backend 6-7h + Frontend 12-13h)
 **Assigned:** Sam (Smart Contract), TaiSheng (Backend), YiLing (Frontend)
 **Timeline:** Week 5-7
 **Dependencies:** Epic 4 (Component Library - Timeline), Epic 5 (Product Registration), Epic 6 (Product Transfer - Optional)
@@ -275,7 +275,7 @@ export async function GET(req, { params }) {
 **Blocks:**
 - Epic 9 (Consumer Query Interface) - Consumer query shows complete trace history timeline
 
-#### Story Breakdown (Updated 2025-12-04)
+#### Story Breakdown (Updated 2025-12-04 - Session 67)
 
 | Story | Title | Estimate | Status | Assigned |
 |-------|-------|----------|--------|----------|
@@ -284,10 +284,15 @@ export async function GET(req, { params }) {
 | 7.3 | GET Trace History API | 1.5h | ✅ Complete | TaiSheng |
 | 7.4 | Product Ownership Tracking | 2-3h | ✅ Complete | TaiSheng |
 | 7.5 | TraceRecordForm + Timeline Components | 3h | ✅ Complete | YiLing |
-| 7.6 | Distributor Dashboard Integration | 2h | Pending | YiLing |
-| 7.7 | Retailer + Producer Dashboard Integration | 2-3h | Pending | YiLing |
+| 7.6 | Distributor Dashboard - Product List & Layout | 2h | Pending | YiLing |
+| 7.7 | Distributor Dashboard - Trace Features | 2h | Pending | YiLing |
+| 7.8 | Retailer Dashboard | 2h | Pending | YiLing |
+| 7.9 | Producer Dashboard - Trace Features | 1.5h | Pending | YiLing |
+| 7.10 | QR Scanner Component | 3h | Pending | YiLing |
 
-**Story 7.4 Addition (Session 65):** Added Product Ownership Tracking to enable supply chain dashboards to show products in each company's custody. Implements "chain of custody" pattern - ownership transfers on RECEIVED action. This is a prerequisite for frontend stories 7.5-7.7.
+**Story Breakdown Update (Session 67):** Original Stories 7.6-7.7 split into 7.6-7.10 for better testability and context management. Each story is independently testable and scoped to 2 hours or less. QR Scanner (7.10) added as shared component for product lookup, replacing manual ID entry.
+
+**Story 7.4 Addition (Session 65):** Added Product Ownership Tracking to enable supply chain dashboards to show products in each company's custody. Implements "chain of custody" pattern - ownership transfers on RECEIVED action. This is a prerequisite for frontend stories 7.5-7.10.
 
 #### Team Assignment
 
@@ -330,23 +335,37 @@ export async function GET(req, { params }) {
   - Create GET /api/products endpoint with owner=me filter
   - Unit tests for products list and ownership transfer
 
-**YiLing (5-7 hours - Frontend Lead):**
+**YiLing (12-13 hours - Frontend Lead):**
 
-- Add trace record form (distributor dashboard) (2 hours)
-  - Form with action dropdown, location input, notes textarea
-  - Form validation (action required, location required)
-  - Loading states during blockchain transaction
-  - Success toast notification
-- Add trace record form (retailer dashboard) (2 hours)
-  - Similar form for retailer role
-  - Additional action option: "SOLD"
-- Timeline view component integration (2-3 hours)
-  - Integrate Epic 4 Timeline component
-  - Fetch trace history from GET /api/products/:id/trace-history
-  - Display actor name, company, action, location, timestamp
-  - Show blockchain transaction hash link to Etherscan
-  - Empty state when no trace records
-  - Mobile-responsive layout
+- Story 7.5: TraceRecordForm + Timeline Components (3 hours) ✅ Complete
+  - Reusable components for all dashboards
+  - Role-based action filtering in form
+  - Vertical timeline with Etherscan links
+
+- Story 7.6: Distributor Dashboard - Product List & Layout (2 hours)
+  - Product list with GET /api/products?owner=me
+  - Product cards with key info
+  - Loading, error, empty states
+
+- Story 7.7: Distributor Dashboard - Trace Features (2 hours)
+  - Modal with TraceRecordForm integration
+  - Timeline expand/collapse per product
+  - "Receive Product" section with ID lookup
+
+- Story 7.8: Retailer Dashboard (2 hours)
+  - Same pattern as distributor dashboard
+  - RETAILER actions: RECEIVED, QUALITY_CHECK, STOCKED, SOLD
+
+- Story 7.9: Producer Dashboard - Trace Features (1.5 hours)
+  - Add product list to existing dashboard
+  - PRODUCER actions: QUALITY_CHECK, SHIPPED
+  - No "Receive Product" section (producers create, don't receive)
+
+- Story 7.10: QR Scanner Component (3 hours)
+  - html5-qrcode integration
+  - Camera permissions handling
+  - Mobile support (iOS Safari, Android Chrome)
+  - Integration into distributor and retailer dashboards
 
 #### Risks & Mitigations
 
