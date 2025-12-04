@@ -10,6 +10,34 @@
 
 Build reusable React component library using Chakra UI v2 to accelerate frontend development across all 4 user roles (Producer, Distributor, Retailer, Consumer). Component library must be 100% complete before Week 5 when intensive UI development begins, preventing duplicate work and ensuring consistent design system.
 
+#### Scope Change (2025-12-04)
+
+**Status:** ✅ DONE (Scoped Down)
+
+**Decision:** Use Chakra UI components directly instead of creating wrapper components.
+
+**Rationale:**
+- Chakra UI v2 provides all needed functionality out of the box
+- Wrapper components add maintenance overhead without benefit
+- Theme configuration (theme.ts) customizes Chakra components to match brand
+- Timeline and Chart components will be built as needed in Epic 7/8
+
+**What was implemented (Stories 4.1-4.2):**
+- Custom Chakra UI theme with FoodTrace brand colors
+- Button/Input/Checkbox/Card/Container component overrides in theme.ts
+- Layout.tsx - main page layout with header
+- Container.tsx - content container with responsive padding
+- LoadingSpinner.tsx - async operation indicator
+- ErrorBoundary.tsx - error handling component
+- Login page UI (login.tsx)
+
+**What was intentionally skipped:**
+- Wrapper components (Button.tsx, Modal.tsx, Select.tsx, etc.) - Use Chakra directly
+- docs/components.md documentation - Inline JSDoc sufficient
+- Table, Timeline, Chart components - Deferred to Epic 7/8 when needed
+
+**Reference:** CLAUDE.md Key Technical Decision #7
+
 #### Business Value
 
 - **Development Speed:** Reusable components save 20-30 hours in Weeks 5-7 (no rebuilding forms for each role)

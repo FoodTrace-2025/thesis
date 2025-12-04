@@ -29,9 +29,11 @@ Enable producers to register harvested products on the blockchain with metadata 
 | Story | Title | Assignee | Time | Dependencies | Status |
 |-------|-------|----------|------|--------------|--------|
 | 5.1 | ProductRegistry Smart Contract | Sam | 4h | Epic 3 Tier 1 | ✅ DONE |
-| 5.2 | Backend Prerequisites | TaiSheng | 2-3h | Story 5.1 | TODO |
-| 5.3 | Product Registration API | TaiSheng | 4-5h | Story 5.2 | TODO |
-| 5.4 | Frontend Registration Form | YiLing | 4-6h | Story 5.3, Epic 4 | TODO (after Epic 4) |
+| 5.2 | Backend Prerequisites | TaiSheng | 2-3h | Story 5.1 | ✅ DONE |
+| 5.3 | Product Registration API | TaiSheng | 4-5h | Story 5.2 | ✅ DONE |
+| 5.4 | Route Structure and Dashboard Stubs | YiLing | 3h | Story 5.3, Epic 4 | ✅ DONE |
+| 5.5 | Product Registration Form | YiLing | 3h | Story 5.4 | ✅ DONE |
+| 5.6 | Registration Success Modal with QR | YiLing | 2h | Story 5.5 | ✅ DONE |
 
 **Story 5.1: ProductRegistry Smart Contract** ✅ DONE
 - ProductRegistry.sol contract with PRODUCER_ROLE access control
@@ -39,21 +41,29 @@ Enable producers to register harvested products on the blockchain with metadata 
 - Deployed to Sepolia: `0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646`
 - 100% test coverage, QA review passed
 
-**Story 5.2: Backend Prerequisites**
-- Add Product model to Prisma schema
-- Modify approve.ts to grant PRODUCER_ROLE on blockchain when approving PRODUCER companies
-- Standardize environment variables
-- Run database migrations
+**Story 5.2: Backend Prerequisites** ✅ DONE
+- Product model added to Prisma schema
+- Company approval grants PRODUCER_ROLE on blockchain
+- Database migration successful
 
-**Story 5.3: Product Registration API**
-- POST /api/products/register endpoint using viem
+**Story 5.3: Product Registration API** ✅ DONE
+- POST /api/products/register endpoint
 - Server-side wallet decryption and transaction signing
-- Database save with QR code URL generation
-- Audit logging
+- QR code URL generation, audit logging
 
-**Story 5.4: Frontend Registration Form** (Blocked by Epic 4)
-- Producer dashboard form using Epic 4 components
-- Client-side validation, loading states, success modal
+**Story 5.4: Route Structure and Dashboard Stubs** ✅ DONE
+- /dashboard converted to role-based router
+- Created /producer/dashboard, /distributor/dashboard, /retailer/dashboard stubs
+- Role-based access protection (getServerSideProps)
+
+**Story 5.5: Product Registration Form** ✅ DONE
+- Producer registration form at /producer/register
+- Zod validation matching API, loading states, error handling
+
+**Story 5.6: Registration Success Modal with QR Code** ✅ DONE
+- react-qr-code integration
+- Success modal with visual QR code display
+- Responsive sizing (150px mobile, 200px desktop)
 
 #### User Prerequisites (Manual Tasks - Complete First)
 
@@ -128,7 +138,7 @@ ls src/pages/api/admin/companies/[id]/approve.ts
 - ✅ Transaction hash and productId returned to frontend
 - ✅ Audit log entry created (action: PRODUCT_REGISTERED, userId, companyId, productId)
 
-**Frontend (Producer Dashboard):** (Story 5.4 - After Epic 4)
+**Frontend (Producer Dashboard):** ✅ DONE
 
 - ✅ Product registration form rendered using Epic 4 components
 - ✅ Form validation: name required, origin required, harvest date cannot be future
@@ -393,13 +403,12 @@ NEXT_PUBLIC_PRODUCT_REGISTRY_ADDRESS=0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646
 - Smart contract unit tests (100% coverage achieved)
 - Contract deployment to Sepolia and Etherscan verification
 
-**TaiSheng (6-8 hours - Backend Lead):**
+**TaiSheng (6-8 hours - Backend Lead):** ✅ COMPLETED
 
 - Story 5.2: Backend Prerequisites (2-3 hours)
-  - Add Product model to Prisma schema
-  - Modify approve.ts to grant PRODUCER_ROLE for PRODUCER companies
-  - Run database migration
-  - Test role granting with contract
+  - Product model added to Prisma schema
+  - approve.ts modified to grant PRODUCER_ROLE for PRODUCER companies
+  - Database migration complete
 
 - Story 5.3: Product Registration API (4-5 hours)
   - POST /api/products/register route implementation
@@ -408,13 +417,19 @@ NEXT_PUBLIC_PRODUCT_REGISTRY_ADDRESS=0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646
   - Database save with QR code URL
   - Error handling and audit logging
 
-**YiLing (4-6 hours - Frontend Lead):** (After Epic 4)
+**YiLing (8 hours - Frontend Lead):** ✅ COMPLETED
 
-- Story 5.4: Producer registration form
-  - Build form using Epic 4 components
-  - Client-side validation
-  - Loading states and success modal
-  - Error handling UI
+- Story 5.4: Route structure and dashboard stubs (3 hours)
+  - /dashboard role-based router
+  - Producer/distributor/retailer dashboard stubs
+
+- Story 5.5: Product registration form (3 hours)
+  - Form with Zod validation
+  - Loading states and error handling
+
+- Story 5.6: Success modal with QR code (2 hours)
+  - react-qr-code integration
+  - Responsive modal with Etherscan link
 
 #### Risks & Mitigations
 
@@ -446,4 +461,4 @@ NEXT_PUBLIC_PRODUCT_REGISTRY_ADDRESS=0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646
 
 ---
 
-**Last Updated:** 2025-11-30 (Story 5.1 completed, Epic rewritten for accuracy)
+**Last Updated:** 2025-12-04 (All 6 stories completed, Epic 5 DONE)
