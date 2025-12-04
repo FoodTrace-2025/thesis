@@ -113,16 +113,25 @@ export default async function handler(
     const encryptionKey = getEncryptionKey();
     const encryptedPrivateKey = encryptWalletKey(privateKey, encryptionKey);
 
-    // 6b. Grant PRODUCER_ROLE on blockchain (PRODUCER companies only) - Story 5.2
+    // 6b. Grant blockchain role based on company type - Story 5.2 + Story 7.7 fix
     let roleGrantTxHash: string | undefined;
 
-    if (company.type === 'PRODUCER') {
+    // Map company type to grant function
+    const roleGrantFunctions: Record<string, string> = {
+      PRODUCER: 'grantProducerRole',
+      DISTRIBUTOR: 'grantDistributorRole',
+      RETAILER: 'grantRetailerRole',
+    };
+
+    const grantFunctionName = roleGrantFunctions[company.type];
+
+    if (grantFunctionName) {
       const deployerPrivateKey = process.env.PRIVATE_KEY;
       const contractAddress = process.env.NEXT_PUBLIC_PRODUCT_REGISTRY_ADDRESS;
       const rpcUrl = process.env.SEPOLIA_RPC_URL;
 
       if (!deployerPrivateKey || !contractAddress || !rpcUrl) {
-        console.error('Missing blockchain configuration for PRODUCER_ROLE granting');
+        console.error(`Missing blockchain configuration for ${company.type}_ROLE granting`);
         return res.status(500).json({
           error: 'Blockchain configuration missing',
           code: 'CONFIG_ERROR',
@@ -143,11 +152,11 @@ export default async function handler(
         transport: http(rpcUrl),
       });
 
-      // Grant PRODUCER_ROLE to the new company wallet
+      // Grant role to the new company wallet
       const hash = await walletClient.writeContract({
         address: contractAddress as `0x${string}`,
         abi: ProductRegistryABI.abi,
-        functionName: 'grantProducerRole',
+        functionName: grantFunctionName,
         args: [walletAddress],
       });
 
@@ -158,7 +167,7 @@ export default async function handler(
       });
 
       if (receipt.status !== 'success') {
-        console.error('PRODUCER_ROLE granting transaction failed:', { hash, receipt });
+        console.error(`${company.type}_ROLE granting transaction failed:`, { hash, receipt });
         return res.status(500).json({
           error: 'Failed to grant blockchain role',
           code: 'BLOCKCHAIN_ERROR',
@@ -166,7 +175,7 @@ export default async function handler(
       }
 
       roleGrantTxHash = hash;
-      console.log('PRODUCER_ROLE granted:', { walletAddress, txHash: hash });
+      console.log(`${company.type}_ROLE granted:`, { walletAddress, txHash: hash });
     }
 
     // 7. Atomic update: company + audit log

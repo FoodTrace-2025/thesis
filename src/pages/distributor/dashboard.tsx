@@ -1,12 +1,14 @@
 // src/pages/distributor/dashboard.tsx
 // Story 7.6: Distributor Dashboard - Product List & Layout
 // Story 7.7: Trace Features - Modal, Timeline, Receive Product
+// Story 7.7 Enhancement: Only show Add Trace when distributor owns the product
 // DISTRIBUTOR role only - displays products in company's custody
 
 import { useState, useEffect } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { prisma } from '@/lib/prisma';
 import {
   Heading,
   Text,
@@ -56,11 +58,22 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { redirect: { destination: '/dashboard', permanent: false } };
   }
 
+  // Get company name for ownership comparison
+  let companyName = '';
+  if (session.user.companyId) {
+    const company = await prisma.company.findUnique({
+      where: { id: session.user.companyId },
+      select: { name: true },
+    });
+    companyName = company?.name || '';
+  }
+
   return {
     props: {
       userName: session.user.name || session.user.email,
       userRole: session.user.role,
       companyId: session.user.companyId,
+      companyName,
     },
   };
 }
@@ -69,11 +82,13 @@ interface DistributorDashboardProps {
   userName: string;
   userRole: string;
   companyId: string | null;
+  companyName: string;
 }
 
 export default function DistributorDashboard({
   userName,
   userRole,
+  companyName,
 }: DistributorDashboardProps) {
   // Product list state (Story 7.6)
   const [products, setProducts] = useState<Product[]>([]);
@@ -320,14 +335,17 @@ export default function DistributorDashboard({
                     </Text>
 
                     {/* Action buttons (Story 7.7 Task 1 & 2) */}
+                    {/* Only show Add Trace if distributor still owns the product */}
                     <HStack spacing={2}>
-                      <Button
-                        size="sm"
-                        colorScheme="green"
-                        onClick={() => handleAddTrace(product.id)}
-                      >
-                        Add Trace
-                      </Button>
+                      {product.currentOwner?.name === companyName && (
+                        <Button
+                          size="sm"
+                          colorScheme="green"
+                          onClick={() => handleAddTrace(product.id)}
+                        >
+                          Add Trace
+                        </Button>
+                      )}
                       <Button
                         size="sm"
                         variant="outline"

@@ -10,7 +10,8 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 // Query parameters validation schema
 const querySchema = z.object({
-  owner: z.enum(['me']).optional(),
+  owner: z.enum(['me']).optional(), // Products currently owned by user's company
+  company: z.enum(['me']).optional(), // Products registered by user's company (for producers)
   limit: z.coerce.number().int().min(1).max(100).default(50),
   offset: z.coerce.number().int().min(0).default(0),
 });
@@ -62,10 +63,10 @@ export default async function handler(
       });
     }
 
-    const { owner, limit, offset } = validation.data;
+    const { owner, company, limit, offset } = validation.data;
 
-    // 3. If owner=me, require authentication
-    if (owner === 'me') {
+    // 3. If owner=me or company=me, require authentication
+    if (owner === 'me' || company === 'me') {
       const session = await getServerSession(req, res, authOptions);
       if (!session?.user?.companyId) {
         return res.status(401).json({
@@ -74,16 +75,22 @@ export default async function handler(
         });
       }
 
-      // 4. Query products owned by user's company
+      // 4. Build where clause based on filter type
+      // owner=me: products currently owned by user's company (for distributors/retailers)
+      // company=me: products registered by user's company (for producers)
+      const whereClause = company === 'me'
+        ? { companyId: session.user.companyId }
+        : { currentOwnerId: session.user.companyId };
+
       const [products, total] = await Promise.all([
         prisma.product.findMany({
-          where: { currentOwnerId: session.user.companyId },
+          where: whereClause,
           include: { currentOwner: { select: { name: true } } },
           take: limit,
           skip: offset,
           orderBy: { createdAt: 'desc' },
         }),
-        prisma.product.count({ where: { currentOwnerId: session.user.companyId } }),
+        prisma.product.count({ where: whereClause }),
       ]);
 
       // 5. Format response
