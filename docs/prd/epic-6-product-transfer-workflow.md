@@ -34,10 +34,8 @@ Automate product handoff workflow between supply chain participants (Producer â†
 # Epic 5: Products must exist in database
 SELECT * FROM "Product" LIMIT 1; # Verify at least one product registered
 
-# Epic 4: Component Library components available
-src/components/ui/Modal.tsx
-src/components/ui/Select.tsx
-src/components/ui/Button.tsx
+# Epic 4: Chakra UI components available (used directly, no wrappers)
+# Modal, Select, Button from @chakra-ui/react - already configured in theme.ts
 ```
 
 **Team Decision Confirmation (From Epic 2 - Verify Before Starting):**
@@ -293,7 +291,7 @@ export async function POST(req, { params }) {
 
 **Requires:**
 - Epic 2 (Company/User Management) - Email service decision, company/user data models
-- Epic 4 (Component Library) - Modal, Select, Button components for transfer UI
+- Epic 4 (Component Library) - Chakra UI theme configured (Modal, Select, Button used directly from @chakra-ui/react)
 - Epic 5 (Product Registration) - Products must exist before transfers can occur
 
 **Blocks:**

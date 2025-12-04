@@ -33,8 +33,8 @@ Distributors and retailers add trace records to products as they move through su
 # Epic 5: At least one product registered
 SELECT * FROM "Product" WHERE status = 'REGISTERED' LIMIT 1;
 
-# Epic 4: Timeline component available
-ls src/components/visualization/Timeline.tsx
+# Epic 4: Chakra UI theme configured (Timeline built as first task of this epic)
+# Timeline.tsx will be created in src/components/visualization/ using Chakra UI components
 
 # Epic 6 (Optional): Transfer workflow creates trace records automatically
 # If Epic 6 skipped, distributors/retailers manually create first trace record
@@ -46,9 +46,10 @@ ls src/components/visualization/Timeline.tsx
   - **Option A (Recommended):** Database audit log for trace history queries - Fast (<50ms), supports pagination, joins with user/company names
   - **Option B:** Blockchain events for trace history - Slow (1-2s), requires RPC calls, limited metadata
   - **Decision:** Use database audit log (Option A), blockchain only for tamper-proof timestamp verification
-- ✅ **Timeline Component Library Decision**:
-  - Epic 4 Timeline component ready (visualizes trace records chronologically)
-  - If Epic 4 Timeline not available, use simple table view as fallback
+- ✅ **Timeline Component Approach Decision**:
+  - **Decision:** Build custom Timeline using Chakra UI (VStack, Box, Divider)
+  - Timeline created as Task 1 of first story in this epic
+  - No external timeline library needed - simple vertical timeline sufficient for supply chain
 - ✅ **GPS Location Integration Decision**:
   - MVP: Manual text input for location (e.g., "Helsinki Distribution Center")
   - Future: Browser Geolocation API integration (defer to post-MVP)
@@ -229,7 +230,7 @@ export async function GET(req, { params }) {
 #### Dependencies
 
 **Requires:**
-- Epic 4 (Component Library) - Timeline component needed for trace history visualization
+- Epic 4 (Component Library) - Chakra UI theme configured (Timeline built as first task of this epic using Chakra components)
 - Epic 5 (Product Registration) - Products must exist before trace records can be added
 - Epic 3 Tier 1 (Wallet Encryption) - Server-side wallet decryption for blockchain transactions
 
@@ -302,6 +303,6 @@ export async function GET(req, { params }) {
 | Missing trace records (user forgets to add) | Dashboard reminders show products without recent trace records, Epic 6 transfer workflow auto-creates trace records |
 | Fake location data (manual text entry) | Manual entry acceptable for MVP POC, GPS integration (Browser Geolocation API) deferred to post-MVP, blockchain timestamp provides tamper-proof audit |
 | Database query slow (products with 100+ trace records) | Pagination (limit 50 per page), database indexes on productId + createdAt, optional caching layer (5-minute TTL) |
-| Epic 4 Timeline component not ready | Fallback to simple table view if Timeline component unavailable, Timeline component prioritized in Epic 4 Week 4 |
+| Timeline component complexity | Build simple vertical timeline using Chakra UI (VStack, Box, Divider) - no external library needed |
 | Blockchain event query too slow (1-2s per product) | Use database audit log for queries (Option A decision), blockchain events only for verification/dispute resolution |
 | Epic 6 not implemented (no auto trace records) | Manual trace record entry acceptable, distributors/retailers create first trace record manually when receiving product |

@@ -35,8 +35,8 @@ Platform admin interface to simulate IoT sensor data (temperature, humidity, GPS
 # Epic 5: At least one product registered
 SELECT * FROM "Product" WHERE status != 'DRAFT' LIMIT 1;
 
-# Epic 4: Button components available
-ls src/components/ui/Button.tsx
+# Epic 4: Chakra UI theme configured (Button used directly from @chakra-ui/react)
+# TemperatureChart will be created using Recharts library (npm install recharts)
 
 # Epic 7 (Optional): Sensor data can be linked to trace records
 # If Epic 7 skipped, sensor data standalone (not linked to trace records)
@@ -224,9 +224,10 @@ export function generateSensorData(scenario: 'normal' | 'warning' | 'critical') 
 #### Dependencies
 
 **Requires:**
-- Epic 4 (Component Library) - Button components for scenario buttons
+- Epic 4 (Component Library) - Chakra UI theme configured (Button used directly, TemperatureChart built with Recharts)
 - Epic 5 (Product Registration) - Products must exist before attaching sensor data
 - Epic 3 Tier 1 (Wallet Encryption) - Server-side wallet decryption for blockchain transactions
+- **New dependency:** `recharts` library for temperature visualization (npm install recharts)
 
 **Optional:**
 - Epic 7 (Supply Chain Tracking) - Sensor data can be linked to trace records (enhanced visualization)

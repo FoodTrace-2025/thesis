@@ -39,10 +39,11 @@ SELECT * FROM "Product" WHERE "qrCodeUrl" IS NOT NULL LIMIT 1;
 # Epic 7: Trace records exist for timeline visualization
 SELECT * FROM "TraceRecord" LIMIT 1;
 
-# Epic 4: Timeline component available
-ls src/components/visualization/Timeline.tsx
+# Epic 7: Timeline component created (custom Chakra UI component)
+# src/components/visualization/Timeline.tsx - built in Epic 7
 
 # Epic 8 (Optional): Sensor readings exist for temperature chart
+# TemperatureChart component built with Recharts in Epic 8
 SELECT * FROM "SensorReading" LIMIT 1; # Optional - chart hidden if no data
 ```
 
@@ -186,9 +187,9 @@ export default async function ProductPage({ params }) {
 #### Dependencies
 
 **Requires:**
-- Epic 4 (Component Library) - Timeline component for supply chain visualization
+- Epic 4 (Component Library) - Chakra UI theme configured
 - Epic 5 (Product Registration) - Products with QR codes must exist
-- Epic 7 (Supply Chain Tracking) - Trace records for timeline display
+- Epic 7 (Supply Chain Tracking) - Trace records + Timeline component (built in Epic 7 using Chakra UI)
 
 **Optional:**
 - Epic 8 (IoT Simulator) - Sensor data for temperature chart (chart hidden if no data)
@@ -248,6 +249,6 @@ export default async function ProductPage({ params }) {
 | Abuse/spam requests (DDoS, scraping) | Rate limiting (100 req/min per IP), Cloudflare DDoS protection (Epic 13), bot detection |
 | Confusing for non-tech consumers (blockchain jargon) | Simple language ("Product Journey", not "Blockchain"), visual timeline, hide technical details by default |
 | MetaMask popup appears (wallet connection prompt) | NO Web3 libraries on consumer page, server-side blockchain queries only, explicit no-wallet architecture validation |
-| Epic 4 Timeline component not ready | Fallback to simple ordered list view (acceptable for MVP), Timeline component prioritized in Epic 4 Week 4 |
+| Timeline component reuse | Timeline component built in Epic 7 using Chakra UI - reuse directly in Epic 9 |
 | Epic 8 missing (no sensor data) | Temperature chart hidden conditionally, page still functional without IoT data |
 | Mobile layout broken on old devices (Android 7, iOS 12) | Test on real devices, graceful degradation, minimum supported: iOS 14, Android 9 |
