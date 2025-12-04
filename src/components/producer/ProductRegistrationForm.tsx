@@ -1,5 +1,6 @@
 // src/components/producer/ProductRegistrationForm.tsx
 // Story 5.5: Product Registration Form Component
+// Story 5.6: Updated to use success modal with QR code
 
 import { useState, FormEvent } from 'react';
 import {
@@ -13,10 +14,10 @@ import {
   Text,
   Alert,
   AlertIcon,
-  Link as ChakraLink,
+  useDisclosure,
 } from '@chakra-ui/react';
-import NextLink from 'next/link';
 import { z } from 'zod';
+import { RegistrationSuccessModal } from './RegistrationSuccessModal';
 
 // Validation schema matching API (Story 5.3)
 const registerSchema = z.object({
@@ -58,6 +59,9 @@ export function ProductRegistrationForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [apiError, setApiError] = useState('');
   const [successData, setSuccessData] = useState<ProductData | null>(null);
+
+  // Modal state (Story 5.6)
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const validateForm = (): boolean => {
     const result = registerSchema.safeParse({ name, origin, harvestDate });
@@ -106,8 +110,9 @@ export function ProductRegistrationForm() {
         return;
       }
 
-      // Success
+      // Success - open modal (Story 5.6)
       setSuccessData(data.product);
+      onOpen();
     } catch (err) {
       console.error('Product registration failed:', err);
       setApiError('Network error. Please try again.');
@@ -123,73 +128,23 @@ export function ProductRegistrationForm() {
     setErrors({});
     setApiError('');
     setSuccessData(null);
+    onClose(); // Close modal (Story 5.6)
   };
 
-  // Success state
-  if (successData) {
-    return (
-      <Box
-        bg="brand.surface"
-        p={6}
-        borderRadius="md"
-        borderWidth="1px"
-        borderColor="brand.border"
-      >
-        <VStack spacing={4} align="stretch">
-          <Alert status="success" borderRadius="md">
-            <AlertIcon />
-            Product registered successfully!
-          </Alert>
-
-          <Box>
-            <Text fontWeight="bold" color="brand.dark">
-              Product ID:
-            </Text>
-            <Text color="brand.dark">{successData.blockchainId}</Text>
-          </Box>
-
-          <Box>
-            <Text fontWeight="bold" color="brand.dark">
-              Transaction Hash:
-            </Text>
-            <ChakraLink
-              href={`https://sepolia.etherscan.io/tx/${successData.transactionHash}`}
-              isExternal
-              color="brand.accent"
-            >
-              {successData.transactionHash.slice(0, 10)}...
-              {successData.transactionHash.slice(-8)}
-            </ChakraLink>
-          </Box>
-
-          <Box>
-            <Text fontWeight="bold" color="brand.dark">
-              QR Code URL:
-            </Text>
-            <Text fontSize="sm" color="brand.muted">
-              {successData.qrCodeUrl}
-            </Text>
-          </Box>
-
-          <VStack spacing={2} pt={4}>
-            <Button onClick={handleRegisterAnother} width="100%">
-              Register Another Product
-            </Button>
-            <ChakraLink
-              as={NextLink}
-              href="/producer/dashboard"
-              color="brand.accent"
-            >
-              Back to Dashboard
-            </ChakraLink>
-          </VStack>
-        </VStack>
-      </Box>
-    );
-  }
-
-  // Form state
+  // Form with modal (Story 5.6 - replaced inline success state with modal)
   return (
+    <>
+      {/* Success Modal (Story 5.6) */}
+      {successData && (
+        <RegistrationSuccessModal
+          isOpen={isOpen}
+          onClose={onClose}
+          product={successData}
+          onRegisterAnother={handleRegisterAnother}
+        />
+      )}
+
+      {/* Registration Form */}
     <Box
       as="form"
       onSubmit={handleSubmit}
@@ -269,5 +224,6 @@ export function ProductRegistrationForm() {
         )}
       </VStack>
     </Box>
+    </>
   );
 }
