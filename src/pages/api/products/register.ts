@@ -254,6 +254,7 @@ export default async function handler(
           qrCodeUrl,
           companyId: company.id,
           createdByUserId: session.user.id,
+          currentOwnerId: company.id, // Story 7.4: Producer is initial owner
         },
       });
 

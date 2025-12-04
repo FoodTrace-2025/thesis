@@ -185,6 +185,9 @@ describe('/api/products/[id]/trace', () => {
         traceRecord: {
           create: jest.fn().mockResolvedValue(mockCreatedTrace),
         },
+        product: {
+          update: jest.fn().mockResolvedValue({}), // Story 7.4: Ownership transfer
+        },
         auditLog: {
           create: jest.fn().mockResolvedValue({}),
         },
@@ -508,6 +511,9 @@ describe('/api/products/[id]/trace', () => {
           return fn({
             traceRecord: {
               create: jest.fn().mockResolvedValue({ ...mockCreatedTrace, action }),
+            },
+            product: {
+              update: jest.fn().mockResolvedValue({}), // Story 7.4: Ownership transfer
             },
             auditLog: {
               create: jest.fn().mockResolvedValue({}),

@@ -4,6 +4,21 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 65 (2025-12-04) - Story 7.4 Complete
+
+### Session 65 Achievements
+
+✅ **Story 7.4 Implemented**: Product ownership tracking with currentOwnerId field and relations
+✅ **Ownership Transfer Logic**: Transfers on RECEIVED action with combined audit log entry
+✅ **Products List API**: GET /api/products with ?owner=me filter and pagination
+✅ **Data Migration**: 6 existing products migrated to set initial owner
+✅ **Unit Tests Created**: 22 tests with 100% coverage for products/index.ts
+✅ **All 196 Project Tests Pass**: +22 new tests, no regressions
+
+**Impact:** Story 7.4 complete. Dashboards can now show products currently in each company's custody. Ready for Story 7.5 (Frontend TraceRecordForm + Timeline) or Epic 9.
+
+---
+
 ## Session 64 (2025-12-04) - Story 7.3 Complete
 
 ### Session 64 Achievements
@@ -138,19 +153,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 55 (2025-12-03) - Story 2.11 Complete, Login/Logout Header Buttons
-
-### Session 55 Achievements
-
-✅ **Story 2.11 Created**: Login/Logout Header Buttons story document
-✅ **Story 2.11 Implemented**: Session-aware header with Login/Logout buttons in Layout
-✅ **UX Fix**: Separated role text from Logout button (role is not an action)
-✅ **Role Label Mapping**: Added getRoleLabel() for friendly role display (PLATFORM_ADMIN → Platform Admin)
-✅ **Removed CONSUMER**: From role mapping (consumers don't login per Epic 9 wallet-free)
-✅ **Manual Testing**: All 9 acceptance criteria verified with Playwright browser testing
-
-**Impact:** All pages using Layout now have authentication UI. Users can login/logout from any page.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (55-64). Older sessions (1-54) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (56-65). Older sessions (1-55) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md

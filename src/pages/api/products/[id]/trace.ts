@@ -126,7 +126,7 @@ export default async function handler(
     const productId = req.query.id as string;
     const product = await prisma.product.findUnique({
       where: { id: productId },
-      select: { id: true, blockchainId: true },
+      select: { id: true, blockchainId: true, currentOwnerId: true }, // Story 7.4: Include for ownership transfer
     });
 
     if (!product) {
@@ -285,6 +285,15 @@ export default async function handler(
         },
       });
 
+      // Story 7.4: Transfer ownership on RECEIVED action (idempotent)
+      if (action === 'RECEIVED') {
+        await tx.product.update({
+          where: { id: product.id },
+          data: { currentOwnerId: company.id },
+        });
+      }
+
+      // Story 7.4: Include ownership transfer info in audit log (combined entry approach)
       await tx.auditLog.create({
         data: {
           action: 'TRACE_RECORD_ADDED',
@@ -298,6 +307,10 @@ export default async function handler(
             location,
             transactionHash: hash,
             blockchainIndex,
+            // Story 7.4: Ownership transfer info
+            ownershipTransferred: action === 'RECEIVED',
+            previousOwnerId: action === 'RECEIVED' ? product.currentOwnerId : undefined,
+            newOwnerId: action === 'RECEIVED' ? company.id : undefined,
           },
         },
       });

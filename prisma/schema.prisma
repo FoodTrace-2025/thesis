@@ -62,6 +62,7 @@ model Company {
   auditLogs           AuditLog[]
   products            Product[] // Products registered by this company
   traceRecords        TraceRecord[] // Trace records from this company's users
+  ownedProducts       Product[] @relation("ProductOwner") // Story 7.4: Products currently owned
 
   @@index([status])
 }
@@ -144,8 +145,14 @@ model Product {
   @@index([companyId])
   @@index([blockchainId])
 
+  // Story 7.4: Product Ownership Tracking
+  currentOwnerId  String?
+  currentOwner    Company? @relation("ProductOwner", fields: [currentOwnerId], references: [id])
+
   // Relation for Epic 7: Supply Chain Tracking
   traceRecords    TraceRecord[]
+
+  @@index([currentOwnerId])
 }
 
 // =============================================================================

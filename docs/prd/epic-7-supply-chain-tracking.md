@@ -263,6 +263,20 @@ export async function GET(req, { params }) {
 **Blocks:**
 - Epic 9 (Consumer Query Interface) - Consumer query shows complete trace history timeline
 
+#### Story Breakdown (Updated 2025-12-04)
+
+| Story | Title | Estimate | Status | Assigned |
+|-------|-------|----------|--------|----------|
+| 7.1 | TraceRecord Smart Contract | 4h | ✅ Complete | Sam |
+| 7.2 | POST Trace API | 3h | ✅ Complete (QA PASS) | TaiSheng |
+| 7.3 | GET Trace History API | 1.5h | ✅ Complete | TaiSheng |
+| 7.4 | Product Ownership Tracking | 2-3h | Ready | TaiSheng |
+| 7.5 | TraceRecordForm + Timeline Components | 3h | Pending | YiLing |
+| 7.6 | Distributor Dashboard Integration | 2h | Pending | YiLing |
+| 7.7 | Retailer + Producer Dashboard Integration | 2-3h | Pending | YiLing |
+
+**Story 7.4 Addition (Session 65):** Added Product Ownership Tracking to enable supply chain dashboards to show products in each company's custody. Implements "chain of custody" pattern - ownership transfers on RECEIVED action. This is a prerequisite for frontend stories 7.5-7.7.
+
 #### Team Assignment
 
 **Sam (4 hours - Smart Contract Lead):**
@@ -283,22 +297,26 @@ export async function GET(req, { params }) {
   - Deploy TraceRecords contract or integrate into ProductRegistry
   - Share contract ABI with TaiSheng
 
-**TaiSheng (3-4 hours - Backend Lead):**
+**TaiSheng (5-7 hours - Backend Lead):**
 
-- Trace record API endpoint (2 hours)
+- Trace record API endpoint (2 hours) - Story 7.2 ✅ Complete
   - POST /api/products/:id/trace implementation
   - Blockchain transaction submission
   - Database save with transactionHash and blockchainIndex
   - Error handling (wallet decryption, product not found)
-- Trace history query endpoint (1.5 hours)
+- Trace history query endpoint (1.5 hours) - Story 7.3 ✅ Complete
   - GET /api/products/:id/trace-history implementation
   - Database query with user/company joins
   - Pagination support (limit/offset)
   - Format response with Etherscan links
-  - Optional: Caching layer (Redis or in-memory, 5-minute TTL)
-- TraceRecord Prisma model (0.5 hours)
+- TraceRecord Prisma model (0.5 hours) - Story 7.1 ✅ Complete
   - Add TraceRecord model to schema
   - Run Prisma migration
+- **Product Ownership Tracking (2-3 hours) - Story 7.4 (NEW)**
+  - Add currentOwnerId field to Product schema
+  - Update trace API to transfer ownership on RECEIVED action
+  - Create GET /api/products endpoint with owner=me filter
+  - Unit tests for products list and ownership transfer
 
 **YiLing (5-7 hours - Frontend Lead):**
 
