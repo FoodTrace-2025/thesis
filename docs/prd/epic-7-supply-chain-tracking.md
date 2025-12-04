@@ -144,6 +144,18 @@ model TraceRecord {
 }
 ```
 
+**Role-Action Mapping (Frontend UX - Added Session 66):**
+
+Based on supply chain workflow and UX best practices ([Formsort dropdown guidelines](https://formsort.com/article/how-to-design-a-dropdown-field-in-a-form/)), the TraceRecordForm filters action dropdown options by user role:
+
+| Role | Available Actions | Rationale |
+|------|------------------|-----------|
+| PRODUCER | QUALITY_CHECK, SHIPPED | Creates product, doesn't receive |
+| DISTRIBUTOR | RECEIVED, QUALITY_CHECK, SHIPPED | Receives from producer, ships to retailer |
+| RETAILER | RECEIVED, QUALITY_CHECK, STOCKED, SOLD | Receives from distributor, sells to consumer |
+
+**Note:** The API still accepts all actions from any supply chain role for flexibility. The frontend filtering is a UX improvement to reduce confusion.
+
 **Smart Contract (ProductRegistry.sol or TraceRecords.sol):**
 
 ```solidity
@@ -270,8 +282,8 @@ export async function GET(req, { params }) {
 | 7.1 | TraceRecord Smart Contract | 4h | ✅ Complete | Sam |
 | 7.2 | POST Trace API | 3h | ✅ Complete (QA PASS) | TaiSheng |
 | 7.3 | GET Trace History API | 1.5h | ✅ Complete | TaiSheng |
-| 7.4 | Product Ownership Tracking | 2-3h | Ready | TaiSheng |
-| 7.5 | TraceRecordForm + Timeline Components | 3h | Pending | YiLing |
+| 7.4 | Product Ownership Tracking | 2-3h | ✅ Complete | TaiSheng |
+| 7.5 | TraceRecordForm + Timeline Components | 3h | ✅ Complete | YiLing |
 | 7.6 | Distributor Dashboard Integration | 2h | Pending | YiLing |
 | 7.7 | Retailer + Producer Dashboard Integration | 2-3h | Pending | YiLing |
 
