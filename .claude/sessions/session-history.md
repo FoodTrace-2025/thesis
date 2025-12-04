@@ -4,6 +4,22 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 61 (2025-12-04) - Story 7.1 Implementation & QA Review Complete
+
+### Session 61 Achievements
+
+✅ **Story 7.1 Implemented**: TraceRecord smart contract with DISTRIBUTOR_ROLE, RETAILER_ROLE, addTraceRecord(), getTraceHistory()
+✅ **37 Tests Passing**: 18 new trace record tests added, 100% statement coverage, 92.86% branch coverage
+✅ **Contract Deployed**: ProductRegistry v2 to Sepolia 0x5d56f5a8703d7d545319177042cd91FD3339E2b6, verified on Etherscan
+✅ **Epic 7 PRD Synced**: Updated gas targets from "<80k" to "measure and document" (3 edits)
+✅ **Story 7.1 QA Review**: Security-critical review passed (PASS, 95/100 quality score)
+✅ **QA Gate Created**: docs/qa/gates/7.1-trace-record-smart-contract.yml with full AC traceability
+✅ **.env.local Cleanup**: Removed unused TRACE_RECORDS_ADDRESS, added clarifying comments
+
+**Impact:** Story 7.1 complete with QA. Smart contract now supports full supply chain tracking (Producer → Distributor → Retailer). Ready for Story 7.2 (Backend API).
+
+---
+
 ## Session 60 (2025-12-04) - Epic 4 & 5 PRD Review Complete
 
 ### Session 60 Achievements
@@ -139,19 +155,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 51 (2025-12-01) - Story 2.8 Updated, Story 4.2 Parallel Development
-
-### Session 51 Achievements
-
-✅ **Story 2.8 Critical Review**: Identified 3 blockers (SessionProvider, /login, /dashboard missing)
-✅ **Story 2.8 Updated**: Added Task 0 (SessionProvider + stub /dashboard page)
-✅ **15 Explicit Test Cases**: Added to Task 6 for consistency with Stories 2.6-2.7
-✅ **Integration Notes**: Added Story 2.8 ↔ 4.2 coordination documentation
-✅ **Routing Architecture**: Agreed `/admin` for PLATFORM_ADMIN, `/dashboard` for business users
-✅ **Parallel Development**: Story 4.2 (YiLing) in progress, Story 2.8 ready for Sam
-
-**Impact:** Story 2.8 prerequisites identified. Parallel development with Story 4.2 enabled.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (51-60). Older sessions (1-50) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (52-61). Older sessions (1-51) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md

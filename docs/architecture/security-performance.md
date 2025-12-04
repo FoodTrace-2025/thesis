@@ -167,7 +167,7 @@ module.exports = {
 
 **API Route Protection:**
 - `POST /api/products/register`: 10 requests/minute per user
-- `POST /api/trace/add`: 20 requests/minute per user
+- `POST /api/products/:id/trace`: 20 requests/minute per user
 - `POST /api/iot/simulate`: 60 requests/minute per admin
 - `GET` endpoints: 100 requests/minute per IP
 
@@ -216,7 +216,7 @@ npm audit --audit-level=moderate  # Weekly, GitHub Actions
 |----------|---------------|-----------|-----|-----|--------|--------|
 | **POST /api/products/register** | Write (Blockchain) | 2,134ms | 2,987ms | 3,456ms | <3s | ✅ PASS |
 | **GET /api/products/:id** | Read (Database) | 89ms | 156ms | 234ms | <200ms | ✅ PASS |
-| **GET /api/trace/:productId** | Read (Database) | 124ms | 187ms | 267ms | <250ms | ✅ PASS |
+| **GET /api/products/:id/trace-history** | Read (Database) | 124ms | 187ms | 267ms | <250ms | ✅ PASS |
 
 **Write Endpoint Latency Breakdown:**
 - Blockchain block confirmation: 1,632ms (76.4% of total time) ← Unavoidable bottleneck

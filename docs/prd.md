@@ -857,52 +857,88 @@ Features prioritized using **MoSCoW framework** (Must Have, Should Have, Could H
 
 ### 3.2 Priority Matrix
 
-```
-High Value, Low Effort          High Value, High Effort
-┌─────────────────────┐        ┌─────────────────────┐
-│ Epic 6: Transfer    │        │ Epic 3: Security    │
-│ Epic 11: QR Codes   │        │ Epic 5: Registration│
-│ Epic 9: Consumer    │        │ Epic 7: Tracking    │
-└─────────────────────┘        └─────────────────────┘
-        DO FIRST                    PLAN CAREFULLY
+**Updated: 2025-12-04 (Session 61)** - Fixed to reflect actual dependencies
 
-Low Value, Low Effort           Low Value, High Effort
-┌─────────────────────┐        ┌─────────────────────┐
-│ Batch Registration  │        │ Real IoT Hardware   │
-│ Advanced Search     │        │ Mainnet Deployment  │
-│ Real-Time Updates   │        │ AI Anomaly Detection│
-└─────────────────────┘        └─────────────────────┘
-        CUT IF NEEDED               DON'T DO
 ```
+MUST HAVE (Critical Path)       HIGH VALUE (Do After Critical Path)
+┌─────────────────────┐        ┌─────────────────────┐
+│ Epic 7: Tracking    │        │ Epic 6: Transfer    │
+│ Epic 9: Consumer    │        │ Epic 8: IoT Sim     │
+│ Epic 13: Deployment │        │ Epic 11: QR Scan    │
+└─────────────────────┘        └─────────────────────┘
+    CRITICAL PATH                  HIGH VALUE ADD-ONS
+    (Do in order: 7→9→13)          (Do if time permits)
+
+OPTIONAL (Nice to Have)         DON'T DO (Out of Scope)
+┌─────────────────────┐        ┌─────────────────────┐
+│ Epic 10: Verify     │        │ Real IoT Hardware   │
+│ Epic 12: Viz Charts │        │ Mainnet Deployment  │
+│ Batch Registration  │        │ AI Anomaly Detection│
+└─────────────────────┘        └─────────────────────┘
+    CUT IF BEHIND                  OUT OF SCOPE
+
+COMPLETED (Epics 1-5)
+┌─────────────────────────────────────────────────────┐
+│ Epic 1: Setup ✅  Epic 2: Users ✅  Epic 3: Security ✅ │
+│ Epic 4: Components ✅  Epic 5: Registration ✅          │
+└─────────────────────────────────────────────────────┘
+```
+
+**Key Insight:** Epic 9 (Consumer Query) depends on Epic 7 (Tracking). You cannot
+"DO FIRST" Epic 9 without completing Epic 7. The critical path is: **7 → 9 → 13**
 
 ---
 
 ### 3.3 Dependency Map
 
+**Updated: 2025-12-04 (Session 61)** - Shows current status
+
 ```
-Epic 1: Project Setup (Week 1-2)
+COMPLETED FOUNDATION (Epics 1-5)
+═══════════════════════════════════════════════════════════════
+Epic 1: Project Setup ✅ DONE
     ↓
-Epic 2: Company/User Management (Week 3)
+Epic 2: Company/User Management ✅ DONE (11 stories)
     ↓
-Epic 3: Security Hardening (Week 3-4) ← BLOCKS Epic 5
+Epic 3: Security Hardening ✅ DONE (3 stories)
     ↓
-Epic 4: Component Library (Week 3-4, parallel with Epic 3)
+Epic 4: Component Library ✅ DONE (2 stories, scoped to theme + layout)
     ↓
-Epic 5: Product Registration (Week 3-4)
-    ├─→ Epic 6: Transfer Workflow (Week 4-5)
-    ├─→ Epic 7: Supply Chain Tracking (Week 5-6)
-    ├─→ Epic 8: IoT Simulator (Week 5)
-    └─→ Epic 11: QR Codes (Week 5-6)
-              ↓
-    Epic 9: Consumer Query (Week 6-7) ← DEPENDS on Epic 5, 7, 11
-              ↓
-    Epic 10: Multi-Party Verification (Week 7) [OPTIONAL]
-    Epic 12: Data Visualization (Week 7-8)
-              ↓
-    Epic 13: Deployment (Week 8-9)
+Epic 5: Product Registration ✅ DONE (6 stories)
+    │   ProductRegistry.sol deployed: 0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646
+═══════════════════════════════════════════════════════════════
+
+REMAINING WORK (from Epic 5)
+───────────────────────────────────────────────────────────────
+    ├─→ Epic 7: Supply Chain Tracking 🔴 MUST HAVE (12-15h)
+    │       ↓ (BLOCKS Epic 9)
+    │   Epic 9: Consumer Query 🔴 MUST HAVE (8-10h)
+    │       ↓
+    │   Epic 13: Deployment 🔴 MUST HAVE (6-9h)
+    │
+    ├─→ Epic 6: Transfer Workflow 🟡 SHOULD HAVE (4-6h)
+    │       (Can do after Epic 7, uses same patterns)
+    │
+    ├─→ Epic 8: IoT Simulator 🟡 SHOULD HAVE (6-8h)
+    │       (Enhances thesis demo, not blocking)
+    │
+    └─→ Epic 11: QR Scanning 🟡 SHOULD HAVE (4-6h)
+            (QR codes already generated in Epic 5, just need scanner)
+
+OPTIONAL (if time permits)
+    Epic 10: Multi-Party Verification 🟢 OPTIONAL (4-6h)
+    Epic 12: Data Visualization 🟢 OPTIONAL (6-8h)
 ```
 
-**Critical Path:** Epic 1 → 2 → 3 → 5 → 7 → 9 → 13 (65-75 hours minimum)
+**Critical Path:** Epic 5 ✅ → **Epic 7** → **Epic 9** → **Epic 13** (~30h remaining)
+
+**Recommended Order:**
+1. Epic 7 (12-15h) - Core traceability, blocks Epic 9
+2. Epic 6 (4-6h) - Transfer workflow, high value add-on
+3. Epic 9 (8-10h) - Consumer query, thesis value proposition
+4. Epic 13 (6-9h) - Deployment for thesis demo
+
+**Cut if behind schedule:** Epic 8, 10, 11, 12 (in that order)
 
 ---
 
@@ -2483,7 +2519,14 @@ function addTraceRecord(
   string memory action,
   string memory location,
   string memory notes
-) public onlyRole(SUPPLY_CHAIN_ROLE) {
+) public {
+  // Updated Session 61: Allow PRODUCER, DISTRIBUTOR, or RETAILER roles
+  require(
+    hasRole(PRODUCER_ROLE, msg.sender) ||
+    hasRole(DISTRIBUTOR_ROLE, msg.sender) ||
+    hasRole(RETAILER_ROLE, msg.sender),
+    "Caller must be producer, distributor, or retailer"
+  );
   require(products[productId].exists, "Product not found");
 
   productTraceHistory[productId].push(TraceRecord({

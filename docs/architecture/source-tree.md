@@ -155,8 +155,8 @@ foodtrace/
 | `/api/products/register` | POST | Register product | `pages/api/products/register.ts` |
 | `/api/products/:id` | GET | Fetch product details | `pages/api/products/[id].ts` |
 | `/api/products/:id/transfer` | POST | Transfer ownership | `pages/api/products/[id]/transfer.ts` |
-| `/api/trace/add` | POST | Add trace record | `pages/api/trace/add.ts` |
-| `/api/trace/history/:productId` | GET | Fetch trace history | `pages/api/trace/history/[productId].ts` |
+| `/api/products/:id/trace` | POST | Add trace record | `pages/api/products/[id]/trace.ts` |
+| `/api/products/:id/trace-history` | GET | Fetch trace history | `pages/api/products/[id]/trace-history.ts` |
 | `/api/iot/simulate` | POST | Generate sensor data | `pages/api/iot/simulate.ts` |
 | `/api/qrcode/generate` | POST | Generate QR code | `pages/api/qrcode/generate.ts` |
 

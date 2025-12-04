@@ -100,7 +100,7 @@
 
 4. **Confirm Receipt** (New owner)
    - Frontend: Scan QR code (html5-qrcode)
-   - Backend: `POST /api/trace/add` (action: "RECEIVED")
+   - Backend: `POST /api/products/:id/trace` (action: "RECEIVED")
    - Add trace record to blockchain + database
    - Show confirmation toast
 

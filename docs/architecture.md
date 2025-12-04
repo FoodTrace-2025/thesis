@@ -564,7 +564,7 @@ graph TB
 
     subgraph API["Backend API Routes"]
         ProductAPI["Product API<br/>/api/products/register<br/>/api/products/:id<br/>/api/products/transfer"]
-        TraceAPI["Trace API<br/>/api/trace/add<br/>/api/trace/history"]
+        TraceAPI["Trace API<br/>/api/products/:id/trace<br/>/api/products/:id/trace-history"]
         IoTAPI["IoT API<br/>/api/iot/simulate<br/>/api/iot/scenarios"]
         AuthAPI["Auth API<br/>/api/auth/[...nextauth]<br/>NextAuth.js"]
         QRAPI["QR Code API<br/>/api/qrcode/generate<br/>/api/qrcode/:productId"]
@@ -905,19 +905,19 @@ mapping(address => bool) public trustedAuditors;
   3. Update database owner
   4. Send email notification to new owner
 
-**Trace API (`src/app/api/trace/*`):**
+**Trace API (`src/pages/api/products/[id]/*`):**
 
-`POST /api/trace/add`
+`POST /api/products/:id/trace`
 - **Purpose:** Add trace record to blockchain + database
 - **Flow:**
-  1. Validate session, check role (DISTRIBUTOR or RETAILER)
+  1. Validate session, check role (PRODUCER, DISTRIBUTOR, or RETAILER)
   2. Validate product exists
   3. Decrypt custodial wallet
   4. Call TraceRecords.addTraceRecord()
   5. Save detailed notes to database
   6. Return confirmation
 
-`GET /api/trace/history/:productId`
+`GET /api/products/:id/trace-history`
 - **Purpose:** Fetch complete trace history
 - **Flow:**
   1. Query blockchain for on-chain records (Viem)
@@ -2500,10 +2500,10 @@ Performance targets validated in Chapter 6 (Results & Testing). All benchmarks m
 | Endpoint | Operation Type | p50 Median | p95 | p99 | Target | Status |
 |----------|---------------|-----------|-----|-----|--------|--------|
 | **POST /api/products/register** | Write (Blockchain) | 2,134ms | 2,987ms | 3,456ms | <3s | ✅ PASS |
-| **POST /api/trace/add** | Write (Blockchain) | 1,987ms | 2,654ms | 3,123ms | <3s | ✅ PASS |
+| **POST /api/products/:id/trace** | Write (Blockchain) | 1,987ms | 2,654ms | 3,123ms | <3s | ✅ PASS |
 | **POST /api/iot/simulate** | Write (Blockchain) | 2,341ms | 3,012ms | 3,789ms | <4s | ✅ PASS |
 | **GET /api/products/:id** | Read (Database) | 89ms | 156ms | 234ms | <200ms | ✅ PASS |
-| **GET /api/trace/:productId** | Read (Database) | 124ms | 187ms | 267ms | <250ms | ✅ PASS |
+| **GET /api/products/:id/trace-history** | Read (Database) | 124ms | 187ms | 267ms | <250ms | ✅ PASS |
 | **GET /api/qrcode/:productId** | Read (Cached) | 23ms | 67ms | 112ms | <100ms | ✅ PASS |
 
 **Write Endpoint Latency Breakdown (POST /api/products/register):**

@@ -191,23 +191,24 @@ Authorization: Session cookie
 
 ## Trace Endpoints
 
-### POST /api/trace/add
+**Updated: 2025-12-04** - Standardized to RESTful nested paths
+
+### POST /api/products/:id/trace
 
 **Purpose:** Add trace record to blockchain and database
 
-**Authentication:** Required (DISTRIBUTOR or RETAILER role)
+**Authentication:** Required (PRODUCER, DISTRIBUTOR, or RETAILER role)
 
 **Request:**
 ```http
-POST /api/trace/add
+POST /api/products/uuid-product-123/trace
 Content-Type: application/json
 Authorization: Session cookie
 
 {
-  "productId": "uuid-product-123",
   "action": "RECEIVED",  // RECEIVED | QUALITY_CHECK | SHIPPED | STOCKED | SOLD
   "location": "Helsinki Distribution Center",
-  "notes": "Product received in good condition, temperature 2.1°C"
+  "notes": "Product received in good condition, temperature 2.1C"
 }
 ```
 
@@ -216,13 +217,14 @@ Authorization: Session cookie
 {
   "success": true,
   "traceId": "uuid-trace-456",
-  "transactionHash": "0x1234567890abcdef..."
+  "transactionHash": "0x1234567890abcdef...",
+  "blockchainIndex": 0
 }
 ```
 
 ---
 
-### GET /api/trace/history/:productId
+### GET /api/products/:id/trace-history
 
 **Purpose:** Fetch complete trace history for product
 
@@ -230,7 +232,7 @@ Authorization: Session cookie
 
 **Request:**
 ```http
-GET /api/trace/history/uuid-product-123
+GET /api/products/uuid-product-123/trace-history?limit=50&offset=0
 ```
 
 **Response 200 OK:**
@@ -245,24 +247,31 @@ GET /api/trace/history/uuid-product-123
       "notes": "Product received in good condition",
       "actor": {
         "name": "Liisa Korhonen",
-        "role": "DISTRIBUTOR"
+        "role": "DISTRIBUTOR",
+        "company": "Helsinki Distributors"
       },
-      "txHash": "0x1234...",
+      "transactionHash": "0x1234...",
+      "etherscanLink": "https://sepolia.etherscan.io/tx/0x1234...",
       "createdAt": "2025-11-16T08:15:00.000Z"
     },
     {
       "id": "uuid-trace-2",
       "action": "QUALITY_CHECK",
       "location": "Helsinki Distribution Center",
-      "notes": "Temperature check passed: 2.8°C",
+      "notes": "Temperature check passed: 2.8C",
       "actor": {
         "name": "Liisa Korhonen",
-        "role": "DISTRIBUTOR"
+        "role": "DISTRIBUTOR",
+        "company": "Helsinki Distributors"
       },
-      "txHash": "0x5678...",
+      "transactionHash": "0x5678...",
+      "etherscanLink": "https://sepolia.etherscan.io/tx/0x5678...",
       "createdAt": "2025-11-16T09:30:00.000Z"
     }
-  ]
+  ],
+  "total": 2,
+  "limit": 50,
+  "offset": 0
 }
 ```
 
@@ -579,7 +588,7 @@ Content-Type: application/json
 
 **Limits:**
 - `POST /api/products/register`: 10 requests/minute per user
-- `POST /api/trace/add`: 20 requests/minute per user
+- `POST /api/products/:id/trace`: 20 requests/minute per user
 - `POST /api/iot/simulate`: 60 requests/minute per admin
 - `GET` endpoints: 100 requests/minute per IP
 

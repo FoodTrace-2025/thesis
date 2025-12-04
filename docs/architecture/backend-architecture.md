@@ -115,9 +115,8 @@ pages/api/
 │   └── [id]/
 │       └── transfer.ts      → POST /api/products/:id/transfer
 ├── trace/
-│   ├── add.ts               → POST /api/trace/add
-│   └── history/
-│       └── [productId].ts   → GET /api/trace/history/:productId
+│   ├── [id]/trace.ts        → POST /api/products/:id/trace (moved under products)
+│   └── [id]/trace-history.ts → GET /api/products/:id/trace-history (moved under products)
 ├── iot/
 │   ├── simulate.ts          → POST /api/iot/simulate
 │   └── scenarios.ts         → GET /api/iot/scenarios
@@ -259,25 +258,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 ---
 
-### Trace API (`/api/trace/*`)
+### Trace API (`/api/products/:id/trace*`)
 
-**POST /api/trace/add**
+**Updated: 2025-12-04 (Session 61)** - Moved under products namespace for RESTful consistency
+
+**POST /api/products/:id/trace**
 - **Purpose:** Add trace record to blockchain + database
-- **Auth:** Required (DISTRIBUTOR or RETAILER role)
+- **Auth:** Required (PRODUCER, DISTRIBUTOR, or RETAILER role)
 - **Flow:**
-  1. Validate session, check role
+  1. Validate session, check role (PRODUCER/DISTRIBUTOR/RETAILER)
   2. Validate product exists
   3. Decrypt custodial wallet
-  4. Call TraceRecords.addTraceRecord()
-  5. Save detailed notes to database
-  6. Return confirmation
+  4. Call ProductRegistry.addTraceRecord()
+  5. Save trace record to database
+  6. Return confirmation with transactionHash
 
-**GET /api/trace/history/:productId**
+**GET /api/products/:id/trace-history**
 - **Purpose:** Fetch complete trace history
 - **Auth:** Optional (public for consumers)
 - **Flow:**
-  1. Query blockchain for on-chain records (Viem)
-  2. Query database for detailed notes
+  1. Query database for trace records (fast)
+  2. Include user/company joins for actor info
   3. Merge data, sort by timestamp
   4. Return array of trace events
 
