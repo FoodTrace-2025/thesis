@@ -90,6 +90,65 @@ async function main() {
     });
 
     console.log(`  ${user.role}: test@${roleData.domain} / admin123`);
+
+    // Add test products for distributor (Story 7.6 testing)
+    if (roleData.type === 'DISTRIBUTOR') {
+      // Need a producer company to register products from
+      let producerCompany = await prisma.company.findFirst({
+        where: { type: 'PRODUCER' },
+      });
+
+      if (!producerCompany) {
+        producerCompany = await prisma.company.create({
+          data: {
+            name: 'Test Farm',
+            email: 'farm@producer.test',
+            domain: 'producer.test',
+            type: 'PRODUCER',
+            status: 'APPROVED',
+          },
+        });
+        console.log('  Created producer company: Test Farm');
+      }
+
+      // Create producer user for createdBy relation
+      const producerUser = await prisma.user.upsert({
+        where: { email: 'farmer@producer.test' },
+        update: {},
+        create: {
+          email: 'farmer@producer.test',
+          passwordHash,
+          name: 'Test Farmer',
+          role: 'PRODUCER',
+          companyId: producerCompany.id,
+        },
+      });
+
+      // Create test products owned by distributor
+      const testProducts = [
+        { name: 'Organic Apples', origin: 'Helsinki Farm', blockchainId: 100 },
+        { name: 'Fresh Strawberries', origin: 'Oulu Berries', blockchainId: 101 },
+        { name: 'Premium Salmon', origin: 'Norwegian Fisheries', blockchainId: 102 },
+      ];
+
+      for (const productData of testProducts) {
+        await prisma.product.upsert({
+          where: { blockchainId: productData.blockchainId },
+          update: { currentOwnerId: company.id },
+          create: {
+            name: productData.name,
+            origin: productData.origin,
+            blockchainId: productData.blockchainId,
+            harvestDate: new Date(),
+            transactionHash: '0x' + '0'.repeat(64),
+            companyId: producerCompany.id,
+            createdByUserId: producerUser.id,
+            currentOwnerId: company.id, // Distributor owns these
+          },
+        });
+      }
+      console.log('  Created 3 test products for distributor');
+    }
   }
 
   console.log('---');
