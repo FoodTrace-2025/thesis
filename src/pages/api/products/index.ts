@@ -1,7 +1,8 @@
 // Products List API
 // Story 7.4: Product Ownership Tracking
 // Story 7.12: Product Status Badges - Added status field
-// GET /api/products - List products with optional owner filter
+// Story 7.13: Product History API - Added history=me filter
+// GET /api/products - List products with optional owner/company/history filter
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
@@ -13,6 +14,7 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 const querySchema = z.object({
   owner: z.enum(['me']).optional(), // Products currently owned by user's company
   company: z.enum(['me']).optional(), // Products registered by user's company (for producers)
+  history: z.enum(['me']).optional(), // Story 7.13: Products where company has ANY trace record
   limit: z.coerce.number().int().min(1).max(100).default(50),
   offset: z.coerce.number().int().min(0).default(0),
 });
@@ -97,9 +99,18 @@ export default async function handler(
       });
     }
 
-    const { owner, company, limit, offset } = validation.data;
+    const { owner, company, history, limit, offset } = validation.data;
 
-    // 3. If owner=me or company=me, require authentication
+    // 3. Story 7.13: Validate mutually exclusive filters
+    const filterCount = [owner, company, history].filter(Boolean).length;
+    if (filterCount > 1) {
+      return res.status(400).json({
+        error: 'Only one filter allowed: owner, company, or history',
+        code: 'VALIDATION_ERROR',
+      });
+    }
+
+    // 4. If owner=me or company=me, require authentication
     if (owner === 'me' || company === 'me') {
       const session = await getServerSession(req, res, authOptions);
       if (!session?.user?.companyId) {
@@ -109,7 +120,7 @@ export default async function handler(
         });
       }
 
-      // 4. Build where clause based on filter type
+      // 5. Build where clause based on filter type
       // owner=me: products currently owned by user's company (for distributors/retailers)
       // company=me: products registered by user's company (for producers)
       const whereClause = company === 'me'
@@ -127,7 +138,7 @@ export default async function handler(
         prisma.product.count({ where: whereClause }),
       ]);
 
-      // 5. Format response with status (Story 7.12)
+      // 6. Format response with status (Story 7.12)
       const formattedProducts = await getProductsWithStatus(products);
 
       return res.status(200).json({
@@ -139,7 +150,46 @@ export default async function handler(
       });
     }
 
-    // 6. Public access: return all products
+    // 7. Story 7.13: history=me - products where company has ANY trace record
+    if (history === 'me') {
+      const session = await getServerSession(req, res, authOptions);
+      if (!session?.user?.companyId) {
+        return res.status(401).json({
+          error: 'Authentication required',
+          code: 'UNAUTHORIZED',
+        });
+      }
+
+      // Use Prisma's relation filter - efficient single query
+      const whereClause = {
+        traceRecords: {
+          some: { companyId: session.user.companyId },
+        },
+      };
+
+      const [products, total] = await Promise.all([
+        prisma.product.findMany({
+          where: whereClause,
+          include: { currentOwner: { select: { name: true } } },
+          take: limit,
+          skip: offset,
+          orderBy: { createdAt: 'desc' },
+        }),
+        prisma.product.count({ where: whereClause }),
+      ]);
+
+      const formattedProducts = await getProductsWithStatus(products);
+
+      return res.status(200).json({
+        success: true,
+        products: formattedProducts,
+        total,
+        limit,
+        offset,
+      });
+    }
+
+    // 8. Public access: return all products
     const [products, total] = await Promise.all([
       prisma.product.findMany({
         include: { currentOwner: { select: { name: true } } },
@@ -150,7 +200,7 @@ export default async function handler(
       prisma.product.count(),
     ]);
 
-    // 7. Format response with status (Story 7.12)
+    // 9. Format response with status (Story 7.12)
     const formattedProducts = await getProductsWithStatus(products);
 
     return res.status(200).json({

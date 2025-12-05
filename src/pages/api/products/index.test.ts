@@ -3,6 +3,7 @@
  */
 // Products List API Tests
 // Story 7.4: Product Ownership Tracking
+// Story 7.13: Product History API - Added history=me filter tests
 // Tests for GET /api/products
 
 // IMPORTANT: next-test-api-route-handler must be imported first
@@ -528,6 +529,217 @@ describe('GET /api/products', () => {
           const json = await res.json();
           expect(json.products[0]).toHaveProperty('status');
           expect(json.products[0].status).toBe('IN_STOCK');
+        },
+      });
+    });
+  });
+
+  // ==================== STORY 7.13: HISTORY FILTER ====================
+
+  describe('Product History (history=me)', () => {
+    it('should return 401 when history=me without session', async () => {
+      getServerSession.mockResolvedValueOnce(null);
+
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?history=me',
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(401);
+          const json = await res.json();
+          expect(json.error).toBe('Authentication required');
+          expect(json.code).toBe('UNAUTHORIZED');
+        },
+      });
+    });
+
+    it('should return 401 when session has no companyId', async () => {
+      getServerSession.mockResolvedValueOnce({
+        user: { id: 'user-1', email: 'admin@test.com', role: 'PLATFORM_ADMIN' },
+      });
+
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?history=me',
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(401);
+        },
+      });
+    });
+
+    it('should return products where company has trace records', async () => {
+      const historyProducts = [mockProducts[0]];
+      (mockPrisma.product.findMany as jest.Mock).mockResolvedValueOnce(historyProducts);
+      (mockPrisma.product.count as jest.Mock).mockResolvedValueOnce(1);
+
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?history=me',
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(200);
+          const json = await res.json();
+          expect(json.success).toBe(true);
+          expect(json.products).toHaveLength(1);
+          expect(json.total).toBe(1);
+        },
+      });
+    });
+
+    it('should use traceRecords.some filter for history query', async () => {
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?history=me',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+
+          expect(mockPrisma.product.findMany).toHaveBeenCalledWith(
+            expect.objectContaining({
+              where: {
+                traceRecords: {
+                  some: { companyId: 'company-1' },
+                },
+              },
+            })
+          );
+
+          expect(mockPrisma.product.count).toHaveBeenCalledWith({
+            where: {
+              traceRecords: {
+                some: { companyId: 'company-1' },
+              },
+            },
+          });
+        },
+      });
+    });
+
+    it('should order products by createdAt desc', async () => {
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?history=me',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+
+          expect(mockPrisma.product.findMany).toHaveBeenCalledWith(
+            expect.objectContaining({
+              orderBy: { createdAt: 'desc' },
+            })
+          );
+        },
+      });
+    });
+
+    it('should include status field for history products', async () => {
+      (mockPrisma.traceRecord.findFirst as jest.Mock).mockResolvedValue({
+        action: 'SOLD',
+      });
+
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?history=me',
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(200);
+          const json = await res.json();
+          expect(json.products[0]).toHaveProperty('status');
+          expect(json.products[0].status).toBe('SOLD');
+        },
+      });
+    });
+
+    it('should support pagination for history query', async () => {
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?history=me&limit=10&offset=5',
+        test: async ({ fetch }) => {
+          await fetch({ method: 'GET' });
+
+          expect(mockPrisma.product.findMany).toHaveBeenCalledWith(
+            expect.objectContaining({
+              take: 10,
+              skip: 5,
+            })
+          );
+        },
+      });
+    });
+
+    it('should return empty array when company has no trace records', async () => {
+      (mockPrisma.product.findMany as jest.Mock).mockResolvedValueOnce([]);
+      (mockPrisma.product.count as jest.Mock).mockResolvedValueOnce(0);
+
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?history=me',
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(200);
+          const json = await res.json();
+          expect(json.success).toBe(true);
+          expect(json.products).toEqual([]);
+          expect(json.total).toBe(0);
+        },
+      });
+    });
+  });
+
+  // ==================== STORY 7.13: PARAMETER CONFLICT VALIDATION ====================
+
+  describe('Parameter Conflict Validation', () => {
+    it('should return 400 if owner and history both provided', async () => {
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?owner=me&history=me',
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(400);
+          const json = await res.json();
+          expect(json.error).toBe('Only one filter allowed: owner, company, or history');
+          expect(json.code).toBe('VALIDATION_ERROR');
+        },
+      });
+    });
+
+    it('should return 400 if company and history both provided', async () => {
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?company=me&history=me',
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(400);
+          const json = await res.json();
+          expect(json.error).toBe('Only one filter allowed: owner, company, or history');
+          expect(json.code).toBe('VALIDATION_ERROR');
+        },
+      });
+    });
+
+    it('should return 400 if owner and company both provided', async () => {
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?owner=me&company=me',
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(400);
+          const json = await res.json();
+          expect(json.error).toBe('Only one filter allowed: owner, company, or history');
+          expect(json.code).toBe('VALIDATION_ERROR');
+        },
+      });
+    });
+
+    it('should return 400 if all three filters provided', async () => {
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?owner=me&company=me&history=me',
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(400);
+          const json = await res.json();
+          expect(json.error).toBe('Only one filter allowed: owner, company, or history');
+          expect(json.code).toBe('VALIDATION_ERROR');
         },
       });
     });
