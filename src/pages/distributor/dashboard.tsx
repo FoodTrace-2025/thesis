@@ -2,6 +2,7 @@
 // Story 7.6: Distributor Dashboard - Product List & Layout
 // Story 7.7: Trace Features - Modal, Timeline, Receive Product
 // Story 7.7 Enhancement: Only show Add Trace when distributor owns the product
+// Story 7.14: Dashboard Tabs - In Custody + Product History
 // DISTRIBUTOR role only - displays products in company's custody
 
 import { useState, useEffect, useCallback } from 'react';
@@ -31,6 +32,12 @@ import {
   ModalBody,
   useDisclosure,
   useToast,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  Badge,
 } from '@chakra-ui/react';
 import { InfoIcon, ViewIcon } from '@chakra-ui/icons';
 import { Layout } from '@/components/layout';
@@ -93,10 +100,17 @@ export default function DistributorDashboard({
   userRole,
   companyName,
 }: DistributorDashboardProps) {
-  // Product list state (Story 7.6)
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // Product list state (Story 7.6, 7.14: Tabs)
+  const [custodyProducts, setCustodyProducts] = useState<Product[]>([]);
+  const [custodyLoading, setCustodyLoading] = useState(true);
+  const [custodyError, setCustodyError] = useState<string | null>(null);
+
+  // Story 7.14: Product History tab state
+  const [historyProducts, setHistoryProducts] = useState<Product[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState<string | null>(null);
+  const [historyLoaded, setHistoryLoaded] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
 
   // Modal state for Add Trace Record (Story 7.7 Task 1)
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -119,28 +133,56 @@ export default function DistributorDashboard({
     onClose: onScannerClose,
   } = useDisclosure();
 
-  // Fetch products - callable for retry functionality
-  const fetchProducts = async () => {
-    setIsLoading(true);
-    setError(null);
+  // Fetch custody products (owner=me) - callable for retry functionality
+  const fetchCustodyProducts = async () => {
+    setCustodyLoading(true);
+    setCustodyError(null);
     try {
       const response = await fetch('/api/products?owner=me');
       const data = await response.json();
       if (!response.ok) {
-        setError(data.error || 'Failed to fetch products');
+        setCustodyError(data.error || 'Failed to fetch products');
         return;
       }
-      setProducts(data.products);
+      setCustodyProducts(data.products);
     } catch {
-      setError('Network error. Please try again.');
+      setCustodyError('Network error. Please try again.');
     } finally {
-      setIsLoading(false);
+      setCustodyLoading(false);
     }
   };
 
-  // Fetch on mount
+  // Story 7.14: Fetch history products (history=me) - lazy loaded on tab switch
+  const fetchHistoryProducts = async () => {
+    setHistoryLoading(true);
+    setHistoryError(null);
+    try {
+      const response = await fetch('/api/products?history=me');
+      const data = await response.json();
+      if (!response.ok) {
+        setHistoryError(data.error || 'Failed to fetch history');
+        return;
+      }
+      setHistoryProducts(data.products);
+      setHistoryLoaded(true);
+    } catch {
+      setHistoryError('Network error. Please try again.');
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
+  // Story 7.14: Handle tab change - lazy load history on first click
+  const handleTabChange = (index: number) => {
+    setActiveTab(index);
+    if (index === 1 && !historyLoaded) {
+      fetchHistoryProducts();
+    }
+  };
+
+  // Fetch custody products on mount
   useEffect(() => {
-    fetchProducts();
+    fetchCustodyProducts();
   }, []);
 
   // Handle Add Trace button click (Story 7.7 Task 1)
@@ -149,11 +191,14 @@ export default function DistributorDashboard({
     onOpen();
   };
 
-  // Handle trace record success (Story 7.7 Task 1)
+  // Handle trace record success (Story 7.7 Task 1, 7.14: Refetch both lists)
   const handleTraceSuccess = () => {
     onClose();
     setSelectedProductId(null);
-    fetchProducts(); // Refetch to update list
+    fetchCustodyProducts(); // Refetch custody list
+    if (historyLoaded) {
+      fetchHistoryProducts(); // Refetch history if already loaded
+    }
     toast({
       title: 'Trace record added',
       description: 'The trace record has been recorded on the blockchain.',
@@ -201,11 +246,14 @@ export default function DistributorDashboard({
     [onScannerClose]
   );
 
-  // Handle receive success (Story 7.7 Task 3)
+  // Handle receive success (Story 7.7 Task 3, 7.14: Refetch both lists)
   const handleReceiveSuccess = () => {
     setLookupProduct(null);
     setBlockchainIdInput('');
-    fetchProducts(); // Refetch to show new product in custody
+    fetchCustodyProducts(); // Refetch custody list
+    if (historyLoaded) {
+      fetchHistoryProducts(); // Refetch history if already loaded
+    }
     toast({
       title: 'Product received',
       description: 'The product is now in your custody.',
@@ -296,118 +344,251 @@ export default function DistributorDashboard({
           )}
         </Box>
 
+        {/* Story 7.14: Tabs for In Custody and Product History */}
         <Box>
-          <Heading size="md" color="brand.dark" mb={4}>
-            Products in Custody
-          </Heading>
+          <Tabs
+            index={activeTab}
+            onChange={handleTabChange}
+            colorScheme="green"
+            variant="enclosed"
+          >
+            <TabList>
+              <Tab>
+                In Custody
+                <Badge ml={2} colorScheme="green" borderRadius="full">
+                  {custodyProducts.length}
+                </Badge>
+              </Tab>
+              <Tab>
+                Product History
+                <Badge ml={2} colorScheme="gray" borderRadius="full">
+                  {historyProducts.length}
+                </Badge>
+              </Tab>
+            </TabList>
 
-          {/* Loading state */}
-          {isLoading && (
-            <Center py={8}>
-              <Spinner size="lg" color="brand.primary" />
-            </Center>
-          )}
+            <TabPanels>
+              {/* In Custody Tab */}
+              <TabPanel px={0}>
+                {/* Loading state */}
+                {custodyLoading && (
+                  <Center py={8}>
+                    <Spinner size="lg" color="brand.primary" />
+                  </Center>
+                )}
 
-          {/* Error state with retry */}
-          {error && !isLoading && (
-            <Alert status="error" borderRadius="md">
-              <AlertIcon />
-              <Box flex="1">{error}</Box>
-              <Button size="sm" onClick={fetchProducts}>
-                Retry
-              </Button>
-            </Alert>
-          )}
+                {/* Error state with retry */}
+                {custodyError && !custodyLoading && (
+                  <Alert status="error" borderRadius="md">
+                    <AlertIcon />
+                    <Box flex="1">{custodyError}</Box>
+                    <Button size="sm" onClick={fetchCustodyProducts}>
+                      Retry
+                    </Button>
+                  </Alert>
+                )}
 
-          {/* Empty state */}
-          {!isLoading && !error && products.length === 0 && (
-            <Center py={8} flexDirection="column">
-              <Icon as={InfoIcon} boxSize={8} color="brand.muted" mb={3} />
-              <Text color="brand.muted" fontWeight="medium">
-                No products in custody yet
-              </Text>
-              <Text color="brand.muted" fontSize="sm" mt={1}>
-                Products will appear here when you receive them.
-              </Text>
-            </Center>
-          )}
-
-          {/* Products grid */}
-          {!isLoading && !error && products.length > 0 && (
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
-              {products.map((product) => (
-                <Box key={product.id}>
-                  <Box
-                    borderWidth="1px"
-                    borderRadius="lg"
-                    borderColor={
-                      expandedProductId === product.id
-                        ? 'brand.accent'
-                        : 'brand.border'
-                    }
-                    bg="brand.surface"
-                    p={4}
-                  >
-                    {/* Story 7.12: Name + Status Badge */}
-                    <HStack justify="space-between" mb={2}>
-                      <Heading size="sm" color="brand.dark">
-                        {product.name}
-                      </Heading>
-                      <StatusBadge status={product.status} />
-                    </HStack>
-                    <Text fontSize="sm" color="brand.muted">
-                      Product #{product.blockchainId}
+                {/* Empty state */}
+                {!custodyLoading && !custodyError && custodyProducts.length === 0 && (
+                  <Center py={8} flexDirection="column">
+                    <Icon as={InfoIcon} boxSize={8} color="brand.muted" mb={3} />
+                    <Text color="brand.muted" fontWeight="medium">
+                      No products in custody yet
                     </Text>
-                    <Text fontSize="sm" color="brand.muted">
-                      Origin: {product.origin}
+                    <Text color="brand.muted" fontSize="sm" mt={1}>
+                      Products will appear here when you receive them.
                     </Text>
-                    <Text fontSize="sm" color="brand.muted">
-                      Harvested:{' '}
-                      {new Date(product.harvestDate).toLocaleDateString()}
-                    </Text>
-                    <Text fontSize="sm" color="brand.muted" mb={3}>
-                      Current Owner: {product.currentOwner?.name || 'Sold to Consumer'}
-                    </Text>
+                  </Center>
+                )}
 
-                    {/* Action buttons (Story 7.7 Task 1 & 2) */}
-                    {/* Only show Add Trace if distributor still owns the product */}
-                    <HStack spacing={2}>
-                      {product.currentOwner?.name === companyName && (
-                        <Button
-                          size="sm"
-                          colorScheme="green"
-                          onClick={() => handleAddTrace(product.id)}
+                {/* Products grid */}
+                {!custodyLoading && !custodyError && custodyProducts.length > 0 && (
+                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+                    {custodyProducts.map((product) => (
+                      <Box key={product.id}>
+                        <Box
+                          borderWidth="1px"
+                          borderRadius="lg"
+                          borderColor={
+                            expandedProductId === product.id
+                              ? 'brand.accent'
+                              : 'brand.border'
+                          }
+                          bg="brand.surface"
+                          p={4}
                         >
-                          Add Trace
-                        </Button>
-                      )}
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => toggleTimeline(product.id)}
-                      >
-                        {expandedProductId === product.id
-                          ? 'Hide Timeline'
-                          : 'View Timeline'}
-                      </Button>
-                    </HStack>
-                  </Box>
+                          {/* Story 7.12: Name + Status Badge */}
+                          <HStack justify="space-between" mb={2}>
+                            <Heading size="sm" color="brand.dark">
+                              {product.name}
+                            </Heading>
+                            <StatusBadge status={product.status} />
+                          </HStack>
+                          <Text fontSize="sm" color="brand.muted">
+                            Product #{product.blockchainId}
+                          </Text>
+                          <Text fontSize="sm" color="brand.muted">
+                            Origin: {product.origin}
+                          </Text>
+                          <Text fontSize="sm" color="brand.muted">
+                            Harvested:{' '}
+                            {new Date(product.harvestDate).toLocaleDateString()}
+                          </Text>
+                          <Text fontSize="sm" color="brand.muted" mb={3}>
+                            Current Owner: {product.currentOwner?.name || 'Sold to Consumer'}
+                          </Text>
 
-                  {/* Timeline display (Story 7.7 Task 2) */}
-                  {expandedProductId === product.id && (
-                    <Box
-                      mt={2}
-                      pl={4}
-                      borderLeftWidth="2px"
-                      borderColor="brand.accent"
-                    >
-                      <TraceTimeline productId={product.id} />
-                    </Box>
-                  )}
-                </Box>
-              ))}
-            </SimpleGrid>
-          )}
+                          {/* Action buttons - Add Trace always visible in custody tab */}
+                          <HStack spacing={2}>
+                            {product.currentOwner?.name === companyName && (
+                              <Button
+                                size="sm"
+                                colorScheme="green"
+                                onClick={() => handleAddTrace(product.id)}
+                              >
+                                Add Trace
+                              </Button>
+                            )}
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => toggleTimeline(product.id)}
+                            >
+                              {expandedProductId === product.id
+                                ? 'Hide Timeline'
+                                : 'View Timeline'}
+                            </Button>
+                          </HStack>
+                        </Box>
+
+                        {/* Timeline display */}
+                        {expandedProductId === product.id && (
+                          <Box
+                            mt={2}
+                            pl={4}
+                            borderLeftWidth="2px"
+                            borderColor="brand.accent"
+                          >
+                            <TraceTimeline productId={product.id} />
+                          </Box>
+                        )}
+                      </Box>
+                    ))}
+                  </SimpleGrid>
+                )}
+              </TabPanel>
+
+              {/* Product History Tab */}
+              <TabPanel px={0}>
+                {/* Loading state */}
+                {historyLoading && (
+                  <Center py={8}>
+                    <Spinner size="lg" color="brand.primary" />
+                  </Center>
+                )}
+
+                {/* Error state with retry */}
+                {historyError && !historyLoading && (
+                  <Alert status="error" borderRadius="md">
+                    <AlertIcon />
+                    <Box flex="1">{historyError}</Box>
+                    <Button size="sm" onClick={fetchHistoryProducts}>
+                      Retry
+                    </Button>
+                  </Alert>
+                )}
+
+                {/* Empty state */}
+                {!historyLoading && !historyError && historyProducts.length === 0 && (
+                  <Center py={8} flexDirection="column">
+                    <Icon as={InfoIcon} boxSize={8} color="brand.muted" mb={3} />
+                    <Text color="brand.muted" fontWeight="medium">
+                      No product history yet
+                    </Text>
+                    <Text color="brand.muted" fontSize="sm" mt={1}>
+                      Products you&apos;ve handled will appear here.
+                    </Text>
+                  </Center>
+                )}
+
+                {/* Products grid */}
+                {!historyLoading && !historyError && historyProducts.length > 0 && (
+                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+                    {historyProducts.map((product) => (
+                      <Box key={product.id}>
+                        <Box
+                          borderWidth="1px"
+                          borderRadius="lg"
+                          borderColor={
+                            expandedProductId === product.id
+                              ? 'brand.accent'
+                              : 'brand.border'
+                          }
+                          bg="brand.surface"
+                          p={4}
+                        >
+                          {/* Story 7.12: Name + Status Badge */}
+                          <HStack justify="space-between" mb={2}>
+                            <Heading size="sm" color="brand.dark">
+                              {product.name}
+                            </Heading>
+                            <StatusBadge status={product.status} />
+                          </HStack>
+                          <Text fontSize="sm" color="brand.muted">
+                            Product #{product.blockchainId}
+                          </Text>
+                          <Text fontSize="sm" color="brand.muted">
+                            Origin: {product.origin}
+                          </Text>
+                          <Text fontSize="sm" color="brand.muted">
+                            Harvested:{' '}
+                            {new Date(product.harvestDate).toLocaleDateString()}
+                          </Text>
+                          <Text fontSize="sm" color="brand.muted" mb={3}>
+                            Current Owner: {product.currentOwner?.name || 'Sold to Consumer'}
+                          </Text>
+
+                          {/* Action buttons - Add Trace only if still owned */}
+                          <HStack spacing={2}>
+                            {product.currentOwner?.name === companyName && (
+                              <Button
+                                size="sm"
+                                colorScheme="green"
+                                onClick={() => handleAddTrace(product.id)}
+                              >
+                                Add Trace
+                              </Button>
+                            )}
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => toggleTimeline(product.id)}
+                            >
+                              {expandedProductId === product.id
+                                ? 'Hide Timeline'
+                                : 'View Timeline'}
+                            </Button>
+                          </HStack>
+                        </Box>
+
+                        {/* Timeline display */}
+                        {expandedProductId === product.id && (
+                          <Box
+                            mt={2}
+                            pl={4}
+                            borderLeftWidth="2px"
+                            borderColor="brand.accent"
+                          >
+                            <TraceTimeline productId={product.id} />
+                          </Box>
+                        )}
+                      </Box>
+                    ))}
+                  </SimpleGrid>
+                )}
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </Box>
       </VStack>
 
