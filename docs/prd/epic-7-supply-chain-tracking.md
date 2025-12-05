@@ -275,7 +275,7 @@ export async function GET(req, { params }) {
 **Blocks:**
 - Epic 9 (Consumer Query Interface) - Consumer query shows complete trace history timeline
 
-#### Story Breakdown (Updated 2025-12-04 - Session 67)
+#### Story Breakdown (Updated 2025-12-05 - Session 71)
 
 | Story | Title | Estimate | Status | Assigned |
 |-------|-------|----------|--------|----------|
@@ -289,10 +289,24 @@ export async function GET(req, { params }) {
 | 7.8 | Retailer Dashboard | 2h | ✅ Complete | YiLing |
 | 7.9 | Producer Dashboard - Trace Features | 1.5h | ✅ Complete | YiLing |
 | 7.10 | QR Scanner Component | 3h | ✅ Complete | YiLing |
+| 7.11 | SOLD Ownership Transfer Fix | 1h | 📋 Draft | TaiSheng |
+| 7.12 | Product Status Badges and Labels | 1.5h | 📋 Draft | YiLing |
+| 7.13 | Product History API | 1.5h | 📋 Draft | TaiSheng |
+| 7.14 | Distributor Dashboard Tabs | 2h | 📋 Draft | YiLing |
+| 7.15 | Retailer Dashboard Tabs | 2h | 📋 Draft | YiLing |
+| 7.16 | Producer Dashboard Labels | 1h | 📋 Draft | YiLing |
 
 **Story Breakdown Update (Session 67):** Original Stories 7.6-7.7 split into 7.6-7.10 for better testability and context management. Each story is independently testable and scoped to 2 hours or less. QR Scanner (7.10) added as shared component for product lookup, replacing manual ID entry.
 
 **Story 7.4 Addition (Session 65):** Added Product Ownership Tracking to enable supply chain dashboards to show products in each company's custody. Implements "chain of custody" pattern - ownership transfers on RECEIVED action. This is a prerequisite for frontend stories 7.5-7.10.
+
+**Stories 7.11-7.16 Addition (Session 71 - UX Improvements):** Added 6 new stories to improve dashboard UX based on user feedback. Key changes:
+- 7.11: SOLD action now sets `currentOwnerId = null` (product left supply chain)
+- 7.12: Status badges (IN_STOCK/SOLD) and clear current owner display
+- 7.13: New `history=me` API endpoint for "Product History" view
+- 7.14-7.15: Tab navigation for Distributor/Retailer dashboards
+- 7.16: Updated labels and status display for Producer dashboard
+Total additional estimate: ~9 hours.
 
 #### Team Assignment
 

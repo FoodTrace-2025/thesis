@@ -286,14 +286,21 @@ export default async function handler(
       });
 
       // Story 7.4: Transfer ownership on RECEIVED action (idempotent)
+      // Story 7.11: Clear ownership on SOLD (product leaves supply chain)
       if (action === 'RECEIVED') {
         await tx.product.update({
           where: { id: product.id },
           data: { currentOwnerId: company.id },
         });
+      } else if (action === 'SOLD') {
+        await tx.product.update({
+          where: { id: product.id },
+          data: { currentOwnerId: null },
+        });
       }
 
-      // Story 7.4: Include ownership transfer info in audit log (combined entry approach)
+      // Story 7.4 + 7.11: Include ownership transfer info in audit log
+      const isOwnershipChange = action === 'RECEIVED' || action === 'SOLD';
       await tx.auditLog.create({
         data: {
           action: 'TRACE_RECORD_ADDED',
@@ -307,10 +314,11 @@ export default async function handler(
             location,
             transactionHash: hash,
             blockchainIndex,
-            // Story 7.4: Ownership transfer info
-            ownershipTransferred: action === 'RECEIVED',
-            previousOwnerId: action === 'RECEIVED' ? product.currentOwnerId : undefined,
-            newOwnerId: action === 'RECEIVED' ? company.id : undefined,
+            // Story 7.4 + 7.11: Ownership transfer info
+            ownershipTransferred: isOwnershipChange,
+            previousOwnerId: isOwnershipChange ? product.currentOwnerId : undefined,
+            newOwnerId: action === 'RECEIVED' ? company.id : (action === 'SOLD' ? null : undefined),
+            soldToConsumer: action === 'SOLD' || undefined,
           },
         },
       });

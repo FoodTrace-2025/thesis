@@ -581,4 +581,147 @@ describe('/api/products/[id]/trace', () => {
       });
     });
   });
+
+  // ==================== SOLD OWNERSHIP TRANSFER (Story 7.11) ====================
+
+  describe('SOLD action ownership transfer', () => {
+    it('should set currentOwnerId to null when action is SOLD', async () => {
+      // Setup: Product currently owned by retailer
+      const productWithOwner = {
+        id: 'test-product-id',
+        blockchainId: 1,
+        currentOwnerId: 'retailer-company-id',
+      };
+      (mockPrisma.product.findUnique as jest.Mock).mockResolvedValueOnce(productWithOwner);
+
+      // Track the product.update call
+      let productUpdateData: { currentOwnerId: string | null } | undefined;
+      (mockPrisma.$transaction as jest.Mock).mockImplementation(async (fn) => {
+        return fn({
+          traceRecord: {
+            create: jest.fn().mockResolvedValue({
+              ...mockCreatedTrace,
+              action: 'SOLD',
+            }),
+          },
+          product: {
+            update: jest.fn().mockImplementation(({ data }) => {
+              productUpdateData = data;
+              return Promise.resolve({});
+            }),
+          },
+          auditLog: {
+            create: jest.fn().mockResolvedValue({}),
+          },
+        });
+      });
+
+      await testApiHandler({
+        pagesHandler: handler,
+        params: { id: 'test-product-id' },
+        test: async ({ fetch }) => {
+          const res = await fetch({
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'SOLD',
+              location: 'Retail Store',
+              notes: 'Sold to consumer',
+            }),
+          });
+          expect(res.status).toBe(201);
+          // Verify currentOwnerId was set to null
+          expect(productUpdateData).toBeDefined();
+          expect(productUpdateData?.currentOwnerId).toBeNull();
+        },
+      });
+    });
+
+    it('should include soldToConsumer in audit log for SOLD action', async () => {
+      // Track the auditLog.create call
+      let auditLogDetails: Record<string, unknown> | undefined;
+      (mockPrisma.$transaction as jest.Mock).mockImplementation(async (fn) => {
+        return fn({
+          traceRecord: {
+            create: jest.fn().mockResolvedValue({
+              ...mockCreatedTrace,
+              action: 'SOLD',
+            }),
+          },
+          product: {
+            update: jest.fn().mockResolvedValue({}),
+          },
+          auditLog: {
+            create: jest.fn().mockImplementation(({ data }) => {
+              auditLogDetails = data.details as Record<string, unknown>;
+              return Promise.resolve({});
+            }),
+          },
+        });
+      });
+
+      await testApiHandler({
+        pagesHandler: handler,
+        params: { id: 'test-product-id' },
+        test: async ({ fetch }) => {
+          const res = await fetch({
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'SOLD',
+              location: 'Retail Store',
+            }),
+          });
+          expect(res.status).toBe(201);
+          // Verify audit log contains soldToConsumer flag
+          expect(auditLogDetails).toBeDefined();
+          expect(auditLogDetails?.soldToConsumer).toBe(true);
+          expect(auditLogDetails?.ownershipTransferred).toBe(true);
+          expect(auditLogDetails?.newOwnerId).toBeNull();
+        },
+      });
+    });
+
+    it('should not affect currentOwnerId for non-ownership actions', async () => {
+      // Track the product.update call
+      let productUpdateCalled = false;
+      (mockPrisma.$transaction as jest.Mock).mockImplementation(async (fn) => {
+        return fn({
+          traceRecord: {
+            create: jest.fn().mockResolvedValue({
+              ...mockCreatedTrace,
+              action: 'QUALITY_CHECK',
+            }),
+          },
+          product: {
+            update: jest.fn().mockImplementation(() => {
+              productUpdateCalled = true;
+              return Promise.resolve({});
+            }),
+          },
+          auditLog: {
+            create: jest.fn().mockResolvedValue({}),
+          },
+        });
+      });
+
+      await testApiHandler({
+        pagesHandler: handler,
+        params: { id: 'test-product-id' },
+        test: async ({ fetch }) => {
+          const res = await fetch({
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'QUALITY_CHECK',
+              location: 'Warehouse',
+            }),
+          });
+          expect(res.status).toBe(201);
+          // Verify product.update was NOT called for non-ownership actions
+          expect(productUpdateCalled).toBe(false);
+        },
+      });
+    });
+  });
 });
