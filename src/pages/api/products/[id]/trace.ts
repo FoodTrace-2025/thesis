@@ -40,6 +40,8 @@ const traceSchema = z.object({
     .max(500, 'Notes too long (max 500 chars)')
     .optional()
     .default(''),
+  // Story 7.16: Recipient company for SHIPPED action
+  recipientCompanyId: z.string().optional(),
 });
 
 // Response types
@@ -146,7 +148,49 @@ export default async function handler(
       });
     }
 
-    const { action, location, notes } = validation.data;
+    const { action, location, notes, recipientCompanyId } = validation.data;
+
+    // Story 7.16: Validate recipientCompanyId for SHIPPED action
+    let validatedRecipientCompanyId: string | null = null;
+    if (action === 'SHIPPED') {
+      // Required for SHIPPED action
+      if (!recipientCompanyId) {
+        return res.status(400).json({
+          error: 'Recipient company is required for SHIPPED action',
+          code: 'VALIDATION_ERROR',
+        });
+      }
+
+      // Can't ship to yourself
+      if (recipientCompanyId === company.id) {
+        return res.status(400).json({
+          error: 'Cannot ship to your own company',
+          code: 'VALIDATION_ERROR',
+        });
+      }
+
+      // Validate recipient exists and is APPROVED
+      const recipientCompany = await prisma.company.findUnique({
+        where: { id: recipientCompanyId },
+        select: { id: true, status: true },
+      });
+
+      if (!recipientCompany) {
+        return res.status(400).json({
+          error: 'Recipient company not found',
+          code: 'VALIDATION_ERROR',
+        });
+      }
+
+      if (recipientCompany.status !== 'APPROVED') {
+        return res.status(400).json({
+          error: 'Recipient company is not approved',
+          code: 'VALIDATION_ERROR',
+        });
+      }
+
+      validatedRecipientCompanyId = recipientCompanyId;
+    }
 
     // 5. Decrypt company wallet
     const encryptionKey = getEncryptionKey();
@@ -282,6 +326,8 @@ export default async function handler(
           notes,
           transactionHash: hash,
           blockchainIndex,
+          // Story 7.16: Save recipient company for SHIPPED action
+          recipientCompanyId: validatedRecipientCompanyId,
         },
       });
 
@@ -319,6 +365,8 @@ export default async function handler(
             previousOwnerId: isOwnershipChange ? product.currentOwnerId : undefined,
             newOwnerId: action === 'RECEIVED' ? company.id : (action === 'SOLD' ? null : undefined),
             soldToConsumer: action === 'SOLD' || undefined,
+            // Story 7.16: Recipient company for SHIPPED
+            recipientCompanyId: validatedRecipientCompanyId || undefined,
           },
         },
       });

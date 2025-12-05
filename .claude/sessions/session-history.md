@@ -4,6 +4,21 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 71 (2025-12-05) - Story 7.14-7.15 Dashboard Tabs
+
+### Session 71 Achievements
+
+✅ **Story 7.14 Implemented**: Distributor Dashboard Tabs (In Custody + Product History)
+✅ **Story 7.15 Implemented**: Retailer Dashboard Tabs (In Stock + Product History)
+✅ **Chakra UI Tabs Integration**: Tab navigation with count badges, lazy loading for history tab
+✅ **UX Best Practice Research**: Tab navigation patterns, role-based UI, lazy loading strategies
+✅ **Manual Testing via Playwright**: Verified tabs, timeline, status badges all working
+✅ **228 Tests Passing**: Build verified, all acceptance criteria met
+
+**Impact:** Dashboard UX improved with tab navigation. Ready for Story 7.16-7.17 (recipient selection + incoming shipments).
+
+---
+
 ## Session 70 (2025-12-05) - Epic 7 Review Complete + Epic 9 Planning
 
 ### Session 70 Achievements
@@ -133,22 +148,6 @@ This file contains the last 10 session achievements for historical reference.
 ✅ **BMAD Template Review**: Confirmed qa-gate-tmpl.yaml defines YAML format as standard
 
 **Impact:** QA documentation hygiene verified. Story 7.1 now fully documented. Ready for Epic 7 continuation.
-
----
-
-## Session 61 (2025-12-04) - Story 7.1 Implementation & QA Review Complete
-
-### Session 61 Achievements
-
-✅ **Story 7.1 Implemented**: TraceRecord smart contract with DISTRIBUTOR_ROLE, RETAILER_ROLE, addTraceRecord(), getTraceHistory()
-✅ **37 Tests Passing**: 18 new trace record tests added, 100% statement coverage, 92.86% branch coverage
-✅ **Contract Deployed**: ProductRegistry v2 to Sepolia 0x5d56f5a8703d7d545319177042cd91FD3339E2b6, verified on Etherscan
-✅ **Epic 7 PRD Synced**: Updated gas targets from "<80k" to "measure and document" (3 edits)
-✅ **Story 7.1 QA Review**: Security-critical review passed (PASS, 95/100 quality score)
-✅ **QA Gate Created**: docs/qa/gates/7.1-trace-record-smart-contract.yml with full AC traceability
-✅ **.env.local Cleanup**: Removed unused TRACE_RECORDS_ADDRESS, added clarifying comments
-
-**Impact:** Story 7.1 complete with QA. Smart contract now supports full supply chain tracking (Producer → Distributor → Retailer). Ready for Story 7.2 (Backend API).
 
 ---
 

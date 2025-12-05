@@ -1,6 +1,7 @@
 // src/pages/retailer/dashboard.tsx
 // Story 7.8: Retailer Dashboard
 // Story 7.15: Dashboard Tabs - In Stock + Product History
+// Story 7.17: Incoming Shipments section with Accept workflow
 // Same pattern as Distributor Dashboard (Story 7.7, 7.14)
 // RETAILER role only - displays products in company's custody
 
@@ -54,6 +55,12 @@ interface Product {
   currentOwner: { name: string } | null;
   status: ProductStatus;
   createdAt: string;
+}
+
+// Story 7.17: Incoming product with shipping info
+interface IncomingProduct extends Product {
+  shippedBy?: { name: string };
+  shippedAt?: string;
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -111,10 +118,23 @@ export default function RetailerDashboard({
   const [historyLoaded, setHistoryLoaded] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
 
+  // Story 7.17: Incoming Shipments state
+  const [incomingProducts, setIncomingProducts] = useState<IncomingProduct[]>([]);
+  const [incomingLoading, setIncomingLoading] = useState(true);
+  const [incomingError, setIncomingError] = useState<string | null>(null);
+
   // Modal state for Add Trace Record
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const toast = useToast();
+
+  // Story 7.17: Accept modal state for incoming shipments
+  const {
+    isOpen: isAcceptOpen,
+    onOpen: onAcceptOpen,
+    onClose: onAcceptClose,
+  } = useDisclosure();
+  const [acceptProductId, setAcceptProductId] = useState<string | null>(null);
 
   // Timeline expand state
   const [expandedProductId, setExpandedProductId] = useState<string | null>(null);
@@ -171,6 +191,25 @@ export default function RetailerDashboard({
     }
   };
 
+  // Story 7.17: Fetch incoming shipments (incoming=me)
+  const fetchIncomingProducts = async () => {
+    setIncomingLoading(true);
+    setIncomingError(null);
+    try {
+      const response = await fetch('/api/products?incoming=me');
+      const data = await response.json();
+      if (!response.ok) {
+        setIncomingError(data.error || 'Failed to fetch incoming shipments');
+        return;
+      }
+      setIncomingProducts(data.products);
+    } catch {
+      setIncomingError('Network error. Please try again.');
+    } finally {
+      setIncomingLoading(false);
+    }
+  };
+
   // Story 7.15: Handle tab change - lazy load history on first click
   const handleTabChange = (index: number) => {
     setActiveTab(index);
@@ -179,9 +218,10 @@ export default function RetailerDashboard({
     }
   };
 
-  // Fetch in-stock products on mount
+  // Fetch in-stock and incoming products on mount
   useEffect(() => {
     fetchInStockProducts();
+    fetchIncomingProducts(); // Story 7.17
   }, []);
 
   // Handle Add Trace button click
@@ -262,11 +302,133 @@ export default function RetailerDashboard({
     });
   };
 
+  // Story 7.17: Handle Accept button click
+  const handleAcceptClick = (productId: string) => {
+    setAcceptProductId(productId);
+    onAcceptOpen();
+  };
+
+  // Story 7.17: Handle Accept success - product moves from incoming to in-stock
+  const handleAcceptSuccess = () => {
+    onAcceptClose();
+    setAcceptProductId(null);
+    fetchIncomingProducts(); // Refetch incoming (product should disappear)
+    fetchInStockProducts(); // Refetch in-stock (product should appear)
+    if (historyLoaded) {
+      fetchHistoryProducts(); // Refetch history if already loaded
+    }
+    toast({
+      title: 'Shipment accepted',
+      description: 'The product is now in your stock.',
+      status: 'success',
+      duration: 4000,
+      isClosable: true,
+    });
+  };
+
   return (
     <Layout>
       <VStack spacing={6} align="stretch">
         <Heading color="brand.primary">Retailer Dashboard</Heading>
         <Text color="brand.muted">Welcome, {userName}</Text>
+
+        {/* Story 7.17: Incoming Shipments Section */}
+        <Box
+          borderWidth="1px"
+          borderRadius="lg"
+          borderColor="brand.border"
+          bg="brand.surface"
+          p={4}
+        >
+          <HStack justify="space-between" mb={4}>
+            <HStack>
+              <Heading size="md" color="brand.dark">
+                Incoming Shipments
+              </Heading>
+              <Badge colorScheme="orange" borderRadius="full" fontSize="sm">
+                {incomingProducts.length}
+              </Badge>
+            </HStack>
+            <Button size="sm" variant="ghost" onClick={fetchIncomingProducts}>
+              Refresh
+            </Button>
+          </HStack>
+
+          {/* Loading state */}
+          {incomingLoading && (
+            <Center py={6}>
+              <Spinner size="md" color="brand.primary" />
+            </Center>
+          )}
+
+          {/* Error state */}
+          {incomingError && !incomingLoading && (
+            <Alert status="error" borderRadius="md">
+              <AlertIcon />
+              <Box flex="1">{incomingError}</Box>
+              <Button size="sm" onClick={fetchIncomingProducts}>
+                Retry
+              </Button>
+            </Alert>
+          )}
+
+          {/* Empty state */}
+          {!incomingLoading && !incomingError && incomingProducts.length === 0 && (
+            <Center py={6} flexDirection="column">
+              <Icon as={InfoIcon} boxSize={6} color="brand.muted" mb={2} />
+              <Text color="brand.muted" fontSize="sm">
+                No incoming shipments
+              </Text>
+            </Center>
+          )}
+
+          {/* Incoming products list */}
+          {!incomingLoading && !incomingError && incomingProducts.length > 0 && (
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+              {incomingProducts.map((product) => (
+                <Box
+                  key={product.id}
+                  borderWidth="1px"
+                  borderRadius="md"
+                  borderColor="orange.200"
+                  bg="orange.50"
+                  p={4}
+                >
+                  <HStack justify="space-between" mb={2}>
+                    <Heading size="sm" color="brand.dark">
+                      {product.name}
+                    </Heading>
+                    <StatusBadge status="IN_TRANSIT" />
+                  </HStack>
+                  <Text fontSize="sm" color="brand.muted">
+                    Product #{product.blockchainId}
+                  </Text>
+                  <Text fontSize="sm" color="brand.muted">
+                    Origin: {product.origin}
+                  </Text>
+                  {product.shippedBy && (
+                    <Text fontSize="sm" color="brand.muted">
+                      Shipped by: {product.shippedBy.name}
+                    </Text>
+                  )}
+                  {product.shippedAt && (
+                    <Text fontSize="sm" color="brand.muted" mb={3}>
+                      Shipped: {new Date(product.shippedAt).toLocaleDateString()}
+                    </Text>
+                  )}
+                  <Button
+                    size="sm"
+                    colorScheme="orange"
+                    onClick={() => handleAcceptClick(product.id)}
+                    mt={2}
+                  >
+                    Accept Shipment
+                  </Button>
+                </Box>
+              ))}
+            </SimpleGrid>
+          )}
+        </Box>
 
         {/* Receive New Product Section */}
         <Box
@@ -617,6 +779,25 @@ export default function RetailerDashboard({
           <ModalCloseButton />
           <ModalBody pb={6}>
             <QRScanner onScan={handleScan} />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      {/* Story 7.17: Accept Shipment Modal */}
+      <Modal isOpen={isAcceptOpen} onClose={onAcceptClose} size="lg">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Accept Incoming Shipment</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            {acceptProductId && (
+              <TraceRecordForm
+                productId={acceptProductId}
+                userRole={userRole}
+                onSuccess={handleAcceptSuccess}
+                defaultAction="RECEIVED"
+              />
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>

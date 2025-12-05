@@ -1,8 +1,9 @@
 // src/components/trace/TraceRecordForm.tsx
 // Story 7.5: TraceRecordForm Component
+// Story 7.17: Added defaultAction prop for Accept workflow
 // Form for adding trace records to products on the blockchain
 
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import {
   Box,
   Button,
@@ -18,9 +19,17 @@ import {
   AlertIcon,
   useToast,
   Link,
+  Spinner,
 } from '@chakra-ui/react';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
 import { z } from 'zod';
+
+// Company type for recipient selection (Story 7.16)
+interface Company {
+  id: string;
+  name: string;
+  type: string;
+}
 
 // Role-action mapping (UX best practice: show only relevant options per role)
 // Reference: https://formsort.com/article/how-to-design-a-dropdown-field-in-a-form/
@@ -57,23 +66,63 @@ interface TraceRecordFormProps {
   productId: string;
   userRole: string;
   onSuccess?: () => void;
+  defaultAction?: string; // Story 7.17: Pre-select action (e.g., 'RECEIVED' for Accept workflow)
 }
 
 export function TraceRecordForm({
   productId,
   userRole,
   onSuccess,
+  defaultAction,
 }: TraceRecordFormProps) {
   const toast = useToast();
   const availableActions = ROLE_ACTIONS[userRole] || [];
 
-  // Form state
-  const [action, setAction] = useState('');
+  // Form state - initialize with defaultAction if provided and valid for this role
+  const initialAction = defaultAction && availableActions.includes(defaultAction) ? defaultAction : '';
+  const [action, setAction] = useState(initialAction);
   const [location, setLocation] = useState('');
   const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [apiError, setApiError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Story 7.16: Company selection for SHIPPED action
+  const [recipientCompanyId, setRecipientCompanyId] = useState('');
+  const [companies, setCompanies] = useState<Company[]>([]);
+  const [companiesLoading, setCompaniesLoading] = useState(false);
+  const [companiesError, setCompaniesError] = useState('');
+
+  // Fetch companies when SHIPPED action is selected
+  useEffect(() => {
+    if (action === 'SHIPPED') {
+      setCompaniesLoading(true);
+      setCompaniesError('');
+      fetch('/api/companies?type=DISTRIBUTOR,RETAILER&status=APPROVED')
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) {
+            setCompanies(data.companies);
+            if (data.companies.length === 0) {
+              setCompaniesError('No companies available to ship to');
+            }
+          } else {
+            setCompaniesError(data.error || 'Failed to load companies');
+          }
+        })
+        .catch(() => {
+          setCompaniesError('Failed to load companies');
+        })
+        .finally(() => {
+          setCompaniesLoading(false);
+        });
+    } else {
+      // Clear company selection when action changes
+      setRecipientCompanyId('');
+      setCompanies([]);
+      setCompaniesError('');
+    }
+  }, [action]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -90,14 +139,33 @@ export function TraceRecordForm({
       setErrors(fieldErrors);
       return;
     }
+
+    // Story 7.16: Validate recipient for SHIPPED action
+    if (action === 'SHIPPED' && !recipientCompanyId) {
+      setErrors((prev) => ({
+        ...prev,
+        recipientCompanyId: 'Recipient company is required for shipping',
+      }));
+      return;
+    }
     setErrors({});
 
     setIsLoading(true);
     try {
+      // Story 7.16: Include recipientCompanyId for SHIPPED
+      const requestBody: { action: string; location: string; notes: string; recipientCompanyId?: string } = {
+        action,
+        location,
+        notes,
+      };
+      if (action === 'SHIPPED') {
+        requestBody.recipientCompanyId = recipientCompanyId;
+      }
+
       const response = await fetch(`/api/products/${productId}/trace`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, location, notes }),
+        body: JSON.stringify(requestBody),
       });
 
       const data = await response.json();
@@ -140,6 +208,7 @@ export function TraceRecordForm({
       setAction('');
       setLocation('');
       setNotes('');
+      setRecipientCompanyId(''); // Story 7.16
       onSuccess?.();
     } catch (err) {
       console.error('Add trace record failed:', err);
@@ -186,6 +255,44 @@ export function TraceRecordForm({
           </Select>
           <FormErrorMessage>{errors.action}</FormErrorMessage>
         </FormControl>
+
+        {/* Story 7.16: Company selector for SHIPPED action */}
+        {action === 'SHIPPED' && (
+          <FormControl isInvalid={!!errors.recipientCompanyId} isRequired>
+            <FormLabel color="brand.dark">Ship to</FormLabel>
+            {companiesLoading ? (
+              <Box py={2}>
+                <Spinner size="sm" mr={2} />
+                <Text as="span" fontSize="sm" color="brand.muted">
+                  Loading companies...
+                </Text>
+              </Box>
+            ) : companiesError && companies.length === 0 ? (
+              <Alert status="warning" borderRadius="md" py={2}>
+                <AlertIcon />
+                <Text fontSize="sm">{companiesError}</Text>
+              </Alert>
+            ) : (
+              <Select
+                value={recipientCompanyId}
+                onChange={(e) => {
+                  setRecipientCompanyId(e.target.value);
+                  if (errors.recipientCompanyId)
+                    setErrors((prev) => ({ ...prev, recipientCompanyId: '' }));
+                }}
+                placeholder="Select recipient company"
+                isDisabled={isLoading || companies.length === 0}
+              >
+                {companies.map((company) => (
+                  <option key={company.id} value={company.id}>
+                    {company.name} ({company.type})
+                  </option>
+                ))}
+              </Select>
+            )}
+            <FormErrorMessage>{errors.recipientCompanyId}</FormErrorMessage>
+          </FormControl>
+        )}
 
         <FormControl isInvalid={!!errors.location} isRequired>
           <FormLabel color="brand.dark">Location</FormLabel>

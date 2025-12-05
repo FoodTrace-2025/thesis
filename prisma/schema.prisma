@@ -63,6 +63,7 @@ model Company {
   products            Product[] // Products registered by this company
   traceRecords        TraceRecord[] // Trace records from this company's users
   ownedProducts       Product[] @relation("ProductOwner") // Story 7.4: Products currently owned
+  incomingShipments   TraceRecord[] @relation("ShipmentRecipient") // Story 7.16: Shipments coming to this company
 
   @@index([status])
 }
@@ -171,6 +172,10 @@ model TraceRecord {
   transactionHash String   // Blockchain transaction hash
   blockchainIndex Int?     // Index in blockchain array (for verification)
   createdAt       DateTime @default(now())
+
+  // Story 7.16: Recipient selection - who is receiving this shipment?
+  recipientCompanyId String?
+  recipientCompany   Company? @relation("ShipmentRecipient", fields: [recipientCompanyId], references: [id])
 
   // Relations
   product         Product  @relation(fields: [productId], references: [id])

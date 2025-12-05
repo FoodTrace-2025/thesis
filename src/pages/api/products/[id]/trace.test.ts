@@ -103,6 +103,9 @@ jest.mock('@/lib/prisma', () => ({
     product: {
       findUnique: jest.fn(),
     },
+    company: {
+      findUnique: jest.fn(), // Story 7.16: For recipient company validation
+    },
     traceRecord: {
       create: jest.fn(),
     },
@@ -434,6 +437,12 @@ describe('/api/products/[id]/trace', () => {
         company: { ...mockCompany, id: 'distributor-company-id', type: 'DISTRIBUTOR' },
       });
 
+      // Story 7.16: Mock recipient company for SHIPPED action
+      (mockPrisma.company.findUnique as jest.Mock).mockResolvedValueOnce({
+        id: 'retailer-company-id',
+        status: 'APPROVED',
+      });
+
       await testApiHandler({
         pagesHandler: handler,
         params: { id: 'test-product-id' },
@@ -444,6 +453,7 @@ describe('/api/products/[id]/trace', () => {
             body: JSON.stringify({
               action: 'SHIPPED',
               location: 'Logistics Hub',
+              recipientCompanyId: 'retailer-company-id', // Story 7.16: Required for SHIPPED
             }),
           });
           expect(res.status).toBe(201);
@@ -521,17 +531,31 @@ describe('/api/products/[id]/trace', () => {
           });
         });
 
+        // Story 7.16: Mock recipient company for SHIPPED action
+        if (action === 'SHIPPED') {
+          (mockPrisma.company.findUnique as jest.Mock).mockResolvedValueOnce({
+            id: 'recipient-company-id',
+            status: 'APPROVED',
+          });
+        }
+
         await testApiHandler({
           pagesHandler: handler,
           params: { id: 'test-product-id' },
           test: async ({ fetch }) => {
+            // Story 7.16: Include recipientCompanyId for SHIPPED action
+            const body: { action: string; location: string; recipientCompanyId?: string } = {
+              action,
+              location: 'Test Location',
+            };
+            if (action === 'SHIPPED') {
+              body.recipientCompanyId = 'recipient-company-id';
+            }
+
             const res = await fetch({
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                action,
-                location: 'Test Location',
-              }),
+              body: JSON.stringify(body),
             });
             expect(res.status).toBe(201);
           },

@@ -1,6 +1,6 @@
 ### Epic 7: Supply Chain Tracking
 
-**Updated: 2025-12-05 (Session 69)** - All 10 stories complete (Epic 7 done)
+**Updated: 2025-12-05 (Session 72)** - 17/17 stories complete - EPIC COMPLETE
 
 **Priority:** 🔴 Must Have
 **Estimated Time:** 22-24 hours (Smart Contract 4h + Backend 6-7h + Frontend 12-13h)
@@ -289,24 +289,28 @@ export async function GET(req, { params }) {
 | 7.8 | Retailer Dashboard | 2h | ✅ Complete | YiLing |
 | 7.9 | Producer Dashboard - Trace Features | 1.5h | ✅ Complete | YiLing |
 | 7.10 | QR Scanner Component | 3h | ✅ Complete | YiLing |
-| 7.11 | SOLD Ownership Transfer Fix | 1h | 📋 Draft | TaiSheng |
-| 7.12 | Product Status Badges and Labels | 1.5h | 📋 Draft | YiLing |
-| 7.13 | Product History API | 1.5h | 📋 Draft | TaiSheng |
-| 7.14 | Distributor Dashboard Tabs | 2h | 📋 Draft | YiLing |
-| 7.15 | Retailer Dashboard Tabs | 2h | 📋 Draft | YiLing |
-| 7.16 | Producer Dashboard Labels | 1h | 📋 Draft | YiLing |
+| 7.11 | SOLD Ownership Transfer Fix | 1h | ✅ Complete | TaiSheng |
+| 7.12 | Product Status Badges and Labels | 1.5h | ✅ Complete | YiLing |
+| 7.13 | Product History API | 1.5h | ✅ Complete | TaiSheng |
+| 7.14 | Distributor Dashboard Tabs | 2h | ✅ Complete | YiLing |
+| 7.15 | Retailer Dashboard Tabs | 2h | ✅ Complete | YiLing |
+| 7.16 | SHIPPED Action - Recipient Selection | 2h | ✅ Complete | TaiSheng + YiLing |
+| 7.17 | Incoming Shipments Visibility | 2.5h | ✅ Complete | TaiSheng + YiLing |
 
 **Story Breakdown Update (Session 67):** Original Stories 7.6-7.7 split into 7.6-7.10 for better testability and context management. Each story is independently testable and scoped to 2 hours or less. QR Scanner (7.10) added as shared component for product lookup, replacing manual ID entry.
 
 **Story 7.4 Addition (Session 65):** Added Product Ownership Tracking to enable supply chain dashboards to show products in each company's custody. Implements "chain of custody" pattern - ownership transfers on RECEIVED action. This is a prerequisite for frontend stories 7.5-7.10.
 
-**Stories 7.11-7.16 Addition (Session 71 - UX Improvements):** Added 6 new stories to improve dashboard UX based on user feedback. Key changes:
-- 7.11: SOLD action now sets `currentOwnerId = null` (product left supply chain)
-- 7.12: Status badges (IN_STOCK/SOLD) and clear current owner display
-- 7.13: New `history=me` API endpoint for "Product History" view
-- 7.14-7.15: Tab navigation for Distributor/Retailer dashboards
-- 7.16: Updated labels and status display for Producer dashboard
-Total additional estimate: ~9 hours.
+**Stories 7.11-7.17 Addition (Session 71-72 - UX Improvements):** Added stories to improve dashboard UX based on user feedback. Key changes:
+- 7.11: SOLD action now sets `currentOwnerId = null` (product left supply chain) ✅
+- 7.12: Status badges (IN_STOCK/SOLD), producer labels, clear current owner display ✅
+- 7.13: New `history=me` API endpoint for "Product History" view ✅
+- 7.14-7.15: Tab navigation for Distributor/Retailer dashboards ✅
+- 7.16: SHIPPED Action - Recipient Selection (select who receives shipment) ✅
+- 7.17: Incoming Shipments Visibility (dashboard section + accept workflow) ✅
+Total additional estimate: ~12.5 hours - ALL COMPLETE.
+
+**Story Split (Session 72):** Original 7.16 (3-4h) split into 7.16 + 7.17 per [Humanizing Work vertical slicing](https://www.humanizingwork.com/the-humanizing-work-guide-to-splitting-user-stories/) best practices. Each story is independently testable and delivers end-to-end value.
 
 #### Team Assignment
 

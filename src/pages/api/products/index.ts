@@ -2,7 +2,8 @@
 // Story 7.4: Product Ownership Tracking
 // Story 7.12: Product Status Badges - Added status field
 // Story 7.13: Product History API - Added history=me filter
-// GET /api/products - List products with optional owner/company/history filter
+// Story 7.17: Incoming Shipments API - Added incoming=me filter
+// GET /api/products - List products with optional owner/company/history/incoming filter
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
@@ -15,12 +16,13 @@ const querySchema = z.object({
   owner: z.enum(['me']).optional(), // Products currently owned by user's company
   company: z.enum(['me']).optional(), // Products registered by user's company (for producers)
   history: z.enum(['me']).optional(), // Story 7.13: Products where company has ANY trace record
+  incoming: z.enum(['me']).optional(), // Story 7.17: Products shipped to me but not yet received
   limit: z.coerce.number().int().min(1).max(100).default(50),
   offset: z.coerce.number().int().min(0).default(0),
 });
 
 // Response types
-type ProductStatus = 'IN_STOCK' | 'SOLD';
+type ProductStatus = 'IN_STOCK' | 'SOLD' | 'IN_TRANSIT';
 
 interface ProductResponse {
   id: string;
@@ -31,6 +33,9 @@ interface ProductResponse {
   currentOwner: { name: string } | null;
   status: ProductStatus;
   createdAt: string;
+  // Story 7.17: Shipping info (only for incoming=me)
+  shippedBy?: { name: string };
+  shippedAt?: string;
 }
 
 interface SuccessResponse {
@@ -99,13 +104,13 @@ export default async function handler(
       });
     }
 
-    const { owner, company, history, limit, offset } = validation.data;
+    const { owner, company, history, incoming, limit, offset } = validation.data;
 
-    // 3. Story 7.13: Validate mutually exclusive filters
-    const filterCount = [owner, company, history].filter(Boolean).length;
+    // 3. Story 7.13 + 7.17: Validate mutually exclusive filters
+    const filterCount = [owner, company, history, incoming].filter(Boolean).length;
     if (filterCount > 1) {
       return res.status(400).json({
-        error: 'Only one filter allowed: owner, company, or history',
+        error: 'Only one filter allowed: owner, company, history, or incoming',
         code: 'VALIDATION_ERROR',
       });
     }
@@ -189,7 +194,89 @@ export default async function handler(
       });
     }
 
-    // 8. Public access: return all products
+    // 8. Story 7.17: incoming=me - products shipped to me but not yet received
+    if (incoming === 'me') {
+      const session = await getServerSession(req, res, authOptions);
+      if (!session?.user?.companyId) {
+        return res.status(401).json({
+          error: 'Authentication required',
+          code: 'UNAUTHORIZED',
+        });
+      }
+
+      const myCompanyId = session.user.companyId;
+
+      // Find products with SHIPPED trace to me, without my RECEIVED
+      const whereClause = {
+        traceRecords: {
+          some: {
+            action: 'SHIPPED',
+            recipientCompanyId: myCompanyId,
+          },
+        },
+        NOT: {
+          traceRecords: {
+            some: {
+              action: 'RECEIVED',
+              companyId: myCompanyId,
+            },
+          },
+        },
+      };
+
+      const [products, total] = await Promise.all([
+        prisma.product.findMany({
+          where: whereClause,
+          include: {
+            currentOwner: { select: { name: true } },
+            // Include the SHIPPED trace to get shipper info
+            traceRecords: {
+              where: {
+                action: 'SHIPPED',
+                recipientCompanyId: myCompanyId,
+              },
+              orderBy: { createdAt: 'desc' },
+              take: 1,
+              include: {
+                company: { select: { name: true } },
+              },
+            },
+          },
+          take: limit,
+          skip: offset,
+          orderBy: { createdAt: 'desc' },
+        }),
+        prisma.product.count({ where: whereClause }),
+      ]);
+
+      // Format response with IN_TRANSIT status and shipping info
+      const formattedProducts: ProductResponse[] = products.map((product) => {
+        const shippedTrace = product.traceRecords[0]; // Most recent SHIPPED trace to me
+        return {
+          id: product.id,
+          name: product.name,
+          origin: product.origin,
+          blockchainId: product.blockchainId,
+          harvestDate: product.harvestDate.toISOString(),
+          currentOwner: product.currentOwner,
+          status: 'IN_TRANSIT' as ProductStatus,
+          createdAt: product.createdAt.toISOString(),
+          // Shipping info
+          shippedBy: shippedTrace?.company ? { name: shippedTrace.company.name } : undefined,
+          shippedAt: shippedTrace?.createdAt.toISOString(),
+        };
+      });
+
+      return res.status(200).json({
+        success: true,
+        products: formattedProducts,
+        total,
+        limit,
+        offset,
+      });
+    }
+
+    // 9. Public access: return all products
     const [products, total] = await Promise.all([
       prisma.product.findMany({
         include: { currentOwner: { select: { name: true } } },
