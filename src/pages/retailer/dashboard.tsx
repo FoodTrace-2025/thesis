@@ -3,7 +3,7 @@
 // Same pattern as Distributor Dashboard (Story 7.7)
 // RETAILER role only - displays products in company's custody
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
@@ -31,9 +31,10 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { InfoIcon } from '@chakra-ui/icons';
+import { InfoIcon, ViewIcon } from '@chakra-ui/icons';
 import { Layout } from '@/components/layout';
 import { TraceRecordForm, TraceTimeline } from '@/components/trace';
+import { QRScanner } from '@/components/scanner';
 
 // Product type matching API response (Story 7.4)
 interface Product {
@@ -108,6 +109,13 @@ export default function RetailerDashboard({
   const [lookupError, setLookupError] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
 
+  // QR Scanner state (Story 7.10)
+  const {
+    isOpen: isScannerOpen,
+    onOpen: onScannerOpen,
+    onClose: onScannerClose,
+  } = useDisclosure();
+
   // Fetch products - callable for retry functionality
   const fetchProducts = async () => {
     setIsLoading(true);
@@ -157,15 +165,16 @@ export default function RetailerDashboard({
     setExpandedProductId((prev) => (prev === productId ? null : productId));
   };
 
-  // Lookup product by blockchainId
-  const handleLookup = async () => {
-    if (!blockchainIdInput.trim()) return;
+  // Lookup product by blockchainId (Story 7.10 enhancement)
+  const handleLookup = async (idOverride?: string) => {
+    const idToLookup = idOverride || blockchainIdInput.trim();
+    if (!idToLookup) return;
     setIsLookingUp(true);
     setLookupError('');
     setLookupProduct(null);
 
     try {
-      const response = await fetch(`/api/products/${blockchainIdInput}`);
+      const response = await fetch(`/api/products/${idToLookup}`);
       const data = await response.json();
       if (!response.ok) {
         setLookupError(data.error || 'Product not found');
@@ -178,6 +187,16 @@ export default function RetailerDashboard({
       setIsLookingUp(false);
     }
   };
+
+  // Handle QR scan success (Story 7.10)
+  const handleScan = useCallback(
+    (productId: string) => {
+      onScannerClose();
+      setBlockchainIdInput(productId);
+      handleLookup(productId);
+    },
+    [onScannerClose]
+  );
 
   // Handle receive success
   const handleReceiveSuccess = () => {
@@ -210,9 +229,9 @@ export default function RetailerDashboard({
           <Heading size="md" color="brand.dark" mb={4}>
             Receive New Product
           </Heading>
-          <HStack spacing={4} mb={4}>
+          <HStack spacing={4} mb={4} flexWrap="wrap">
             <Input
-              placeholder="Enter Blockchain ID (e.g., 100)"
+              placeholder="Enter Blockchain ID (e.g., 1)"
               value={blockchainIdInput}
               onChange={(e) => setBlockchainIdInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleLookup()}
@@ -220,11 +239,18 @@ export default function RetailerDashboard({
             />
             <Button
               colorScheme="green"
-              onClick={handleLookup}
+              onClick={() => handleLookup()}
               isLoading={isLookingUp}
               loadingText="Looking up..."
             >
               Look Up
+            </Button>
+            <Button
+              variant="outline"
+              leftIcon={<ViewIcon />}
+              onClick={onScannerOpen}
+            >
+              Scan QR
             </Button>
           </HStack>
 
@@ -389,6 +415,18 @@ export default function RetailerDashboard({
                 onSuccess={handleTraceSuccess}
               />
             )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      {/* QR Scanner Modal (Story 7.10) */}
+      <Modal isOpen={isScannerOpen} onClose={onScannerClose} size="lg">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Scan Product QR Code</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <QRScanner onScan={handleScan} />
           </ModalBody>
         </ModalContent>
       </Modal>
