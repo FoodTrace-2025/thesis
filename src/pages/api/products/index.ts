@@ -1,5 +1,6 @@
 // Products List API
 // Story 7.4: Product Ownership Tracking
+// Story 7.12: Product Status Badges - Added status field
 // GET /api/products - List products with optional owner filter
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -17,6 +18,8 @@ const querySchema = z.object({
 });
 
 // Response types
+type ProductStatus = 'IN_STOCK' | 'SOLD';
+
 interface ProductResponse {
   id: string;
   name: string;
@@ -24,6 +27,7 @@ interface ProductResponse {
   blockchainId: number;
   harvestDate: string;
   currentOwner: { name: string } | null;
+  status: ProductStatus;
   createdAt: string;
 }
 
@@ -42,6 +46,36 @@ interface ErrorResponse {
 }
 
 type ApiResponse = SuccessResponse | ErrorResponse;
+
+// Story 7.12: Helper to get status for each product from last trace action
+// Note: N+1 query pattern accepted for POC scale (~50-100 products per request)
+// TODO: Optimize with aggregation query if performance becomes an issue
+async function getProductsWithStatus(
+  products: { id: string; name: string; origin: string; blockchainId: number; harvestDate: Date; currentOwner: { name: string } | null; createdAt: Date }[]
+): Promise<ProductResponse[]> {
+  return Promise.all(
+    products.map(async (product) => {
+      const lastTrace = await prisma.traceRecord.findFirst({
+        where: { productId: product.id },
+        orderBy: { createdAt: 'desc' },
+        select: { action: true },
+      });
+
+      const status: ProductStatus = lastTrace?.action === 'SOLD' ? 'SOLD' : 'IN_STOCK';
+
+      return {
+        id: product.id,
+        name: product.name,
+        origin: product.origin,
+        blockchainId: product.blockchainId,
+        harvestDate: product.harvestDate.toISOString(),
+        currentOwner: product.currentOwner,
+        status,
+        createdAt: product.createdAt.toISOString(),
+      };
+    })
+  );
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -93,16 +127,8 @@ export default async function handler(
         prisma.product.count({ where: whereClause }),
       ]);
 
-      // 5. Format response
-      const formattedProducts: ProductResponse[] = products.map((product) => ({
-        id: product.id,
-        name: product.name,
-        origin: product.origin,
-        blockchainId: product.blockchainId,
-        harvestDate: product.harvestDate.toISOString(),
-        currentOwner: product.currentOwner,
-        createdAt: product.createdAt.toISOString(),
-      }));
+      // 5. Format response with status (Story 7.12)
+      const formattedProducts = await getProductsWithStatus(products);
 
       return res.status(200).json({
         success: true,
@@ -124,16 +150,8 @@ export default async function handler(
       prisma.product.count(),
     ]);
 
-    // 7. Format response
-    const formattedProducts: ProductResponse[] = products.map((product) => ({
-      id: product.id,
-      name: product.name,
-      origin: product.origin,
-      blockchainId: product.blockchainId,
-      harvestDate: product.harvestDate.toISOString(),
-      currentOwner: product.currentOwner,
-      createdAt: product.createdAt.toISOString(),
-    }));
+    // 7. Format response with status (Story 7.12)
+    const formattedProducts = await getProductsWithStatus(products);
 
     return res.status(200).json({
       success: true,

@@ -34,9 +34,10 @@ import {
 import { InfoIcon, ViewIcon } from '@chakra-ui/icons';
 import { Layout } from '@/components/layout';
 import { TraceRecordForm, TraceTimeline } from '@/components/trace';
+import { StatusBadge, type ProductStatus } from '@/components/product';
 import { QRScanner } from '@/components/scanner';
 
-// Product type matching API response (Story 7.4)
+// Product type matching API response (Story 7.4, 7.12: Added status field)
 interface Product {
   id: string;
   name: string;
@@ -44,6 +45,7 @@ interface Product {
   blockchainId: number;
   harvestDate: string;
   currentOwner: { name: string } | null;
+  status: ProductStatus;
   createdAt: string;
 }
 
@@ -345,18 +347,25 @@ export default function RetailerDashboard({
                     bg="brand.surface"
                     p={4}
                   >
-                    <Heading size="sm" color="brand.dark" mb={2}>
-                      {product.name}
-                    </Heading>
+                    {/* Story 7.12: Name + Status Badge */}
+                    <HStack justify="space-between" mb={2}>
+                      <Heading size="sm" color="brand.dark">
+                        {product.name}
+                      </Heading>
+                      <StatusBadge status={product.status} />
+                    </HStack>
                     <Text fontSize="sm" color="brand.muted">
                       Product #{product.blockchainId}
                     </Text>
                     <Text fontSize="sm" color="brand.muted">
                       Origin: {product.origin}
                     </Text>
-                    <Text fontSize="sm" color="brand.muted" mb={3}>
+                    <Text fontSize="sm" color="brand.muted">
                       Harvested:{' '}
                       {new Date(product.harvestDate).toLocaleDateString()}
+                    </Text>
+                    <Text fontSize="sm" color="brand.muted" mb={3}>
+                      Current Owner: {product.currentOwner?.name || 'Sold to Consumer'}
                     </Text>
 
                     {/* Action buttons */}

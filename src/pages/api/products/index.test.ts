@@ -20,12 +20,15 @@ import { prisma } from '@/lib/prisma';
 
 const { getServerSession } = jest.requireMock('next-auth');
 
-// Mock Prisma
+// Mock Prisma (Story 7.12: Added traceRecord for status)
 jest.mock('@/lib/prisma', () => ({
   prisma: {
     product: {
       findMany: jest.fn(),
       count: jest.fn(),
+    },
+    traceRecord: {
+      findFirst: jest.fn(),
     },
   },
 }));
@@ -74,6 +77,11 @@ describe('GET /api/products', () => {
     // Default: products exist
     (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(mockProducts);
     (mockPrisma.product.count as jest.Mock).mockResolvedValue(2);
+
+    // Story 7.12: Default - products are IN_STOCK (last action not SOLD)
+    (mockPrisma.traceRecord.findFirst as jest.Mock).mockResolvedValue({
+      action: 'RECEIVED',
+    });
   });
 
   // ==================== PUBLIC ACCESS ====================
@@ -431,6 +439,95 @@ describe('GET /api/products', () => {
           expect(res.status).toBe(200);
           const json = await res.json();
           expect(json.products[0].currentOwner).toBeNull();
+        },
+      });
+    });
+  });
+
+  // ==================== STORY 7.12: STATUS FIELD ====================
+
+  describe('Product Status Field', () => {
+    it('should return IN_STOCK status for products with no trace records', async () => {
+      // No trace records = null result from findFirst
+      (mockPrisma.traceRecord.findFirst as jest.Mock).mockResolvedValue(null);
+
+      await testApiHandler({
+        pagesHandler: handler,
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(200);
+          const json = await res.json();
+          expect(json.products[0].status).toBe('IN_STOCK');
+          expect(json.products[1].status).toBe('IN_STOCK');
+        },
+      });
+    });
+
+    it('should return IN_STOCK status for products with last action RECEIVED', async () => {
+      (mockPrisma.traceRecord.findFirst as jest.Mock).mockResolvedValue({
+        action: 'RECEIVED',
+      });
+
+      await testApiHandler({
+        pagesHandler: handler,
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(200);
+          const json = await res.json();
+          expect(json.products[0].status).toBe('IN_STOCK');
+        },
+      });
+    });
+
+    it('should return SOLD status for products with last action SOLD', async () => {
+      (mockPrisma.traceRecord.findFirst as jest.Mock).mockResolvedValue({
+        action: 'SOLD',
+      });
+
+      await testApiHandler({
+        pagesHandler: handler,
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(200);
+          const json = await res.json();
+          expect(json.products[0].status).toBe('SOLD');
+          expect(json.products[1].status).toBe('SOLD');
+        },
+      });
+    });
+
+    it('should return IN_STOCK for non-SOLD actions (QUALITY_CHECK, SHIPPED, STOCKED)', async () => {
+      // Test each non-SOLD action
+      const nonSoldActions = ['QUALITY_CHECK', 'SHIPPED', 'STOCKED'];
+
+      for (const action of nonSoldActions) {
+        (mockPrisma.traceRecord.findFirst as jest.Mock).mockResolvedValue({ action });
+
+        await testApiHandler({
+          pagesHandler: handler,
+          test: async ({ fetch }) => {
+            const res = await fetch({ method: 'GET' });
+            const json = await res.json();
+            expect(json.products[0].status).toBe('IN_STOCK');
+          },
+        });
+      }
+    });
+
+    it('should include status field in response for authenticated requests', async () => {
+      (mockPrisma.traceRecord.findFirst as jest.Mock).mockResolvedValue({
+        action: 'RECEIVED',
+      });
+
+      await testApiHandler({
+        pagesHandler: handler,
+        url: '/api/products?owner=me',
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          expect(res.status).toBe(200);
+          const json = await res.json();
+          expect(json.products[0]).toHaveProperty('status');
+          expect(json.products[0].status).toBe('IN_STOCK');
         },
       });
     });

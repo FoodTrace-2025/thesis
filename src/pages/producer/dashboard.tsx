@@ -33,9 +33,10 @@ import {
 import { InfoIcon } from '@chakra-ui/icons';
 import { Layout } from '@/components/layout';
 import { TraceRecordForm, TraceTimeline } from '@/components/trace';
+import { StatusBadge, type ProductStatus } from '@/components/product';
 import NextLink from 'next/link';
 
-// Product type matching API response
+// Product type matching API response (Story 7.12: Added status field)
 interface Product {
   id: string;
   name: string;
@@ -43,6 +44,7 @@ interface Product {
   blockchainId: number;
   harvestDate: string;
   currentOwner: { name: string } | null;
+  status: ProductStatus;
   createdAt: string;
 }
 
@@ -164,9 +166,10 @@ export default function ProducerDashboard({
           </Button>
         </Box>
 
+        {/* Story 7.12: Updated section label */}
         <Box>
           <Heading size="md" color="brand.dark" mb={4}>
-            Registered Products
+            My Registered Products
           </Heading>
 
           {/* Loading state */}
@@ -187,12 +190,12 @@ export default function ProducerDashboard({
             </Alert>
           )}
 
-          {/* Empty state */}
+          {/* Empty state (Story 7.12: Updated message) */}
           {!isLoading && !error && products.length === 0 && (
             <Center py={8} flexDirection="column">
               <Icon as={InfoIcon} boxSize={8} color="brand.muted" mb={3} />
               <Text color="brand.muted" fontWeight="medium">
-                No products registered yet
+                No products in your registry
               </Text>
               <Text color="brand.muted" fontSize="sm" mt={1}>
                 Click &quot;Register New Product&quot; to add your first product.
@@ -216,9 +219,13 @@ export default function ProducerDashboard({
                     bg="brand.surface"
                     p={4}
                   >
-                    <Heading size="sm" color="brand.dark" mb={2}>
-                      {product.name}
-                    </Heading>
+                    {/* Story 7.12: Name + Status Badge */}
+                    <HStack justify="space-between" mb={2}>
+                      <Heading size="sm" color="brand.dark">
+                        {product.name}
+                      </Heading>
+                      <StatusBadge status={product.status} />
+                    </HStack>
                     <Text fontSize="sm" color="brand.muted">
                       Product #{product.blockchainId}
                     </Text>
@@ -230,7 +237,7 @@ export default function ProducerDashboard({
                       {new Date(product.harvestDate).toLocaleDateString()}
                     </Text>
                     <Text fontSize="sm" color="brand.muted" mb={3}>
-                      Current Owner: {product.currentOwner?.name || 'Unknown'}
+                      Current Owner: {product.currentOwner?.name || 'Sold to Consumer'}
                     </Text>
 
                     {/* Action buttons - only show Add Trace if still owned by producer */}
