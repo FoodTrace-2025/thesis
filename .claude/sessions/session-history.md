@@ -4,6 +4,21 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 68 (2025-12-05) - Trace API Fixes + Ownership UI
+
+### Session 68 Achievements
+
+✅ **Trace API 500 Errors Fixed**: 4 root causes (wallet key mismatch, no gas, products not on chain, roles not granted)
+✅ **Company Approval Enhanced**: approve.ts now grants blockchain roles for ALL company types (not just PRODUCER)
+✅ **Producer Dashboard Enhanced**: Full trace features (product list, Add Trace modal, View Timeline)
+✅ **Products API Extended**: Added `company=me` filter for producer-registered products
+✅ **Ownership-Based UI**: Add Trace button hidden after product ownership transfers
+✅ **Distributor Dashboard Updated**: Same ownership check applied to distributor trace button
+
+**Impact:** Trace API fully functional. Producer and Distributor dashboards enhanced with trace features. Ready for Story 7.8 (Retailer Dashboard).
+
+---
+
 ## Session 67 (2025-12-04) - Epic 7 Stories 7.6-7.10 Created
 
 ### Session 67 Achievements
@@ -123,19 +138,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 59 (2025-12-03) - Story 5.4 Complete, Role-Based Dashboards
-
-### Session 59 Achievements
-
-✅ **Story 5.4 Implemented**: Role-based routing - /dashboard now redirects to role-specific dashboards
-✅ **Dashboard Stubs Created**: producer/dashboard, distributor/dashboard, retailer/dashboard pages
-✅ **Link/Button Pattern Fixed**: Story template corrected to use `Button as={NextLink}` pattern
-✅ **Seed.ts Extended**: Added DISTRIBUTOR and RETAILER test users for testing
-✅ **Manual Testing Verified**: All 11 acceptance criteria passed (4 role dashboards + role protection)
-✅ **124 Tests Passing**: No regressions, build successful
-
-**Impact:** Epic 5 Story 5.4 complete. Role-based routing foundation established for all business user dashboards.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (59-68). Older sessions (1-58) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (60-69). Older sessions (1-59) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md

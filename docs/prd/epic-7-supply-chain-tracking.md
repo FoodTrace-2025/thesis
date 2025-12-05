@@ -284,10 +284,10 @@ export async function GET(req, { params }) {
 | 7.3 | GET Trace History API | 1.5h | ✅ Complete | TaiSheng |
 | 7.4 | Product Ownership Tracking | 2-3h | ✅ Complete | TaiSheng |
 | 7.5 | TraceRecordForm + Timeline Components | 3h | ✅ Complete | YiLing |
-| 7.6 | Distributor Dashboard - Product List & Layout | 2h | Pending | YiLing |
-| 7.7 | Distributor Dashboard - Trace Features | 2h | Pending | YiLing |
-| 7.8 | Retailer Dashboard | 2h | Pending | YiLing |
-| 7.9 | Producer Dashboard - Trace Features | 1.5h | Pending | YiLing |
+| 7.6 | Distributor Dashboard - Product List & Layout | 2h | ✅ Complete | YiLing |
+| 7.7 | Distributor Dashboard - Trace Features | 2h | ✅ Complete | YiLing |
+| 7.8 | Retailer Dashboard | 2h | ✅ Complete | YiLing |
+| 7.9 | Producer Dashboard - Trace Features | 1.5h | ✅ Complete | YiLing |
 | 7.10 | QR Scanner Component | 3h | Pending | YiLing |
 
 **Story Breakdown Update (Session 67):** Original Stories 7.6-7.7 split into 7.6-7.10 for better testability and context management. Each story is independently testable and scoped to 2 hours or less. QR Scanner (7.10) added as shared component for product lookup, replacing manual ID entry.
