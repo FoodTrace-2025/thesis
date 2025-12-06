@@ -60,6 +60,37 @@ End-to-end validation confirmed complete supply chain workflows function correct
 
 **Scenario 1: Complete Supply Chain Journey**
 
+```mermaid
+flowchart TB
+    subgraph Producer
+        P1[Register Product] --> P2[QR Code Generated]
+        P2 --> P3[SHIPPED to Distributor]
+    end
+
+    subgraph Distributor
+        D1[View Incoming Shipment] --> D2[Accept → RECEIVED]
+        D2 --> D3[QUALITY_CHECK]
+        D3 --> D4[SHIPPED to Retailer]
+    end
+
+    subgraph Retailer
+        R1[View Incoming Shipment] --> R2[Accept → RECEIVED]
+        R2 --> R3[STOCKED]
+        R3 --> R4[SOLD]
+    end
+
+    subgraph Consumer
+        C1[Scan QR Code] --> C2[View Complete Timeline]
+        C2 --> C3[Verify on Etherscan]
+    end
+
+    P3 --> D1
+    D4 --> R1
+    R4 -.->|Wallet-Free| C1
+```
+
+**Figure 6.1:** Complete supply chain journey showing trace record actions at each stage. Solid arrows indicate ownership transfer; dashed arrow indicates wallet-free consumer access.
+
 Producer registered "Organic Blueberries" with origin "Helsinki Farm" and harvest date. System response: blockchain confirmation in ~12-15 seconds, QR code generated automatically, product visible in Producer dashboard. Distributor logged in, viewed "Incoming Shipments" section showing product shipped to their company. Distributor clicked "Accept" → RECEIVED trace recorded on blockchain → product moved to "In Custody" tab. Distributor added QUALITY_CHECK trace with location notes. Distributor selected recipient company and clicked SHIPPED. Retailer viewed incoming shipment, accepted product (RECEIVED trace), added STOCKED trace. Retailer marked product SOLD. Consumer scanned QR code (wallet-free), viewed complete timeline showing all trace events with timestamps, actors, and Etherscan verification links.
 
 **Validation Results:**
