@@ -1,16 +1,15 @@
 # Chapter 5: System Implementation
 
-This chapter describes the implementation of the supporting system components that connect end users to the smart contracts detailed in Chapter 4. It covers the backend architecture including database schema design, API route implementation, and Web3 integration using Wagmi v2 (Section 5.1), explains the frontend development of four role-specific user interfaces built with Next.js and Chakra UI (Section 5.2), and details the IoT simulator implementation providing realistic sensor data for cold chain monitoring (Section 5.3). Together, these components demonstrate how blockchain technology can be made accessible to mainstream users while maintaining the transparency and immutability benefits established in the literature review.
+This chapter describes the implementation of the supporting system components that connect end users to the smart contract detailed in Chapter 4. It covers the backend architecture including database schema design, API route implementation, and Web3 integration using Wagmi v2 (Section 5.1), and explains the frontend development of role-specific user interfaces built with Next.js and Chakra UI (Section 5.2). Together, these components demonstrate how blockchain technology can be made accessible to mainstream users while maintaining the transparency and immutability benefits established in the literature review.
 
-**Target Length:** 2,200-2,700 words (~5-6 pages)
-**Owners:** TaiSheng (Backend), YiLing (Frontend + IoT Simulator)
-**Purpose:** Detail the supporting system components connecting users to smart contracts - backend API, Web3 integration, frontend interfaces, and IoT simulation
+**Target Length:** 1,800-2,200 words (~4-5 pages)
+**Owners:** TaiSheng (Backend), YiLing (Frontend)
+**Purpose:** Detail the supporting system components connecting users to smart contract - backend API, Web3 integration, and frontend interfaces
 
-**Note:** This chapter will reference:
-
-- Section 2.4.1 (Custodial Wallet Patterns - to be written) → Backend correspondence
+**Note:** This chapter references:
+- Section 2.4.1 (Custodial Wallet Patterns) → Backend correspondence
 - Section 2.4.2 (Wallet-Free Consumer Access) → Frontend correspondence
-- Section 2.4.3 (IoT-Blockchain Integration - to be written) → IoT Simulator correspondence
+- IoT sensor integration (Epic 8) was deferred to future work—see Chapter 8 for proposed design
 
 ---
 
@@ -24,23 +23,33 @@ The backend architecture uses Next.js 14 API routes (Next.js, 2024) for serverle
 
 ### 5.1.1 Database Schema (Prisma + Supabase)
 
-The PostgreSQL database schema follows normalized relational database principles while accommodating blockchain data patterns. Primary tables include Product (stores off-chain metadata linked to on-chain product IDs), TraceRecord (caches blockchain trace events for fast queries), SensorReading (stores IoT simulator data), and User/Company (authentication and multi-tenancy). Each table includes blockchain-specific fields: transactionHash (links to Ethereum transaction), blockNumber (for event ordering), and onChainId (maps to smart contract product ID).
+The PostgreSQL database schema follows normalized relational database principles while accommodating blockchain data patterns. Primary tables include:
 
-Foreign key relationships enforce referential integrity between Product, TraceRecord, SensorReading, User, and Company tables. Prisma ORM (Prisma, 2024) manages schema evolution through declarative migrations with automatic rollback capabilities, providing type-safe database access and preventing SQL injection vulnerabilities. Connection pooling through Supabase's pgBouncer (TRANSACTION mode) prevents connection exhaustion in Next.js serverless environment where each API route invocation creates a new database client.
+- **Product:** Stores off-chain metadata linked to on-chain product IDs (blockchainId, name, origin, harvestDate, qrCodeUrl)
+- **TraceRecord:** Caches blockchain trace events for fast queries (action, location, notes, transactionHash, blockchainIndex)
+- **Company:** Multi-tenancy with encrypted wallet storage (encryptedPrivateKey, walletAddress, type, status)
+- **User:** Authentication with role-based access (email, passwordHash, role, companyId)
+- **AuditLog:** Tracks all system operations (action, details, userId, companyId)
 
-Database indexing strategy prioritizes consumer query performance: composite index on (Product.onChainId, TraceRecord.timestamp) enables efficient trace history retrieval, and index on SensorReading.timestamp enables cold chain monitoring queries.
+Each table includes blockchain-specific fields: transactionHash (links to Ethereum transaction), blockchainIndex (for trace ordering), and blockchainId (maps to smart contract product ID).
+
+Foreign key relationships enforce referential integrity between Product, TraceRecord, User, and Company tables. Prisma ORM (Prisma, 2024) manages schema evolution through declarative migrations with automatic rollback capabilities, providing type-safe database access and preventing SQL injection vulnerabilities. Connection pooling through Supabase's pgBouncer (TRANSACTION mode) prevents connection exhaustion in Next.js serverless environment where each API route invocation creates a new database client.
+
+Database indexing strategy prioritizes consumer query performance: composite index on (Product.blockchainId, TraceRecord.createdAt) enables efficient trace history retrieval.
 
 ### 5.1.2 API Route Architecture
 
-API routes follow REST conventions with domain-based organization: `/api/products/*` for product operations, `/api/traces/*` for trace records, `/api/sensors/*` for IoT data, and `/api/blockchain/*` for direct contract interactions. Each route implements authentication (NextAuth.js session validation), authorization (role-based access control), validation (Zod schema validation), business logic (Prisma database queries and Wagmi blockchain interactions), and error handling (structured responses with appropriate HTTP status codes).
+API routes follow REST conventions with domain-based organization: `/api/products/*` for product operations, `/api/admin/*` for platform administration, and `/api/companies/*` for company management. Each route implements authentication (NextAuth.js session validation), authorization (role-based access control), validation (Zod schema validation), business logic (Prisma database queries and Viem blockchain interactions), and error handling (structured responses with appropriate HTTP status codes).
 
 Key endpoints include:
 
-- `POST /api/products/register` - Registers product to blockchain and database
+- `POST /api/products` - Registers product to blockchain and database (PRODUCER_ROLE required)
+- `GET /api/products` - Lists products with filtering (owner=me, history=me, incoming=me)
 - `GET /api/products/[id]` - Retrieves product details (public, wallet-free)
-- `POST /api/traces/add` - Adds trace record to blockchain and database
-- `GET /api/traces/[productId]` - Retrieves complete trace history
-- `POST /api/sensors/simulate` - Records IoT simulator data
+- `POST /api/products/[id]/trace` - Adds trace record to blockchain (PRODUCER/DISTRIBUTOR/RETAILER required)
+- `GET /api/products/[id]/trace-history` - Retrieves complete trace history (public)
+- `POST /api/admin/companies/[id]/approve` - Approves company and grants blockchain role
+- `GET /api/companies` - Lists companies for recipient selection in SHIPPED actions
 
 Performance optimization employs caching strategies: React Query on frontend caches blockchain read queries for 30 seconds, reducing redundant RPC calls and improving perceived performance.
 
@@ -95,9 +104,9 @@ All three business user dashboards share common architectural patterns while imp
 
 **Producer Dashboard** provides product registration form collecting product name, origin location, harvest date, weight, and product photo. Client-side validation using React Hook Form with Zod schema ensures data completeness before blockchain submission. Form submission triggers API request creating blockchain transaction and database record atomically. Transaction state feedback displays loading spinner during blockchain confirmation (12-15 second Sepolia block time), success message with product ID and QR code upon confirmation, and detailed error messages if transaction fails. Product list view displays registered products with thumbnails, action buttons for QR code generation (downloads 300x300px PNG using react-qr-code library), and transfer functionality to downstream partners.
 
-**Distributor Dashboard** focuses on receiving products and adding trace records during transport/storage. Main view displays pending shipments with product details and sender information. Trace record form provides action type selection (Received, Quality_Check, Shipped, Stored) with context-specific fields. Product detail view shows complete supply chain journey using vertical timeline component displaying all trace records chronologically with icons, actor addresses, locations, and timestamps. Temperature sensor data displayed as line chart with color-coded zones (green: safe, yellow: warning, red: critical).
+**Distributor Dashboard** focuses on receiving products and adding trace records during transport/storage. Dashboard organized with tabs: "In Custody" (products currently owned) and "Product History" (previously handled products). "Incoming Shipments" section above tabs displays products shipped to this company with "Accept" button triggering RECEIVED trace. Trace record form provides action type selection (RECEIVED, QUALITY_CHECK, SHIPPED) with location and notes fields. Product detail view shows complete supply chain journey using vertical timeline component displaying all trace records chronologically with action badges, actor companies, locations, timestamps, and Etherscan links for blockchain verification.
 
-**Retailer Dashboard** mirrors distributor functionality with retail-specific actions including inventory management panel, sales recording interface, and batch operations for marking multiple products sold simultaneously. Products approaching expiration highlighted in amber, and products with critical temperature violations flagged in red for immediate attention.
+**Retailer Dashboard** mirrors distributor functionality with retail-specific actions. Dashboard tabs: "In Stock" (products currently owned) and "Product History" (sold products). "Incoming Shipments" section displays products shipped from distributors. Trace actions include RECEIVED, STOCKED, and SOLD. When SOLD action recorded, product ownership transfers to null (no current owner), removing it from active inventory.
 
 All business user interfaces implement optimistic UI updates showing pending operations before blockchain confirmation, reverting if transaction fails to provide responsive user experience despite blockchain latency.
 
@@ -109,13 +118,12 @@ Consumer query interface provides public product verification without authentica
 
 Primary entry point uses QR code scanning via html5-qrcode library: accesses device camera (requires HTTPS and user permission), decodes QR code, extracts product ID, and navigates to product detail page. Fallback manual entry allows consumers to type product ID directly if camera unavailable or QR code damaged.
 
-Product detail page fetches data via `/api/products/[id]` endpoint (public read-only) and displays:
+Product detail page fetches data via `/api/products/[id]/trace-history` endpoint (public read-only) and displays:
 
 1. **Product Identity:** Name, origin location, harvest date, producer information
 2. **Supply Chain Timeline:** Vertical timeline showing all trace records (producer → distributor → retailer) with timestamps, locations, and actors
-3. **Temperature History:** Line chart of IoT sensor readings with safe/warning/critical zones
-4. **Verification Status:** Green checkmark if all trace records valid and no temperature violations; yellow warning if minor issues; red alert if critical violations detected
-5. **Blockchain Proof:** Link to Etherscan showing on-chain transaction for independent verification
+3. **Blockchain Proof:** Link to Etherscan showing on-chain transaction for independent verification
+4. **Verification Status:** Visual confirmation that product has complete trace history from registration to current holder
 
 Mobile-optimized layout prioritizes information hierarchy: product identity and verification status above fold, supply chain timeline lazy-loaded on scroll, technical details (block numbers, transaction hashes) collapsed by default with "Show Technical Details" expand button. Page load time <2 seconds on 4G network achieved through Next.js Image component optimization (automatic WebP format conversion) and aggressive caching (stale-while-revalidate strategy).
 
@@ -123,72 +131,34 @@ Accessibility features include ARIA labels for screen readers, keyboard navigati
 
 ---
 
-## 5.3 IoT Simulator Implementation
-
-**Owner:** YiLing Chen (UI), TaiSheng Chen (Backend Integration)
-
-**Note:** This section implements IoT simulation patterns reviewed in Section 2.4.3 (IoT-Blockchain Integration - to be written), demonstrating the hybrid architecture (events vs storage) for sensor data while maintaining production-ready patterns.
-
-IoT simulator provides admin interface for generating realistic sensor data without physical hardware, enabling reproducible testing and demonstration while maintaining architectural compatibility with future real sensor integration.
-
-### 5.3.1 Simulator Interface
-
-Admin-only page at `/simulator` (protected by admin role check) displays product selector dropdown, scenario selection buttons (Normal, Warning, Critical), real-time data preview panel, and manual override fields. Scenario buttons trigger pre-configured data generation:
-
-- **Normal Scenario:** Temperature 2-4°C, Humidity 70-75% (optimal refrigeration)
-- **Warning Scenario:** Temperature 8-10°C, Humidity 75-85% (approaching danger zone)
-- **Critical Scenario:** Temperature >10°C, Humidity >85% (food safety violation)
-
-Data generation uses pseudorandom number generation seeded with timestamp to ensure reproducibility while appearing realistic. Temperature values follow normal distribution with scenario-appropriate mean and standard deviation.
-
-Generated data submitted to `/api/sensors/simulate` endpoint, which records to database and optionally blockchain (only alert-triggering readings stored on-chain for gas optimization). Real-time feedback displays transaction hash upon successful blockchain recording and database record ID.
-
-### 5.3.2 Simulator Architecture
-
-**Hybrid Data Recording:**
-
-Following blockchain-IoT integration patterns reviewed in Section 2.4.3:
-
-- **Normal readings:** Emit events only (cheap, 375 gas/event)
-- **Alert readings:** Store on-chain permanently (20,000 gas/record) for regulatory compliance
-- **All readings:** Stored in Supabase for fast querying and visualization
-
-**Benefits of Simulation Approach:**
-
-1. **Cost Savings:** €150-200 hardware costs avoided (no Raspberry Pi, DHT22 sensors, power supplies)
-2. **Time Savings:** ~3 weeks development time saved (no MQTT setup, edge computing, hardware debugging)
-3. **Reproducibility:** Identical scenarios generated on demand for testing and demos
-4. **Academic Validity:** Demonstrates production-ready architecture without physical hardware dependency
-
-**Migration Path to Real Sensors:**
-
-Simulator interface can be replaced with MQTT subscriber listening to real sensor topics without changing backend API, blockchain contracts, or frontend displays. The hybrid recording strategy (normal = events, alerts = storage) remains optimal for real deployment.
-
----
-
 ## Chapter 5 Summary
 
-[To be written after implementation]
-
-This chapter demonstrated the supporting system components connecting users to the smart contracts detailed in Chapter 4. The implementation validates Research Question 4 "How can user experience challenges be addressed to enable broader blockchain adoption?" through:
+This chapter demonstrated the supporting system components connecting users to the smart contract detailed in Chapter 4. The implementation validates Research Question 4 "How can user experience challenges be addressed to enable broader blockchain adoption?" through:
 
 **Key Achievements:**
 
 - Custodial wallet pattern eliminating MetaMask requirement for business users
-- Wallet-free consumer access via public RPC queries
-- IoT simulation demonstrating production-ready architecture without hardware costs
+- Wallet-free consumer access via public RPC queries (no wallet installation needed)
+- Role-based dashboards with tab navigation for Producer, Distributor, and Retailer
+- QR code scanning for product lookup via html5-qrcode library
+- Incoming shipments workflow with recipient selection and accept functionality
 - Responsive mobile-first design optimized for QR scanning
 
 **Correspondence to Literature:**
 
-- Section 2.4.2 (Wallet-Free Consumer Access) → Consumer wallet-free interface
-- Section 2.4.3 (IoT-Blockchain Integration) → Hybrid sensor data architecture
-- Section 2.4.1 (Custodial Wallet Patterns) → Custodial wallet implementation
+- Section 2.4.1 (Custodial Wallet Patterns) → Custodial wallet implementation with AES-256-GCM encryption
+- Section 2.4.2 (Wallet-Free Consumer Access) → Consumer interface requiring no wallet
 
 **Limitations Acknowledged:**
 
-- Simulated sensor data (not real-world conditions)
-- Custodial wallet centralization risk (platform holds keys)
-- RPC provider centralization (Alchemy single point of failure)
+- Custodial wallet centralization risk (platform holds private keys)
+- RPC provider centralization (Alchemy as single point of failure)
+- IoT sensor integration deferred to future work (see Chapter 8)
 
-Next chapter (Chapter 6: Results and Testing) presents performance metrics, test coverage results, and comparative analysis against traditional systems.
+Next chapter (Chapter 6: Results and Testing) presents performance metrics, test coverage results, and system validation.
+
+---
+
+**Word Count:** ~1,900 words (Target: 1,800-2,200 | Reduced after removing IoT Simulator section)
+**Structure:** 2 main sections (Backend + Frontend), IoT deferred to Chapter 8 Future Work
+**Focus:** Actual implementation narrative, not planned features

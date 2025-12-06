@@ -1,145 +1,179 @@
 # Chapter 4: Smart Contract Development
 
-This chapter details the blockchain layer implementation of the FoodTrace system, focusing on the Solidity smart contracts deployed to Ethereum Sepolia testnet. It begins with the overall contract architecture and design principles emphasizing gas optimization and security (Section 4.1), explains the implementation of the three core contracts—ProductRegistry, TraceRecords, and SensorData—including role-based access control and event-driven communication (Section 4.2), analyzes security considerations and mitigation strategies for common vulnerabilities (Section 4.3), and documents the testing approach and deployment process to Sepolia testnet (Section 4.4). This chapter demonstrates how the smart contracts translate the theoretical concepts from Chapter 2 into functional code.
+This chapter details the blockchain layer implementation of the FoodTrace system, focusing on the Solidity smart contract deployed to Ethereum Sepolia testnet. It begins with the overall contract architecture and design principles emphasizing security and modularity (Section 4.1), explains the implementation of the ProductRegistry contract combining product registration and supply chain trace recording in a unified design (Section 4.2), analyzes security considerations and testing approach (Section 4.3), and documents the deployment process and lessons learned (Section 4.4). This chapter demonstrates how the smart contract translates the theoretical concepts from Chapter 2 into functional code.
 
-**Target Length:** 2,800-3,000 words (~4-5 pages)
+**Target Length:** 2,000-2,500 words (~3-4 pages)
 **Owner:** Sam (Blockchain Lead)
-**Purpose:** Detail the core blockchain implementation - smart contracts architecture, design decisions, security patterns, and deployment
+**Purpose:** Detail the core blockchain implementation - smart contract architecture, design decisions, security patterns, and deployment
 
-**Note:** This chapter references Section 2.3 (Smart Contract Design Patterns) throughout to demonstrate narrative coherence between literature review and implementation.
+**Note:** This chapter references Section 2.3 (Smart Contract Design Patterns) throughout to demonstrate narrative coherence between literature review and implementation. IoT sensor integration (originally planned as Epic 8) was deferred to future work due to time constraints; see Chapter 8 for proposed design.
 
 ---
 
 ## 4.1 Contract Architecture Overview
 
-The FoodTrace system deploys three interconnected Solidity smart contracts to Ethereum Sepolia testnet providing immutable product registration, supply chain tracking, and sensor data recording. The architecture follows modular design principles enabling independent contract upgrades while maintaining cross-contract data consistency through event-driven communication patterns.
+The FoodTrace system deploys a single Solidity smart contract (ProductRegistry.sol, 176 lines) to Ethereum Sepolia testnet providing immutable product registration and supply chain trace recording. The unified contract design consolidates both features into one deployment, simplifying cross-function validation and reducing deployment complexity compared to multi-contract architectures.
 
 ### 4.1.1 Design Principles
 
-The contract architecture prioritizes four key principles balancing technical constraints with business requirements:
+The contract architecture prioritizes three key principles balancing development constraints with business requirements:
 
-**1. Gas Cost Optimization:** Hybrid storage architecture stores critical traceability data on-chain (product IDs, timestamps, actor addresses, sensor alerts) while referencing off-chain metadata through Keccak-256 hashes. This pattern reduces gas consumption by 40-60% compared to storing full strings on-chain while preserving data integrity through cryptographic verification. Design decisions reference systematic reviews documenting gas-efficient patterns, with the Gas Consumption subcategory containing 27 optimization techniques for smart contract development (Empirical Software Engineering, 2025).
+**1. Role-Based Access Control:** OpenZeppelin AccessControl library implementation provides granular permissions preventing unauthorized contract interactions. Four roles (PRODUCER_ROLE, DISTRIBUTOR_ROLE, RETAILER_ROLE, DEFAULT_ADMIN_ROLE) map to supply chain actors with specific function access rights. This security pattern follows established Ethereum development best practices (OpenZeppelin, 2024) and enables flexible permission management without contract redeployment.
 
-**2. Role-Based Access Control:** OpenZeppelin AccessControl library implementation provides granular permissions preventing unauthorized contract interactions. Four roles (PRODUCER, DISTRIBUTOR, RETAILER, ADMIN) map to supply chain actors with specific function access rights. This security pattern follows established Ethereum development best practices (OpenZeppelin, 2024) and enables flexible permission management without contract redeployment.
+**2. Event-Driven Architecture:** All state-changing operations emit events enabling efficient off-chain indexing. The system emits ProductRegistered and TraceRecordAdded events through Alchemy RPC provider, building cached database views in Supabase for fast queries. This architecture pattern addresses blockchain query limitations while maintaining on-chain verification capability.
 
-**3. Event-Driven Architecture:** All state-changing operations emit events enabling efficient off-chain indexing without additional storage costs. The consumer query interface subscribes to ProductRegistered, TraceRecordAdded, and SensorAlertTriggered events through Alchemy RPC provider, building cached database views in Supabase for fast queries. This architecture pattern addresses blockchain query limitations while maintaining on-chain verification capability.
+**3. Security First:** Multiple defense layers protect against common vulnerabilities including integer overflow (Solidity 0.8+ built-in checks), access control bypass (function modifiers with require statements), and input validation (product existence checks, harvest date validation). Security measures reference patterns documented in comprehensive reviews identifying critical vulnerabilities across blockchain-based supply chain implementations (IEEE Access, 2023).
 
-**4. Security First:** Multiple defense layers protect against common vulnerabilities including reentrancy attacks (OpenZeppelin ReentrancyGuard), integer overflow (Solidity 0.8+ built-in checks), access control bypass (function modifiers), and timestamp manipulation (chronological ordering validation). Security measures reference patterns documented in comprehensive reviews identifying critical vulnerabilities across blockchain-based supply chain implementations (IEEE Access, 2023).
+### 4.1.2 Contract Structure
 
-### 4.1.2 Contract Relationships
+The ProductRegistry contract combines two functional modules in a single deployment:
 
-[Diagram placeholder: Contract interaction diagram showing ProductRegistry → TraceRecords → SensorData flow with event emissions]
+1. **Product Registration Module:** Stores product metadata (name, origin, harvest date) with sequential ID assignment and producer attribution
+2. **Trace Recording Module:** Records supply chain events (RECEIVED, QUALITY_CHECK, SHIPPED, STOCKED, SOLD) linked to products via productId
 
-ProductRegistry serves as the core contract storing product registration ledger. TraceRecords extends ProductRegistry functionality by linking trace records to registered products through product ID foreign key relationships. SensorData integrates with both contracts, associating sensor readings with specific products and trace records. All contracts share the same AccessControl role definitions enabling consistent permission enforcement across the system.
+This unified design enables direct product existence validation within trace functions (`require(products[productId].exists, "Product not found")`) without cross-contract calls, reducing gas costs and complexity. The trade-off is reduced modularity—both features must be redeployed together if either requires updates.
 
 ---
 
 ## 4.2 Core Contract Implementation
 
-### 4.2.1 Product Registry Contract
+### 4.2.1 ProductRegistry Contract
 
-The ProductRegistry contract serves as the foundational ledger for product registration and ownership tracking throughout the supply chain. Each product registration creates an immutable on-chain record containing product ID (auto-incremented counter starting at 1), creator address (Ethereum wallet of registering producer), registration timestamp (block.timestamp), current status enum (Active, Transferred, Sold), and metadata hash (bytes32 Keccak-256 hash referencing off-chain product details).
+The ProductRegistry contract (176 lines, Solidity 0.8.20) serves as the unified smart contract handling both product registration and supply chain trace recording. This design decision prioritized development simplicity over modularity, enabling the 12-week thesis timeline to deliver a functional POC.
 
-**Role-Based Access Control Implementation:**
+**Data Structures:**
 
-The contract integrates OpenZeppelin's AccessControl library defining four permission levels with specific function access rights. PRODUCER_ROLE (bytes32 hash: keccak256("PRODUCER_ROLE")) grants permission to execute registerProduct() and updateProductStatus() functions. DISTRIBUTOR_ROLE and RETAILER_ROLE inherit limited permissions for status updates but cannot register new products. DEFAULT_ADMIN_ROLE (contract deployer initially) manages role assignments through grantRole() and revokeRole() functions enabling dynamic permission management without contract upgrades.
+```solidity
+struct Product {
+    uint256 id;
+    string name;
+    string origin;
+    uint256 harvestDate;
+    address producer;
+    uint256 timestamp;
+    bool exists;
+}
 
-Permission enforcement uses function modifiers: `onlyRole(PRODUCER_ROLE)` wraps registerProduct(), reverting transactions from unauthorized addresses with "AccessControl: account {address} is missing role {role}" error messages. This pattern prevents malicious actors from registering fake products while enabling public read access through view functions requiring no gas costs.
+struct TraceRecord {
+    uint256 productId;
+    address actor;      // msg.sender (producer/distributor/retailer wallet)
+    string action;      // "RECEIVED", "QUALITY_CHECK", "SHIPPED", "STOCKED", "SOLD"
+    string location;    // "Helsinki Distribution Center"
+    string notes;       // Optional quality notes
+    uint256 timestamp;  // block.timestamp (automatic, immutable)
+}
+```
 
-**Gas Optimization Strategies:**
+**Design Decision - String Storage vs Hash-Based:**
 
-Initial contract design stored product names and descriptions as Solidity strings, consuming approximately 100,000 gas per registration for 100-character strings. Profiling with Hardhat gas reporter identified string storage as primary cost driver. Optimized design pivoted to hash-based storage: product metadata stored in Supabase PostgreSQL receives SHA-256 hash (computed off-chain in Next.js API route), hash stored on-chain as bytes32 (fixed 32-byte storage slot), reducing registration costs to approximately 60,000 gas (40% reduction).
+The implementation stores product and trace data as Solidity strings rather than bytes32 hashes. This decision prioritized code clarity and development speed over gas optimization:
 
-**Key Functions:**
+- **Trade-off accepted:** Higher gas costs (~190,000-207,000 gas per registration vs ~60,000 with hash-based approach)
+- **Benefit gained:** Simplified development—no off-chain hash computation, no hash verification logic, readable data directly on-chain
+- **POC justification:** Sepolia testnet has zero real costs; gas optimization deferred to production phase
 
-- `registerProduct(bytes32 metadataHash, uint256 harvestDate)` - Registers new product with sequential ID assignment, emits ProductRegistered event
-- `getProduct(uint256 productId)` - Retrieves product struct (public view function, zero gas cost)
-- `updateProductStatus(uint256 productId, ProductStatus newStatus)` - Updates lifecycle status with role-based access control
-- `verifyMetadata(uint256 productId, string memory metadata)` - Validates off-chain metadata against stored hash
+This illustrates the academic value of documenting trade-offs: future implementations can adopt hash-based storage patterns referenced in Chapter 2.3 to achieve 40-60% gas reduction.
 
-**Contract Address (Sepolia):** [PENDING_DEPLOYMENT_WEEK_4]
+**Role-Based Access Control:**
 
-**Measured Performance:** Post-deployment testing on Sepolia testnet averaged 87,432 gas per product registration (zero actual cost on testnet; equivalent to ~€0.02 on Ethereum mainnet at 20 gwei gas price and 2025 ETH prices).
+The contract integrates OpenZeppelin's AccessControl library defining four permission levels:
 
-### 4.2.2 Trace Records Contract
+| Role | registerProduct() | addTraceRecord() | Role Management |
+|------|-------------------|------------------|-----------------|
+| PRODUCER_ROLE | ✅ | ✅ | ❌ |
+| DISTRIBUTOR_ROLE | ❌ | ✅ | ❌ |
+| RETAILER_ROLE | ❌ | ✅ | ❌ |
+| DEFAULT_ADMIN_ROLE | ❌ | ❌ | ✅ |
+| Consumer (no role) | ❌ | ❌ | ❌ |
 
-The TraceRecords contract extends ProductRegistry to record supply chain events as products move through distribution channels, implementing chronological ordering enforcement preventing backdating or reordering of audit trail entries. Each trace record captures actor address (msg.sender), action type enum (Received, Quality_Check, Shipped, Stocked, Sold), location hash (bytes32 referencing GPS coordinates and warehouse details stored off-chain), timestamp (block.timestamp), and optional notes hash (bytes32 for quality inspection reports or handling instructions).
-
-**Chronological Ordering Enforcement:**
-
-The contract maintains mapping(uint256 => TraceRecord[]) storing ordered array of trace records per product ID. addTraceRecord() function validates new timestamp occurs after the most recent existing record for the same product: `require(block.timestamp > lastRecord.timestamp, "Cannot backdate trace records")`. This validation prevents supply chain fraud scenarios where actors attempt to retroactively modify shipment dates or quality check results. The implementation acknowledges block.timestamp manipulation limitations (miners can adjust timestamps ±15 seconds), which is acceptable for supply chain traceability requiring hour-level precision.
-
-**Access Control and Supply Chain Roles:**
-
-Only wallets with PRODUCER_ROLE, DISTRIBUTOR_ROLE, or RETAILER_ROLE can execute addTraceRecord(). The contract binds each trace record to calling address (actor = msg.sender), creating immutable attribution—distributors cannot create trace records claiming to be retailers, ensuring audit trail authenticity. Permission matrix:
-
-| Role               | registerProduct() | addTraceRecord() | updateProductStatus() |
-| ------------------ | ----------------- | ---------------- | --------------------- |
-| PRODUCER           | ✅                | ✅               | ✅                    |
-| DISTRIBUTOR        | ❌                | ✅               | ⚠️ (limited)          |
-| RETAILER           | ❌                | ✅               | ⚠️ (limited)          |
-| ADMIN              | ❌                | ❌               | ✅ (override)         |
-| Consumer (no role) | ❌                | ❌               | ❌                    |
-
-**Gas Optimization Through Hash-Based Storage:**
-
-Initial design stored location and notes as Solidity strings, consuming approximately 120,000 gas per trace record for 200-character combined text. Optimized design stores Keccak-256 hashes (bytes32, fixed 32-byte slots) reducing costs to approximately 75,000 gas per record (37% reduction). Trade-off: consumers must query both blockchain (for hash verification) and Supabase API (for readable text), increasing frontend complexity. However, this hybrid pattern enables editing off-chain location descriptions (e.g., correcting warehouse address typos) without blockchain redeployment—hash remains unchanged, text updated in database, maintaining backwards compatibility.
-
-**Key Functions:**
-
-- `addTraceRecord(uint256 productId, ActionType action, bytes32 locationHash, bytes32 notesHash)` - Adds supply chain event with timestamp validation
-- `getProductHistory(uint256 productId)` - Retrieves complete chronologically ordered trace array
-- `validateTimestamp(uint256 productId, uint256 newTimestamp)` - Internal function enforcing ordering constraints
-
-**Contract Address (Sepolia):** [PENDING_DEPLOYMENT_WEEK_4]
-
-**Measured Performance:** Post-deployment testing averaged 64,789 gas per trace record.
-
-### 4.2.3 Sensor Data Contract
-
-The SensorData contract records IoT sensor readings (temperature, humidity) for cold chain monitoring, following blockchain-IoT integration architectures demonstrated for food traceability systems (Tsang et al., 2019). Systematic reviews identify hybrid architectures combining edge computing with blockchain immutability as optimal patterns for addressing resource constraints and scalability challenges in food supply chain applications (Sensors, 2024). Each sensor reading stores product ID, sensor type enum (Temperature, Humidity), reading value (int256 with two decimal precision, e.g., 425 represents 4.25°C), timestamp, and sensor device ID (bytes32 hash identifying physical or simulated sensor).
-
-**Event-Based Logging vs Storage Trade-Off:**
-
-Initial contract design stored all sensor readings in mapping(uint256 => SensorReading[]) array, enabling on-chain query of complete temperature history. Gas profiling revealed unsustainable costs for storing all readings (~€400 per product at mainnet prices). Design iteration implemented hybrid approach: recordSensorData() emits SensorDataRecorded event (1,500 gas) without storage, off-chain indexer (Supabase triggers listening to Alchemy event stream) caches readings in PostgreSQL enabling fast queries. Only alert-triggering readings (temperature >8°C warning threshold or >10°C critical threshold) are permanently stored on-chain for regulatory compliance and dispute resolution, reducing average costs by 92% while maintaining audit trail for safety incidents.
-
-This design decision illustrates gas cost trade-offs forcing blockchain implementations to prioritize critical data. The POC accepts off-chain caching dependency because temperature compliance matters more than complete historical records.
-
-**Alert Threshold Implementation:**
-
-The contract defines constant thresholds (TEMP_WARNING = 800 representing 8.0°C, TEMP_CRITICAL = 1000 representing 10.0°C) aligned with EU cold chain regulations for dairy products. recordSensorData() evaluates readings against thresholds: `if (value > TEMP_CRITICAL) { emit AlertTriggered(productId, SensorType.Temperature, value, AlertLevel.Critical); }`. Frontend subscribes to AlertTriggered events displaying real-time notifications when products experience temperature excursions. This event-driven pattern enables responsive UI updates without polling blockchain state every few seconds (which would exhaust RPC provider rate limits).
+The addTraceRecord() function uses tri-role access control: `require(hasRole(PRODUCER_ROLE, msg.sender) || hasRole(DISTRIBUTOR_ROLE, msg.sender) || hasRole(RETAILER_ROLE, msg.sender))`. This enables all supply chain participants to record trace events while preventing unauthorized access from consumers or external actors.
 
 **Key Functions:**
 
-- `recordSensorData(uint256 productId, SensorType sensorType, int256 value, bytes32 sensorId)` - Records reading, emits event, stores if alert triggered
-- `getSensorHistory(uint256 productId)` - Retrieves only alert-triggering readings from on-chain storage (off-chain indexer provides complete history)
-- `checkThresholds(int256 value)` - Internal function validating readings against alert levels
+Product Registration:
+- `registerProduct(string name, string origin, uint256 harvestDate)` - Registers new product with sequential ID, emits ProductRegistered event
+- `getProduct(uint256 productId)` - Retrieves product struct (view function, zero gas)
+- `productExists(uint256 productId)` - Boolean check for product existence
 
-**Contract Address (Sepolia):** [PENDING_DEPLOYMENT_WEEK_4]
+Trace Recording:
+- `addTraceRecord(uint256 productId, string action, string location, string notes)` - Adds supply chain event, returns array index
+- `getTraceHistory(uint256 productId)` - Retrieves complete trace record array
 
-**Measured Performance:** Post-deployment testing averaged 52,341 gas per sensor reading with alert storage, 1,500 gas for event-only recordings.
+Role Management:
+- `grantProducerRole(address)`, `grantDistributorRole(address)`, `grantRetailerRole(address)` - Admin-only role assignment
+- `hasProducerRole(address)`, `hasDistributorRole(address)`, `hasRetailerRole(address)` - Public role queries
+
+**Contract Address (Sepolia):** `0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646`
+
+**Etherscan Verification:** https://sepolia.etherscan.io/address/0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646
+
+**Measured Performance (Sepolia Testnet):**
+- Product registration: ~190,000-207,000 gas per call
+- Trace record addition: ~180,000-190,000 gas per call
+- View functions: 0 gas (read-only, no transaction required)
+
+Note: These gas costs are higher than optimized implementations due to string storage. On Sepolia testnet, costs are zero (test ETH). Hypothetical mainnet deployment at 20 gwei and €2,000 ETH would cost approximately €0.08 per product registration—acceptable for POC but requiring optimization for production scale.
 
 ---
 
 ## 4.3 Testing and Verification
 
-The smart contract testing strategy follows test-driven development principles demonstrated feasible for agile blockchain development despite unique constraints including transaction immutability and deployment costs (IEEE, 2024). Test implementation used Hardhat development environment with Mocha test framework and Chai assertion library, targeting >70% code coverage measured by nyc coverage reporter with Solidity plugin.
+The smart contract testing strategy follows test-driven development principles demonstrated feasible for agile blockchain development despite unique constraints including transaction immutability and deployment costs (IEEE, 2024). Test implementation used Hardhat development environment with Mocha test framework and Chai assertion library, targeting >70% code coverage.
 
 ### 4.3.1 Unit Test Coverage
 
-The test suite validates individual contract functions through isolated test scenarios exercising happy paths, edge cases, and failure modes. ProductRegistry tests (42 test cases) cover product registration (should emit ProductRegistered event, should assign sequential IDs, should store correct creator address), status updates (should allow producer to update status, should reject unauthorized status changes), metadata verification (should validate correct hash, should reject modified metadata), and access control (should revert when non-producer calls registerProduct with AccessControl error message). TraceRecords tests (38 test cases) focus on chronological ordering enforcement (should reject backdated timestamps, should allow same-block timestamps as tie-breaker), role-based permissions (should allow all supply chain roles to add records, should reject consumer addresses), and history retrieval (should return records in chronological order, should handle empty history for unregistered products). SensorData tests (29 test cases) validate threshold logic (should emit warning at 8.1°C, should emit critical at 10.1°C, should not emit alert at 7.9°C) and event emission patterns.
+The test suite (37 test cases in `test/ProductRegistry.test.ts`) validates contract functions through isolated test scenarios covering:
 
-Initial test coverage achieved 73% measured by statement coverage (nyc reporter), exceeding target threshold. After comprehensive test expansion during Week 4, coverage improved to 94.7% statement coverage (final metrics detailed in Chapter 6). Uncovered code paths primarily consist of emergency pause functionality (deferred to post-MVP) and admin override functions requiring multi-signature wallet integration planned for production deployment.
+**Deployment Tests (2 cases):**
+- Verifies admin role assignment to deployer
+- Confirms productCount initializes to zero
 
-### 4.3.2 Integration Testing
+**Role Management Tests (6 cases):**
+- Grant/revoke producer, distributor, retailer roles
+- Validates admin-only authorization for role changes
+- Tests hasRole() query functions
 
-Integration tests validate cross-contract interactions simulating complete product journeys from registration through trace records to sensor monitoring. Test scenario "Complete Product Lifecycle" executes: (1) Producer registers product with ProductRegistry.registerProduct(), (2) Distributor adds trace record with TraceRecords.addTraceRecord() action=Received, (3) Temperature reading recorded via SensorData.recordSensorData(), (4) Retailer adds trace record action=Stocked, (5) Consumer queries getProductHistory() retrieving all trace records with correct chronological ordering. Integration tests discovered two bugs during Week 3 development: (a) TraceRecords initially lacked validation ensuring product exists before adding trace record—adding `require(productRegistry.getProduct(productId).productId != 0, "Product not registered")` resolved the issue; (b) SensorData contract initially referenced incorrect product ID when multiple products registered in same block—switching from array index to explicit product ID parameter fixed the race condition.
+**Product Registration Tests (8 cases):**
+- Should emit ProductRegistered event with correct parameters
+- Should assign sequential IDs (1, 2, 3...)
+- Should store producer address from msg.sender
+- Should reject empty product names
+- Should reject future harvest dates
+- Should revert when non-producer attempts registration
 
-### 4.3.3 Security Testing
+**Getter Functions Tests (4 cases):**
+- Product retrieval by ID
+- Product existence checks
+- Product count queries
+- Error handling for non-existent products
 
-Security test suite validates protection against common vulnerabilities documented in smart contract security best practices (OpenZeppelin, 2024). Reentrancy tests attempt to recursively call state-changing functions, confirming OpenZeppelin ReentrancyGuard prevents exploitation. Access control tests systematically verify each role's permissions match specification, attempting unauthorized function calls from addresses lacking required roles. Input validation tests submit malformed data (empty strings, future timestamps, negative values, zero addresses) confirming require statements reject invalid inputs with descriptive error messages. Integer overflow tests (less critical given Solidity 0.8+ built-in protections) validate SafeMath patterns in custom arithmetic operations. Gas limit tests confirm no functions exceed block gas limit (30M gas on Ethereum mainnet, similar limits on Sepolia testnet) preventing denial-of-service through unbounded loops.
+**Trace Record Tests (11 cases):**
+- All three supply chain roles can add records
+- Consumer addresses (no role) are rejected
+- Product existence validated before trace addition
+- Event emission with correct parameters
+- Array index tracking (returns 0, 1, 2...)
+- Timestamp accuracy matches block.timestamp
+- Complete history retrieval via getTraceHistory()
+- Empty history handling for new products
 
-Security testing identified one medium-severity finding: initial ProductRegistry implementation lacked validation preventing harvest dates in the future—malicious producers could claim products harvested in 2030, bypassing expiration checks. Adding `require(harvestDate <= block.timestamp, "Harvest date cannot be in future")` resolved the vulnerability. This discovery demonstrates value of systematic security testing beyond happy path validation.
+**Test Coverage:** 100% statement coverage for ProductRegistry.sol (exceeds >70% target). All 37 tests passing in ~786ms execution time.
+
+### 4.3.2 Security Testing
+
+Security tests validate protection against common vulnerabilities:
+
+**Access Control Tests:** Systematically verify role permissions match specification. Tests confirm:
+- Unauthorized addresses receive "Caller must be producer, distributor, or retailer" error
+- Role management restricted to admin addresses
+- Public view functions accessible without roles
+
+**Input Validation Tests:** Submit malformed data confirming require statements reject:
+- Empty product names ("Name required" error)
+- Future harvest dates ("Future date not allowed" error)
+- Non-existent product IDs ("Product not found" error)
+
+**Security Finding Resolved:** Initial implementation lacked harvest date validation—producers could register products with future dates (e.g., 2030), enabling fraud scenarios. Adding `require(harvestDate <= block.timestamp, "Future date not allowed")` resolved the vulnerability. This discovery demonstrates value of systematic security testing beyond happy path validation.
 
 ---
 
@@ -147,77 +181,86 @@ Security testing identified one medium-severity finding: initial ProductRegistry
 
 ### 4.4.1 Deployment Process
 
-All contracts deployed to Ethereum Sepolia testnet using Hardhat deployment scripts with gas price optimization targeting 20-30 gwei during off-peak hours (monitoring gas prices via Etherscan Gas Tracker to minimize testnet ETH consumption). Deployment sequence follows dependency order: (1) ProductRegistry deployed first establishing role definitions and product ledger, (2) TraceRecords deployed with ProductRegistry address as constructor parameter enabling cross-contract product validation, (3) SensorData deployed last with references to both previous contracts. Each contract verified on Etherscan immediately post-deployment using Hardhat's verify task (`npx hardhat verify --network sepolia <contract_address>`), making source code publicly auditable and enabling blockchain explorer interaction without custom frontend.
+The ProductRegistry contract was deployed to Ethereum Sepolia testnet using Hardhat deployment script (`scripts/deploy-product-registry.ts`). Deployment used the Hardhat verify task for Etherscan source code publication: `npx hardhat verify --network sepolia 0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646`.
 
-Post-deployment testing validated cross-contract interactions and confirmed gas cost estimates aligned with pre-deployment profiling: ProductRegistry.registerProduct() averaged 87,432 gas (within 5% of Hardhat gas reporter estimates), TraceRecords.addTraceRecord() averaged 64,789 gas, and SensorData.recordReading() averaged 52,341 gas for alert-triggering readings. Total gas cost for complete product journey (1 registration + 3 trace records + 5 sensor readings with 1 alert) measured 312,456 gas. On Sepolia testnet this incurs zero actual cost; hypothetical mainnet deployment would cost approximately €0.06 at 20 gwei gas price and €2,000 ETH/USD, validating economic feasibility for POC scale.
+**Deployment Details:**
+- **Contract Address:** `0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646`
+- **Network:** Ethereum Sepolia Testnet (Chain ID: 11155111)
+- **Deployment Gas:** ~928,485 gas (3.1% of block gas limit)
+- **Etherscan Verification:** ✅ Source code publicly visible
 
-All contracts verified on Etherscan (Sepolia): https://sepolia.etherscan.io/
+Post-deployment testing confirmed gas measurements:
+- Product registration: ~190,000-207,000 gas per call
+- Trace record addition: ~180,000-190,000 gas per call
+- Complete product journey (1 registration + 3 traces): ~750,000 gas
 
-> **Deployment Note:** Contract addresses shown as placeholders `[PENDING_DEPLOYMENT_WEEK_4]` represent the planned Week 4 deployment milestone. Actual Sepolia testnet addresses will be recorded in this document after deployment and Etherscan verification are completed.
+On Sepolia testnet, costs are zero (test ETH from faucets). Hypothetical mainnet deployment at 20 gwei gas price and €2,000 ETH would cost approximately €0.30 per complete product journey—acceptable for POC demonstration but requiring gas optimization for production scale.
 
 ### 4.4.2 Design Iterations and Challenges
 
-Smart contract development revealed several unexpected challenges requiring design iterations:
+Smart contract development revealed several challenges requiring design iterations:
 
-**Challenge 1 - Gas Cost Estimation Accuracy:** Initial gas estimates based on Hardhat profiler underestimated deployment costs by 15-20% compared to actual Sepolia testnet measurements. Root cause: Hardhat simulation uses default gas price without accounting for network congestion fluctuations and miner prioritization fees. Lesson learned: always test on public testnet before mainnet deployment—local simulation provides directional guidance but not production accuracy.
+**Challenge 1 - Role Granting Integration:** Initial design assumed role management would be manual (admin grants roles via Etherscan). Implementation required integrating role granting into the company approval API flow—when platform admin approves a company, the backend automatically calls `grantProducerRole()`, `grantDistributorRole()`, or `grantRetailerRole()` based on company type. This required secure wallet decryption (AES-256-GCM) in the Next.js API route to sign blockchain transactions.
 
-**Challenge 2 - Timestamp Validation Edge Cases:** TraceRecords chronological ordering initially used strict greater-than comparison (`require(newTimestamp > lastTimestamp)`), causing failures when multiple actors added trace records in the same block (timestamps identical). Design iteration changed to greater-than-or-equal (`require(newTimestamp >= lastTimestamp)`) accepting tie-breaker resolution through transaction ordering within blocks. This compromise acknowledges blockchain timestamp limitations while maintaining "close enough" chronological ordering for supply chain use cases where second-level precision is unnecessary.
+**Challenge 2 - Trace API 500 Errors:** Four distinct root causes discovered during integration testing:
+1. Wallet private key mismatch (encryption key environment variable misconfigured)
+2. Insufficient gas (initial estimates too low for string storage)
+3. Products not registered on blockchain (database-only records)
+4. Roles not granted (company approved in database but blockchain role missing)
 
-**Challenge 3 - Event vs Storage Trade-Offs:** SensorData contract's initial design assumed all sensor readings should be stored on-chain for "immutability benefits." Gas profiling revealed unsustainable costs for high-frequency IoT data. Design pivot to event-based logging with selective storage (alerts only) required frontend architecture changes—consumer query interface must subscribe to events rather than directly query blockchain state. This lesson validated Chapter 3's hybrid storage strategy while highlighting hidden complexity costs of gas optimization patterns.
+Each required systematic debugging through Etherscan transaction analysis and console logging.
+
+**Challenge 3 - String Storage Decision:** Gas profiling revealed string storage costs (~190k gas) were 3x higher than hash-based alternatives (~60k gas). Decision made to accept higher costs for POC simplicity rather than implementing complex hash verification logic. This trade-off documented for thesis discussion value.
 
 ### 4.4.3 What Would Be Done Differently
 
-Reflecting on the implementation process, two improvements would strengthen future iterations:
+**Improvement 1 - Hash-Based Storage:** Implementing bytes32 hash storage from the start would reduce gas costs by 60%. The naive string approach provided faster development but created technical debt requiring refactoring for production.
 
-**Improvement 1 - Earlier Gas Profiling:** Gas optimization occurred reactively (implement naively, profile costs, refactor) rather than proactively (research patterns first, implement efficiently). Earlier integration of gas reporter in Week 1 learning phase would reduce rework and prevent over-engineering solutions for low-cost operations.
-
-**Improvement 2 - Upgradeable Contract Patterns:** Current contracts use immutable deployment—bugs require redeployment and data migration. OpenZeppelin's proxy patterns (TransparentUpgradeableProxy, UUPS) enable bug fixes without losing on-chain data. Trade-off: increased complexity and additional attack surface. For POC, immutability acceptable; for production, upgradeability essential.
+**Improvement 2 - Upgradeable Contract Patterns:** Current contract is immutable—any bugs require redeployment and data migration. OpenZeppelin's UUPS proxy pattern would enable bug fixes without data loss. Trade-off: increased complexity and attack surface. For POC, immutability acceptable; for production, upgradeability recommended.
 
 ### 4.4.4 Production Deployment Considerations
 
-Transitioning from POC to production requires addressing several constraints identified during implementation:
+**Gas Cost Economics:** Current implementation (~750,000 gas per product journey) is expensive for mainnet. Production systems should:
+- Adopt hash-based storage (40-60% reduction)
+- Evaluate Layer 2 solutions (Polygon, Arbitrum - 90% cost reduction)
+- Consider Hyperledger Fabric for B2B contexts (zero transaction costs)
 
-**Gas Cost Economics:** Measured gas consumption (~312,000 gas per product journey, zero cost on testnet) scales linearly with volume. Hypothetical mainnet deployment at current gas prices would cost approximately €0.06 per product journey. Production systems should evaluate Layer 2 solutions (90% cost reduction) or migrate to Hyperledger Fabric (zero transaction costs, discussed in Chapter 3).
-
-**Oracle Problem:** Smart contracts cannot verify sensor data authenticity—malicious actors could submit fake readings. Production systems require trusted oracle integration (Chainlink) or hardware security modules (HSMs) in IoT devices. This constraint acknowledged in Chapter 7 Limitations.
+**Oracle Problem:** Smart contracts cannot verify off-chain data authenticity—the "garbage in, garbage out" problem. This is an inherent blockchain limitation discussed in Chapter 7.
 
 ---
 
 ## Chapter 4 Summary
 
-This chapter detailed the smart contract implementation addressing Research Question 1: "How suitable is Ethereum blockchain for food supply chain traceability?" Through careful design balancing immutability against gas costs, role-based access control enabling multi-stakeholder coordination, and hybrid storage architecture achieving cost efficiency, the implementation validates Ethereum's technical feasibility for POC-scale food traceability applications.
+This chapter detailed the smart contract implementation addressing Research Question 1: "How suitable is Ethereum blockchain for food supply chain traceability?" Through role-based access control enabling multi-stakeholder coordination and event-driven architecture for off-chain indexing, the implementation validates Ethereum's technical feasibility for POC-scale food traceability applications.
 
 **Key Achievements:**
 
-- Three deployed, verified contracts (ProductRegistry, TraceRecords, SensorData) on Sepolia testnet
-- 94.7% statement coverage (test coverage significantly exceeding >70% target threshold)
-- Gas optimization achieving 40-60% cost reductions through hash-based storage and event-driven patterns
+- One deployed, verified contract (ProductRegistry) on Sepolia testnet at `0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646`
+- 100% statement coverage for smart contract (37 tests, exceeds >70% target)
+- Role-based access control (PRODUCER, DISTRIBUTOR, RETAILER, ADMIN) preventing unauthorized modifications
 - Public verifiability via Etherscan enabling independent audit trail verification
-- Role-based access control preventing unauthorized supply chain modifications
+- Unified contract design combining product registration and trace recording
 
 **Implementation Insights:**
 
-- Hybrid storage (on-chain critical data, off-chain metadata) essential for economic feasibility
-- Event-driven architecture enables responsive UI without prohibitive query costs
-- Test-driven development caught chronological ordering bug and harvest date validation vulnerability before deployment
-- Gas profiling revealed sensor data storage unsustainable at scale, forcing design iteration to event-based logging
+- String storage prioritized code clarity over gas optimization—documented trade-off with academic value
+- Event-driven architecture enables off-chain indexing without prohibitive query costs
+- Test-driven development caught harvest date validation vulnerability before deployment
+- Role granting integration required secure wallet handling (AES-256-GCM decryption in API routes)
 
 **Acknowledged Constraints:**
 
 - Testnet deployment doesn't reflect real economic costs (Sepolia ETH has no monetary value)
-- Oracle problem: cannot verify sensor data authenticity on-chain without trusted hardware
-- Scalability limitations: Layer 1 Ethereum throughput (15-30 TPS) inadequate for national-scale food traceability
-- Block timestamp manipulation risk: miners can adjust ±15 seconds, acceptable for supply chain but not all use cases
+- Higher gas costs (~190k per call) due to string storage vs hash-based alternatives (~60k)
+- Oracle problem: cannot verify off-chain data authenticity without trusted hardware
+- Scalability limitations: Layer 1 Ethereum throughput (15-30 TPS) inadequate for national-scale traceability
+- IoT sensor integration (Epic 8) deferred to future work—see Chapter 8 for proposed design
 
-Next chapter (Chapter 5: System Implementation) describes the Web3 integration, backend API, frontend interfaces, and IoT simulator connecting users to these smart contracts, completing the full-stack traceability system.
+Next chapter (Chapter 5: System Implementation) describes the Web3 integration, backend API, and frontend interfaces connecting users to this smart contract.
 
 ---
 
 **References for Chapter 4**
-
-A systematic review on smart contracts security design patterns. (2025). _Empirical Software Engineering_, Springer. https://doi.org/10.1007/s10664-025-10646-w
-
-Blockchain and Internet of Things Technologies for Food Traceability in Olive Oil Supply Chains. (2024). _Sensors_, 24(24), 8189. https://doi.org/10.3390/s24248189
 
 Blockchain Technology to Support Agri-Food Supply Chains: A Comprehensive Review. (2023). _IEEE Access_, Document 10187146. https://doi.org/10.1109/ACCESS.2023.3297722
 
@@ -229,10 +272,8 @@ IEEE. (2024). Feasibility of test-driven development in agile blockchain smart c
 
 OpenZeppelin. (2024). _OpenZeppelin Contracts documentation: Secure smart contract library_. Retrieved from https://docs.openzeppelin.com/contracts
 
-Tsang, Y. P., Choy, K. L., Wu, C. H., Ho, G. T. S., Lam, H. Y., & Tang, V. (2019). An intelligent model for assuring food quality in managing a multi-temperature food distribution centre. _Food Control_, 90, 81-97. https://doi.org/10.1016/j.foodcont.2018.02.030
-
 ---
 
-**Word Count:** ~3,000 words (Target: 2,800-3,000 | OAMK Range: 2,700-3,300)
+**Word Count:** ~2,200 words (Target: 2,000-2,500 | Reduced from 3,000 after removing SensorData section)
 **Structure:** 4 main sections, 3 subsection levels maximum
-**Focus:** Implementation narrative with design decisions, not API documentation
+**Focus:** Implementation narrative with design decisions, documenting actual code not planned features
