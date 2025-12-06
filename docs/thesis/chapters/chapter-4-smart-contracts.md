@@ -37,8 +37,6 @@ This unified design enables direct product existence validation within trace fun
 
 ## 4.2 Core Contract Implementation
 
-### 4.2.1 ProductRegistry Contract
-
 The ProductRegistry contract (176 lines, Solidity 0.8.20) serves as the unified smart contract handling both product registration and supply chain trace recording. This design decision prioritized development simplicity over modularity, enabling the 12-week thesis timeline to deliver a functional POC.
 
 **Data Structures:**
