@@ -61,63 +61,63 @@ End-to-end validation confirmed complete supply chain workflows function correct
 **Scenario 1: Complete Supply Chain Journey**
 
 ```mermaid
-flowchart TB
-    subgraph Producer
-        P1[Register Product] --> P2[QR Code Generated]
-        P2 --> P3[SHIPPED to Distributor]
+flowchart LR
+    subgraph P[Producer]
+        P1[Register<br/>Product] --> P2[Generate<br/>QR Code]
     end
 
-    subgraph Distributor
-        D1[View Incoming Shipment] --> D2[Accept → RECEIVED]
-        D2 --> D3[QUALITY_CHECK]
-        D3 --> D4[SHIPPED to Retailer]
+    subgraph D[Distributor]
+        D1[RECEIVED] --> D2[QUALITY<br/>CHECK] --> D3[SHIPPED]
     end
 
-    subgraph Retailer
-        R1[View Incoming Shipment] --> R2[Accept → RECEIVED]
-        R2 --> R3[STOCKED]
-        R3 --> R4[SOLD]
+    subgraph R[Retailer]
+        R1[RECEIVED] --> R2[STOCKED] --> R3[SOLD]
     end
 
-    subgraph Consumer
-        C1[Scan QR Code] --> C2[View Complete Timeline]
-        C2 --> C3[Verify on Etherscan]
+    subgraph C[Consumer]
+        C1[Scan QR] --> C2[View<br/>Timeline]
     end
 
-    P3 --> D1
-    D4 --> R1
-    R4 -.->|Wallet-Free| C1
+    P2 -->|Ship| D1
+    D3 -->|Ship| R1
+    R3 -.->|Wallet-Free<br/>Access| C1
 ```
 
-**Figure 6.1:** Complete supply chain journey showing trace record actions at each stage. Solid arrows indicate ownership transfer; dashed arrow indicates wallet-free consumer access.
+**Figure 6.5:** Complete supply chain journey showing trace record actions at each stage. Solid arrows indicate ownership transfer; dashed arrow indicates wallet-free consumer access.
 
 Producer registered "Organic Blueberries" with origin "Helsinki Farm" and harvest date. System response: blockchain confirmation in ~12-15 seconds, QR code generated automatically, product visible in Producer dashboard. Distributor logged in, viewed "Incoming Shipments" section showing product shipped to their company. Distributor clicked "Accept" → RECEIVED trace recorded on blockchain → product moved to "In Custody" tab. Distributor added QUALITY_CHECK trace with location notes. Distributor selected recipient company and clicked SHIPPED. Retailer viewed incoming shipment, accepted product (RECEIVED trace), added STOCKED trace. Retailer marked product SOLD. Consumer scanned QR code (wallet-free), viewed complete timeline showing all trace events with timestamps, actors, and Etherscan verification links.
 
 **Validation Results:**
-✅ All blockchain transactions succeeded without errors
-✅ Ownership transfers correctly on RECEIVED actions
-✅ Complete audit trail visible to consumer without wallet
-✅ QR code scanning works on desktop (mobile requires HTTPS—deferred to production deployment)
-✅ Etherscan links enable independent verification
+- All blockchain transactions succeeded without errors
+- Ownership transfers correctly on RECEIVED actions
+- Complete audit trail visible to consumer without wallet
+- QR code scanning works on desktop (mobile requires HTTPS—deferred to production deployment)
+- Etherscan links enable independent verification
 
 **Scenario 2: Role-Based Access Control**
 
-Attempted unauthorized access: Consumer account tried accessing Producer dashboard → redirected to Consumer page. Distributor account tried registering product → API returned "Forbidden" (PRODUCER_ROLE required). Non-role blockchain address tried addTraceRecord() → smart contract reverted with "Caller must be producer, distributor, or retailer".
+Table 6.5 Access control was validated at three layers (frontend, API, smart contract) 
+
+| Layer | Attempted Action | Actor | Result | Protection |
+|-------|------------------|-------|--------|------------|
+| Frontend | Access Producer Dashboard | Consumer | Redirected to Consumer page | NextAuth.js middleware |
+| API | POST /api/products (register) | Distributor | 403 Forbidden | Role-based middleware |
+| Smart Contract | addTraceRecord() | No-role address | Transaction reverted | OpenZeppelin AccessControl |
 
 **Validation Results:**
-✅ Frontend route protection working (NextAuth.js + middleware)
-✅ API authorization working (role-based middleware)
-✅ Smart contract access control working (OpenZeppelin AccessControl)
+- Frontend route protection working (NextAuth.js + middleware)  
+- API authorization working (role-based middleware)  
+- Smart contract access control working (OpenZeppelin AccessControl)
 
 **Scenario 3: Dashboard Tab Navigation**
 
 Distributor with multiple products: "In Custody" tab showed 2 current products, "Product History" tab showed 3 previously handled products (shipped to retailers). Badge counts accurate. Switching tabs lazy-loaded history data (performance optimization). Retailer with sold products: "In Stock" tab showed 1 current product, "Product History" showed 2 sold products with SOLD status badge.
 
 **Validation Results:**
-✅ Tab navigation responsive and intuitive
-✅ Ownership-based filtering accurate (owner=me, history=me)
-✅ Status badges reflect current product state (IN_STOCK, SOLD, IN_TRANSIT)
-✅ Lazy loading prevents unnecessary API calls
+- Tab navigation responsive and intuitive
+- Ownership-based filtering accurate (owner=me, history=me)
+- Status badges reflect current product state (IN_STOCK, SOLD, IN_TRANSIT)
+- Lazy loading prevents unnecessary API calls
 
 ---
 
