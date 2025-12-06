@@ -19,8 +19,8 @@
 
 **Public Routes:**
 - `/` - Homepage (landing page)
-- `/consumer/scan` - QR scanner landing
-- `/consumer/product/:id` - Product journey (wallet-free)
+- `/trace` - Consumer landing page (QR scanner + manual entry) [Epic 9]
+- `/trace/:id` - Product journey page (wallet-free, no auth) [Epic 9]
 
 **Authenticated Routes:**
 - `/producer/dashboard` - Product list

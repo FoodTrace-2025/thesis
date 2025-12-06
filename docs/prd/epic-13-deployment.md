@@ -135,7 +135,7 @@ cat .env.example  # All required variables listed with descriptions
 - ✅ Platform admin can login (NextAuth.js session works)
 - ✅ Company registration workflow works (Epic 2)
 - ✅ Product registration works (Epic 5) - QR code generated and saved to Supabase Storage
-- ✅ QR code scan works (Epic 11) - Consumer can scan QR and view product page
+- ✅ QR code scan works (Epic 9) - Consumer can scan QR and view product page
 - ✅ Temperature chart renders (Epic 12) - If sensor data exists
 - ✅ Error pages render correctly (404 Not Found, 500 Internal Server Error)
 - ✅ Mobile responsive on real device (iPhone Safari, Android Chrome)
@@ -350,9 +350,8 @@ git push origin main  # Trigger auto-deploy with reverted code
 - Epic 6 (Product Transfer Workflow) - Email notifications (optional)
 - Epic 7 (Supply Chain Tracking) - Trace records, database audit log
 - Epic 8 (IoT Simulator) - Sensor data (optional)
-- Epic 9 (Consumer Query Interface) - Public-facing consumer query page
+- Epic 9 (Consumer Query Interface) - Public-facing consumer query page with QR scanner
 - Epic 10 (Multi-Party Verification) - Verification badges (optional)
-- Epic 11 (QR Code Functionality) - QR scanner (optional)
 - Epic 12 (Data Visualization) - Timeline, Temperature chart (optional)
 
 **Testing Requirements:**
