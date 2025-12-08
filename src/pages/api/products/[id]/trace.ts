@@ -15,7 +15,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { decryptWalletKey, getEncryptionKey } from '@/lib/crypto';
 import { requireSupplyChainRole } from '@/lib/auth/requireRole';
-import ProductRegistryABI from '@/../artifacts/contracts/ProductRegistry.sol/ProductRegistry.json';
+import ProductRegistryABI from '@/lib/abi/ProductRegistry';
 
 // Valid trace record actions
 const TRACE_ACTIONS = [
