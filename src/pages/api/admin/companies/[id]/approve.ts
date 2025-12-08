@@ -11,7 +11,7 @@ import { sepolia } from 'viem/chains';
 import { prisma } from '@/lib/prisma';
 import { encryptWalletKey, getEncryptionKey } from '@/lib/crypto';
 import { requirePlatformAdmin } from '@/lib/auth/requireAdmin';
-import ProductRegistryABI from '@/../artifacts/contracts/ProductRegistry.sol/ProductRegistry.json';
+import ProductRegistryABI from '@/lib/abi/ProductRegistry';
 
 // Response types
 interface SuccessResponse {

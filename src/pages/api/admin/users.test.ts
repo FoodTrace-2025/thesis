@@ -27,8 +27,8 @@ jest.mock('next-auth', () => ({
   ),
 }));
 
-// Mock bcrypt
-jest.mock('bcrypt', () => ({
+// Mock bcryptjs
+jest.mock('bcryptjs', () => ({
   hash: jest.fn(() => Promise.resolve('$2b$10$hashedpassword')),
 }));
 

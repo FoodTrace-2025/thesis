@@ -15,7 +15,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { decryptWalletKey, getEncryptionKey } from '@/lib/crypto';
 import { requireProducer } from '@/lib/auth/requireProducer';
-import ProductRegistryABI from '@/../artifacts/contracts/ProductRegistry.sol/ProductRegistry.json';
+import ProductRegistryABI from '@/lib/abi/ProductRegistry';
 
 // Request validation schema
 const registerSchema = z.object({

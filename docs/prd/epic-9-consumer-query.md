@@ -1,14 +1,28 @@
 ### Epic 9: Consumer Query Interface (Wallet-Free)
 
-**Priority:** 🔴 Must Have
-**Estimated Time:** 8-10 hours (Backend 3h + Frontend 5-7h)
+**Priority:** Must Have
+**Estimated Time:** 6-9 hours (API enhancement 1-2h + Frontend 5-7h)
 **Assigned:** TaiSheng (Backend), YiLing (Frontend)
-**Timeline:** Week 6-8
-**Dependencies:** Epic 4 (Component Library - Timeline), Epic 5 (Product Registration - QR codes), Epic 7 (Supply Chain Tracking - trace records), Epic 8 (IoT Simulator - sensor data optional)
+**Timeline:** Week 5-6
+**Dependencies:** Epic 5 (Product Registration), Epic 7 (Supply Chain Tracking)
+
+**Note:** Epic 11 (QR Functionality) was merged into this epic on 2025-12-06. QRScanner component already exists from Epic 7 Story 7.10.
+
+---
 
 #### Epic Description
 
-Public-facing wallet-free consumer interface where anyone can scan QR code OR manually enter Product ID to view complete product journey. Zero friction: no account creation, no wallet connection, no MetaMask prompt. Server-side queries blockchain + database. Shows: product details, supply chain timeline, temperature logs (if available), verification status, link to Etherscan for blockchain proof.
+Public-facing wallet-free consumer interface where anyone can scan QR code OR manually enter Product ID to view complete product journey. Zero friction: no account creation, no wallet connection, no MetaMask prompt. Server-side queries database + blockchain verification links. Shows: product details, supply chain timeline (including registration as first event), link to Etherscan for blockchain proof.
+
+**Key Design Decisions:**
+- URL format: `/trace/{blockchainId}` (matches existing QR codes from Epic 5)
+- No back button; instead use "Scan Another Product" forward action
+- Registration event shown as synthetic first event in timeline
+- No temperature chart (Epic 8 IoT deferred to Future Work)
+- No verification badges (Epic 10 deferred to Future Work)
+- Use existing Layout component without role prop
+
+---
 
 #### Business Value
 
@@ -17,20 +31,21 @@ Public-facing wallet-free consumer interface where anyone can scan QR code OR ma
 - **Trust Building:** Transparent journey increases willingness to pay premium
 - **Viral Potential:** Consumers share impressive traceability with friends
 
+---
+
 #### User Stories (High-Level)
 
 - As a **consumer**, I want to **scan QR code with phone camera** (no app download) so I can see product journey
 - As a **consumer**, I want to **manually enter Product ID** if QR scanner fails or unavailable
 - As a **consumer**, I want to **view product origin and harvest date** so I verify it's local
-- As a **consumer**, I want to **see complete supply chain timeline** with all participants
-- As a **consumer**, I want to **check temperature history** so I know cold chain was maintained
-- As a **consumer**, I want to **see organic certification** so I trust marketing claims
+- As a **consumer**, I want to **see complete supply chain timeline** starting from registration
 - As a **consumer**, I want to **link to Etherscan** if I want blockchain proof (advanced users)
-- As a **consumer**, I want **zero friction** - no login, no account, no wallet, no MetaMask prompt, no app download
+- As a **consumer**, I want to **share product URL** to show friends
+- As a **consumer**, I want **zero friction** - no login, no account, no wallet, no MetaMask, no app download
 
-#### User Prerequisites (Manual Tasks - Complete First)
+---
 
-**IMPORTANT:** This is a public-facing epic (no authentication, no external services needed). Verify:
+#### User Prerequisites (Verify Before Starting)
 
 ```bash
 # Epic 5: At least one product with QR code exists
@@ -39,216 +54,207 @@ SELECT * FROM "Product" WHERE "qrCodeUrl" IS NOT NULL LIMIT 1;
 # Epic 7: Trace records exist for timeline visualization
 SELECT * FROM "TraceRecord" LIMIT 1;
 
-# Epic 7: Timeline component created (custom Chakra UI component)
-# src/components/visualization/Timeline.tsx - built in Epic 7
-
-# Epic 8 (Optional): Sensor readings exist for temperature chart
-# TemperatureChart component built with Recharts in Epic 8
-SELECT * FROM "SensorReading" LIMIT 1; # Optional - chart hidden if no data
+# Epic 7: Components exist
+ls src/components/scanner/QRScanner.tsx  # QR Scanner (Story 7.10)
+ls src/components/trace/TraceTimeline.tsx  # Timeline (Story 7.5)
 ```
 
-**Team Decision Required (10 minutes together - BEFORE starting Epic 9):**
+---
 
-- ✅ **QR Code Scanner vs Manual Entry UX Decision**:
-  - **Landing page shows BOTH options**:
-    - Option 1: "Scan QR Code" button (opens camera scanner)
-    - Option 2: "Enter Product ID" text input field
-  - Decision: QR scanner primary option (featured at top), manual entry fallback below
-  - Mobile-first design: QR scanner takes full screen width on mobile
-- ✅ **Wallet-Free Architecture Validation**:
-  - **NO MetaMask popup** - Server-side blockchain queries only
-  - **NO authentication required** - Public route accessible to anyone
-  - **NO account creation** - Zero friction consumer experience
-  - Backend queries blockchain via Alchemy RPC (Epic 1 setup)
-- ✅ **Mobile-First Design Requirements**:
-  - Timeline must work on 360px width (smallest modern smartphone)
-  - Touch-friendly buttons (minimum 44px tap target)
-  - Text legible without zoom (minimum 16px font size)
-  - Test on iPhone Safari and Android Chrome
+#### Story Breakdown
 
-**Developer Setup (After Prerequisites):**
+| Story | Title | Scope | Time | Dependencies |
+|-------|-------|-------|------|--------------|
+| 9.1 | Consumer Landing Page | `/trace` page with QR scanner + manual entry | 2-3h | Epic 7 QRScanner |
+| 9.2 | Product Detail Page | `/trace/[id]` page with product header + timeline | 2-3h | Epic 7 TraceTimeline |
+| 9.3 | Registration Event in Timeline | API enhancement + error handling | 1-2h | Story 9.2 |
+| 9.4 | Share and Polish | Share button + responsive polish | 1h | Story 9.3 |
 
-- No external accounts needed (public-facing, uses Epic 1 Alchemy RPC)
-- html5-qrcode library: `npm install html5-qrcode` (QR scanner)
-- Public route (no authentication middleware)
+---
 
 #### Acceptance Criteria (Epic Level)
 
-**Backend API (GET /api/products/:id/public - No Authentication):**
+**Consumer Landing Page (`/trace`):**
 
-- ✅ Public route accessible without NextAuth.js session
-- ✅ Server-side blockchain query (NO client-side MetaMask prompt)
-- ✅ Query Alchemy RPC for on-chain data verification
-- ✅ Returns: product details (name, origin, harvestDate, imageUrl, certification)
-- ✅ Returns: trace history with user/company names (joined from database)
-- ✅ Returns: sensor readings with temperature chart data (if Epic 8 data exists)
-- ✅ Returns: verification status (count of multi-party verifications from Epic 10)
-- ✅ Returns: blockchain transaction hash for Etherscan link
-- ✅ Caching for popular products (5-minute TTL, Redis or in-memory cache)
-- ✅ Rate limiting: 100 requests/minute per IP (prevent DDoS/scraping)
-- ✅ Error handling: product not found returns 404 with user-friendly message
+- Public Next.js page route (no authentication)
+- QR scanner as primary option (reuse Epic 7 QRScanner component)
+- Manual Product ID entry as fallback below scanner
+- "Scan QR Code" button opens scanner modal
+- Successful scan redirects to `/trace/{blockchainId}`
+- Invalid Product ID shows user-friendly error message
+- Mobile-first design (works on 360px width)
 
-**Frontend (Consumer Landing Page - /products/[id]):**
+**Product Detail Page (`/trace/[id]`):**
 
-- ✅ Public Next.js page route (no authentication middleware)
-- ✅ **NO wallet connection prompt** (no MetaMask, no RainbowKit, no WalletConnect)
-- ✅ **NO account creation required** (zero friction, accessible to anyone)
-- ✅ QR code scanner component (html5-qrcode library):
-  - Scanner opens fullscreen on mobile
-  - Camera permission request with fallback message
-  - Auto-detects Product ID from QR code URL format
-  - Redirects to /products/[id] after successful scan
-- ✅ Manual Product ID entry (fallback if QR scanner fails):
-  - Text input field with placeholder "Enter Product ID"
-  - Submit button or Enter key triggers search
-  - Error message if Product ID not found
-- ✅ Product header shows name, origin, harvest date, image
-- ✅ Supply chain timeline using Epic 4 Timeline component:
-  - Shows all trace records chronologically (oldest → newest)
-  - Displays actor name, company, action, location, timestamp
-  - Mobile-responsive: vertical timeline on mobile, horizontal on desktop
-- ✅ Temperature history chart (if sensor data exists from Epic 8):
-  - Line chart showing temperature over time
-  - Warning/critical thresholds highlighted
-  - Chart hidden if no sensor data available
-- ✅ Verification badges:
-  - ✅ "Verified" badge if verificationCount ≥ 2 (Epic 10 data)
-  - ⚠️ "Unverified" badge if verificationCount < 2
-- ✅ Blockchain proof section:
-  - Link to Etherscan transaction: `https://sepolia.etherscan.io/tx/{hash}`
-  - Explanation: "View blockchain proof (technical users)"
-- ✅ Share button copies product URL to clipboard
-- ✅ Mobile-first design requirements:
-  - Works on 360px width screens (iPhone SE, Samsung Galaxy S8)
-  - Touch targets minimum 44px (Apple Human Interface Guidelines)
-  - Font size minimum 16px (prevent zoom on iOS)
-  - Timeline horizontal scroll on mobile (<768px width)
-  - Images optimized for mobile data usage
-- ✅ Cross-browser compatibility:
-  - Tested on iPhone Safari (iOS 14+)
-  - Tested on Android Chrome (Android 9+)
-  - QR scanner fallback for unsupported browsers
-- ✅ Performance:
-  - Page load time <3 seconds on 3G network
-  - Images lazy-loaded (below the fold)
-  - Temperature chart lazy-loaded (conditional rendering)
+- Public route accessible without authentication
+- NO wallet connection prompt (no MetaMask, no RainbowKit)
+- Product header: name, origin, harvest date, producer company
+- Supply chain timeline showing complete journey:
+  - Registration event as FIRST entry (synthetic from Product table)
+  - All TraceRecord events in chronological order
+  - Each event shows: action, location, actor name, company, timestamp
+  - Etherscan link for each blockchain transaction
+- "Scan Another Product" button at bottom (no back button)
+- Share button copies URL to clipboard
+- Error state for product not found (404)
+- Loading state while fetching data
+
+**API Enhancement (`/api/products/[id]/trace-history`):**
+
+- Returns registration as synthetic first event
+- Includes product metadata in response
+- Proper error handling (404 for not found)
+
+**Cross-Cutting:**
+
+- Mobile-responsive (360px minimum width)
+- Touch targets minimum 44px
+- Font size minimum 16px
+- Page load <3 seconds on 3G
+- Works on iOS Safari 14+ and Android Chrome 9+
+
+---
 
 #### Technical Approach
 
-**Consumer Query Page:**
+**Consumer Landing Page:**
 
 ```typescript
-// src/app/products/[id]/page.tsx (public route, no auth)
-export default async function ProductPage({ params }) {
-  const product = await db.product.findUnique({
-    where: { id: params.id },
-    include: {
-      company: true,
-      traceRecords: true,
-      sensorReadings: true,
-    },
-  });
+// src/pages/trace/index.tsx (Pages Router)
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { Layout } from '@/components/layout';
+import { QRScanner } from '@/components/scanner';
+
+export default function ConsumerLandingPage() {
+  const router = useRouter();
+  const [productId, setProductId] = useState('');
+  const [showScanner, setShowScanner] = useState(false);
+
+  const handleScan = (id: string) => {
+    setShowScanner(false);
+    router.push(`/trace/${id}`);
+  };
+
+  const handleManualLookup = () => {
+    if (productId.trim()) {
+      router.push(`/trace/${productId}`);
+    }
+  };
 
   return (
-    <ConsumerLayout>
-      <ProductHeader
-        name={product.name}
-        origin={product.origin}
-        image={product.imageUrl}
-      />
-
-      <VerificationBadge verified={product.verificationCount > 2} />
-
-      <SupplyChainTimeline traces={product.traceRecords} />
-
-      {product.sensorReadings.length > 0 && (
-        <TemperatureChart data={product.sensorReadings} />
-      )}
-
-      <BlockchainProof
-        etherscanUrl={`https://sepolia.etherscan.io/tx/${product.transactionHash}`}
-      />
-
-      <ShareButton url={`https://foodtrace.app/products/${params.id}`} />
-    </ConsumerLayout>
+    <Layout>
+      {/* QR Scanner (primary) */}
+      {/* Manual entry (fallback) */}
+    </Layout>
   );
 }
 ```
 
-**QR Scanner Component:**
+**Product Detail Page:**
 
 ```typescript
-<QRScanner
-  onScan={(productId) => router.push(`/products/${productId}`)}
-  onError={(error) => toast.error("QR code not recognized")}
-/>
+// src/pages/trace/[id].tsx (Pages Router)
+import { GetServerSidePropsContext } from 'next';
+import { Layout } from '@/components/layout';
+import { TraceTimeline } from '@/components/trace';
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { id } = context.params;
+  // Fetch product + trace history
+  // Return 404 if not found
+}
+
+export default function ProductTracePage({ product, traceRecords }) {
+  return (
+    <Layout>
+      {/* Product header */}
+      {/* Timeline with registration as first event */}
+      {/* Scan Another Product button */}
+      {/* Share button */}
+    </Layout>
+  );
+}
 ```
+
+**Registration Event in API:**
+
+```typescript
+// In /api/products/[id]/trace-history.ts
+// Prepend registration as synthetic first event
+const registrationEvent = {
+  id: 'registration',
+  action: 'REGISTERED',
+  location: product.origin,
+  actor: { name: 'Producer', company: product.company.name },
+  transactionHash: product.transactionHash,
+  createdAt: product.createdAt,
+};
+return { traceRecords: [registrationEvent, ...dbRecords] };
+```
+
+---
 
 #### Dependencies
 
 **Requires:**
-- Epic 4 (Component Library) - Chakra UI theme configured
-- Epic 5 (Product Registration) - Products with QR codes must exist
-- Epic 7 (Supply Chain Tracking) - Trace records + Timeline component (built in Epic 7 using Chakra UI)
+- Epic 5 (Product Registration) - Products with QR codes exist
+- Epic 7 (Supply Chain Tracking) - TraceTimeline and QRScanner components
 
-**Optional:**
-- Epic 8 (IoT Simulator) - Sensor data for temperature chart (chart hidden if no data)
-- Epic 10 (Multi-Party Verification) - Verification badges (shows "Unverified" if Epic 10 skipped)
+**Deferred (Future Work):**
+- Epic 8 (IoT Simulator) - Temperature chart (not implemented)
+- Epic 10 (Multi-Party Verification) - Verification badges (not implemented)
 
-**Blocks:** None (Epic 9 is final consumer-facing feature)
+**Blocks:**
+- Epic 13 (Deployment) - Consumer query is core thesis demo feature
+
+---
 
 #### Team Assignment
 
-**TaiSheng (3-4 hours - Backend Lead):**
+**TaiSheng (1-2 hours - Backend):**
+- Story 9.3: Add registration event to trace-history API response
+- Error handling for product not found
 
-- Public product query API (2 hours)
-  - GET /api/products/:id/public endpoint (no authentication)
-  - Server-side blockchain query via Alchemy RPC
-  - Database joins (Product + TraceRecord + SensorReading + User + Company)
-  - Return verification count from Epic 10 (if available)
-- Performance optimization (1.5 hours)
-  - Query optimization (select only needed fields, eager loading)
-  - Caching layer (5-minute TTL, Redis or in-memory cache)
-  - Rate limiting middleware (100 req/min per IP)
-- Error handling (0.5 hours)
-  - 404 for product not found
-  - User-friendly error messages
+**YiLing (5-7 hours - Frontend):**
+- Story 9.1: Consumer landing page with QR scanner + manual entry
+- Story 9.2: Product detail page with timeline integration
+- Story 9.4: Share button and responsive polish
 
-**YiLing (6-8 hours - Frontend Lead):**
-
-- QR scanner integration (2-3 hours)
-  - Install html5-qrcode library
-  - QR scanner component with camera permission request
-  - Auto-detect Product ID from QR code URL
-  - Fallback message for unsupported browsers
-- Consumer landing page layout (2 hours)
-  - Product header (name, origin, harvest date, image)
-  - No-wallet architecture (no MetaMask prompt)
-  - Manual Product ID entry fallback
-- Supply chain timeline integration (2 hours)
-  - Integrate Epic 4 Timeline component
-  - Mobile-responsive layout (vertical timeline on <768px)
-  - Display trace records with user/company names
-- Additional features (2 hours)
-  - Temperature chart (conditional rendering if sensor data exists)
-  - Verification badges (verified/unverified)
-  - Blockchain proof link to Etherscan
-  - Share button (copy URL to clipboard)
-- Mobile-first optimization (1 hour)
-  - Test on 360px width (iPhone SE)
-  - Touch targets 44px minimum
-  - Font size 16px minimum
-  - Lazy-load images and charts
+---
 
 #### Risks & Mitigations
 
 | Risk | Mitigation |
 |------|-----------|
-| QR scan fails on some phones (iOS camera permission, unsupported browsers) | Fallback to manual Product ID entry, clear permission request message, browser compatibility detection |
-| Page load too slow (>3 seconds on 3G) | Caching (5-minute TTL), optimize images (WebP format), lazy-load charts, server-side rendering |
-| Abuse/spam requests (DDoS, scraping) | Rate limiting (100 req/min per IP), Cloudflare DDoS protection (Epic 13), bot detection |
-| Confusing for non-tech consumers (blockchain jargon) | Simple language ("Product Journey", not "Blockchain"), visual timeline, hide technical details by default |
-| MetaMask popup appears (wallet connection prompt) | NO Web3 libraries on consumer page, server-side blockchain queries only, explicit no-wallet architecture validation |
-| Timeline component reuse | Timeline component built in Epic 7 using Chakra UI - reuse directly in Epic 9 |
-| Epic 8 missing (no sensor data) | Temperature chart hidden conditionally, page still functional without IoT data |
-| Mobile layout broken on old devices (Android 7, iOS 12) | Test on real devices, graceful degradation, minimum supported: iOS 14, Android 9 |
+| QR scan fails on some phones | Manual Product ID entry fallback always visible |
+| Page load too slow on mobile | Server-side rendering, minimal client JS |
+| Confusing for non-tech consumers | Simple language ("Product Journey"), visual timeline |
+| MetaMask popup appears | NO Web3 libraries on consumer pages, server-side only |
+| Mobile layout issues | Test on 360px width, use Chakra responsive props |
+
+---
+
+#### What's NOT in Scope (Deferred)
+
+These features were originally planned but deferred to Future Work:
+
+1. **Temperature Chart** (Epic 8 not implemented)
+   - SensorReading model doesn't exist
+   - Document as "Future Work" in thesis
+
+2. **Verification Badges** (Epic 10 not implemented)
+   - verificationCount field doesn't exist
+   - Document as "Future Work" in thesis
+
+3. **Rate Limiting** (over-engineering for POC)
+   - Render provides basic DDoS protection
+   - Document as "Production recommendation" in thesis
+
+4. **Redis Caching** (over-engineering for POC)
+   - Database queries are fast enough for demo
+   - Document as "Production recommendation" in thesis
+
+---
+
+**Last Updated:** 2025-12-06 (Epic 11 merged, scope corrected)

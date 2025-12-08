@@ -862,12 +862,14 @@ Features prioritized using **MoSCoW framework** (Must Have, Should Have, Could H
 ```
 MUST HAVE (Critical Path)       HIGH VALUE (Do After Critical Path)
 ┌─────────────────────┐        ┌─────────────────────┐
-│ Epic 7: Tracking    │        │ Epic 6: Transfer    │
+│ Epic 7: Tracking ✅ │        │ Epic 6: Transfer    │
 │ Epic 9: Consumer    │        │ Epic 8: IoT Sim     │
-│ Epic 13: Deployment │        │ Epic 11: QR Scan    │
+│ Epic 13: Deployment │        │                     │
 └─────────────────────┘        └─────────────────────┘
     CRITICAL PATH                  HIGH VALUE ADD-ONS
     (Do in order: 7→9→13)          (Do if time permits)
+
+Note: Epic 11 (QR Scanning) merged into Epic 9 on 2025-12-06
 
 OPTIONAL (Nice to Have)         DON'T DO (Out of Scope)
 ┌─────────────────────┐        ┌─────────────────────┐
@@ -910,35 +912,33 @@ Epic 5: Product Registration ✅ DONE (6 stories)
 
 REMAINING WORK (from Epic 5)
 ───────────────────────────────────────────────────────────────
-    ├─→ Epic 7: Supply Chain Tracking 🔴 MUST HAVE (12-15h)
+    ├─→ Epic 7: Supply Chain Tracking ✅ DONE (17 stories)
     │       ↓ (BLOCKS Epic 9)
-    │   Epic 9: Consumer Query 🔴 MUST HAVE (8-10h)
-    │       ↓
+    │   Epic 9: Consumer Query 🔴 MUST HAVE (6-9h)
+    │       ↓   (Epic 11 merged into Epic 9 on 2025-12-06)
     │   Epic 13: Deployment 🔴 MUST HAVE (6-9h)
     │
     ├─→ Epic 6: Transfer Workflow 🟡 SHOULD HAVE (4-6h)
     │       (Can do after Epic 7, uses same patterns)
     │
-    ├─→ Epic 8: IoT Simulator 🟡 SHOULD HAVE (6-8h)
-    │       (Enhances thesis demo, not blocking)
-    │
-    └─→ Epic 11: QR Scanning 🟡 SHOULD HAVE (4-6h)
-            (QR codes already generated in Epic 5, just need scanner)
+    └─→ Epic 8: IoT Simulator 🟡 SHOULD HAVE (6-8h)
+            (Enhances thesis demo, not blocking)
 
 OPTIONAL (if time permits)
     Epic 10: Multi-Party Verification 🟢 OPTIONAL (4-6h)
     Epic 12: Data Visualization 🟢 OPTIONAL (6-8h)
 ```
 
-**Critical Path:** Epic 5 ✅ → **Epic 7** → **Epic 9** → **Epic 13** (~30h remaining)
+**Critical Path:** Epic 5 ✅ → Epic 7 ✅ → **Epic 9** → **Epic 13** (~15h remaining)
 
 **Recommended Order:**
-1. Epic 7 (12-15h) - Core traceability, blocks Epic 9
-2. Epic 6 (4-6h) - Transfer workflow, high value add-on
-3. Epic 9 (8-10h) - Consumer query, thesis value proposition
-4. Epic 13 (6-9h) - Deployment for thesis demo
+1. Epic 7 ✅ DONE (17 stories) - Core traceability complete
+2. Epic 9 (6-9h) - Consumer query, thesis value proposition (Epic 11 merged)
+3. Epic 13 (6-9h) - Deployment for thesis demo
+4. Epic 6 (4-6h) - Transfer workflow, if time permits
 
-**Cut if behind schedule:** Epic 8, 10, 11, 12 (in that order)
+**Cut if behind schedule:** Epic 8, 10, 12 (in that order)
+Note: Epic 11 merged into Epic 9 on 2025-12-06
 
 ---
 

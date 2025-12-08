@@ -4,6 +4,82 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 76 (2025-12-08) - Epic 13 Deployment Complete
+
+### Session 76 Achievements
+
+✅ **Epic 13 Complete**: All 5 stories (13.1-13.5) implemented and verified
+✅ **Production Deployment**: Live at https://foodtrace.onrender.com with auto-deploy from main
+✅ **Smoke Testing Verified**: Auth, products, transfers, QR scanner all working on production
+✅ **Mobile QR Scanner Verified**: Tested on Android phone - camera and scanning works
+✅ **Documentation Created**: README Live Demo section, docs/deployment.md guide
+✅ **Release Tagged**: v1.0.0-thesis-demo created and pushed to GitHub
+
+**Impact:** Production deployment complete. Thesis demo ready. Epic 9 pending (by TaiSheng/YiLing).
+
+---
+
+## Session 75 (2025-12-06) - Epic 9 Review + Stories Created
+
+### Session 75 Achievements
+
+✅ **Epic 9 Comprehensive Review**: Identified IoT/verification references to defer, technology mismatches fixed
+✅ **Epic 11 Merged into Epic 9**: QRScanner already exists from Epic 7, Epic 11 archived
+✅ **Best Practice Research**: GS1 Digital Link standards, registration as first event, back button UX
+✅ **Stories 9.1-9.4 Created**: Landing page, product detail, registration event, share/polish
+✅ **PRD/Architecture Updated**: Epic 9 rewritten, Epic 13 refs updated, routes corrected
+✅ **URL Format Standardized**: `/trace/{blockchainId}` matches existing QR codes
+
+**Impact:** Epic 9 ready for implementation. 4 stories created (~7 hours total). Epic 11 merged to avoid duplication.
+
+---
+
+## Session 74 (2025-12-06) - Thesis Chapter Corrections Complete
+
+### Session 74 Achievements
+
+✅ **All 7 Thesis Chapters Corrected**: Removed fabricated SensorData/IoT content
+✅ **Chapter 4 Rewritten**: Fixed 3 contracts→1, 109 tests→37, 87k gas→~190k gas
+✅ **Chapter 5 Updated**: Removed entire IoT Simulator section (5.3)
+✅ **Chapter 6 Rewritten**: Replaced 3 fake IoT scenarios with actual validation scenarios
+✅ **Chapter 7 Enhanced**: Added "Scope Reduction Decisions" section (7.3.4)
+✅ **Chapter 8 Expanded**: Added IoT design to Future Work with Solidity code sample
+✅ **Academic Integrity Preserved**: Thesis now reflects actual implementation only
+
+**Impact:** Thesis chapters aligned with reality. 363 insertions, 295 deletions across 7 files.
+
+---
+
+## Session 73 (2025-12-06) - Thesis Chapter Corrections (Continued)
+
+### Session 73 Achievements
+
+✅ **All 7 Thesis Chapters Corrected**: Removed fabricated SensorData/IoT content, updated with actual implementation
+✅ **Chapter 4 Rewritten**: Fixed from 3 contracts→1, 109 tests→37, 87k gas→190k gas
+✅ **Chapter 5 Updated**: Removed entire IoT Simulator section (5.3)
+✅ **Chapter 6 Updated**: Replaced 3 fake IoT scenarios with actual validation scenarios
+✅ **Chapter 7 Enhanced**: Added "Scope Reduction Decisions" section explaining IoT deferral
+✅ **Chapter 8 Expanded**: Added IoT design to Future Work with Solidity code sample
+✅ **Academic Integrity Preserved**: Thesis now reflects actual implementation, not fabricated features
+
+**Impact:** Thesis chapters aligned with reality. 363 insertions, 295 deletions across 7 files. Ready for Epic 9 or further thesis writing.
+
+---
+
+## Session 72 (2025-12-05) - Epic 7 Complete + Manual Testing
+
+### Session 72 Achievements
+
+✅ **Story 7.16 Manual Tests Verified**: 5/5 tests passing (SHIPPED recipient selection)
+✅ **Story 7.17 Manual Tests Verified**: 6/7 tests passing (Incoming Shipments Visibility)
+✅ **Epic 7 Complete**: 17/17 stories implemented and verified
+✅ **Manual Testing Guideline Created**: Comprehensive 7-test checklist for Story 7.17
+✅ **Full Supply Chain Flow Tested**: Producer→Distributor→Retailer with recipient selection + accept workflow
+
+**Impact:** Epic 7 fully complete with manual verification. Ready for Epic 9 (Consumer Query) or thesis writing.
+
+---
+
 ## Session 71 (2025-12-05) - Story 7.14-7.15 Dashboard Tabs
 
 ### Session 71 Achievements
@@ -93,62 +169,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 65 (2025-12-04) - Story 7.4 Complete
-
-### Session 65 Achievements
-
-✅ **Story 7.4 Implemented**: Product ownership tracking with currentOwnerId field and relations
-✅ **Ownership Transfer Logic**: Transfers on RECEIVED action with combined audit log entry
-✅ **Products List API**: GET /api/products with ?owner=me filter and pagination
-✅ **Data Migration**: 6 existing products migrated to set initial owner
-✅ **Unit Tests Created**: 22 tests with 100% coverage for products/index.ts
-✅ **All 196 Project Tests Pass**: +22 new tests, no regressions
-
-**Impact:** Story 7.4 complete. Dashboards can now show products currently in each company's custody. Ready for Story 7.5 (Frontend TraceRecordForm + Timeline) or Epic 9.
-
----
-
-## Session 64 (2025-12-04) - Story 7.3 Complete
-
-### Session 64 Achievements
-
-✅ **Story 7.3 Created**: GET /api/products/:id/trace-history endpoint story document with 13 ACs
-✅ **Story 7.3 Implemented**: Public trace history API with pagination, Prisma joins, Etherscan links
-✅ **Unit Tests Created**: 16 tests with 90.47% coverage (exceeds 70% requirement)
-✅ **All 174 Project Tests Pass**: +16 new tests, no regressions
-✅ **Story Documentation Updated**: Dev Agent Record reflects actual implementation
-
-**Impact:** Story 7.3 complete. Consumers can now view product trace history via public API. Ready for Story 7.4 (Frontend form) or Epic 9 (Consumer query interface).
-
----
-
-## Session 63 (2025-12-04) - Story 7.2 Complete with QA PASS
-
-### Session 63 Achievements
-
-✅ **Story 7.2 Implementation**: POST /api/products/:id/trace endpoint with requireSupplyChainRole middleware
-✅ **Unit Tests Created**: 16 tests with 80% line coverage (exceeds 70% requirement)
-✅ **Jest Mock Issue Resolved**: Used real AES-256-GCM encryption instead of mocking (sidesteps module resolution)
-✅ **QA Review Passed**: Security review passed, all 18 acceptance criteria verified
-✅ **QA Gate Created**: docs/qa/gates/7.2.yml with full security review
-✅ **All 158 Project Tests Pass**: No regressions
-
-**Impact:** Story 7.2 complete with QA PASS. Supply chain participants can now add trace records via API. Ready for Story 7.3 (GET trace history) or Story 7.4 (Frontend form).
-
----
-
-## Session 62 (2025-12-04) - QA Documentation Audit & Story 7.1 Fix
-
-### Session 62 Achievements
-
-✅ **QA Documentation Audit**: Comprehensive analysis of QA gates - found 3 gate files vs 5 stories with QA reviews
-✅ **Gap Analysis**: Identified missing gate files (Stories 3.2, 5.1) and format inconsistency (2.3.md vs .yml)
-✅ **Story 7.1 Documentation Fix**: Marked all 47 task checkboxes and 12 test coverage items as complete
-✅ **Recommendations Provided**: Accept historical variance, standardize future QA gates in YAML format
-✅ **BMAD Template Review**: Confirmed qa-gate-tmpl.yaml defines YAML format as standard
-
-**Impact:** QA documentation hygiene verified. Story 7.1 now fully documented. Ready for Epic 7 continuation.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (62-71). Older sessions (1-61) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (66-76). Older sessions (1-65) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md

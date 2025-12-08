@@ -4,7 +4,7 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Prisma } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { createCompanyAdminSchema } from '@/lib/validation/user';
 import { requirePlatformAdmin } from '@/lib/auth/requireAdmin';

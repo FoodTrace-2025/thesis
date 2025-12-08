@@ -1,6 +1,8 @@
 # Chapter 6: Results and Testing
 
-This chapter presents the testing results and performance evaluation of the FoodTrace proof-of-concept system. It begins with an overview of the testing strategy following the Test Pyramid principle (Section 6.1), reports smart contract testing results including code coverage, gas cost measurements, and security analysis (Section 6.2), presents frontend testing results covering component tests, end-to-end workflows, and accessibility compliance (Section 6.3), evaluates system performance including page load times, API response latency, and database query optimization (Section 6.4), and documents end-to-end system validation demonstrating complete supply chain workflows from producer to consumer (Section 6.5). These results provide empirical evidence for addressing the research questions established in Chapter 1.
+This chapter presents the testing results and performance evaluation of the FoodTrace proof-of-concept system. It begins with an overview of the testing strategy following the Test Pyramid principle (Section 6.1), reports smart contract testing results including code coverage, gas cost measurements, and security analysis (Section 6.2), presents backend and frontend testing results covering API endpoints, component tests, and accessibility compliance (Section 6.3), evaluates system performance including page load times, API response latency, and database query optimization (Section 6.4), and documents end-to-end system validation demonstrating complete supply chain workflows from producer to consumer (Section 6.5). These results provide empirical evidence for addressing the research questions established in Chapter 1.
+
+**Note:** IoT sensor integration (Epic 8) was deferred to future work—see Chapter 8 for proposed design. Testing results reflect actual implemented features only.
 
 ## 6.1 Testing Strategy Overview
 
@@ -10,68 +12,112 @@ Testing followed the Test Pyramid principle (Cohn, 2009): unit tests (individual
 
 ## 6.2 Smart Contract Testing Results
 
-Smart contract testing achieved 94.7% statement coverage, 89.3% branch coverage, 92.1% function coverage, and 93.8% line coverage across ProductRegistry, TraceRecords, and SensorData contracts, significantly exceeding 70% target (solidity-coverage). All 100 test cases passed (36 ProductRegistry, 28 TraceRecords, 24 SensorData, 12 integration) with zero failures.
+Smart contract testing achieved 100% statement coverage for ProductRegistry.sol (37 test cases, all passing in ~672ms execution time), significantly exceeding the 70% target. Tests were organized into five categories: deployment tests (2 cases), role management tests (6 cases), product registration tests (8 cases), getter function tests (4 cases), and trace record tests (11 cases), with additional gas profiling tests (6 cases).
 
-**Gas Cost Validation:**
+**Gas Cost Measurements (Sepolia Testnet):**
 
-| Function | Gas Cost | Target | Mainnet (50 gwei) |
-|----------|----------|--------|-------------------|
-| `registerProduct()` | 87,432 | <100k | ~$1.31 |
-| `addTraceRecord()` | 64,789 | <80k | ~$0.97 |
-| `recordSensorData()` | 52,341 | <60k | ~$0.79 |
+| Function | Measured Gas | Hypothetical Mainnet (20 gwei, €2,000 ETH) |
+|----------|--------------|-------------------------------------------|
+| `registerProduct()` | ~190,000-207,000 | ~€0.08 |
+| `addTraceRecord()` | ~174,000-188,000 | ~€0.07 |
+| Complete product journey (1 reg + 3 traces) | ~750,000 | ~€0.30 |
 
-Struct packing and event optimization reduced registration costs from ~100,000 to 87,432 gas (12.6% improvement, IEEE 2024).
+**Design Trade-off Documented:** Gas costs are higher than optimized implementations (~60,000 gas with hash-based storage) due to string storage decision prioritizing code clarity for POC. This trade-off is acceptable for Sepolia testnet (zero cost) but would require optimization for mainnet production deployment. See Chapter 7 for discussion.
 
-**Security Validation:** Slither analysis identified zero critical or high-severity issues. Reentrancy (4 tests), access control (8 tests), integer overflow (6 tests), and gas limit DoS (2 tests) all passed. Timestamp manipulation partially passed—block.timestamp accuracy (±15 seconds) acceptable for non-critical supply chain ordering versus hours/days timescales.
+**Security Validation:** Access control tests verified role-based permissions: unauthorized addresses receive appropriate error messages, role management is restricted to admin, and public view functions are accessible without roles. Input validation tests confirmed rejection of empty product names, future harvest dates, and non-existent product IDs. A harvest date validation vulnerability was discovered and fixed during testing—producers could originally register products with future dates (e.g., 2030), enabling fraud scenarios.
 
 ---
 
-## 6.3 Frontend Testing Results
+## 6.3 Backend and Frontend Testing Results
 
-React Testing Library validated 186 component test cases across 48 files achieving 87.3% component coverage with zero failures. End-to-end testing using Playwright confirmed complete workflows across Chrome 120, Firefox 121, and Safari 17.2 with 21 test cases passing (Producer registration 45s avg, Distributor trace 38s, Consumer query 22s, IoT simulator 31s).
+The project achieved 236 total passing tests across 14 test suites (~3.2 seconds execution time). Backend API testing covered authentication endpoints, product registration, trace record APIs, and company management with >80% coverage on critical paths. Frontend component testing used React Testing Library with Jest, validating TraceRecordForm (role-based action filtering), TraceTimeline (event display, Etherscan links), and dashboard components.
 
-Lighthouse accessibility audits achieved WCAG 2.1 Level AA compliance with scores 92-96 (accessibility), 98-92 (performance), 100 (best practices). Fixed issues included missing ARIA labels (3 buttons), insufficient contrast (2 instances, updated to 7.2:1), and missing form label (1 search input). Keyboard accessibility verified for all interactive elements.
+**Test Distribution:**
+- Smart contract tests: 37 (ProductRegistry.sol)
+- API endpoint tests: ~100 (products, trace, auth, companies)
+- Component tests: ~70 (forms, timelines, dashboards)
+- Integration tests: ~29 (blockchain-database sync, auth flows)
+
+**Manual Testing:** Complete supply chain workflows validated via Playwright browser automation: Producer registration with QR code generation, Distributor receiving and tracing products, Retailer stocking and selling, and Consumer wallet-free product lookup. Dashboard tab navigation (In Custody, Product History, Incoming Shipments) verified across all roles.
+
+Accessibility features implemented include ARIA labels for screen readers, keyboard navigation for all interactive elements, and color-blind safe palette using patterns in addition to color for status differentiation.
 
 ---
 
 ## 6.4 Performance Evaluation
 
-Page load performance met all LCP targets: Homepage 1.8s, Producer Dashboard 2.3s, Consumer Query 1.9s, IoT Simulator 2.1s (Chrome DevTools, throttled 3G). API response times passed targets with write endpoints 1,987-2,341ms median (block confirmation dominates 76.4% latency) and read endpoints <200ms (database caching, Supabase pooling). Database queries achieved 8-89ms average times with composite indexes eliminating full table scans. Supabase pgBouncer connection pooling improved acquisition time 78× (234ms → 3ms).
+**Page Load Performance:** Measured using Next.js development server with browser DevTools. Homepage <2s, Producer Dashboard <2.5s, Consumer Query <2s on desktop connections. Mobile performance optimized through Next.js Image component (automatic WebP format conversion) and stale-while-revalidate caching strategy.
+
+**API Response Times:** Write endpoints (blockchain transactions) 12-15 seconds median due to Sepolia block confirmation time—this latency is inherent to Ethereum L1 and acceptable for supply chain tracking where operations occur over hours/days, not seconds. Read endpoints <200ms (database caching, Supabase connection pooling). Composite index on (Product.blockchainId, TraceRecord.createdAt) enables efficient trace history retrieval.
+
+**Blockchain Latency:** Block confirmation dominates write operation latency. Optimistic UI updates provide responsive user experience by showing pending state before blockchain confirmation, reverting if transaction fails.
 
 ---
 
 ## 6.5 System Validation
 
-End-to-end scenarios validated complete supply chain workflows: Producer registered "Organic Blueberries" (12.8s confirmation, QR generated) → Distributor scanned QR, added trace records with 3.2-3.8°C temperatures → Retailer stocked product → Consumer scanned QR without wallet, viewed complete journey timeline and temperature chart. Validation confirmed wallet-free consumer access, multi-party workflows, QR code functionality, and IoT simulator integration.
+End-to-end validation confirmed complete supply chain workflows function correctly from producer registration through consumer verification.
+
+**Scenario 1: Complete Supply Chain Journey**
+
+```mermaid
+flowchart LR
+    subgraph P[Producer]
+        P1[Register<br/>Product] --> P2[Generate<br/>QR Code]
+    end
+
+    subgraph D[Distributor]
+        D1[RECEIVED] --> D2[QUALITY<br/>CHECK] --> D3[SHIPPED]
+    end
+
+    subgraph R[Retailer]
+        R1[RECEIVED] --> R2[STOCKED] --> R3[SOLD]
+    end
+
+    subgraph C[Consumer]
+        C1[Scan QR] --> C2[View<br/>Timeline]
+    end
+
+    P2 -->|Ship| D1
+    D3 -->|Ship| R1
+    R3 -.->|Wallet-Free<br/>Access| C1
+```
+
+**Figure 6.5:** Complete supply chain journey showing trace record actions at each stage. Solid arrows indicate ownership transfer; dashed arrow indicates wallet-free consumer access.
+
+Producer registered "Organic Blueberries" with origin "Helsinki Farm" and harvest date. System response: blockchain confirmation in ~12-15 seconds, QR code generated automatically, product visible in Producer dashboard. Distributor logged in, viewed "Incoming Shipments" section showing product shipped to their company. Distributor clicked "Accept" → RECEIVED trace recorded on blockchain → product moved to "In Custody" tab. Distributor added QUALITY_CHECK trace with location notes. Distributor selected recipient company and clicked SHIPPED. Retailer viewed incoming shipment, accepted product (RECEIVED trace), added STOCKED trace. Retailer marked product SOLD. Consumer scanned QR code (wallet-free), viewed complete timeline showing all trace events with timestamps, actors, and Etherscan verification links.
 
 **Validation Results:**
-✅ All transactions succeeded without errors
-✅ Complete audit trail visible to consumer
-✅ Temperature monitoring demonstrated cold chain integrity
-✅ Wallet-free consumer access confirmed working
-✅ QR code scanning reliable across devices (iPhone 13, Samsung Galaxy S22, Google Pixel 7)
+- All blockchain transactions succeeded without errors
+- Ownership transfers correctly on RECEIVED actions
+- Complete audit trail visible to consumer without wallet
+- QR code scanning works on desktop (mobile requires HTTPS—deferred to production deployment)
+- Etherscan links enable independent verification
 
-**Scenario 2: Temperature Alert Workflow**
+**Scenario 2: Role-Based Access Control**
 
-Producer registered "Fresh Strawberries". Distributor received product. IoT simulator generated Warning scenario (8.5°C): temperature recorded 8.5°C, alert level WARNING (orange badge), database alert record created, email notification sent to distributor. Distributor received alert and took corrective action. Second sensor reading: 4.1°C (corrected, Normal). Consumer viewed product: temperature chart showed spike at 8.5°C then correction, alert history displayed with resolution notes.
+Table 6.5 Access control was validated at three layers (frontend, API, smart contract) 
 
-**Validation Results:**
-✅ Warning alert triggered correctly at 8.5°C threshold
-✅ Alert notification system functional
-✅ Consumer can see alert history and resolution
-✅ System transparency demonstrates complete cold chain integrity record
-
-**Scenario 3: Critical Temperature Alert**
-
-Producer registered "Organic Salmon Fillets". IoT simulator generated Critical scenario (11.2°C): temperature recorded 11.2°C, alert level CRITICAL (red badge), alert marked as "Food Safety Violation", email notification sent to all stakeholders. Product quarantined (status updated). Consumer attempted to scan QR code: warning displayed "This product exceeded safe temperature limits. Do not consume. Contact retailer for refund."
+| Layer | Attempted Action | Actor | Result | Protection |
+|-------|------------------|-------|--------|------------|
+| Frontend | Access Producer Dashboard | Consumer | Redirected to Consumer page | NextAuth.js middleware |
+| API | POST /api/products (register) | Distributor | 403 Forbidden | Role-based middleware |
+| Smart Contract | addTraceRecord() | No-role address | Transaction reverted | OpenZeppelin AccessControl |
 
 **Validation Results:**
-✅ Critical alert triggered at >10°C threshold
-✅ Stakeholder notifications sent
-✅ Consumer protected by visible warning
-✅ Product recall simulation successful
+- Frontend route protection working (NextAuth.js + middleware)  
+- API authorization working (role-based middleware)  
+- Smart contract access control working (OpenZeppelin AccessControl)
 
-User acceptance testing with three participants (small-scale farmer, distribution inspector, retail manager) achieved 4.3/5.0 average satisfaction across usability criteria (ease of use, visual clarity, speed, error handling). Producers appreciated email login eliminating cryptocurrency complexity, distributors valued temperature alert functionality for cold chain management, and retailers highlighted wallet-free consumer access enabling instant in-store verification. Minor UX issues (QR download button clarity, camera permission prompts, transaction delay feedback) were addressed through interface improvements.
+**Scenario 3: Dashboard Tab Navigation**
+
+Distributor with multiple products: "In Custody" tab showed 2 current products, "Product History" tab showed 3 previously handled products (shipped to retailers). Badge counts accurate. Switching tabs lazy-loaded history data (performance optimization). Retailer with sold products: "In Stock" tab showed 1 current product, "Product History" showed 2 sold products with SOLD status badge.
+
+**Validation Results:**
+- Tab navigation responsive and intuitive
+- Ownership-based filtering accurate (owner=me, history=me)
+- Status badges reflect current product state (IN_STOCK, SOLD, IN_TRANSIT)
+- Lazy loading prevents unnecessary API calls
 
 ---
 
@@ -83,15 +129,17 @@ Backend security implemented AES-256-GCM encrypted wallet management, role-based
 
 ## 6.7 Limitations Analysis
 
-**Blockchain Scalability:** Ethereum Sepolia processes ~15 TPS, insufficient for national-scale systems with millions of products. Gas costs ($0.79-$1.31 per transaction at 50 gwei mainnet) create $150-$300 annual cost barrier for small producers. 12-15 second confirmation latency acceptable for supply chain tracking but problematic for real-time retail scenarios. Layer 2 solutions (Polygon, Optimism) could increase throughput to 2,000-7,000 TPS while reducing costs.
+**Blockchain Scalability:** Ethereum L1 processes ~15-30 TPS, insufficient for national-scale systems with millions of products. 12-15 second confirmation latency acceptable for supply chain tracking (operations occur over hours/days) but problematic for real-time retail POS integration. Layer 2 solutions (Polygon, Arbitrum) could increase throughput while reducing costs 90%—see Chapter 8 Future Work.
 
-**Data Immutability Trade-offs:** Once registered on-chain, erroneous data (typos, wrong dates) cannot be modified—new "correction" transactions leave original errors visible. GDPR "right to be forgotten" conflicts with immutability; hybrid architecture stores personal data off-chain (deletable) while supply chain events remain on-chain (permanent).
+**Gas Cost Economics:** Current implementation (~750,000 gas per complete product journey) is acceptable for POC on Sepolia testnet (zero cost). Hypothetical mainnet deployment at 20 gwei would cost ~€0.30 per product journey—potentially cost-prohibitive for small producers tracking low-margin products. Hash-based storage optimization could reduce costs 40-60%.
 
-**IoT Simulation Limitations:** Software simulator validates architecture but lacks real-world sensor validation (battery depletion, connectivity loss, calibration drift, environmental variability). Manual data entry introduces manipulation opportunities. Three preset scenarios (Normal/Warning/Critical) create predictable patterns rather than natural sensor variability. While `isSimulated: true` flag provides transparency, consumers may distrust simulated data.
+**Data Immutability Trade-offs:** Once registered on-chain, erroneous data (typos, wrong dates) cannot be modified—new "correction" transactions leave original errors visible. GDPR "right to be forgotten" conflicts with blockchain immutability; hybrid architecture stores personal data off-chain (deletable) while supply chain events remain on-chain (permanent).
 
-**Wallet-Free Trade-off:** Consumer accessibility improvement sacrifices independent blockchain verification—consumers trust FoodTrace frontend rather than cryptographically verifying data via block explorers or personal nodes.
+**Wallet-Free Trade-off:** Consumer accessibility improvement (no MetaMask installation required) sacrifices independent blockchain verification—consumers trust FoodTrace frontend rather than cryptographically verifying data via block explorers or personal nodes. This trade-off prioritizes mainstream adoption over trustless verification.
 
-**Oracle Problem:** Blockchain guarantees data immutability but not truthfulness at creation. Producers could misrepresent origins, admins could falsify sensor data, or old inventory could be backdated. Timestamp validation prevents future dates but cannot verify past dates. Multi-party verification provides social proof but remains vulnerable to Sybil attacks. True data authenticity requires physical verification (independent audits, certifications) and hardware security modules—beyond POC scope.
+**IoT Sensor Integration Deferred:** Originally planned as Epic 8, IoT sensor integration was deferred to future work due to timeline constraints. The current implementation relies on manual trace record entry, which introduces manipulation opportunities—actors could fabricate data. IoT sensors would provide automated, tamper-resistant data collection. See Chapter 8 for proposed IoT design.
+
+**Oracle Problem:** Blockchain guarantees data immutability but not truthfulness at creation. Producers could misrepresent origins, harvest dates could be backdated (though future dates are validated). Timestamp validation prevents future dates but cannot verify past date accuracy. True data authenticity requires physical verification mechanisms (independent audits, certifications, IoT sensors with hardware security modules)—beyond POC scope.
 
 ---
 
@@ -115,4 +163,4 @@ W3C. (2018). *Web Content Accessibility Guidelines (WCAG) 2.1*. World Wide Web C
 
 ---
 
-**Word Count:** ~1,100 words (Target: 1,900-2,300 | Session 24: 3,451 → 1,093 | Reduction: 68%)
+**Word Count:** ~1,400 words (Target: 1,900-2,300 | Corrected Session 73: Removed fabricated IoT scenarios, updated with actual test counts)

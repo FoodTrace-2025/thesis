@@ -3,8 +3,8 @@ doc-id: thesis-project-context
 title: FoodTrace Thesis Project Context
 purpose: AI agent entry point and navigation hub
 auto-generated: false
-last-updated: 2025-12-05
-session: 72
+last-updated: 2025-12-08
+session: 76
 ---
 
 # FoodTrace Thesis - Project Context
@@ -32,7 +32,7 @@ session: 72
 
 ### Session History
 
-- **Session Archive** → .claude/sessions/session-history.md (Sessions 62-72 archive, last 10 kept)
+- **Session Archive** → .claude/sessions/session-history.md (Sessions 66-76 archive, last 10 kept)
 
 ### Archived Documents (2025-11-13 - Planning Phase)
 
@@ -54,31 +54,33 @@ Planning documents created during Sessions 1-7 but never used for development. A
 **Project:** FoodTrace - Blockchain food supply chain traceability system (POC)
 **Goal:** Transparent tracking Producer → Distributor → Retailer → Consumer using Ethereum + Next.js
 
-**Key Innovation:** IoT sensor simulation + QR code tracking + wallet-free consumer query
+**Key Innovation:** QR code tracking + wallet-free consumer query + role-based supply chain dashboards
 
 ---
 
 ## Current Session Status
 
-- **Last Updated**: 2025-12-05 (Session 72)
-- **Project Status**: Week 4 - Epics 1-7 ✅ COMPLETE (7/13 epics done)
-- **Project Completion**: ~65% (see breakdown below)
+- **Last Updated**: 2025-12-08 (Session 76)
+- **Project Status**: Week 6 - Epic 13 Complete, Production Live
+- **Project Completion**: ~75% (see breakdown below)
   - Planning Phase: 100% (Brief, PRD, Architecture)
-  - Implementation: 54% (7/13 epics complete)
-  - Thesis Writing: 0% (templates only, content written during development)
-- **Active Stage**: Ready for Epic 9 (Consumer Query Interface)
-- **Next Priority**: Epic 9 stories (Consumer Query - core thesis value)
-- **Recent Changes**: Epic 7 complete (17/17 stories), Stories 7.16-7.17 manual tests verified
+  - Implementation: 62% (8/13 epics complete - Epic 13 Deployment done)
+  - Thesis Writing: 30% (7 chapters corrected to reflect actual implementation)
+- **Active Stage**: Epic 9 Story Implementation (by TaiSheng/YiLing)
+- **Next Priority**: Story 9.1 (Consumer Landing Page) - team implementing
+- **Recent Changes**: Epic 13 complete, production deployed, smoke tests verified
 - **Blockers**: None
-- **Ready for**: Epic 9 story creation and implementation
+- **Ready for**: Epic 9 implementation or thesis writing
+- **Production URL**: https://foodtrace.onrender.com
 
-### Current Session Achievements (Session 72 - 2025-12-05)
+### Current Session Achievements (Session 76 - 2025-12-08)
 
-✅ **Story 7.16 Manual Tests Verified**: 5/5 tests passing (SHIPPED recipient selection)
-✅ **Story 7.17 Manual Tests Verified**: 6/7 tests passing (Incoming Shipments Visibility)
-✅ **Epic 7 Complete**: 17/17 stories implemented and verified
-✅ **Manual Testing Guideline Created**: Comprehensive 7-test checklist for Story 7.17
-✅ **Full Supply Chain Flow Tested**: Producer→Distributor→Retailer with recipient selection + accept workflow
+✅ **Epic 13 Complete**: All 5 stories (13.1-13.5) implemented and verified
+✅ **Production Deployment**: Live at https://foodtrace.onrender.com with auto-deploy from main
+✅ **Smoke Testing Verified**: Auth, products, transfers, QR scanner all working on production
+✅ **Mobile QR Scanner Verified**: Tested on Android phone - camera and scanning works
+✅ **Documentation Created**: README Live Demo section, docs/deployment.md guide
+✅ **Release Tagged**: v1.0.0-thesis-demo created and pushed to GitHub
 
 ### Development Approach
 
@@ -132,9 +134,9 @@ Planning documents created during Sessions 1-7 but never used for development. A
 
    - Simpler deployment, no CORS issues, saves hosting costs
 
-3. **IoT Simulator** (vs real hardware) - Software simulation (Normal/Warning/Critical)
+3. **IoT Deferred** (Epic 8 not implemented) - Planned but not built due to time constraints
 
-   - Academic validity, saves €150-200, faster testing, reliable demos
+   - Focus on core supply chain tracking (Epic 7) instead; IoT documented as Future Work
 
 4. **Supabase** (vs vanilla PostgreSQL) - Built-in pgBouncer connection pooling
 
@@ -207,7 +209,7 @@ Planning documents created during Sessions 1-7 but never used for development. A
 /home/kala/Documents/GitHub/thesis/docs/thesis/chapters/chapter-8-conclusion.md
 
 # Session Archive
-/home/kala/Documents/GitHub/thesis/.claude/sessions/session-history.md (✅ Sessions 62-72, last 10 kept)
+/home/kala/Documents/GitHub/thesis/.claude/sessions/session-history.md (✅ Sessions 66-76, last 10 kept)
 
 # Archived Planning (2025-11-13)
 /home/kala/Documents/GitHub/thesis/docs/archive/planning-phase/README.md (📦 Index of archived docs)
@@ -280,9 +282,9 @@ When updating this file after each session:
 
 ---
 
-**Last Session:** Dec 5, 2025 (Session 72) - Epic 7 Complete + Manual Testing
-**Next Priority:** Epic 9 (Consumer Query Interface) - core thesis value proposition
-**Status:** Implementation 54% complete (Epics 1-7 ✅, 6 epics remaining)
-**Session History:** See .claude/sessions/session-history.md for Sessions 62-72 (last 10 kept)
+**Last Session:** Dec 8, 2025 (Session 76) - Epic 13 Deployment Complete
+**Next Priority:** Story 9.1 (Consumer Landing Page) - team implementing
+**Status:** Implementation 62% complete, production live at https://foodtrace.onrender.com
+**Session History:** See .claude/sessions/session-history.md for Sessions 66-76 (last 10 kept)
 
 _This CLAUDE.md file is the AI assistant's primary context document. Update after each significant milestone._

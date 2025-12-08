@@ -17,6 +17,9 @@
 .env.production.local
 .env*.local
 
+# Render.com deployment env file
+.env.render
+
 # Hardhat private keys & secrets
 .secret
 hardhat.config.ts.backup

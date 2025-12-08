@@ -42,14 +42,15 @@ This objective emphasizes:
 
 ### 1.3.2 Specific Objectives
 
-This thesis implements a proof-of-concept system with six key components:
+This thesis implements a proof-of-concept system with five key components:
 
 - smart contracts with role-based permissions deployed to Ethereum testnet
 - wallet-free consumer interface enabling product verification through QR codes
 - hybrid data storage balancing blockchain immutability with off-chain efficiency
 - web application supporting four supply chain roles (Producer, Distributor, Retailer, Consumer)
-- simulated IoT sensor integration for temperature and humidity monitoring
 - comparative analysis of public versus permissioned blockchain platforms for food traceability applications.
+
+*Note: IoT sensor integration was originally planned but deferred to future work due to time constraints. See Chapter 8 for proposed design.*
 
 ### 1.3.3 Research Questions
 
@@ -74,7 +75,7 @@ _What is the feasibility of deploying blockchain traceability for small-scale pr
 
 This **proof-of-concept (POC)** system uses Ethereum Sepolia testnet (not mainnet—zero real costs), Next.js 14.2.15 + React + TypeScript frontend, Solidity ^0.8.20 smart contracts with Hardhat framework, and Supabase (PostgreSQL) for off-chain metadata. The simplified 4-role supply chain model (Producer, Distributor, Retailer, Consumer) focuses on one product category for demonstration.
 
-**Key limitations acknowledged:** Testnet deployment means gas costs estimated not experienced; IoT simulation without physical sensors (no MQTT, hardware, edge computing); limited scalability testing (3-wallet scenario, not high-volume production); no formal security audit or enterprise system integration; 12-week timeline prevents long-term deployment validation. These limitations are justified by educational focus, budget constraints (zero-cost requirement), and time constraints appropriate for bachelor's thesis scope. Detailed limitation implications discussed in Chapter 6.
+**Key limitations acknowledged:** Testnet deployment means gas costs estimated not experienced; IoT sensor integration deferred to future work (see Chapter 8); limited scalability testing (3-wallet scenario, not high-volume production); no formal security audit or enterprise system integration; 12-week timeline prevents long-term deployment validation. These limitations are justified by educational focus, budget constraints (zero-cost requirement), and time constraints appropriate for bachelor's thesis scope. Detailed limitation implications discussed in Chapter 7.
 
 ---
 
@@ -84,10 +85,11 @@ This thesis progresses through eight chapters:
 **Chapter 1** establishes blockchain technology context, research problem, and objectives.
 **Chapter 2** reviews literature on blockchain fundamentals, Ethereum vs Hyperledger Fabric, smart contract design patterns, and Web3 UX challenges.
 **Chapter 3** explains BMAD methodology, platform selection justification, technical architecture design, and testing approach.
-**Chapter 4** details smart contract implementation (Solidity, OpenZeppelin, role-based access control, gas optimization).
-**Chapter 5** covers system implementation (backend API development, frontend interfaces, IoT simulator integration).
-**Chapter 6** presents test results (coverage analysis, performance metrics, gas cost measurements). **Chapter 7** discusses findings, evaluates blockchain advantages and limitations (scalability, oracle problem, GDPR conflicts), and recommends production deployment strategies.
-**Chapter 8** concludes by answering research questions, positioning technical contributions, and proposing future work (Layer 2 scaling, real IoT sensors, Hyperledger migration).
+**Chapter 4** details smart contract implementation (Solidity, OpenZeppelin, role-based access control).
+**Chapter 5** covers system implementation (backend API development, frontend interfaces, Web3 integration).
+**Chapter 6** presents test results (coverage analysis, performance metrics, gas cost measurements).
+**Chapter 7** discusses findings, evaluates blockchain advantages and limitations (scalability, oracle problem, scope reduction decisions), and recommends production deployment strategies.
+**Chapter 8** concludes by answering research questions, positioning technical contributions, and proposing future work (gas optimization, IoT sensors, Layer 2 scaling).
 
 ---
 
