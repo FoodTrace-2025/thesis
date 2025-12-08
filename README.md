@@ -2,9 +2,10 @@
 
 **Bachelor's Thesis Project | OAMK University of Applied Sciences**
 
-[![Project Status](https://img.shields.io/badge/Status-Planning%20Phase-yellow)]()
+[![Project Status](https://img.shields.io/badge/Status-Development%20Phase-green)]()
 [![Timeline](https://img.shields.io/badge/Timeline-12%20Weeks-blue)]()
 [![Team Size](https://img.shields.io/badge/Team-3%20Members-green)]()
+[![Live Demo](https://img.shields.io/badge/Demo-Live-brightgreen)](https://foodtrace.onrender.com)
 
 ---
 
@@ -20,6 +21,37 @@ A proof-of-concept blockchain-based food supply chain traceability system that e
 - 🌡️ IoT sensor simulation (temperature/humidity monitoring)
 - ✅ Multi-party verification
 - 🔍 Consumer query interface (wallet-free)
+
+---
+
+## 🌐 Live Demo
+
+**Production URL:** https://foodtrace.onrender.com
+
+### Accessing the Demo
+
+1. Visit the production URL above
+2. Use test credentials to login:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Platform Admin | admin@foodtrace.app | admin123 |
+| Producer | farmer@producer.test | admin123 |
+| Distributor | test@distributor.test | admin123 |
+| Retailer | test@cityretail.test | admin123 |
+
+### Test Data Available
+
+- 3 approved companies (Producer, Distributor, Retailer)
+- 6 products with complete supply chain history
+- Products transferred through full supply chain
+
+### Consumer Traceability
+
+> **Coming Soon:** Consumer query interface (`/trace`) is under development.
+> Scan QR codes or enter Product ID to view product journey.
+
+**Note:** Free tier may have 30-60 second cold start if inactive. See [Deployment Guide](./docs/deployment.md) for details.
 
 ---
 
@@ -353,8 +385,9 @@ This project is created for academic purposes as part of a Bachelor's thesis at 
 
 ---
 
-**Project Status:** 🟢 Planning Phase
-**Last Updated:** 2025-10-24
-**Next Milestone:** Kickoff Meeting (October 31, 2025)
+**Project Status:** 🟢 Development Phase (Week 6)
+**Last Updated:** 2025-12-08
+**Live Demo:** https://foodtrace.onrender.com
+**Next Milestone:** Consumer Query Interface (Epic 9)
 
 ---
