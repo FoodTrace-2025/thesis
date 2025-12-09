@@ -76,7 +76,7 @@ function ConsumerTraceContent() {
         }
 
         setProduct(data.product as ProductResponse);
-      } catch (err) {
+      } catch {
         setError("Network error. Please try again.");
         setProduct(null);
       } finally {

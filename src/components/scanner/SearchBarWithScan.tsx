@@ -1,11 +1,9 @@
 import {
-  Box,
   Input,
   HStack,
   IconButton,
   Button,
 } from '@chakra-ui/react';
-import { SearchIcon } from '@chakra-ui/icons';
 import { FiCamera } from 'react-icons/fi';
 
 interface SearchBarWithScanProps {

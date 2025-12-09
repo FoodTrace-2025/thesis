@@ -254,27 +254,30 @@ export default function DistributorDashboard({
   };
 
   // Lookup product by blockchainId (Story 7.7 Task 3, Story 7.10 enhancement)
-  const handleLookup = async (idOverride?: string) => {
-    const idToLookup = idOverride || blockchainIdInput.trim();
-    if (!idToLookup) return;
-    setIsLookingUp(true);
-    setLookupError('');
-    setLookupProduct(null);
+  const handleLookup = useCallback(
+    async (idOverride?: string) => {
+      const idToLookup = idOverride || blockchainIdInput.trim();
+      if (!idToLookup) return;
+      setIsLookingUp(true);
+      setLookupError('');
+      setLookupProduct(null);
 
-    try {
-      const response = await fetch(`/api/products/${idToLookup}`);
-      const data = await response.json();
-      if (!response.ok) {
-        setLookupError(data.error || 'Product not found');
-        return;
+      try {
+        const response = await fetch(`/api/products/${idToLookup}`);
+        const data = await response.json();
+        if (!response.ok) {
+          setLookupError(data.error || 'Product not found');
+          return;
+        }
+        setLookupProduct(data.product);
+      } catch {
+        setLookupError('Network error. Please try again.');
+      } finally {
+        setIsLookingUp(false);
       }
-      setLookupProduct(data.product);
-    } catch {
-      setLookupError('Network error. Please try again.');
-    } finally {
-      setIsLookingUp(false);
-    }
-  };
+    },
+    [blockchainIdInput]
+  );
 
   // Handle QR scan success (Story 7.10)
   const handleScan = useCallback(
@@ -283,7 +286,7 @@ export default function DistributorDashboard({
       setBlockchainIdInput(productId);
       handleLookup(productId);
     },
-    [onScannerClose]
+    [onScannerClose, handleLookup]
   );
 
   // Handle receive success (Story 7.7 Task 3, 7.14: Refetch both lists)
