@@ -131,14 +131,9 @@ The FoodTrace system implements re-entrancy guards and documents oracle problem 
 
 **Purpose:** Review custodial wallet architectures, private key management, and enterprise blockchain authentication patterns. This subsection corresponds to Chapter 5.1 (Backend Development).
 
-**Planned content:**
+**Planned content:** Email/password authentication vs MetaMask patterns, private key encryption and storage (AES-256), IBM Food Trust custodial wallet model, and trade-offs between centralization and UX accessibility.
 
-- Email/password authentication vs MetaMask patterns
-- Private key encryption and storage (AES-256)
-- IBM Food Trust custodial wallet model
-- Trade-offs: centralization vs UX accessibility
-
-**Citations needed:** Find 2-3 sources - can include technical documentation (OpenZeppelin, IBM Food Trust) alongside academic papers on enterprise blockchain UX.
+**Citations needed:** 2-3 sources including technical documentation (OpenZeppelin, IBM Food Trust) alongside academic papers on enterprise blockchain UX.
 
 **Writing approach:** Mix academic papers with industry technical documentation (clearly labeled as such).
 
@@ -150,33 +145,20 @@ The FoodTrace system implements re-entrancy guards and documents oracle problem 
 
 **Wallet Complexity as Adoption Barrier:**
 
-Blockchain applications present unique UX challenges not found in traditional web applications. Cryptocurrency wallet setup presents significant adoption barriers including seed phrase management, private key storage, and network configuration complexity. Traditional web authentication requires email/password entry; blockchain authentication requires a complex seven-step workflow:
-
-1. Wallet extension installation
-2. Seed phrase generation
-3. Secure storage of 24 words (loss = permanent)
-4. Connection approval
-5. Transaction signing
-6. Gas fee payment
-7. Confirmation wait
+Blockchain applications present unique UX challenges not found in traditional web applications. Cryptocurrency wallet setup presents significant adoption barriers including seed phrase management, private key storage, and network configuration complexity. Traditional web authentication requires email/password entry; blockchain authentication requires a seven-step workflow progressing from extension installation through seed phrase generation, secure storage of 24 words (loss = permanent), connection approval, transaction signing, gas fee payment, and finally confirmation wait.
 
 Blockchain wallet onboarding requires **substantially longer time than traditional account creation** due to seed phrase generation, secure backup procedures, and network configuration steps. Empirical research analyzing 45,821 mobile wallet app reviews documents that users frequently experience irreversible monetary losses due to seed phrase mismanagement, with wallet complexity presenting significant adoption barriers for both novice and experienced users (Voskobojnikov et al., 2021). These irrecoverability challenges are absent in traditional systems where password reset mechanisms prevent permanent account loss.
 
 **Wallet-Free Access Pattern:**
 
-For supply chain consumer verification, requiring wallet installation defeats accessibility goals. The solution: **read-only blockchain queries** without wallet requirement. This **dual-access pattern** separates user types by authentication requirements:
+For supply chain consumer verification, requiring wallet installation defeats accessibility goals. The solution: **read-only blockchain queries** without wallet requirement. This **dual-access pattern** separates user types by authentication requirements, as shown in Table 3.
 
-**Business Users (Producer/Distributor/Retailer):**
+*Table 3 Dual-access authentication pattern for blockchain supply chain systems*
 
-- Require wallet authentication for write operations
-- Sign transactions to record supply chain events (product registration, transfers, sensor data)
-- Pay gas fees for blockchain state changes
-
-**Consumers:**
-
-- Access blockchain data via read-only queries (no wallet required)
-- Query product information through public RPC providers such as Alchemy or Infura
-- Zero setup, zero cost, browser-based access via QR code scanning
+| User Type | Authentication | Operations | Cost Model |
+|-----------|----------------|------------|------------|
+| Business Users (Producer/Distributor/Retailer) | Wallet required | Write operations: product registration, transfers, sensor data recording | Gas fees per transaction |
+| Consumers | No wallet required | Read-only queries via public RPC (Alchemy/Infura) | Zero cost, browser-based |
 
 This hybrid approach provides security for business operations (wallet signatures authenticate data sources) while maintaining accessibility for consumers (no installation barriers). Read-only queries impose zero cost (RPC providers absorb infrastructure costs), zero setup (works in any browser), and mobile-first design optimized for QR code scanning on smartphones.
 
@@ -192,14 +174,9 @@ Consumer acceptance research examining 715 Greek consumers found high valuation 
 
 **Purpose:** Review blockchain-IoT integration architectures, sensor data recording patterns, and hybrid data approaches. This subsection corresponds to Chapter 5.3 (IoT Simulator Implementation).
 
-**Planned content:**
+**Planned content:** Blockchain-IoT integration architectures (edge computing, MQTT protocols), sensor data recording patterns (event-based vs storage-based), hybrid data approach (normal readings = events, critical alerts = storage), and IoT simulation for academic POCs (validity, cost-benefit analysis).
 
-- Blockchain-IoT integration architectures (edge computing, MQTT protocols)
-- Sensor data recording patterns (event-based vs storage-based)
-- Hybrid data approach (normal readings = events, critical alerts = storage)
-- IoT simulation for academic POCs (validity, cost-benefit analysis)
-
-**Citations needed:** Find 2-3 REAL academic papers on IoT-blockchain integration for food traceability.
+**Citations needed:** 2-3 REAL academic papers on IoT-blockchain integration for food traceability.
 
 **Writing approach:** Search → Verify → Approve → Write with verified sources.
 
@@ -209,48 +186,28 @@ Consumer acceptance research examining 715 Greek consumers found high valuation 
 
 ### 2.5.1 Identified Gaps in Literature
 
-**Gap 1: User Accessibility in Public Blockchains**
+Ellahi et al. (2024) systematic review of 60 blockchain food supply chain frameworks identified significant research gaps. While 88.3% of frameworks focus on traceability and transparency (data accuracy, supply chain visibility, authenticity verification), only 3% address donation/redistribution and 5% address supply chain financing—critical functions for small producers lacking access to traditional financial services. Table 4 summarizes the three primary research gaps this thesis addresses.
 
-Ellahi et al. (2024) systematic review of 60 blockchain food supply chain frameworks found **88.3% focus on traceability and transparency** (data accuracy, supply chain visibility, authenticity verification), while **only 3% address donation/redistribution and 5% address supply chain financing**—critical functions for small producers lacking access to traditional financial services. Existing research emphasizes enterprise-scale operations with minimal consideration for: wallet-free consumer access patterns, mobile-first blockchain application design, or UX optimization for non-technical users in resource-constrained environments.
+*Table 4 Research gaps identified in blockchain food supply chain literature*
 
-**Gap 2: IoT Simulation for Academic POCs**
-
-Academic papers often assume access to physical IoT sensors (DHT22, GPS modules, Raspberry Pi). Limited research addresses: viability of IoT simulation for proof-of-concept validation, cost-benefit analysis of simulation vs hardware for academic research, or architectural patterns enabling migration from simulation to production.
-
-**Gap 3: Hybrid Storage Architectures**
-
-Most research uses full on-chain storage (expensive, scalability challenges) or full off-chain storage (defeats blockchain immutability benefits). Limited research explores hybrid approaches: critical data on-chain (product ID, timestamps, ownership), metadata off-chain (descriptions, images), cryptographically linked (SHA-256 hashes verify off-chain data integrity).
+| Gap | Description |
+|-----|-------------|
+| Gap 1: User Accessibility | Enterprise-scale operations dominate; missing wallet-free consumer access and mobile-first UX design |
+| Gap 2: IoT Simulation | Physical sensors assumed; missing simulation viability research for POC validation |
+| Gap 3: Storage Architecture | Full on-chain or off-chain only; missing hybrid approaches with cryptographic linking |
 
 ### 2.5.2 Thesis Contributions
 
-This thesis addresses identified gaps through several technical contributions:
+This thesis addresses identified gaps through four technical contributions summarized in Table 5.
 
-**TC1: Wallet-Free Consumer Access Pattern**
+*Table 5 Technical contributions addressing identified research gaps*
 
-- Demonstrates read-only blockchain queries via public RPC (Alchemy)
-- QR code → product ID → blockchain lookup without wallet installation
-- Mobile-first progressive disclosure UI (critical information first, technical details collapsed)
-
-**TC2: IoT Simulation Methodology for Academic POCs**
-
-- Validates software-based IoT simulation without physical hardware
-- Three scenario presets (Normal/Warning/Critical) generate realistic data
-- Database + blockchain dual recording demonstrates production-ready architecture
-- Documents cost savings (€150-200 hardware) and development time reduction (3 weeks)
-
-**TC3: Hybrid Data Architecture**
-
-- Critical data on-chain: product ID, ownership transfers, timestamps (immutable)
-- Metadata off-chain: descriptions, images, detailed sensor logs (PostgreSQL/Supabase)
-- Cryptographic linking: Keccak-256 hashes verify off-chain data integrity
-- Gas cost reduction: 90% savings vs full on-chain storage
-
-**TC4: Small Producer Feasibility Analysis**
-
-- Addresses enterprise bias in current research (Ellahi et al., 2024)
-- Demonstrates Ethereum public blockchain viability for small-scale producers
-- Evaluates barriers: gas costs, technical complexity, setup requirements
-- Compares with traditional centralized database approach
+| Contribution | Description |
+|--------------|-------------|
+| TC1: Wallet-Free Consumer Access | Read-only blockchain queries via public RPC enabling QR code scanning without wallet installation (addresses Gap 1) |
+| TC2: IoT Simulation Methodology | Software-based simulation with scenario presets replacing physical hardware, reducing costs by €150-200 (addresses Gap 2) |
+| TC3: Hybrid Data Architecture | Critical data on-chain with metadata off-chain, achieving 90% gas cost reduction via Keccak-256 hash linking (addresses Gap 3) |
+| TC4: Small Producer Feasibility | Ethereum viability analysis for small-scale producers with barrier evaluation and database comparison (addresses Gap 1) |
 
 ### 2.5.3 Field Positioning
 
@@ -348,17 +305,8 @@ Zheng, Z., Xie, S., Dai, H., Chen, X., & Wang, H. (2018). Blockchain challenges 
 
 **Word Count:** ~3,600 words (Target: 2,200-2,700 words - currently exceeds by ~900 words but within acceptable thesis range)
 
-**Current Status:**
+**Current Status:** Sections 2.1-2.2 complete (~1,400 words); Section 2.3 (Smart Contracts) complete (~950 words) with 17 verified academic citations (2018-2025); Section 2.4 (Web3+IoT) partially complete (2.4.2 written ~500 words, 2.4.1 and 2.4.3 to be written Week 5-6 ~400-600 words); Section 2.5 (Research Gaps) complete (~1,000 words).
 
-- Sections 2.1-2.2: Complete (~1,400 words)
-- Section 2.3 (Smart Contracts): ✅ **Complete (~950 words)** - Added 17 verified academic citations (2018-2025)
-- Section 2.4 (Web3+IoT): Partially complete (2.4.2 written ~500 words, 2.4.1 and 2.4.3 to be written Week 5-6 ~400-600 words)
-- Section 2.5 (Research Gaps): Complete (~1,000 words)
+**Section 2.3 Completion Notes:** Added 4 subsections covering smart contract design patterns for food traceability with 17 new peer-reviewed citations (IEEE, ACM, Springer, MDPI) from 2018-2025. All DOIs verified and citations follow thesis format. Provides theoretical foundation for Chapter 4 implementation covering hybrid storage, RBAC, gas optimization, and security vulnerabilities.
 
-**Section 2.3 Completion Notes:**
-
-- Added 4 subsections covering smart contract design patterns for food traceability
-- 17 new peer-reviewed citations (IEEE, ACM, Springer, MDPI) from 2018-2025
-- All DOIs verified and citations follow thesis format
-- Provides theoretical foundation for Chapter 4 implementation
-- Addresses hybrid storage, RBAC, gas optimization, and security vulnerabilities
+**Session 78 Changes (2025-12-09):** Converted 7-step wallet workflow to prose; converted dual-access pattern to Table 3; converted research gaps to Table 4; converted thesis contributions to Table 5; converted planned content sections to prose. Total bullet points removed: ~35.

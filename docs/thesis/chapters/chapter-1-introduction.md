@@ -12,18 +12,45 @@ However, existing blockchain supply chain implementations face a critical trade-
 
 Current research lacks solutions balancing transparency benefits of public blockchains with accessibility requirements for mass adoption. Recent systematic reviews reveal an enterprise-dominant focus with limited attention to small producer needs and consumer accessibility (Ellahi et al., 2024). Moreover, wallet-based access remains the dominant pattern, creating adoption barriers for end consumers who simply want to verify product authenticity without installing cryptocurrency software. This thesis addresses this gap by demonstrating how Ethereum public blockchain can enable transparent supply chain tracking with wallet-free consumer access, targeting the 570 million small-scale farms globally (FAO, 2023) underserved by enterprise consortium models.
 
+Figure 1 illustrates the FoodTrace system overview, showing how products flow through the four-role supply chain while blockchain provides the immutable data layer.
+
+*Figure 1 FoodTrace system overview showing 4-role supply chain flow and blockchain integration*
+
+<!-- Mermaid diagram for Excalidraw - export as PNG for Word -->
+```mermaid
+flowchart LR
+    subgraph Supply Chain Flow
+        P[Producer] -->|QR Code| D[Distributor]
+        D -->|QR Code| R[Retailer]
+        R -->|QR Code| C[Consumer]
+    end
+
+    subgraph Blockchain Layer
+        BC[(Ethereum\nBlockchain)]
+    end
+
+    P -->|Write| BC
+    D -->|Write| BC
+    R -->|Write| BC
+    C -.->|Read Only| BC
+```
+
 ---
 
 ## 1.2 Problem Statement
 
 The central problem addressed is: **How can blockchain technology be made accessible to mainstream users while preserving its core benefits of decentralization, transparency, and immutability?**
 
-This manifests in food supply chain traceability through interconnected challenges:
+This manifests in food supply chain traceability through four interconnected challenges summarized in Table 1.
 
-- User experience barriers—wallet setup and management complexity deters mainstream adoption
-- Cost-prohibitive transaction fees—Ethereum mainnet gas costs vary significantly based on network congestion, with transaction fees often exceeding economic viability for low-margin products
-- Oracle problem—blockchain ensures data immutability but cannot verify off-chain data accuracy ("garbage in, garbage out")
-- Platform selection complexity—when to use public blockchain (Ethereum) vs permissioned alternatives (Hyperledger Fabric)
+*Table 1 Key challenges in blockchain-based food supply chain traceability*
+
+| Challenge | Description |
+|-----------|-------------|
+| User Experience | Wallet setup and management complexity deters mainstream adoption |
+| Transaction Costs | Ethereum mainnet gas fees vary with congestion, often exceeding viability for low-margin products |
+| Oracle Problem | Blockchain ensures data immutability but cannot verify off-chain data accuracy ("garbage in, garbage out") |
+| Platform Selection | Trade-offs between public blockchain (Ethereum) and permissioned alternatives (Hyperledger Fabric) lack clear guidance |
 
 ---
 
@@ -33,22 +60,21 @@ This manifests in food supply chain traceability through interconnected challeng
 
 **"Design, implement, and evaluate a proof-of-concept blockchain-based food traceability system demonstrating how Ethereum smart contracts can provide transparent, immutable supply chain tracking while addressing mainstream accessibility through wallet-free consumer access and hybrid data architecture."**
 
-This objective emphasizes:
-
-- technical demonstration (smart contracts, Web3 architecture, hybrid storage)
-- accessibility innovation (wallet-free pattern)
-- real-world validation (4-role supply chain: Producer → Distributor → Retailer → Consumer)
-- critical evaluation (performance analysis, limitations documentation).
+This objective emphasizes four dimensions: (1) technical demonstration through smart contracts, Web3 architecture, and hybrid storage; (2) accessibility innovation via the wallet-free consumer pattern; (3) real-world validation using a 4-role supply chain from Producer to Consumer; and (4) critical evaluation including performance analysis and limitations documentation.
 
 ### 1.3.2 Specific Objectives
 
-This thesis implements a proof-of-concept system with five key components:
+This thesis implements a proof-of-concept system with five key components outlined in Table 2.
 
-- smart contracts with role-based permissions deployed to Ethereum testnet
-- wallet-free consumer interface enabling product verification through QR codes
-- hybrid data storage balancing blockchain immutability with off-chain efficiency
-- web application supporting four supply chain roles (Producer, Distributor, Retailer, Consumer)
-- comparative analysis of public versus permissioned blockchain platforms for food traceability applications.
+*Table 2 Specific objectives and system components*
+
+| Objective | Component | Deliverable |
+|-----------|-----------|-------------|
+| SO1 | Smart Contracts | Role-based permissions deployed to Ethereum Sepolia testnet |
+| SO2 | Consumer Interface | Wallet-free product verification via QR codes |
+| SO3 | Data Architecture | Hybrid on-chain/off-chain storage balancing immutability with efficiency |
+| SO4 | Web Application | Four-role dashboards (Producer, Distributor, Retailer, Consumer) |
+| SO5 | Platform Analysis | Comparative evaluation of Ethereum vs Hyperledger Fabric |
 
 *Note: IoT sensor integration was originally planned but deferred to future work due to time constraints. See Chapter 8 for proposed design.*
 
@@ -115,4 +141,11 @@ Wood, G. (2014). _Ethereum: A secure decentralised generalised transaction ledge
 
 ---
 
-**Word Count:** ~1,210 words (Target: 1,200 | Original: 4,271 | Reduction: 72%)
+**Word Count:** ~1,250 words (Target: 1,200 | Tables: 2 | Figures: 1)
+
+**Session 78 Changes (2025-12-09):**
+- Converted Section 1.2 bullet list → Table 1
+- Converted Section 1.3.1 bullet list → numbered prose
+- Converted Section 1.3.2 bullet list → Table 2
+- Added Figure 1 (Mermaid diagram for Excalidraw)
+- Total bullet points removed: 13

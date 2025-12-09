@@ -127,7 +127,7 @@ Based on OAMK thesis template "Thesis Report G22.docx" (also known as 110625 tem
 2. **Objectives** (2-3 sentences)
    - Develop proof-of-concept blockchain traceability system
    - Demonstrate 4-role supply chain tracking (Producer → Distributor → Retailer → Consumer)
-   - Implement IoT sensor simulation and wallet-free consumer access
+   - Implement wallet-free consumer access *(IoT sensor simulation deferred to Future Work)*
 
 3. **Theoretical Background** (2-3 sentences)
    - Ethereum blockchain technology
@@ -341,11 +341,11 @@ Brief overview of each chapter (one paragraph per chapter).
   - QR code verification patterns
   - Corresponds to: Chapter 5.2 Frontend Development - Consumer Interface
 
-- 2.4.3 IoT-Blockchain Integration 🔨 To be written Week 5-6
+- 2.4.3 IoT-Blockchain Integration ⚠️ **DEFERRED TO FUTURE WORK**
   - Blockchain-IoT integration architectures
   - Sensor data recording patterns (event-based vs storage-based)
   - IoT simulation for academic POCs
-  - Corresponds to: Chapter 5.3 IoT Simulator Implementation
+  - *Note: Epic 8 not implemented - document as Future Work in Chapter 8*
 
 **Key Sources:** Mix academic papers with technical documentation (OpenZeppelin, Wagmi docs) clearly labeled as industry standards
 
@@ -506,6 +506,8 @@ Brief overview of each chapter (one paragraph per chapter).
 
 ### 4.4 SensorData Contract (Sam - 0.75 page)
 
+> **⚠️ DEFERRED TO FUTURE WORK** - Epic 8 (IoT Simulator) was not implemented due to time constraints. This section documents planned design for Chapter 8 Future Work discussion.
+
 - IoT sensor data recording
 - Alert threshold implementation (8°C warning, 10°C critical)
 - Event vs storage trade-offs
@@ -638,13 +640,15 @@ Brief overview of each chapter (one paragraph per chapter).
 
 #### 4.3.5 IoT Simulator Admin Interface (0.5 page)
 
+> **⚠️ DEFERRED TO FUTURE WORK** - Epic 8 (IoT Simulator) was not implemented due to time constraints. This section documents planned design for Chapter 8 Future Work discussion.
+
 - Three scenario buttons (Normal, Warning, Critical)
 - Manual data entry mode
 - Auto-generation mode
 - Real-time data display
 - Alert notifications
 
-**Include screenshots:** IoT simulator UI
+**Include screenshots:** IoT simulator UI *(Not available - see Future Work)*
 
 #### 4.3.6 Responsive Design & Accessibility (0.5 page)
 
@@ -816,7 +820,7 @@ If deploying in production:
 ### 7.2 Research Questions Answered (2-2.5 pages)
 
 **For detailed Grade 5 guidance on answering research questions, see:**
-→ `docs/planning/thesis-writing-standards-grade5.md` (Section: Research Questions Answered)
+→ `docs/thesis/requirements/writing-standards-grade5.md` (Section: Research Questions Answered)
 
 **Q1: How suitable is Ethereum blockchain for food supply chain traceability?**
 
@@ -837,7 +841,7 @@ If deploying in production:
 ### 7.3 Field Impact & Contributions (1 page)
 
 **For detailed Grade 5 guidance on field impact evaluation, see:**
-→ `docs/planning/thesis-writing-standards-grade5.md` (Section: Field Impact & Contributions)
+→ `docs/thesis/requirements/writing-standards-grade5.md` (Section: Field Impact & Contributions)
 
 #### 7.3.1 Research Gap Addressed
 
@@ -907,13 +911,13 @@ If deploying in production:
 ## Cross-References
 
 **For detailed writing quality standards:**
-→ `docs/planning/thesis-writing-standards-grade5.md`
+→ `docs/thesis/requirements/writing-standards-grade5.md`
 
 **For source verification protocols:**
-→ `docs/planning/thesis-writing-standards-grade5.md` (Section: SOURCE VERIFICATION & CRITICISM)
+→ `docs/thesis/requirements/writing-standards-grade5.md` (Section: SOURCE VERIFICATION & CRITICISM)
 
 **For Grade 5 examples and templates:**
-→ `docs/planning/thesis-writing-standards-grade5.md` (Multiple sections throughout)
+→ `docs/thesis/requirements/writing-standards-grade5.md` (Multiple sections throughout)
 
 ---
 

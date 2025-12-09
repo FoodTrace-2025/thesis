@@ -6,8 +6,58 @@
 **Target Audience:** All team members during thesis writing (Weeks 10-12)
 
 **Cross-References:**
-- For thesis structure and chapter organization → `docs/planning/thesis-structure-oamk.md`
-- For complete thesis outline → `docs/planning/thesis-outline.md` (original, archived)
+- For thesis structure and chapter organization → `docs/thesis/requirements/oamk-structure.md`
+- For complete thesis outline → Archived (see `docs/archive/planning-phase/`)
+
+---
+
+## ⚡ Quick Reference (Grade 5 Essentials)
+
+**Read this section first. Detailed guidance follows below.**
+
+### Core Rules (The 5 Pillars of Grade 5)
+1. **Sources must interact** - Never cite in isolation; make sources dialogue with each other
+2. **Knowledge base throughout** - Cite literature in Methods, Results, Discussion (not just Chapter 2)
+3. **Evaluate source limitations** - Acknowledge strengths AND weaknesses of every major source
+4. **Quantify research gaps** - "89% of papers focus on X" not "most papers focus on X"
+5. **Active voice** - "We developed" not "The system was developed" (2025 standard)
+
+### Citation Requirements
+| Requirement | Standard |
+|-------------|----------|
+| Sources per major claim | 3+ (diverse perspectives) |
+| Technical claims | Tier 1-2 only (IEEE, ACM, Springer, Nature) |
+| Industry reports (Tier 3-4) | Must cross-reference with Tier 1-2 |
+| Before adding any citation | Verify via WebSearch |
+
+### Word Count Limits (DO NOT EXCEED)
+| Chapter | Target | Max |
+|---------|--------|-----|
+| Ch 1 Introduction | 1,000-1,200 | 1,500 |
+| Ch 2 Literature Review | 2,200-2,700 | 3,000 |
+| Ch 3 Methodology | 1,400-1,700 | 2,000 |
+| Ch 4-5 Implementation | 2,700-3,300 | 4,000 |
+| Ch 6 Results | 1,900-2,300 | 2,500 |
+| Ch 7 Discussion | 1,400-1,700 | 2,000 |
+| Ch 8 Conclusion | 1,100-1,300 | 1,500 |
+| **TOTAL** | ~17,000 | **19,000** |
+
+### Grade 5 Checklist (Per Major Claim)
+Before finalizing any paragraph with a significant claim, verify:
+- [ ] 3+ diverse sources cited
+- [ ] Sources interact (not isolated citations)
+- [ ] Contradictions between sources acknowledged
+- [ ] Source limitations explicitly evaluated
+- [ ] Connected to identified field gap
+- [ ] Impact on field development stated
+
+### AI Agent Guidelines
+When assisting with thesis writing:
+1. Verify citations via WebSearch before adding
+2. Apply Grade 5 dialogical source patterns (see Section 1)
+3. Check word count limits per chapter (table above)
+4. Use active voice (2025 standard)
+5. Reference specific sections for methodology decisions
 
 ---
 
@@ -871,9 +921,136 @@ Even your abstract and conclusions must reflect source-based justification (Grad
 
 ---
 
-**Document Version:** 1.0
+## 10. Professor Feedback Log
+
+Track supervisor feedback and actions taken to address them.
+
+### Session 78 - 2025-12-09
+**Feedback:** Too many bullet points throughout thesis report
+**Action:** Convert bullet lists to tables or numbered prose where appropriate
+**Applies to:** All chapters, priority on Chapters 1-2 (stable/informative chapters)
+**Status:** Chapters 1-2 completed
+
+**Chapter 1 Changes:**
+| Original | Converted To | Location |
+|----------|-------------|----------|
+| 4 bullet challenges | Table 1 (2-column) | Section 1.2 |
+| 5 bullet objectives | Table 2 (3-column) | Section 1.3.2 |
+| 4 bullet dimensions | Numbered prose | Section 1.3.1 |
+| System overview | Figure 1 (Mermaid) | Section 1.1 |
+
+**Chapter 2 Changes:**
+| Original | Converted To | Location |
+|----------|-------------|----------|
+| 7-step wallet workflow | Prose paragraph | Section 2.4.2 |
+| 8 bullet dual-access pattern | Table 3 (4-column) | Section 2.4.2 |
+| 9 bullet research gaps | Table 4 (4-column) | Section 2.5.1 |
+| 15 bullet contributions | Table 5 (4-column) | Section 2.5.2 |
+| 9 bullet planned content | Prose sentences | Sections 2.4.1, 2.4.3 |
+| 9 bullet status notes | Prose paragraph | End of chapter |
+
+**Total bullet points removed:** ~48 (Chapter 1: 13, Chapter 2: 35)
+**Tables added:** 5 (Tables 1-2 in Ch1, Tables 3-5 in Ch2)
+**Figures added:** 1 (Figure 1 in Ch1)
+
+**Guidelines derived from feedback:** Use tables for structured comparisons (2+ items with multiple attributes); use numbered prose for sequential items or short lists (3-4 items); use figures/diagrams for process flows and system overviews; reserve bullet points only for truly unstructured lists (rare).
+
+---
+
+## 11. Thesis Writing Workflow
+
+**Workflow for AI-assisted thesis editing:**
+
+1. **AI edits markdown file** (`docs/thesis/chapters/chapter-X.md`)
+2. **Human reviews changes** in markdown
+3. **Human copies to Word** (`Thesis Report G22.docx`)
+4. **Human handles figures** (export Mermaid from Excalidraw → PNG → insert in Word)
+
+**File locations:**
+- Markdown source: `docs/thesis/chapters/*.md`
+- Word document: SharePoint (Thesis Report G22.docx)
+- Figures: Export from Excalidraw as PNG
+
+**Note:** Markdown is the source of truth for content; Word is the final formatted output.
+
+---
+
+## 12. Academic Databases & Research Resources
+
+*Content merged from `research-resources.md` on 2025-12-09*
+
+### Primary Academic Databases (Tier 1 - Use First)
+
+| Database | URL | Focus Areas |
+|----------|-----|-------------|
+| IEEE Xplore | https://ieeexplore.ieee.org | Computer science, blockchain, IoT, software engineering |
+| ACM Digital Library | https://dl.acm.org | Computing research, HCI (CHI conferences), software systems |
+| Springer | https://link.springer.com | Business & Information Systems Engineering, supply chain management |
+| Nature | https://www.nature.com | Scientific Reports, interdisciplinary research |
+| ScienceDirect (Elsevier) | https://www.sciencedirect.com | Computers in Industry, Food Control, Telematics |
+
+### Secondary Academic Databases (Tier 2)
+
+| Database | URL | Focus Areas |
+|----------|-----|-------------|
+| MDPI | https://www.mdpi.com | Open access journals (Applied Sciences, Foods, Sensors, Future Internet) |
+| Wiley Online Library | https://onlinelibrary.wiley.com | Food Science and Food Safety |
+| Taylor & Francis | https://www.tandfonline.com | Production Research, Supply Chain Management |
+| Frontiers | https://www.frontiersin.org | Blockchain, Sustainable Food Systems |
+| arXiv | https://arxiv.org | Preprints for cutting-edge blockchain research |
+
+### Official Technical Documentation
+
+**Blockchain & Web3:**
+- **Ethereum.org** → https://ethereum.org/en/developers/docs
+- **Hardhat** → https://hardhat.org/docs
+- **OpenZeppelin** → https://docs.openzeppelin.com/contracts
+- **Wagmi** → https://wagmi.sh
+- **Viem** → https://viem.sh
+- **Solidity** → https://docs.soliditylang.org
+
+**Frontend & Backend:**
+- **Next.js** → https://nextjs.org/docs
+- **Chakra UI** → https://chakra-ui.com/docs
+- **Prisma** → https://www.prisma.io/docs
+
+### Quick Search Patterns
+
+```
+# IEEE Xplore
+"blockchain food traceability" + year:2024
+"smart contract security patterns" + year:2023
+
+# ACM Digital Library
+"cryptocurrency wallet usability" CHI
+"blockchain software engineering"
+
+# Google Scholar (fallback)
+"systematic review blockchain supply chain" filetype:pdf
+```
+
+### Citation Verification Checklist
+
+Before adding ANY citation, verify:
+- [ ] Paper found on academic database (Tier 1-2)?
+- [ ] DOI resolves correctly (https://doi.org/...)?
+- [ ] Published 2019-2024? (prefer recent for blockchain topics)
+- [ ] Tier 1/2 venue (IEEE, ACM, Springer, Nature)?
+- [ ] Directly relevant to the specific claim?
+
+### Acceptable Industry Sources (Limited Use)
+
+These Tier 3 sources may be used for context but MUST be cross-referenced with Tier 1-2:
+- **Gartner** - Supply chain market trends (widely cited in academia)
+- **Nielsen Norman Group** - UX standards (authoritative in HCI research)
+- **IBM Food Trust/Walmart** - Documented industry implementations (case studies)
+
+---
+
+**Document Version:** 1.2
 **Created:** 2025-01-13
+**Updated:** 2025-12-09 (Session 79 - merged research-resources.md, added Quick Reference)
 **For:** OAMK Thesis Writing (Weeks 10-12)
 **Related Files:**
-- `docs/planning/thesis-structure-oamk.md` (chapter organization)
-- `docs/planning/thesis-outline.md` (original complete outline, archived)
+- `docs/thesis/requirements/oamk-structure.md` (chapter organization)
+- `docs/thesis/chapters/*.md` (chapter content)
