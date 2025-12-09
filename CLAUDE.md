@@ -3,8 +3,8 @@ doc-id: thesis-project-context
 title: FoodTrace Thesis Project Context
 purpose: AI agent entry point and navigation hub
 auto-generated: false
-last-updated: 2025-12-08
-session: 76
+last-updated: 2025-12-09
+session: 77
 ---
 
 # FoodTrace Thesis - Project Context
@@ -32,7 +32,7 @@ session: 76
 
 ### Session History
 
-- **Session Archive** → .claude/sessions/session-history.md (Sessions 66-76 archive, last 10 kept)
+- **Session Archive** → .claude/sessions/session-history.md (Sessions 67-77 archive, last 10 kept)
 
 ### Archived Documents (2025-11-13 - Planning Phase)
 
@@ -60,7 +60,7 @@ Planning documents created during Sessions 1-7 but never used for development. A
 
 ## Current Session Status
 
-- **Last Updated**: 2025-12-08 (Session 76)
+- **Last Updated**: 2025-12-09 (Session 77)
 - **Project Status**: Week 6 - Epic 13 Complete, Production Live
 - **Project Completion**: ~75% (see breakdown below)
   - Planning Phase: 100% (Brief, PRD, Architecture)
@@ -68,19 +68,18 @@ Planning documents created during Sessions 1-7 but never used for development. A
   - Thesis Writing: 30% (7 chapters corrected to reflect actual implementation)
 - **Active Stage**: Epic 9 Story Implementation (by TaiSheng/YiLing)
 - **Next Priority**: Story 9.1 (Consumer Landing Page) - team implementing
-- **Recent Changes**: Epic 13 complete, production deployed, smoke tests verified
+- **Recent Changes**: CI/CD pipeline established, branch protection enabled
 - **Blockers**: None
 - **Ready for**: Epic 9 implementation or thesis writing
 - **Production URL**: https://foodtrace.onrender.com
 
-### Current Session Achievements (Session 76 - 2025-12-08)
+### Current Session Achievements (Session 77 - 2025-12-09)
 
-✅ **Epic 13 Complete**: All 5 stories (13.1-13.5) implemented and verified
-✅ **Production Deployment**: Live at https://foodtrace.onrender.com with auto-deploy from main
-✅ **Smoke Testing Verified**: Auth, products, transfers, QR scanner all working on production
-✅ **Mobile QR Scanner Verified**: Tested on Android phone - camera and scanning works
-✅ **Documentation Created**: README Live Demo section, docs/deployment.md guide
-✅ **Release Tagged**: v1.0.0-thesis-demo created and pushed to GitHub
+✅ **Build Failure Fixed**: SisiYin's merge broke Render - bcryptjs regression, unused imports, useCallback deps
+✅ **GitHub Actions CI Created**: .github/workflows/ci.yml with build + 242 tests
+✅ **CI Pipeline Passing**: Fixed DATABASE_URL for prisma generate
+✅ **Branch Protection Enabled**: PRs required, CI must pass before merge
+✅ **Git Workflow Documented**: Added feature branch → main workflow to CLAUDE.md
 
 ### Development Approach
 
@@ -175,6 +174,33 @@ Planning documents created during Sessions 1-7 but never used for development. A
 
 ---
 
+## Git Workflow (Feature Branch → Main)
+
+```bash
+# 1. Create and switch to feature branch
+git checkout -b feature/your-feature-name
+
+# 2. Make changes, commit locally
+git add .
+git commit -m "feat: your change description"
+
+# 3. Push branch to GitHub
+git push -u origin feature/your-feature-name
+
+# 4. Create PR on GitHub (browser)
+#    Go to: https://github.com/FoodTrace-2025/thesis
+#    Click "Compare & pull request" → Create PR
+
+# 5. Wait for CI to pass (build + 242 tests)
+
+# 6. Merge PR on GitHub (browser)
+#    Click "Merge pull request" → Confirm
+```
+
+**Branch protection enforces:** CI must pass before merge. No direct pushes to main.
+
+---
+
 ## Quick Reference - Active File Paths
 
 **IMPORTANT:** Use Read tool with these exact paths during sessions.
@@ -209,7 +235,7 @@ Planning documents created during Sessions 1-7 but never used for development. A
 /home/kala/Documents/GitHub/thesis/docs/thesis/chapters/chapter-8-conclusion.md
 
 # Session Archive
-/home/kala/Documents/GitHub/thesis/.claude/sessions/session-history.md (✅ Sessions 66-76, last 10 kept)
+/home/kala/Documents/GitHub/thesis/.claude/sessions/session-history.md (✅ Sessions 67-77, last 10 kept)
 
 # Archived Planning (2025-11-13)
 /home/kala/Documents/GitHub/thesis/docs/archive/planning-phase/README.md (📦 Index of archived docs)
@@ -282,9 +308,9 @@ When updating this file after each session:
 
 ---
 
-**Last Session:** Dec 8, 2025 (Session 76) - Epic 13 Deployment Complete
+**Last Session:** Dec 9, 2025 (Session 77) - CI/CD Setup + Build Fix
 **Next Priority:** Story 9.1 (Consumer Landing Page) - team implementing
 **Status:** Implementation 62% complete, production live at https://foodtrace.onrender.com
-**Session History:** See .claude/sessions/session-history.md for Sessions 66-76 (last 10 kept)
+**Session History:** See .claude/sessions/session-history.md for Sessions 67-77 (last 10 kept)
 
 _This CLAUDE.md file is the AI assistant's primary context document. Update after each significant milestone._

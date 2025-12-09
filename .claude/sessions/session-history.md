@@ -4,6 +4,20 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 77 (2025-12-09) - CI/CD Setup + Build Fix
+
+### Session 77 Achievements
+
+✅ **Build Failure Fixed**: SisiYin's merge broke Render - bcryptjs regression, unused imports, useCallback deps
+✅ **GitHub Actions CI Created**: .github/workflows/ci.yml with build + 242 tests
+✅ **CI Pipeline Passing**: Fixed DATABASE_URL for prisma generate
+✅ **Branch Protection Enabled**: PRs required, CI must pass before merge
+✅ **Git Workflow Documented**: Added feature branch → main workflow to CLAUDE.md
+
+**Impact:** CI/CD pipeline established. No more broken deployments from untested merges.
+
+---
+
 ## Session 76 (2025-12-08) - Epic 13 Deployment Complete
 
 ### Session 76 Achievements
@@ -154,19 +168,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 66 (2025-12-04) - Story 7.5 Complete
-
-### Session 66 Achievements
-
-✅ **Story 7.5 Implemented**: TraceRecordForm + TraceTimeline components with 21 acceptance criteria met
-✅ **Role-Action Filtering**: Dropdown filters actions by user role (PRODUCER: 2, DISTRIBUTOR: 3, RETAILER: 4 options)
-✅ **TraceTimeline Component**: Vertical timeline with action badges, Etherscan links, empty state UX
-✅ **Jest Multi-Project Setup**: Separate test environments for API (node) and components (jsdom)
-✅ **Build Error Fixed**: Pre-existing webpack issue with test files resolved using ignore-loader
-✅ **197 Tests Passing**: 70 trace-related tests, >70% coverage for both components (93.75%/100%)
-
-**Impact:** Story 7.5 complete. Reusable trace components ready for dashboard integration. Ready for Story 7.6 (Distributor Dashboard) or Story 7.7 (Retailer + Producer Dashboard).
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (66-76). Older sessions (1-65) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (67-77). Older sessions (1-66) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
