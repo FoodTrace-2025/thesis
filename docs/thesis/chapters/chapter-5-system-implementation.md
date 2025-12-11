@@ -23,13 +23,17 @@ The backend architecture uses Next.js 14 API routes (Next.js, 2024) for serverle
 
 ### 5.1.1 Database Schema (Prisma + Supabase)
 
-The PostgreSQL database schema follows normalized relational database principles while accommodating blockchain data patterns. Primary tables include:
+The PostgreSQL database schema follows normalized relational database principles while accommodating blockchain data patterns, as summarized in Table 16.
 
-- **Product:** Stores off-chain metadata linked to on-chain product IDs (blockchainId, name, origin, harvestDate, qrCodeUrl)
-- **TraceRecord:** Caches blockchain trace events for fast queries (action, location, notes, transactionHash, blockchainIndex)
-- **Company:** Multi-tenancy with encrypted wallet storage (encryptedPrivateKey, walletAddress, type, status)
-- **User:** Authentication with role-based access (email, passwordHash, role, companyId)
-- **AuditLog:** Tracks all system operations (action, details, userId, companyId)
+*Table 16 Database schema overview (Prisma + Supabase)*
+
+| Table | Purpose | Key Fields |
+|-------|---------|------------|
+| Product | Off-chain metadata linked to blockchain | blockchainId, name, origin, harvestDate, qrCodeUrl |
+| TraceRecord | Cached blockchain trace events | action, location, notes, transactionHash |
+| Company | Multi-tenancy with encrypted wallets | encryptedPrivateKey, walletAddress, type, status |
+| User | Authentication with roles | email, passwordHash, role, companyId |
+| AuditLog | System operations tracking | action, details, userId, companyId |
 
 Each table includes blockchain-specific fields: transactionHash (links to Ethereum transaction), blockchainIndex (for trace ordering), and blockchainId (maps to smart contract product ID).
 
@@ -39,38 +43,46 @@ Database indexing strategy prioritizes consumer query performance: composite ind
 
 ### 5.1.2 API Route Architecture
 
-API routes follow REST conventions with domain-based organization: `/api/products/*` for product operations, `/api/admin/*` for platform administration, and `/api/companies/*` for company management. Each route implements authentication (NextAuth.js session validation), authorization (role-based access control), validation (Zod schema validation), business logic (Prisma database queries and Viem blockchain interactions), and error handling (structured responses with appropriate HTTP status codes).
+API routes follow REST conventions with domain-based organization: `/api/products/*` for product operations, `/api/admin/*` for platform administration, and `/api/companies/*` for company management. Each route implements authentication (NextAuth.js session validation), authorization (role-based access control), validation (Zod schema validation), business logic (Prisma database queries and Viem blockchain interactions), and error handling (structured responses with appropriate HTTP status codes). Core endpoints are summarized in Table 17.
 
-Key endpoints include:
+*Table 17 Core API endpoints*
 
-- `POST /api/products` - Registers product to blockchain and database (PRODUCER_ROLE required)
-- `GET /api/products` - Lists products with filtering (owner=me, history=me, incoming=me)
-- `GET /api/products/[id]` - Retrieves product details (public, wallet-free)
-- `POST /api/products/[id]/trace` - Adds trace record to blockchain (PRODUCER/DISTRIBUTOR/RETAILER required)
-- `GET /api/products/[id]/trace-history` - Retrieves complete trace history (public)
-- `POST /api/admin/companies/[id]/approve` - Approves company and grants blockchain role
-- `GET /api/companies` - Lists companies for recipient selection in SHIPPED actions
+| Endpoint | Method | Purpose | Auth |
+|----------|--------|---------|------|
+| `/api/products/register` | POST | Register product to blockchain + DB | PRODUCER |
+| `/api/products` | GET | List products with filtering | Authenticated |
+| `/api/products/[id]` | GET | Retrieve product details | Public |
+| `/api/products/[id]/trace` | POST | Add trace record to blockchain | Supply chain roles |
+| `/api/products/[id]/trace-history` | GET | Retrieve complete trace history | Public |
+| `/api/admin/companies/[id]/approve` | POST | Approve company + grant blockchain role | ADMIN |
+| `/api/companies` | GET | List companies for recipient selection | Authenticated |
 
 Performance optimization employs caching strategies: React Query on frontend caches blockchain read queries for 30 seconds, reducing redundant RPC calls and improving perceived performance.
 
 ### 5.1.3 Web3 Integration (Wagmi v2)
 
-**Note:** This section applies custodial wallet patterns reviewed in Section 2.4.1 (to be written) to address wallet UX barriers discussed in Section 2.4.2.
+**Note:** This section applies custodial wallet patterns reviewed in Section 2.4.1 to address wallet UX barriers discussed in Section 2.4.2.
 
 Web3 functionality implemented using Wagmi v2 library (Wagmi, 2024) providing React hooks for Ethereum interaction, built on Viem (Viem, 2024) for type-safe Ethereum operations. Configuration in `src/lib/wagmi.ts` defines Sepolia chain connection, Alchemy RPC provider (HTTP transport), and contract ABIs. Wagmi's createConfig initializes Web3 client with connection pooling and automatic retry logic for failed RPC requests.
 
 **Custodial Wallet Pattern:**
 
-Server-side blockchain interaction follows custodial wallet pattern: producer/distributor/retailer wallets stored encrypted (AES-256) in database, decrypted server-side for transaction signing. This eliminates frontend MetaMask requirements for business users while maintaining security through encryption-at-rest and HTTPS transport encryption.
+Server-side blockchain interaction follows custodial wallet pattern: producer/distributor/retailer wallets stored encrypted (AES-256) in database, decrypted server-side for transaction signing. This eliminates frontend MetaMask requirements for business users while maintaining security through encryption-at-rest and HTTPS transport encryption. The transaction signing flow is illustrated in Figure 9.
 
-Transaction signing flow:
+<!-- Mermaid diagram for Excalidraw - export as PNG for Word -->
+```mermaid
+flowchart TB
+    subgraph "Server-Side Transaction Signing"
+        A[API Route] --> B[Retrieve Encrypted Key]
+        B --> C[Decrypt with AES-256]
+        C --> D[Create Wallet Client]
+        D --> E[Sign Transaction]
+        E --> F[Return TX Hash]
+        F --> G[Discard Key from Memory]
+    end
+```
 
-1. API route retrieves encrypted private key from database
-2. Decrypts using environment variable key (AES-256)
-3. Creates Wagmi wallet connector with decrypted key
-4. Signs transaction
-5. Returns transaction hash to frontend
-6. Private key discarded from memory
+*Figure 9 Custodial wallet transaction signing flow*
 
 **Wallet-Free Consumer Access:**
 
@@ -92,7 +104,28 @@ The frontend implements four role-specific interfaces (Producer, Distributor, Re
 
 ### 5.2.1 Layout Architecture and Routing
 
-Application structure follows Next.js Pages Router conventions with file-based routing organized in the `pages/` directory. The root layout provides global Chakra UI theme provider and navigation wrapper. Role-specific dashboards organized under `/producer`, `/distributor`, `/retailer`, and `/consumer` routes, each with dedicated layout components defining navigation sidebars and role-appropriate menu items.
+Application structure follows Next.js Pages Router conventions with file-based routing organized in the `pages/` directory. The root layout provides global Chakra UI theme provider and navigation wrapper. Role-specific dashboards organized under `/producer`, `/distributor`, `/retailer`, and `/trace` routes, each with dedicated layout components defining navigation sidebars and role-appropriate menu items. The application route structure with authentication boundaries is illustrated in Figure 10.
+
+<!-- Mermaid diagram for Excalidraw - export as PNG for Word -->
+```mermaid
+flowchart TB
+    subgraph Protected["Protected Routes (Auth Required)"]
+        P["/producer/*"] --> PD[Dashboard, Register]
+        D["/distributor/*"] --> DD[Dashboard, Receive, Trace]
+        R["/retailer/*"] --> RD[Dashboard, Stock, Sell]
+        A["/admin/*"] --> AD[Companies, Users]
+    end
+
+    subgraph Public["Public Routes (No Auth)"]
+        C["/consumer/*"] --> CD[Scan QR, View Product]
+        L["/login, /register"]
+    end
+
+    AUTH{NextAuth.js\nMiddleware} --> Protected
+    AUTH -.->|bypass| Public
+```
+
+*Figure 10 Application route structure with authentication boundaries*
 
 Authentication state management uses NextAuth.js with Prisma adapter, storing user sessions in Supabase PostgreSQL. Protected routes implement middleware-based authentication checks: unauthenticated requests redirect to `/login`, and role-based authorization validates user permissions before rendering dashboard content. Consumer routes remain public (no authentication) to enable wallet-free product verification.
 
@@ -116,14 +149,26 @@ All business user interfaces implement optimistic UI updates showing pending ope
 
 Consumer query interface provides public product verification without authentication or wallet requirements, addressing wallet complexity barriers including seed phrase management and private key storage that deter mainstream consumer adoption. Empirical studies analyzing 45,821 app reviews of mobile cryptocurrency wallets document that both new and experienced users struggle with UX issues leading to frustration, disengagement, and dangerous errors including irreversible monetary losses (Voskobojnikov et al., 2021).
 
-Primary entry point uses QR code scanning via html5-qrcode library: accesses device camera (requires HTTPS and user permission), decodes QR code, extracts product ID, and navigates to product detail page. Fallback manual entry allows consumers to type product ID directly if camera unavailable or QR code damaged.
+Primary entry point uses QR code scanning via html5-qrcode library: accesses device camera (requires HTTPS and user permission), decodes QR code, extracts product ID, and navigates to product detail page. Fallback manual entry allows consumers to type product ID directly if camera unavailable or QR code damaged. The consumer query flow is illustrated in Figure 11.
 
-Product detail page fetches data via `/api/products/[id]/trace-history` endpoint (public read-only) and displays:
+<!-- Mermaid diagram for Excalidraw - export as PNG for Word -->
+```mermaid
+flowchart LR
+    subgraph "Consumer Query Flow"
+        QR[Scan QR Code] --> ID[Extract Product ID]
+        MANUAL[Manual Entry] --> ID
+        ID --> API["/api/products/[id]"]
+        API --> DB[(Database)]
+        DB --> DISPLAY[Product Detail Page]
+    end
 
-1. **Product Identity:** Name, origin location, harvest date, producer information
-2. **Supply Chain Timeline:** Vertical timeline showing all trace records (producer → distributor → retailer) with timestamps, locations, and actors
-3. **Blockchain Proof:** Link to Etherscan showing on-chain transaction for independent verification
-4. **Verification Status:** Visual confirmation that product has complete trace history from registration to current holder
+    DISPLAY --> TIMELINE[Supply Chain Timeline]
+    DISPLAY --> VERIFY[Etherscan Link]
+```
+
+*Figure 11 Wallet-free consumer query flow with fallback manual entry*
+
+Product detail page fetches data via `/api/products/[id]/trace-history` endpoint (public read-only) and displays product identity (name, origin, harvest date), supply chain timeline with all trace records, and blockchain proof via Etherscan link for independent verification.
 
 Mobile-optimized layout prioritizes information hierarchy: product identity and verification status above fold, supply chain timeline lazy-loaded on scroll, technical details (block numbers, transaction hashes) collapsed by default with "Show Technical Details" expand button. Page load time <2 seconds on 4G network achieved through Next.js Image component optimization (automatic WebP format conversion) and aggressive caching (stale-while-revalidate strategy).
 
@@ -159,6 +204,20 @@ Next chapter (Chapter 6: Results and Testing) presents performance metrics, test
 
 ---
 
-**Word Count:** ~1,900 words (Target: 1,800-2,200 | Reduced after removing IoT Simulator section)
-**Structure:** 2 main sections (Backend + Frontend), IoT deferred to Chapter 8 Future Work
-**Focus:** Actual implementation narrative, not planned features
+## References for Chapter 5
+
+Chakra UI. (2024). _Chakra UI Documentation_. https://chakra-ui.com/
+
+Next.js. (2024). _Next.js Documentation_. Vercel. https://nextjs.org/docs
+
+Prisma. (2024). _Prisma Documentation_. https://www.prisma.io/docs
+
+Viem. (2024). _Viem Documentation_. https://viem.sh/
+
+Voskobojnikov, A., Wiese, O., Mehrabi Koushki, M., Roth, V., & Beznosov, K. (2021). The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. _CHI '21: CHI Conference on Human Factors in Computing Systems_. https://doi.org/10.1145/3411764.3445407
+
+Wagmi. (2024). _Wagmi Documentation_. https://wagmi.sh/
+
+---
+
+**Word Count:** ~1,900 words | **Tables:** 16-17 | **Figures:** 9-11 | **References:** 6
