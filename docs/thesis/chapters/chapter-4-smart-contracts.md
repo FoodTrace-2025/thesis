@@ -12,7 +12,7 @@ This chapter details the blockchain layer implementation of the FoodTrace system
 
 ## 4.1 Contract Architecture Overview
 
-The FoodTrace system deploys a single Solidity smart contract (ProductRegistry.sol, 176 lines) to Ethereum Sepolia testnet providing immutable product registration and supply chain trace recording. The unified contract design consolidates both features into one deployment, simplifying cross-function validation and reducing deployment complexity compared to multi-contract architectures.
+The FoodTrace system deploys a single Solidity smart contract (ProductRegistry.sol, 175 lines) to Ethereum Sepolia testnet providing immutable product registration and supply chain trace recording. The unified contract design consolidates both features into one deployment, simplifying cross-function validation and reducing deployment complexity compared to multi-contract architectures.
 
 ### 4.1.1 Design Principles
 
@@ -26,18 +26,39 @@ The contract architecture prioritizes three key principles balancing development
 
 ### 4.1.2 Contract Structure
 
-The ProductRegistry contract combines two functional modules in a single deployment:
+The ProductRegistry contract combines two functional modules in a single deployment, as illustrated in Figure 7. The Product Registration Module stores product metadata (name, origin, harvest date) with sequential ID assignment and producer attribution. The Trace Recording Module records supply chain events (RECEIVED, QUALITY_CHECK, SHIPPED, STOCKED, SOLD) linked to products via productId. Both modules share OpenZeppelin AccessControl for role-based permissions.
 
-1. **Product Registration Module:** Stores product metadata (name, origin, harvest date) with sequential ID assignment and producer attribution
-2. **Trace Recording Module:** Records supply chain events (RECEIVED, QUALITY_CHECK, SHIPPED, STOCKED, SOLD) linked to products via productId
+<!-- Mermaid diagram for Excalidraw - export as PNG for Word -->
+```mermaid
+flowchart TB
+    subgraph ProductRegistry["ProductRegistry.sol (175 lines)"]
+        subgraph Module1["Product Registration Module"]
+            PR[registerProduct]
+            GP[getProduct]
+            PE[productExists]
+        end
+        subgraph Module2["Trace Recording Module"]
+            ATR[addTraceRecord]
+            GTH[getTraceHistory]
+        end
+        subgraph Access["OpenZeppelin AccessControl"]
+            RBAC[Role-Based Permissions]
+        end
+    end
 
-This unified design enables direct product existence validation within trace functions (`require(products[productId].exists, "Product not found")`) without cross-contract calls, reducing gas costs and complexity. The trade-off is reduced modularity—both features must be redeployed together if either requires updates.
+    Module1 --> RBAC
+    Module2 --> RBAC
+```
+
+*Figure 7 ProductRegistry contract architecture showing unified design with two functional modules*
+
+This unified design enables direct product existence validation within trace functions (`require(products[productId].exists, "Product not found")`) without cross-contract calls, reducing gas costs and complexity. The trade-off is reduced modularity; both features must be redeployed together if either requires updates.
 
 ---
 
 ## 4.2 Core Contract Implementation
 
-The ProductRegistry contract (176 lines, Solidity 0.8.20) serves as the unified smart contract handling both product registration and supply chain trace recording. This design decision prioritized development simplicity over modularity, enabling the 12-week thesis timeline to deliver a functional POC.
+The ProductRegistry contract (175 lines, Solidity 0.8.20) serves as the unified smart contract handling both product registration and supply chain trace recording. This design decision prioritized development simplicity over modularity, enabling the 12-week thesis timeline to deliver a functional POC.
 
 **Data Structures:**
 
@@ -61,6 +82,7 @@ struct TraceRecord {
     uint256 timestamp;  // block.timestamp (automatic, immutable)
 }
 ```
+*Figure 8 Data Structures of ProductRegistry Contract*
 
 **Design Decision - String Storage vs Hash-Based:**
 
@@ -76,6 +98,8 @@ This illustrates the academic value of documenting trade-offs: future implementa
 
 The contract integrates OpenZeppelin's AccessControl library defining four permission levels:
 
+*Table 13 Role-Based Access Control relationships*
+
 | Role | registerProduct() | addTraceRecord() | Role Management |
 |------|-------------------|------------------|-----------------|
 | PRODUCER_ROLE | ✅ | ✅ | ❌ |
@@ -84,26 +108,11 @@ The contract integrates OpenZeppelin's AccessControl library defining four permi
 | DEFAULT_ADMIN_ROLE | ❌ | ❌ | ✅ |
 | Consumer (no role) | ❌ | ❌ | ❌ |
 
-The addTraceRecord() function uses tri-role access control: `require(hasRole(PRODUCER_ROLE, msg.sender) || hasRole(DISTRIBUTOR_ROLE, msg.sender) || hasRole(RETAILER_ROLE, msg.sender))`. This enables all supply chain participants to record trace events while preventing unauthorized access from consumers or external actors.
+The addTraceRecord() function validates that the caller holds one of the three supply chain roles (producer, distributor, or retailer) before permitting trace record creation. This enables all supply chain participants to record trace events while preventing unauthorized access from consumers or external actors.
 
-**Key Functions:**
+**Contract Address (Sepolia):** `0x5d56f5a8703d7d545319177042cd91FD3339E2b6`
 
-Product Registration:
-- `registerProduct(string name, string origin, uint256 harvestDate)` - Registers new product with sequential ID, emits ProductRegistered event
-- `getProduct(uint256 productId)` - Retrieves product struct (view function, zero gas)
-- `productExists(uint256 productId)` - Boolean check for product existence
-
-Trace Recording:
-- `addTraceRecord(uint256 productId, string action, string location, string notes)` - Adds supply chain event, returns array index
-- `getTraceHistory(uint256 productId)` - Retrieves complete trace record array
-
-Role Management:
-- `grantProducerRole(address)`, `grantDistributorRole(address)`, `grantRetailerRole(address)` - Admin-only role assignment
-- `hasProducerRole(address)`, `hasDistributorRole(address)`, `hasRetailerRole(address)` - Public role queries
-
-**Contract Address (Sepolia):** `0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646`
-
-**Etherscan Verification:** https://sepolia.etherscan.io/address/0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646
+**Etherscan Verification:** https://sepolia.etherscan.io/address/0x5d56f5a8703d7d545319177042cd91FD3339E2b6
 
 **Measured Performance (Sepolia Testnet):**
 - Product registration: ~190,000-207,000 gas per call
@@ -120,42 +129,22 @@ The smart contract testing strategy follows test-driven development principles d
 
 ### 4.3.1 Unit Test Coverage
 
-The test suite (37 test cases in `test/ProductRegistry.test.ts`) validates contract functions through isolated test scenarios covering:
+The test suite (37 test cases in `test/ProductRegistry.test.ts`) validates contract functions through isolated test scenarios, as summarized in Table 14.
 
-**Deployment Tests (2 cases):**
-- Verifies admin role assignment to deployer
-- Confirms productCount initializes to zero
+*Table 14 ProductRegistry test suite breakdown (37 total tests)*
 
-**Role Management Tests (6 cases):**
-- Grant/revoke producer, distributor, retailer roles
-- Validates admin-only authorization for role changes
-- Tests hasRole() query functions
+| Category | Tests | Coverage Focus |
+|----------|-------|----------------|
+| Deployment | 2 | Admin role assignment, productCount initialization |
+| Role Management | 6 | Grant/revoke producer, distributor, retailer roles |
+| Product Registration | 8 | Event emission, sequential IDs, input validation |
+| Getter Functions | 4 | Product retrieval, existence checks, count queries |
+| Multiple Producers | 1 | Multi-account registration scenarios |
+| Distributor/Retailer Roles | 6 | Role management for other supply chain actors |
+| Trace Records | 11 | All roles can add, validation, history retrieval |
+| **Total** | **37** | **100% statement coverage** |
 
-**Product Registration Tests (8 cases):**
-- Should emit ProductRegistered event with correct parameters
-- Should assign sequential IDs (1, 2, 3...)
-- Should store producer address from msg.sender
-- Should reject empty product names
-- Should reject future harvest dates
-- Should revert when non-producer attempts registration
-
-**Getter Functions Tests (4 cases):**
-- Product retrieval by ID
-- Product existence checks
-- Product count queries
-- Error handling for non-existent products
-
-**Trace Record Tests (11 cases):**
-- All three supply chain roles can add records
-- Consumer addresses (no role) are rejected
-- Product existence validated before trace addition
-- Event emission with correct parameters
-- Array index tracking (returns 0, 1, 2...)
-- Timestamp accuracy matches block.timestamp
-- Complete history retrieval via getTraceHistory()
-- Empty history handling for new products
-
-**Test Coverage:** 100% statement coverage for ProductRegistry.sol (exceeds >70% target). All 37 tests passing in ~786ms execution time.
+Test coverage achieved 100% statement coverage for ProductRegistry.sol, exceeding the >70% target. All 37 tests pass in ~786ms execution time.
 
 ### 4.3.2 Security Testing
 
@@ -179,20 +168,29 @@ Security tests validate protection against common vulnerabilities:
 
 ### 4.4.1 Deployment Process
 
-The ProductRegistry contract was deployed to Ethereum Sepolia testnet using Hardhat deployment script (`scripts/deploy-product-registry.ts`). Deployment used the Hardhat verify task for Etherscan source code publication: `npx hardhat verify --network sepolia 0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646`.
+The ProductRegistry contract was deployed to Ethereum Sepolia testnet using Hardhat deployment script (`scripts/deploy-product-registry.ts`) following the deployment workflow documented in the Hardhat framework (Hardhat, 2024). Deployment used the Hardhat verify task for Etherscan source code publication: `npx hardhat verify --network sepolia 0x5d56f5a8703d7d545319177042cd91FD3339E2b6`.
 
 **Deployment Details:**
-- **Contract Address:** `0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646`
+- **Contract Address:** `0x5d56f5a8703d7d545319177042cd91FD3339E2b6`
 - **Network:** Ethereum Sepolia Testnet (Chain ID: 11155111)
 - **Deployment Gas:** ~928,485 gas (3.1% of block gas limit)
 - **Etherscan Verification:** ✅ Source code publicly visible
 
-Post-deployment testing confirmed gas measurements:
-- Product registration: ~190,000-207,000 gas per call
-- Trace record addition: ~180,000-190,000 gas per call
-- Complete product journey (1 registration + 3 traces): ~750,000 gas
+Post-deployment testing confirmed gas measurements, as summarized in Table 15.
 
-On Sepolia testnet, costs are zero (test ETH from faucets). Hypothetical mainnet deployment at 20 gwei gas price and €2,000 ETH would cost approximately €0.30 per complete product journey—acceptable for POC demonstration but requiring gas optimization for production scale.
+*Table 15 ProductRegistry gas cost measurements (Sepolia testnet)*
+
+| Operation | Gas Used | Mainnet Cost (20 gwei, €2000 ETH) |
+|-----------|----------|-----------------------------------|
+| Contract deployment | ~928,485 | ~€0.37 (one-time) |
+| registerProduct() | 190,000-207,000 | ~€0.08 |
+| addTraceRecord() | 180,000-190,000 | ~€0.07 |
+| Complete product journey | ~750,000 | ~€0.30 |
+| View functions | 0 | €0 |
+
+*Note: Sepolia testnet has zero real costs (test ETH from faucets). Mainnet estimates assume optimistic conditions.*
+
+On Sepolia testnet, costs are zero. Hypothetical mainnet deployment would cost approximately €0.30 per complete product journey—acceptable for POC demonstration but requiring gas optimization for production scale.
 
 ### 4.4.2 Design Iterations and Challenges
 
@@ -218,7 +216,7 @@ Each required systematic debugging through Etherscan transaction analysis and co
 
 ### 4.4.4 Production Deployment Considerations
 
-**Gas Cost Economics:** Current implementation (~750,000 gas per product journey) is expensive for mainnet. Production systems should:
+**Gas Cost Economics:** Current implementation (~750,000 gas per product journey) is expensive for mainnet. Gas optimization best practices documented by Ethereum.org (2024) recommend production systems should:
 - Adopt hash-based storage (40-60% reduction)
 - Evaluate Layer 2 solutions (Polygon, Arbitrum - 90% cost reduction)
 - Consider Hyperledger Fabric for B2B contexts (zero transaction costs)
@@ -233,7 +231,7 @@ This chapter detailed the smart contract implementation addressing Research Ques
 
 **Key Achievements:**
 
-- One deployed, verified contract (ProductRegistry) on Sepolia testnet at `0x7e18dE7ce4B7C8A985BC03E192469BDf192a1646`
+- One deployed, verified contract (ProductRegistry) on Sepolia testnet at `0x5d56f5a8703d7d545319177042cd91FD3339E2b6`
 - 100% statement coverage for smart contract (37 tests, exceeds >70% target)
 - Role-based access control (PRODUCER, DISTRIBUTOR, RETAILER, ADMIN) preventing unauthorized modifications
 - Public verifiability via Etherscan enabling independent audit trail verification
@@ -272,6 +270,4 @@ OpenZeppelin. (2024). _OpenZeppelin Contracts documentation: Secure smart contra
 
 ---
 
-**Word Count:** ~2,200 words (Target: 2,000-2,500 | Reduced from 3,000 after removing SensorData section)
-**Structure:** 4 main sections, 3 subsection levels maximum
-**Focus:** Implementation narrative with design decisions, documenting actual code not planned features
+**Word Count:** ~2,300 words | **Tables:** 13-15 | **Figures:** 7-8 | **References:** 5
