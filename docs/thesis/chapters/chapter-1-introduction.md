@@ -10,11 +10,7 @@ Food supply chains exemplify these challenges. Traditional centralized systems r
 
 However, existing blockchain supply chain implementations face a critical trade-off between accessibility and decentralization. Enterprise solutions like IBM Food Trust provide user-friendly interfaces but rely on permissioned blockchains controlled by centralized gatekeepers, undermining public verifiability (Hyperledger Foundation case study, 2019). Conversely, public blockchain applications (Ethereum DApps) offer true decentralization but suffer from wallet complexity barriers that exclude mainstream users (Voskobojnikov et al., 2021). This creates a "crypto-native vs mainstream user" divide limiting adoption beyond technical enthusiasts.
 
-Current research lacks solutions balancing transparency benefits of public blockchains with accessibility requirements for mass adoption. Recent systematic reviews reveal an enterprise-dominant focus with limited attention to small producer needs and consumer accessibility (Ellahi et al., 2024). Moreover, wallet-based access remains the dominant pattern, creating adoption barriers for end consumers who simply want to verify product authenticity without installing cryptocurrency software. This thesis addresses this gap by demonstrating how Ethereum public blockchain can enable transparent supply chain tracking with wallet-free consumer access, targeting the 570 million small-scale farms globally (FAO, 2023) underserved by enterprise consortium models.
-
-Figure 1 illustrates the FoodTrace system overview, showing how products flow through the four-role supply chain while blockchain provides the immutable data layer.
-
-*Figure 1 FoodTrace system overview showing 4-role supply chain flow and blockchain integration*
+Current research lacks solutions balancing transparency benefits of public blockchains with accessibility requirements for mass adoption. Recent systematic reviews reveal an enterprise-dominant focus with limited attention to small producer needs and consumer accessibility (Ellahi et al., 2024). Moreover, wallet-based access remains the dominant pattern, creating adoption barriers for end consumers who simply want to verify product authenticity without installing cryptocurrency software. This thesis addresses this gap by demonstrating how Ethereum public blockchain can enable transparent supply chain tracking with wallet-free consumer access, targeting the 475 million small farms globally (Lowder et al., 2016) underserved by enterprise consortium models.
 
 <!-- Mermaid diagram for Excalidraw - export as PNG for Word -->
 ```mermaid
@@ -35,14 +31,13 @@ flowchart LR
     C -.->|Read Only| BC
 ```
 
+*Figure 1 FoodTrace system overview showing 4-role supply chain flow and blockchain integration*
+
 ---
 
 ## 1.2 Problem Statement
 
 The central problem addressed is: **How can blockchain technology be made accessible to mainstream users while preserving its core benefits of decentralization, transparency, and immutability?**
-
-This manifests in food supply chain traceability through four interconnected challenges summarized in Table 1.
-
 *Table 1 Key challenges in blockchain-based food supply chain traceability*
 
 | Challenge | Description |
@@ -63,8 +58,6 @@ This manifests in food supply chain traceability through four interconnected cha
 This objective emphasizes four dimensions: (1) technical demonstration through smart contracts, Web3 architecture, and hybrid storage; (2) accessibility innovation via the wallet-free consumer pattern; (3) real-world validation using a 4-role supply chain from Producer to Consumer; and (4) critical evaluation including performance analysis and limitations documentation.
 
 ### 1.3.2 Specific Objectives
-
-This thesis implements a proof-of-concept system with five key components outlined in Table 2.
 
 *Table 2 Specific objectives and system components*
 
@@ -125,15 +118,13 @@ Buterin, V. (2014). _Ethereum: A next-generation smart contract and decentralize
 
 Ellahi, R. M., Wood, L. C., & Bekhit, A. E. A. (2024). Blockchain-driven food supply chains: A systematic review for unexplored opportunities. _Applied Sciences_, 14(19), 8944. https://doi.org/10.3390/app14198944
 
-Food and Agriculture Organization (FAO). (2023). _Small family farms country factsheet_. Retrieved from https://www.fao.org/family-farming
-
-Hyperledger Foundation. (2019). _Walmart and IBM Food Trust Case Study_. Hyperledger Foundation Case Studies. Retrieved from https://www.hyperledger.org/case-studies/walmart
+Hyperledger Foundation. (2019). _Walmart and IBM Food Trust Case Study_. LF Decentralized Trust Case Studies. Retrieved from https://www.lfdecentralizedtrust.org/case-studies/walmart-case-study
 
 Kamath, R. (2018). Food traceability on blockchain: Walmart's pork and mango pilots with IBM. _The Journal of the British Blockchain Association_, 1(1), 1-12. https://doi.org/10.31585/jbba-1-1-(10)2018
 
-Nakamoto, S. (2008). _Bitcoin: A peer-to-peer electronic cash system_. https://bitcoin.org/bitcoin.pdf
+Lowder, S. K., Skoet, J., & Raney, T. (2016). The number, size, and distribution of farms, smallholder farms, and family farms worldwide. _World Development_, 87, 16–29. https://doi.org/10.1016/j.worlddev.2015.10.041
 
-Springer. (2025). Digital transformation of food supply chain management using blockchain: A systematic literature review. _Business & Information Systems Engineering_. https://doi.org/10.1007/s12599-025-00948-0
+Nakamoto, S. (2008). _Bitcoin: A peer-to-peer electronic cash system_. https://bitcoin.org/bitcoin.pdf
 
 Voskobojnikov, A., Wiese, O., Mehrabi Koushki, M., Roth, V., & Beznosov, K. (2021). The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. _CHI '21: CHI Conference on Human Factors in Computing Systems_. https://doi.org/10.1145/3411764.3445407
 
@@ -141,11 +132,4 @@ Wood, G. (2014). _Ethereum: A secure decentralised generalised transaction ledge
 
 ---
 
-**Word Count:** ~1,250 words (Target: 1,200 | Tables: 2 | Figures: 1)
-
-**Session 78 Changes (2025-12-09):**
-- Converted Section 1.2 bullet list → Table 1
-- Converted Section 1.3.1 bullet list → numbered prose
-- Converted Section 1.3.2 bullet list → Table 2
-- Added Figure 1 (Mermaid diagram for Excalidraw)
-- Total bullet points removed: 13
+**Word Count:** ~1,250 words | **Tables:** 1-2 | **Figure:** 1
