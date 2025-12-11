@@ -16,7 +16,18 @@ Development utilizes AI-assisted tooling (Claude Code IDE) for code scaffolding,
 
 The project employs a 3-member team structure with defined primary responsibilities: Sam Chou leads blockchain development (smart contracts, architecture, security), TaiSheng Chen handles backend integration (API development, database design, Web3 connectivity), and YiLing Chen manages frontend implementation (UI design, responsive development, user experience).
 
-The 12-week development timeline includes non-negotiable validation checkpoints preventing progression with inconsistent requirements or unstable infrastructure: Week 2 (PRD and architecture validated), Week 4 (smart contracts deployed to Sepolia testnet with >70% coverage), Week 7 (all four role interfaces functional with Web3 integration complete), and Week 9 (complete system deployed before thesis writing begins in Week 10).
+The 12-week development timeline includes non-negotiable validation checkpoints preventing progression with inconsistent requirements or unstable infrastructure, as summarized in Table 9.
+
+*Table 9 FoodTrace 12-week development timeline with validation checkpoints*
+
+| Week | Phase | Key Deliverable | Checkpoint |
+|------|-------|-----------------|------------|
+| 0 | Pre-Kickoff | Documentation ready | - |
+| 1-2 | Planning | PRD + Architecture validated | ✓ Week 2 |
+| 3-4 | Smart Contracts | Sepolia deployment, >70% coverage | ✓ Week 4 |
+| 5-7 | Frontend/Backend | 4 role interfaces, Web3 integration | ✓ Week 7 |
+| 8-9 | Testing/Deployment | Complete POC deployed | ✓ Week 9 |
+| 10-12 | Thesis Writing | 60+ page thesis submitted | - |
 
 ### 3.1.3 Risk Assessment
 
@@ -34,9 +45,22 @@ Educational feasibility prioritizes platforms with extensive free learning resou
 
 ### 3.2.2 Decision Rationale
 
-Ethereum was selected for this proof-of-concept based on educational accessibility (Solidity learning curve estimated at 10-15 hours using free Cyfrin Updraft resources versus 30+ hours for Hyperledger Fabric chaincode), technical simplicity (single-developer setup enabling Sepolia testnet deployment in <30 minutes versus multi-organization consortium requiring 40+ hours infrastructure configuration), zero-cost testing (Sepolia testnet ETH freely available from faucets versus cloud infrastructure expenses of €50-100/month), and public verification capability (thesis reviewers can independently verify contract transactions via Sepolia Etherscan without consortium access, strengthening academic credibility).
+Ethereum was selected for this proof-of-concept based on multiple criteria, as summarized in Table 10.
 
-The thesis acknowledges Hyperledger Fabric's strengths in different contexts: enterprise B2B consortiums requiring privacy through GDPR-compliant identity management, high transaction throughput (3,000-10,000 TPS versus Ethereum's 15-30 TPS), and zero transaction costs (no gas fees). These advantages become relevant for production deployment scenarios but represent unnecessary complexity overhead for educational proof-of-concept focused on demonstrating blockchain traceability concepts rather than production scalability.
+*Table 10 Ethereum vs Hyperledger Fabric comparison for POC context*
+
+| Criterion | Ethereum | Hyperledger Fabric |
+|-----------|---------------------|-------------------|
+| Learning Curve | 10-15 hours (Cyfrin Updraft) | 30+ hours (chaincode) |
+| Setup Time | <30 minutes (Sepolia) | 40+ hours (consortium) |
+| Infrastructure Cost | €0 (testnet faucets) | €50-100/month (cloud) |
+| Transaction Cost | Gas fees (free on testnet) | None |
+| Public Verification | Yes (Etherscan) | No (consortium access) |
+| Throughput | 15-30 TPS | 3,000-10,000 TPS |
+| Privacy Controls | Limited | GDPR-compliant |
+| POC Suitability | ✓ Recommended | Enterprise-focused |
+
+The thesis acknowledges Hyperledger Fabric's strengths in different contexts: enterprise B2B consortiums requiring privacy through GDPR-compliant identity management, high transaction throughput, and zero transaction costs (no gas fees). These advantages become relevant for production deployment scenarios but represent unnecessary complexity overhead for educational proof-of-concept focused on demonstrating blockchain traceability concepts rather than production scalability.
 
 ---
 
@@ -44,13 +68,58 @@ The thesis acknowledges Hyperledger Fabric's strengths in different contexts: en
 
 ### 3.3.1 System Architecture Overview
 
-The FoodTrace system employs layered architecture separating presentation, application, integration, and data layers. The presentation layer includes four role-specific portals (Producer, Distributor, Retailer, Consumer) tailored to user workflows and information requirements. The application layer combines Next.js frontend with backend API routes in monolithic architecture, eliminating CORS complexity and simplifying deployment suitable for 3-person team collaboration. The integration layer handles Web3 connectivity through Wagmi v2 and RainbowKit, database access via Prisma ORM, and external services. The data layer spans Ethereum Sepolia testnet for immutable trace records and Supabase PostgreSQL for metadata and query caching.
+The FoodTrace system employs layered architecture separating presentation, application, integration, and data layers, as illustrated in Figure 6. The presentation layer includes four role-specific portals (Producer, Distributor, Retailer, Consumer) tailored to user workflows and information requirements. The application layer combines Next.js frontend with backend API routes in monolithic architecture, eliminating CORS complexity and simplifying deployment suitable for 3-person team collaboration. The integration layer handles Web3 connectivity through Wagmi v2 and RainbowKit, database access via Prisma ORM, and external services. The data layer spans Ethereum Sepolia testnet for immutable trace records and Supabase PostgreSQL for metadata and query caching.
+
+<!-- Mermaid diagram for Excalidraw - export as PNG for Word -->
+```mermaid
+flowchart TB
+    subgraph Presentation["Presentation Layer"]
+        P1[Producer Portal]
+        P2[Distributor Portal]
+        P3[Retailer Portal]
+        P4[Consumer Query]
+    end
+
+    subgraph Application["Application Layer"]
+        FE[Next.js Frontend]
+        API[API Routes]
+    end
+
+    subgraph Integration["Integration Layer"]
+        W3[Wagmi/RainbowKit]
+        ORM[Prisma ORM]
+    end
+
+    subgraph Data["Data Layer"]
+        BC[(Ethereum Sepolia)]
+        DB[(Supabase PostgreSQL)]
+    end
+
+    Presentation --> Application
+    Application --> Integration
+    W3 --> BC
+    ORM --> DB
+```
+
+*Figure 6 FoodTrace layered system architecture*
 
 This architecture balances simplicity appropriate for 12-week development timeline with production-ready patterns enabling future enhancement. Key architectural decisions include monolith versus microservices trade-offs (unified deployment versus independent scaling) and wallet-free consumer access (accessibility versus decentralization). Detailed implementation of these patterns is presented in Chapters 4 and 5.
 
 ### 3.3.2 Hybrid Data Strategy
 
-The system employs hybrid data storage balancing blockchain immutability with off-chain efficiency, following architectural patterns documented in blockchain-based food supply chain frameworks (MDPI, 2023). Critical traceability data requiring immutability guarantees and independent verification capability (product registration, trace records, ownership transfers) is stored on-chain. Data requiring frequent updates or privacy protection (product metadata, rich text content, cached blockchain data, user authentication) is stored off-chain in PostgreSQL.
+The system employs hybrid data storage balancing blockchain immutability with off-chain efficiency, following architectural patterns documented in blockchain-based food supply chain frameworks (MDPI, 2023). Table 11 summarizes the data allocation strategy.
+
+*Table 11 Hybrid data storage allocation*
+
+| Data Category | Storage | Rationale |
+|---------------|---------|-----------|
+| Product registration | On-chain | Immutable proof of origin |
+| Trace records | On-chain | Tamper-proof audit trail |
+| Ownership transfers | On-chain | Verifiable custody changes |
+| Product metadata | Off-chain | Frequent updates, cost efficiency |
+| User authentication | Off-chain | Privacy, GDPR compliance |
+| Search indexes | Off-chain | Query performance optimization |
+| Cached blockchain data | Off-chain | Response speed improvement |
 
 This hybrid approach addresses cost-efficiency constraints—storing all data on-chain incurs prohibitive gas costs while storing all data off-chain eliminates immutability benefits and prevents independent verification. The strategy achieves balance by storing only critical traceability data on-chain for tamper-proof transparency while maintaining flexible metadata off-chain. Implementation details including cryptographic linking mechanisms, gas cost optimizations, and data synchronization patterns are presented in Chapter 4.
 
@@ -66,7 +135,21 @@ Test categories include unit tests validating individual smart contract function
 
 ### 3.4.2 Performance Metrics
 
-The project measures multiple performance dimensions validating acceptance criteria and identifying optimization opportunities. Blockchain performance metrics include block confirmation time, gas costs for critical functions, and transaction success rate. Application performance metrics include page load time, API response time, database query execution time, and QR code generation time. Quality metrics include smart contract test coverage, TypeScript type coverage, ESLint compliance, WCAG accessibility level, and mobile responsiveness. User experience metrics include QR scan success rate, form validation feedback time, error message clarity, and transaction pending state visibility.
+The project measures multiple performance dimensions validating acceptance criteria and identifying optimization opportunities, as summarized in Table 12.
+
+*Table 12 Performance metrics categories and targets*
+
+| Category | Metric | Target |
+|----------|--------|--------|
+| Blockchain | Block confirmation time | <30 seconds |
+| Blockchain | Gas cost per function | Document actuals |
+| Blockchain | Transaction success rate | >99% |
+| Application | Page load time | <3 seconds |
+| Application | API response time | <500ms |
+| Quality | Smart contract coverage | >70% |
+| Quality | TypeScript type coverage | >90% |
+| UX | QR scan success rate | >95% |
+| UX | Form validation feedback | <100ms |
 
 Data collection methods combine quantitative data (blockchain transaction data from Etherscan API, application performance logs from Next.js middleware, automated test results from coverage tools) and qualitative data (UI/UX observations from team testing, workflow friction points, development process insights). All collected data is organized for thesis reference, directly informing Chapter 6 quantitative analysis and Chapter 7 qualitative discussion.
 
@@ -98,6 +181,4 @@ Zhao, G., Liu, S., Lopez, C., Lu, H., Elgueta, S., Chen, H., & Boshkoska, B. M. 
 
 ---
 
-**Word Count:** ~1,600 words (Target: 1,400-1,700 | OAMK Max: 2,000)
-**Structure:** 4 main sections, 3 subsection levels (complies with German university standards)
-**Focus:** Methodology justification (WHY/WHAT), implementation details moved to Chapters 4-5 (HOW)
+**Word Count:** ~1,700 words | **Tables:** 9-12 | **Figure:** 6 | **References:** 11
