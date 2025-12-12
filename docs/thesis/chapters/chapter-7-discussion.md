@@ -18,7 +18,7 @@ Query performance on read-only endpoints averages <200ms (Supabase connection po
 
 Table 22 summarizes the alignment between research objectives established in Chapter 1 and implementation results.
 
-*Table 22: Research objectives alignment*
+TABLE 22. Research objectives alignment
 
 | Objective | Target | Result |
 |-----------|--------|--------|
@@ -39,13 +39,13 @@ Table 22 summarizes the alignment between research objectives established in Cha
 
 ### 7.2.1 Immutability: Cryptographic Guarantee Against Data Tampering
 
-Blockchain's cryptographic immutability addresses a fundamental weakness of traditional centralized databases: retroactive data modification. Keccak-256 hash chaining ensures that once product registration achieves finality on Sepolia (12-15 seconds, 2-3 block confirmations), records become computationally infeasible to alter without rewriting entire blockchain history—requiring 51% network control (Nakamoto, 2008). The tamper-resistant nature of blockchain significantly reduces risks of food adulteration and fraud, with immutable records providing secure and verifiable product history that deters fraudulent activities while promoting authenticity in supply chains facing annual economic losses of $10-15 billion globally from food fraud (Duan et al., 2024).
+Blockchain's cryptographic immutability addresses a fundamental weakness of traditional centralized databases: retroactive data modification. Keccak-256 hash chaining ensures that once product registration achieves finality on Sepolia (12-15 seconds, 2-3 block confirmations), records become computationally infeasible to alter without rewriting entire blockchain history—requiring 51% network control (Nakamoto 2008). The tamper-resistant nature of blockchain significantly reduces risks of food adulteration and fraud, with immutable records providing secure and verifiable product history that deters fraudulent activities while promoting authenticity in supply chains facing annual economic losses of $10-15 billion globally from food fraud (Duan et al. 2024).
 
 Testing confirmed trace records persist immutably—once registered on Sepolia with 2-3 block confirmations, records cannot be modified. Access control tests verified that unauthorized addresses cannot call state-modifying functions.
 
 **GDPR Limitation:** Immutability conflicts with EU "right to be forgotten" mandates. The hybrid architecture partially addresses this—personal data resides off-chain (deletable via Supabase), while supply chain events remain on-chain (immutable). However, transaction metadata (wallet addresses, timestamps) persists permanently. The Vasileiou et al. (2025) systematic review notes no food traceability implementation has fully resolved GDPR-blockchain tensions, validating this as an open research challenge.
 
-Blockchain-based data integrity verification schemes address trust challenges in distributed systems through cryptographic proof mechanisms, though implementation trade-offs between verification efficiency and computational overhead remain significant for large-scale IoT deployments (Li et al., 2023). The fundamental immutability guarantee stems from cryptographic hash chain linking where each block references the previous block's hash, making retroactive tampering computationally infeasible without network consensus (Han et al., 2024).
+Blockchain-based data integrity verification schemes address trust challenges in distributed systems through cryptographic proof mechanisms, though implementation trade-offs between verification efficiency and computational overhead remain significant for large-scale IoT deployments (Li et al. 2023). The fundamental immutability guarantee stems from cryptographic hash chain linking where each block references the previous block's hash, making retroactive tampering computationally infeasible without network consensus (Han et al. 2024).
 
 ### 7.2.2 Transparency: Public Verifiability Without Intermediary Trust
 
@@ -53,11 +53,11 @@ Public blockchain transparency addresses information asymmetry documented by Cas
 
 Consumer query testing validated that non-technical users successfully verified complete product journeys in 4.2 seconds average without creating accounts. The 95% QR code scanning success rate demonstrates practical viability of trustless verification—consumers cryptographically validate product history without relying on producer honesty or third-party auditors. Zhao et al.'s (2019) systematic review identifies transparency as blockchain's primary value proposition, documenting how public blockchains enable consumer trust through independent verification without intermediary reliance.
 
-**Business Confidentiality Tension:** Public blockchains expose competitive intelligence—transaction volumes reveal market share, timing patterns indicate pricing strategies. The implementation mitigates this through selective disclosure: critical traceability data (product ID, timestamps, custody transfers) remains public, while business-sensitive information (pricing, profit margins, supplier contracts) resides off-chain. The 50/50 Ethereum-Hyperledger split in academic literature (Vasileiou et al., 2025) reflects this unresolved tension.
+**Business Confidentiality Tension:** Public blockchains expose competitive intelligence—transaction volumes reveal market share, timing patterns indicate pricing strategies. The implementation mitigates this through selective disclosure: critical traceability data (product ID, timestamps, custody transfers) remains public, while business-sensitive information (pricing, profit margins, supplier contracts) resides off-chain. The 50/50 Ethereum-Hyperledger split in academic literature (Vasileiou et al. 2025) reflects this unresolved tension.
 
 ### 7.2.3 Speed: Real-Time Traceability Versus Multi-Day Reconciliation
 
-Blockchain consensus enables sub-second to sub-minute traceability compared to days or weeks for traditional paper-based systems. The Walmart case study (IBM, 2019) provides the seminal benchmark: tracing mango origins required 6 days 18 hours using paper records versus 2.2 seconds with blockchain—a 281,000× speedup enabling targeted recalls instead of blanket regional bans.
+Blockchain consensus enables sub-second to sub-minute traceability compared to days or weeks for traditional paper-based systems. The Walmart case study (IBM 2019) provides the seminal benchmark: tracing mango origins required 6 days 18 hours using paper records versus 2.2 seconds with blockchain—a 281,000× speedup enabling targeted recalls instead of blanket regional bans.
 
 The implementation achieved 1.8-second average query performance, beating Hyperledger Fabric benchmarks. Complete supply chain journeys (Producer → Distributor → Retailer → Consumer) execute in 4.2 seconds end-to-end, meeting FDA FSMA Rule 204 requirement for 24-hour traceability with 99.995% time margin. Zhao et al.'s (2019) review demonstrates blockchain traceability enables sub-second to sub-minute query times compared to multi-day traditional reconciliation processes, representing order-of-magnitude improvement in recall response speed.
 
@@ -69,7 +69,7 @@ The implementation achieved 1.8-second average query performance, beating Hyperl
 
 ### 7.3.1 Oracle Problem: Data Authenticity Challenge
 
-Blockchain guarantees data immutability but cannot verify off-chain data accuracy at input—the persistent "garbage in, garbage out" (GIGO) challenge. This oracle problem remains a fundamental limitation of blockchain systems connecting to external data sources, with research exploring voting-based and reputation-based verification mechanisms to ensure data integrity and correctness (Pasdar et al., 2023). Zhang et al. (2016) proposed Town Crier, an authenticated data feed using trusted hardware to bridge this gap, though such solutions add infrastructure complexity. The implementation addressed this through timestamp validation (preventing future dates) and multi-party verification (social proof via multiple supply chain actors recording trace events), yet neither provides cryptographic guarantees of real-world truth.
+Blockchain guarantees data immutability but cannot verify off-chain data accuracy at input—the persistent "garbage in, garbage out" (GIGO) challenge. This oracle problem remains a fundamental limitation of blockchain systems connecting to external data sources, with research exploring voting-based and reputation-based verification mechanisms to ensure data integrity and correctness (Pasdar et al. 2023). Zhang et al. (2016) proposed Town Crier, an authenticated data feed using trusted hardware to bridge this gap, though such solutions add infrastructure complexity. The implementation addressed this through timestamp validation (preventing future dates) and multi-party verification (social proof via multiple supply chain actors recording trace events), yet neither provides cryptographic guarantees of real-world truth.
 
 Testing revealed that producers could intentionally enter false harvest dates (backdating organic certification) and pass all smart contract validations. Timestamp checks prevent future dates but cannot detect past-dating fraud. Buterin (2014) identifies this as the fundamental oracle problem: "Blockchains are closed systems; they cannot natively access external truth." Multi-party verification partially mitigates this through social consensus, yet Casino et al. (2019) demonstrate that Sybil attacks—single actors controlling multiple validator identities—remain practical without identity verification systems.
 
@@ -85,11 +85,11 @@ The complete supply chain journey—product registration (~200,000 gas) + three 
 
 **Layer 2 Solutions:** Polygon, Arbitrum, and Optimism offer 90%+ cost reductions while maintaining Ethereum security guarantees. This would reduce per-product costs to €0.01-0.03, making blockchain traceability economically viable for a broader range of products. See Chapter 8 Future Work for Layer 2 migration recommendations.
 
-**Scalability Constraints:** Beyond cost, Ethereum L1 processes only 15-30 transactions per second (TPS), compared to Visa's 24,000 TPS—a fundamental throughput limitation identified in systematic literature reviews (Zhou et al., 2020). This "scalability trilemma" (Buterin, 2017) reflects the inherent trade-off between decentralization, security, and scalability in public blockchains, as illustrated in Figure 14.
+**Scalability Constraints:** Beyond cost, Ethereum L1 processes only 15-30 transactions per second (TPS), compared to Visa's 24,000 TPS—a fundamental throughput limitation identified in systematic literature reviews (Zhou et al. 2020). This "scalability trilemma" (Buterin 2017) reflects the inherent trade-off between decentralization, security, and scalability in public blockchains, as illustrated in Figure 14.
 
 ```mermaid
 flowchart TB
-    subgraph Trilemma["Blockchain Scalability Trilemma (Buterin, 2017)"]
+    subgraph Trilemma["Blockchain Scalability Trilemma (Buterin 2017)"]
         D[Decentralization]
         SC[Security]
         S[Scalability]
@@ -105,7 +105,7 @@ flowchart TB
     ETH --> L2
 ```
 
-*Figure 14: Blockchain scalability trilemma. Ethereum L1 prioritizes decentralization and security over throughput; Layer 2 solutions add scalability while inheriting L1 security guarantees through cryptographic proofs.*
+FIGURE 14. Blockchain scalability trilemma. Ethereum L1 prioritizes decentralization and security over throughput; Layer 2 solutions add scalability while inheriting L1 security guarantees through cryptographic proofs.
 
 For supply chain applications where transactions occur over hours or days rather than seconds, current L1 throughput is adequate—the FoodTrace POC demonstrates this with trace records taking 12-15 seconds to confirm. However, high-volume deployments processing thousands of products daily would require Layer 2 migration to avoid network congestion during peak usage.
 
@@ -113,7 +113,7 @@ For supply chain applications where transactions occur over hours or days rather
 
 Food safety regulation assumes centralized systems with clear accountability hierarchies. The FDA (2023) mandates that "responsible parties must provide traceability information within 24 hours of agency request," yet decentralized blockchains have no single responsible party.
 
-**GDPR Right to Erasure:** EU citizens can demand data deletion, yet blockchain immutability prevents this, creating fundamental tensions documented in systematic literature reviews analyzing blockchain-GDPR compatibility challenges (Godyn et al., 2022). Technical solutions including chameleon hashes, redactable blockchains, and zero-knowledge proofs have been proposed but remain unproven at production scale (Yeh et al., 2024). The hybrid architecture (personal data off-chain) partially complies, but transaction metadata (wallet addresses, timestamps) persists permanently on-chain. This represents the "right to be forgotten" conflict: EU regulations mandate data deletion upon request, yet blockchain immutability prevents erasure.
+**GDPR Right to Erasure:** EU citizens can demand data deletion, yet blockchain immutability prevents this, creating fundamental tensions documented in systematic literature reviews analyzing blockchain-GDPR compatibility challenges (Godyn et al. 2022). Technical solutions including chameleon hashes, redactable blockchains, and zero-knowledge proofs have been proposed but remain unproven at production scale (Yeh et al. 2024). The hybrid architecture (personal data off-chain) partially complies, but transaction metadata (wallet addresses, timestamps) persists permanently on-chain. This represents the "right to be forgotten" conflict: EU regulations mandate data deletion upon request, yet blockchain immutability prevents erasure.
 
 **Legal Admissibility:** Courts require authenticated records with chain-of-custody documentation. While blockchain provides cryptographic proof, judges unfamiliar with distributed systems may question blockchain evidence reliability.
 
@@ -144,7 +144,7 @@ The 12-week thesis timeline required prioritization decisions. IoT sensor integr
 
 ### 7.3.5 User Experience Barriers
 
-**Wallet Complexity:** Despite wallet-free consumer access, supply chain participants require wallet management. Initial MetaMask wallet setup—seed phrase generation, backup instructions, network configuration, test ETH acquisition—proved substantially more time-consuming for non-technical users than traditional account creation. Empirical research analyzing thousands of cryptocurrency wallet reviews documents that wallet complexity including seed phrase management presents significant adoption barriers for non-technical users, with both novice and experienced users struggling with UX issues that can lead to irreversible monetary losses (Voskobojnikov et al., 2021).
+**Wallet Complexity:** Despite wallet-free consumer access, supply chain participants require wallet management. Initial MetaMask wallet setup—seed phrase generation, backup instructions, network configuration, test ETH acquisition—proved substantially more time-consuming for non-technical users than traditional account creation. Empirical research analyzing thousands of cryptocurrency wallet reviews documents that wallet complexity including seed phrase management presents significant adoption barriers for non-technical users, with both novice and experienced users struggling with UX issues that can lead to irreversible monetary losses (Voskobojnikov et al. 2021).
 
 The seed phrase backup process proved particularly problematic. Test participants frequently asked: "Why must I write down 24 words? Can't I just use email/password?" Security best practices mandate offline seed phrase storage, yet this conflicts with user expectations shaped by traditional account recovery. The custodial wallet abstraction (storing encrypted private keys server-side) resolves this for business users willing to trust the platform, yet introduces the centralization that blockchain aimed to eliminate.
 
@@ -159,12 +159,12 @@ This section directly addresses the five research questions established in Chapt
 **RQ1: Technical Suitability**
 _How suitable is Ethereum blockchain for food supply chain traceability in proof-of-concept implementations?_
 
-Ethereum demonstrates strong suitability for POC implementations. The FoodTrace system achieved 100% smart contract test coverage (37 tests), successful deployment to Sepolia testnet, and 12-15 second transaction confirmation times acceptable for supply chain operations. However, limitations exist: gas costs (~€0.30/journey on mainnet) restrict applicability to premium products, and 15-30 TPS throughput limits high-volume deployments. For production systems requiring privacy and higher throughput, Hyperledger Fabric remains the industry preference (Vasileiou et al., 2025).
+Ethereum demonstrates strong suitability for POC implementations. The FoodTrace system achieved 100% smart contract test coverage (37 tests), successful deployment to Sepolia testnet, and 12-15 second transaction confirmation times acceptable for supply chain operations. However, limitations exist: gas costs (~€0.30/journey on mainnet) restrict applicability to premium products, and 15-30 TPS throughput limits high-volume deployments. For production systems requiring privacy and higher throughput, Hyperledger Fabric remains the industry preference (Vasileiou et al. 2025).
 
 **RQ2: Comparative Analysis**
 _What are the technical advantages and limitations of blockchain-based traceability compared to traditional centralized database approaches?_
 
-Blockchain offers three key advantages: cryptographic immutability preventing retroactive tampering (Nakamoto, 2008), public verifiability enabling trustless consumer verification (4.2 seconds average query), and decentralized architecture eliminating single points of failure. However, traditional databases offer faster writes (sub-100ms vs 12-15 seconds), lower operational costs, and simpler GDPR compliance. The hybrid architecture implemented in FoodTrace balances these trade-offs by placing critical traceability data on-chain while keeping mutable business data off-chain.
+Blockchain offers three key advantages: cryptographic immutability preventing retroactive tampering (Nakamoto 2008), public verifiability enabling trustless consumer verification (4.2 seconds average query), and decentralized architecture eliminating single points of failure. However, traditional databases offer faster writes (sub-100ms vs 12-15 seconds), lower operational costs, and simpler GDPR compliance. The hybrid architecture implemented in FoodTrace balances these trade-offs by placing critical traceability data on-chain while keeping mutable business data off-chain.
 
 **RQ3: Transparency vs Privacy Trade-offs**
 _How can blockchain applications balance public verification requirements with business data privacy needs?_

@@ -6,11 +6,11 @@ This chapter presents the testing results and performance evaluation of the Food
 
 ## 6.1 Testing Strategy Overview
 
-Testing followed the Test Pyramid principle (Cohn, 2009), as illustrated in Figure 12. Unit tests form the foundation with highest coverage (>70% target), integration tests verify component interactions and blockchain-database synchronization, and end-to-end tests validate complete user workflows across four supply chain roles. Performance testing measured transaction times, API latency, and page load speeds throughout development.
+Testing followed the Test Pyramid principle (Cohn 2009), as illustrated in Figure 12. Unit tests form the foundation with highest coverage (>70% target), integration tests verify component interactions and blockchain-database synchronization, and end-to-end tests validate complete user workflows across four supply chain roles. Performance testing measured transaction times, API latency, and page load speeds throughout development.
 
 ```mermaid
 flowchart TB
-    subgraph Pyramid["Test Pyramid (Cohn, 2009)"]
+    subgraph Pyramid["Test Pyramid (Cohn 2009)"]
         E2E["E2E Tests<br/>~29 tests"]
         INT["Integration/API Tests<br/>~100 tests"]
         UNIT["Unit Tests<br/>107 tests"]
@@ -19,9 +19,9 @@ flowchart TB
     E2E --> INT --> UNIT
 ```
 
-*Figure 12: FoodTrace test distribution following Test Pyramid principle. Unit tests (smart contract + component) form the foundation, integration tests verify API and blockchain-database sync, E2E tests validate complete workflows.*
+FIGURE 12. FoodTrace test distribution following Test Pyramid principle. Unit tests (smart contract + component) form the foundation, integration tests verify API and blockchain-database sync, E2E tests validate complete workflows.
 
-Testing was integrated into each development sprint using the Hardhat framework (Hardhat, 2024) for smart contract testing and Jest with React Testing Library for frontend components. This approach addressed blockchain-specific challenges including transaction immutability and state verification complexity (Tramontana et al., 2022).
+Testing was integrated into each development sprint using the Hardhat framework (Hardhat 2024) for smart contract testing and Jest with React Testing Library for frontend components. This approach addressed blockchain-specific challenges including transaction immutability and state verification complexity (Tramontana et al. 2022).
 
 ---
 
@@ -29,7 +29,7 @@ Testing was integrated into each development sprint using the Hardhat framework 
 
 Smart contract testing achieved 100% statement coverage for ProductRegistry.sol (37 test cases, all passing in ~672ms execution time), significantly exceeding the 70% target. Tests were organized into five categories: deployment tests (2 cases), role management tests (6 cases), product registration tests (8 cases), getter function tests (4 cases), and trace record tests (11 cases), with additional gas profiling tests (6 cases). Gas cost measurements confirmed values within expected ranges (see Table 15, Section 4.4). Complete product journey consumes ~750,000 gas, acceptable for Sepolia testnet deployment.
 
-**Security Validation:** Access control tests verified role-based permissions: unauthorized addresses receive appropriate error messages, role management is restricted to admin, and public view functions are accessible without roles. Input validation tests confirmed rejection of empty product names, future harvest dates, and non-existent product IDs. Security testing practices followed systematic approaches for smart contract vulnerability detection (Vidal et al., 2024). A harvest date validation vulnerability was discovered and fixed during testing—producers could originally register products with future dates (e.g., 2030), enabling fraud scenarios.
+**Security Validation:** Access control tests verified role-based permissions: unauthorized addresses receive appropriate error messages, role management is restricted to admin, and public view functions are accessible without roles. Input validation tests confirmed rejection of empty product names, future harvest dates, and non-existent product IDs. Security testing practices followed systematic approaches for smart contract vulnerability detection (Vidal et al. 2024). A harvest date validation vulnerability was discovered and fixed during testing—producers could originally register products with future dates (e.g., 2030), enabling fraud scenarios.
 
 ---
 
@@ -37,7 +37,7 @@ Smart contract testing achieved 100% statement coverage for ProductRegistry.sol 
 
 The project achieved 236 total passing tests across 14 test suites (~3.2 seconds execution time). Backend API testing covered authentication endpoints, product registration, trace record APIs, and company management with >80% coverage on critical paths. Frontend component testing used React Testing Library with Jest, validating TraceRecordForm (role-based action filtering), TraceTimeline (event display, Etherscan links), and dashboard components.
 
-*Table 18: Test distribution across system layers*
+TABLE 18. Test distribution across system layers
 
 | Layer | Test Count | Coverage Focus |
 |-------|------------|----------------|
@@ -49,7 +49,7 @@ The project achieved 236 total passing tests across 14 test suites (~3.2 seconds
 
 **Manual Testing:** Complete supply chain workflows validated via Playwright browser automation: Producer registration with QR code generation, Distributor receiving and tracing products, Retailer stocking and selling, and Consumer wallet-free product lookup. Dashboard tab navigation (In Custody, Product History, Incoming Shipments) verified across all roles.
 
-Accessibility features implemented following WCAG 2.1 guidelines (W3C, 2018) include ARIA labels for screen readers, keyboard navigation for all interactive elements, and color-blind safe palette using patterns in addition to color for status differentiation.
+Accessibility features implemented following WCAG 2.1 guidelines (W3C 2018) include ARIA labels for screen readers, keyboard navigation for all interactive elements, and color-blind safe palette using patterns in addition to color for status differentiation.
 
 ---
 
@@ -61,7 +61,7 @@ Accessibility features implemented following WCAG 2.1 guidelines (W3C, 2018) inc
 
 **Blockchain Latency:** Block confirmation dominates write operation latency. Optimistic UI updates provide responsive user experience by showing pending state before blockchain confirmation, reverting if transaction fails.
 
-*Table 19: Performance metrics summary (measured December 2025)*
+TABLE 19. Performance metrics summary (measured December 2025)
 
 | Metric | Target | Measured | Status |
 |--------|--------|----------|--------|
@@ -102,13 +102,13 @@ flowchart LR
     R3 -.->|Wallet-Free<br/>Access| C1
 ```
 
-*Figure 13: Complete supply chain journey showing trace record actions at each stage. Solid arrows indicate ownership transfer; dashed arrow indicates wallet-free consumer access.*
+FIGURE 13. Complete supply chain journey showing trace record actions at each stage. Solid arrows indicate ownership transfer; dashed arrow indicates wallet-free consumer access.
 
 Producer registered "Organic Blueberries" with origin "Helsinki Farm" and harvest date. System response: blockchain confirmation in ~12-15 seconds, QR code generated automatically, product visible in Producer dashboard. Distributor logged in, viewed "Incoming Shipments" section showing product shipped to their company. Distributor clicked "Accept" → RECEIVED trace recorded on blockchain → product moved to "In Custody" tab. Distributor added QUALITY_CHECK trace with location notes. Distributor selected recipient company and clicked SHIPPED. Retailer viewed incoming shipment, accepted product (RECEIVED trace), added STOCKED trace. Retailer marked product SOLD. Consumer accessed product via QR code scan on mobile device (wallet-free), viewed complete timeline showing all trace events with timestamps, actors, and Etherscan verification links. Desktop interface provides QR code display for printing and manual product ID search.
 
 ### 6.5.2 Access Control Validation
 
-*Table 20: Multi-layer access control validation*
+TABLE 20. Multi-layer access control validation
 
 | Layer | Attempted Action | Actor | Result | Protection |
 |-------|------------------|-------|--------|------------|
@@ -118,7 +118,7 @@ Producer registered "Organic Blueberries" with origin "Helsinki Farm" and harves
 
 ### 6.5.3 Validation Summary
 
-*Table 21: System validation summary*
+TABLE 21. System validation summary
 
 | Category | Tests Validated | Result |
 |----------|-----------------|--------|

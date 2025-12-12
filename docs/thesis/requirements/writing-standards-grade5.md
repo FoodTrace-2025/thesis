@@ -142,19 +142,62 @@ For every major source, note:
 
 ## 7. Formatting Rules (Professor Feedback)
 
-### Table/Figure Formatting
-1. **Table captions:** ABOVE the table
-2. **Figure captions:** BELOW the figure
-3. **Numbering:** Sequential across chapters
-   - Ch 1: Tables 1-2, Figure 1
-   - Ch 2: Tables 3-8, Figures 2-5
-   - Future: Table 9+, Figure 6+
+### Table/Figure Caption Format (Updated 2025-12-12)
+
+**Caption Format:**
+- **Figures:** `FIGURE N. Description in sentence case`
+- **Tables:** `TABLE N. Description in sentence case`
+
+**Rules:**
+1. `FIGURE` and `TABLE` must be UPPERCASE
+2. Period (`.`) after the number (e.g., `FIGURE 8.` not `FIGURE 8:`)
+3. Description in sentence case (first letter capital, rest lowercase except proper nouns)
+4. No markdown italics (remove asterisks) - causes incorrect formatting when copied to Word
+5. **Figure captions:** BELOW the figure
+6. **Table captions:** ABOVE the table
+
+**Examples:**
+- `FIGURE 8. Data structures of ProductRegistry contract`
+- `TABLE 13. Role-based access control relationships`
+- `FIGURE 13. Complete supply chain journey showing trace record actions at each stage.`
+
+**Proper nouns to keep capitalized:**
+- Platform names: Ethereum, Hyperledger Fabric, Sepolia
+- Product names: ProductRegistry, FoodTrace, OpenZeppelin
+- Technical terms: Test Pyramid, AccessControl
+
+### Numbering
+Sequential across chapters:
+- Ch 1: Tables 1-2, Figure 1
+- Ch 2: Tables 3-8, Figures 2-5
+- Ch 3: Tables 9-12, Figure 6
+- Ch 4: Tables 13-15, Figures 7-8
+- Ch 5: Tables 16-17, Figures 9-11
+- Ch 6: Tables 18-21, Figures 12-13
+- Ch 7: Table 22, Figure 14
 
 ### Content Guidelines
 - Tables: For structured comparisons (2+ items with multiple attributes)
 - Numbered prose: For sequential items or short lists (3-4 items)
 - Figures/diagrams: For process flows and system overviews
 - Bullet points: Only for truly unstructured lists (rare)
+
+### In-Text Citation Format (Updated 2025-12-12)
+
+**Format:** `(Author Year)` - NO comma between author and year
+
+**Rules:**
+1. Remove comma between author and year
+2. Keep proper format for page numbers: `(Author Year, p. 123)`
+3. Multiple citations separated by semicolon: `(Author1 2024; Author2 2023)`
+
+**Examples:**
+- ❌ Wrong: `(Nakamoto, 2008)`
+- ✅ Correct: `(Nakamoto 2008)`
+- ❌ Wrong: `(Voskobojnikov et al., 2021)`
+- ✅ Correct: `(Voskobojnikov et al. 2021)`
+- ❌ Wrong: `(Casino et al., 2019; Zhao et al., 2019)`
+- ✅ Correct: `(Casino et al. 2019; Zhao et al. 2019)`
 
 ---
 

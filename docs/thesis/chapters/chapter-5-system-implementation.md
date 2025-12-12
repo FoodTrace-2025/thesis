@@ -17,7 +17,7 @@ This chapter describes the implementation of the supporting system components th
 
 **Owner:** TaiSheng Chen
 
-The backend architecture uses Next.js 14 API routes (Next.js, 2024) for serverless functions combined with Supabase PostgreSQL for off-chain data storage and Wagmi v2 (Wagmi, 2024) for blockchain interaction following modern Web3 development patterns.
+The backend architecture uses Next.js 14 API routes (Next.js 2024) for serverless functions combined with Supabase PostgreSQL for off-chain data storage and Wagmi v2 (Wagmi 2024) for blockchain interaction following modern Web3 development patterns.
 
 **Note:** This section corresponds to Section 2.4.1 (Custodial Wallet Patterns) in Literature Review, which reviews custodial wallet patterns, Wagmi/Viem libraries, and API design best practices.
 
@@ -25,7 +25,7 @@ The backend architecture uses Next.js 14 API routes (Next.js, 2024) for serverle
 
 The PostgreSQL database schema follows normalized relational database principles while accommodating blockchain data patterns, as summarized in Table 16.
 
-*Table 16 Database schema overview (Prisma + Supabase)*
+TABLE 16. Database schema overview (Prisma + Supabase)
 
 | Table | Purpose | Key Fields |
 |-------|---------|------------|
@@ -37,7 +37,7 @@ The PostgreSQL database schema follows normalized relational database principles
 
 Each table includes blockchain-specific fields: transactionHash (links to Ethereum transaction), blockchainIndex (for trace ordering), and blockchainId (maps to smart contract product ID).
 
-Foreign key relationships enforce referential integrity between Product, TraceRecord, User, and Company tables. Prisma ORM (Prisma, 2024) manages schema evolution through declarative migrations with automatic rollback capabilities, providing type-safe database access and preventing SQL injection vulnerabilities. Connection pooling through Supabase's pgBouncer (TRANSACTION mode) prevents connection exhaustion in Next.js serverless environment where each API route invocation creates a new database client.
+Foreign key relationships enforce referential integrity between Product, TraceRecord, User, and Company tables. Prisma ORM (Prisma 2024) manages schema evolution through declarative migrations with automatic rollback capabilities, providing type-safe database access and preventing SQL injection vulnerabilities. Connection pooling through Supabase's pgBouncer (TRANSACTION mode) prevents connection exhaustion in Next.js serverless environment where each API route invocation creates a new database client.
 
 Database indexing strategy prioritizes consumer query performance: composite index on (Product.blockchainId, TraceRecord.createdAt) enables efficient trace history retrieval.
 
@@ -45,7 +45,7 @@ Database indexing strategy prioritizes consumer query performance: composite ind
 
 API routes follow REST conventions with domain-based organization: `/api/products/*` for product operations, `/api/admin/*` for platform administration, and `/api/companies/*` for company management. Each route implements authentication (NextAuth.js session validation), authorization (role-based access control), validation (Zod schema validation), business logic (Prisma database queries and Viem blockchain interactions), and error handling (structured responses with appropriate HTTP status codes). Core endpoints are summarized in Table 17.
 
-*Table 17 Core API endpoints*
+TABLE 17. Core API endpoints
 
 | Endpoint | Method | Purpose | Auth |
 |----------|--------|---------|------|
@@ -63,7 +63,7 @@ Performance optimization employs caching strategies: React Query on frontend cac
 
 **Note:** This section applies custodial wallet patterns reviewed in Section 2.4.1 to address wallet UX barriers discussed in Section 2.4.2.
 
-Web3 functionality implemented using Wagmi v2 library (Wagmi, 2024) providing React hooks for Ethereum interaction, built on Viem (Viem, 2024) for type-safe Ethereum operations. Configuration in `src/lib/wagmi.ts` defines Sepolia chain connection, Alchemy RPC provider (HTTP transport), and contract ABIs. Wagmi's createConfig initializes Web3 client with connection pooling and automatic retry logic for failed RPC requests.
+Web3 functionality implemented using Wagmi v2 library (Wagmi 2024) providing React hooks for Ethereum interaction, built on Viem (Viem 2024) for type-safe Ethereum operations. Configuration in `src/lib/wagmi.ts` defines Sepolia chain connection, Alchemy RPC provider (HTTP transport), and contract ABIs. Wagmi's createConfig initializes Web3 client with connection pooling and automatic retry logic for failed RPC requests.
 
 **Custodial Wallet Pattern:**
 
@@ -82,7 +82,7 @@ flowchart TB
     end
 ```
 
-*Figure 9 Custodial wallet transaction signing flow*
+FIGURE 9. Custodial wallet transaction signing flow
 
 **Wallet-Free Consumer Access:**
 
@@ -100,7 +100,7 @@ Addresses common Web3 failure modes: RPC timeout (retry with exponential backoff
 
 **Note:** This section implements wallet-free access patterns reviewed in Section 2.4.2 (Wallet-Free Consumer Access) to address the 80% wallet setup abandonment rate documented in literature.
 
-The frontend implements four role-specific interfaces (Producer, Distributor, Retailer, Consumer) using Next.js 14 Pages Router with TypeScript and Chakra UI v2 component library (Chakra UI, 2024) for accessible, customizable React components following WAI-ARIA design patterns.
+The frontend implements four role-specific interfaces (Producer, Distributor, Retailer, Consumer) using Next.js 14 Pages Router with TypeScript and Chakra UI v2 component library (Chakra UI 2024) for accessible, customizable React components following WAI-ARIA design patterns.
 
 ### 5.2.1 Layout Architecture and Routing
 
@@ -125,7 +125,7 @@ flowchart TB
     AUTH -.->|bypass| Public
 ```
 
-*Figure 10 Application route structure with authentication boundaries*
+FIGURE 10. Application route structure with authentication boundaries
 
 Authentication state management uses NextAuth.js with Prisma adapter, storing user sessions in Supabase PostgreSQL. Protected routes implement middleware-based authentication checks: unauthenticated requests redirect to `/login`, and role-based authorization validates user permissions before rendering dashboard content. Consumer routes remain public (no authentication) to enable wallet-free product verification.
 
@@ -147,7 +147,7 @@ All business user interfaces implement optimistic UI updates showing pending ope
 
 **Note:** This section directly addresses wallet complexity barriers reviewed in Section 2.4.2, implementing the wallet-free access pattern to solve the 80% abandonment rate problem.
 
-Consumer query interface provides public product verification without authentication or wallet requirements, addressing wallet complexity barriers including seed phrase management and private key storage that deter mainstream consumer adoption. Empirical studies analyzing 45,821 app reviews of mobile cryptocurrency wallets document that both new and experienced users struggle with UX issues leading to frustration, disengagement, and dangerous errors including irreversible monetary losses (Voskobojnikov et al., 2021).
+Consumer query interface provides public product verification without authentication or wallet requirements, addressing wallet complexity barriers including seed phrase management and private key storage that deter mainstream consumer adoption. Empirical studies analyzing 45,821 app reviews of mobile cryptocurrency wallets document that both new and experienced users struggle with UX issues leading to frustration, disengagement, and dangerous errors including irreversible monetary losses (Voskobojnikov et al. 2021).
 
 Primary entry point uses QR code scanning via html5-qrcode library: accesses device camera (requires HTTPS and user permission), decodes QR code, extracts product ID, and navigates to product detail page. Fallback manual entry allows consumers to type product ID directly if camera unavailable or QR code damaged. The consumer query flow is illustrated in Figure 11.
 
@@ -166,7 +166,7 @@ flowchart LR
     DISPLAY --> VERIFY[Etherscan Link]
 ```
 
-*Figure 11 Wallet-free consumer query flow with fallback manual entry*
+FIGURE 11. Wallet-free consumer query flow with fallback manual entry
 
 Product detail page fetches data via `/api/products/[id]/trace-history` endpoint (public read-only) and displays product identity (name, origin, harvest date), supply chain timeline with all trace records, and blockchain proof via Etherscan link for independent verification.
 

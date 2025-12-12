@@ -6,9 +6,9 @@ This chapter describes the research methodology and technical approach employed 
 
 ### 3.1.1 Development Framework
 
-This project follows the ABCDE (Agile Block Chain DApp Engineering) framework, a blockchain-adapted agile methodology that separates development activities into two parallel flows: smart contract development and off-chain software development, each performed iteratively with integration activities every 2-3 iterations (Marchesi et al., 2020). This dual-flow approach addresses unique blockchain development challenges including transaction immutability, decentralized deployment, and consensus mechanism dependencies that differentiate blockchain engineering from conventional software development (ACM Computing Surveys, 2023).
+This project follows the ABCDE (Agile Block Chain DApp Engineering) framework, a blockchain-adapted agile methodology that separates development activities into two parallel flows: smart contract development and off-chain software development, each performed iteratively with integration activities every 2-3 iterations (Marchesi et al. 2020). This dual-flow approach addresses unique blockchain development challenges including transaction immutability, decentralized deployment, and consensus mechanism dependencies that differentiate blockchain engineering from conventional software development (ACM Computing Surveys 2023).
 
-The methodology incorporates Scrum principles (Schwaber & Sutherland, 2020) adapted for blockchain DApp development through iterative cycles focusing on incremental delivery and continuous validation. Each iteration follows a structured sequence: concept and requirements definition, prototyping and design, implementation with parallel smart contract and frontend development, testing and quality assurance, and deployment with user feedback integration (Pressman & Maxim, 2019).
+The methodology incorporates Scrum principles (Schwaber & Sutherland 2020) adapted for blockchain DApp development through iterative cycles focusing on incremental delivery and continuous validation. Each iteration follows a structured sequence: concept and requirements definition, prototyping and design, implementation with parallel smart contract and frontend development, testing and quality assurance, and deployment with user feedback integration (Pressman & Maxim 2019).
 
 Development utilizes AI-assisted tooling (Claude Code IDE) for code scaffolding, documentation generation, and workflow automation. However, all critical technical decisions—blockchain architecture design, smart contract security patterns, Web3 integration strategies, and platform selection trade-offs—were researched, analyzed, and validated by the development team through literature review and comparative analysis documented in Chapter 2.
 
@@ -18,7 +18,7 @@ The project employs a 3-member team structure with defined primary responsibilit
 
 The 12-week development timeline includes non-negotiable validation checkpoints preventing progression with inconsistent requirements or unstable infrastructure, as summarized in Table 9.
 
-*Table 9 FoodTrace 12-week development timeline with validation checkpoints*
+TABLE 9. FoodTrace 12-week development timeline with validation checkpoints
 
 | Week | Phase | Key Deliverable | Checkpoint |
 |------|-------|-----------------|------------|
@@ -39,15 +39,15 @@ Blockchain-based food traceability systems face multiple risk categories requiri
 
 ### 3.2.1 Selection Criteria
 
-The choice between Ethereum and Hyperledger Fabric required analysis of factors relevant to an academic proof-of-concept, informed by systematic literature reviews documenting blockchain adoption drivers and barriers in food supply chains (Saurabh & Dey, 2021; Rongonen, 2024). Platform selection frameworks emphasize evaluating transparency requirements, cost structures, throughput constraints, and technical complexity trade-offs (Zhao et al., 2019; Granillo-Macías et al., 2021).
+The choice between Ethereum and Hyperledger Fabric required analysis of factors relevant to an academic proof-of-concept, informed by systematic literature reviews documenting blockchain adoption drivers and barriers in food supply chains (Saurabh & Dey 2021; Rongonen 2024). Platform selection frameworks emphasize evaluating transparency requirements, cost structures, throughput constraints, and technical complexity trade-offs (Zhao et al. 2019; Granillo-Macías et al. 2021).
 
-Educational feasibility prioritizes platforms with extensive free learning resources and shorter onboarding times for developers unfamiliar with blockchain concepts. Development timeline constraints favor platforms with simple setup and deployment workflows suitable for 12-week academic schedules. Cost considerations evaluate both infrastructure expenses and transaction fees, particularly relevant for student thesis budgets. Transparency alignment assesses how well platform characteristics match thesis problem statement emphasizing consumer trust through public verification (Gálvez et al., 2018).
+Educational feasibility prioritizes platforms with extensive free learning resources and shorter onboarding times for developers unfamiliar with blockchain concepts. Development timeline constraints favor platforms with simple setup and deployment workflows suitable for 12-week academic schedules. Cost considerations evaluate both infrastructure expenses and transaction fees, particularly relevant for student thesis budgets. Transparency alignment assesses how well platform characteristics match thesis problem statement emphasizing consumer trust through public verification (Gálvez et al. 2018).
 
 ### 3.2.2 Decision Rationale
 
 Ethereum was selected for this proof-of-concept based on multiple criteria, as summarized in Table 10.
 
-*Table 10 Ethereum vs Hyperledger Fabric comparison for POC context*
+TABLE 10. Ethereum vs Hyperledger Fabric comparison for POC context
 
 | Criterion | Ethereum | Hyperledger Fabric |
 |-----------|---------------------|-------------------|
@@ -101,15 +101,15 @@ flowchart TB
     ORM --> DB
 ```
 
-*Figure 6 FoodTrace layered system architecture*
+FIGURE 6. FoodTrace layered system architecture
 
 This architecture balances simplicity appropriate for 12-week development timeline with production-ready patterns enabling future enhancement. Key architectural decisions include monolith versus microservices trade-offs (unified deployment versus independent scaling) and wallet-free consumer access (accessibility versus decentralization). Detailed implementation of these patterns is presented in Chapters 4 and 5.
 
 ### 3.3.2 Hybrid Data Strategy
 
-The system employs hybrid data storage balancing blockchain immutability with off-chain efficiency, following architectural patterns documented in blockchain-based food supply chain frameworks (MDPI, 2023). Table 11 summarizes the data allocation strategy.
+The system employs hybrid data storage balancing blockchain immutability with off-chain efficiency, following architectural patterns documented in blockchain-based food supply chain frameworks (MDPI 2023). Table 11 summarizes the data allocation strategy.
 
-*Table 11 Hybrid data storage allocation*
+TABLE 11. Hybrid data storage allocation
 
 | Data Category | Storage | Rationale |
 |---------------|---------|-----------|
@@ -129,7 +129,7 @@ This hybrid approach addresses cost-efficiency constraints—storing all data on
 
 ### 3.4.1 Testing Approach
 
-The testing approach emphasizes risk-based prioritization across multiple test levels, following test-driven development principles demonstrated feasible for agile blockchain smart contract development (IEEE, 2024). The test pyramid strategy prioritizes unit testing volume over integration and end-to-end tests for optimal development velocity and defect detection efficiency.
+The testing approach emphasizes risk-based prioritization across multiple test levels, following test-driven development principles demonstrated feasible for agile blockchain smart contract development (IEEE 2024). The test pyramid strategy prioritizes unit testing volume over integration and end-to-end tests for optimal development velocity and defect detection efficiency.
 
 Test categories include unit tests validating individual smart contract functions with >70% coverage target, integration tests validating multi-contract interactions and state consistency, end-to-end tests validating complete user workflows across UI, API, and blockchain layers, and non-functional requirements tests covering performance, security, and reliability. Quality gates enforce deterministic pass/fail rules before story closure, with test standards including no flaky tests, dynamic waiting strategies, stateless tests, and self-cleaning test data. Detailed test results and coverage analysis are presented in Chapter 6.
 
@@ -137,7 +137,7 @@ Test categories include unit tests validating individual smart contract function
 
 The project measures multiple performance dimensions validating acceptance criteria and identifying optimization opportunities, as summarized in Table 12.
 
-*Table 12 Performance metrics categories and targets*
+TABLE 12. Performance metrics categories and targets
 
 | Category | Metric | Target |
 |----------|--------|--------|

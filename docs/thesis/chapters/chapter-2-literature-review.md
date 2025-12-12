@@ -13,25 +13,25 @@ This chapter reviews the theoretical foundations and practical applications of b
 
 Supply chains involve multiple independent parties (suppliers, manufacturers, distributors, retailers) coordinating through fragmented systems.
 
-*Table 3 Traditional supply chain traceability challenges*
+TABLE 3. Traditional supply chain traceability challenges
 
 | Challenge | Description | Impact |
 |-----------|-------------|--------|
 | Data Silos | Proprietary databases create information asymmetry | Stakeholders lack visibility into upstream/downstream operations |
 | Manual Verification | Paper certificates easily forged or lost | Authenticity claims cannot be independently verified |
-| Slow Traceability | Lack of end-to-end visibility (Gartner, 2023) | Contamination investigations take days to weeks |
+| Slow Traceability | Lack of end-to-end visibility (Gartner 2023) | Contamination investigations take days to weeks |
 
-Food safety exemplifies traceability urgency. WHO (2022) reports 600 million people fall ill from contaminated food annually, with $110 billion in economic losses. When contamination occurs, rapid batch identification is critical: the 2006 spinach E. coli outbreak caused $350 million in losses and 5 deaths, exacerbated by slow traceability (FDA, 2023).
+Food safety exemplifies traceability urgency. WHO (2022) reports 600 million people fall ill from contaminated food annually, with $110 billion in economic losses. When contamination occurs, rapid batch identification is critical: the 2006 spinach E. coli outbreak caused $350 million in losses and 5 deaths, exacerbated by slow traceability (FDA 2023).
 
 ### 2.1.2 IBM Food Trust: Real-World Impact
 
-IBM Food Trust, launched in 2018 on Hyperledger Fabric, demonstrates blockchain's practical viability for supply chain traceability. The consortium includes 500+ participants (Walmart, Carrefour, Nestlé) tracking 25+ million products across 11,000+ suppliers (Kamath, 2018). Empirical case studies analyzing blockchain adoption in food supply chains document performance improvements, transparency enhancements, and operational challenges encountered during real-world implementations (Vu et al., 2024).
+IBM Food Trust, launched in 2018 on Hyperledger Fabric, demonstrates blockchain's practical viability for supply chain traceability. The consortium includes 500+ participants (Walmart, Carrefour, Nestlé) tracking 25+ million products across 11,000+ suppliers (Kamath 2018). Empirical case studies analyzing blockchain adoption in food supply chains document performance improvements, transparency enhancements, and operational challenges encountered during real-world implementations (Vu et al. 2024).
 
-**Key Achievement:** Walmart's 2016 mango contamination investigation required **7 days** to trace product origin using paper records. After implementing IBM Food Trust, the same query completed in **2.2 seconds**—a 350,000× speed improvement (Walmart, 2019). This rapid traceability enabled surgical recalls: during the 2019 romaine lettuce recall, Walmart identified the contaminated farm in 2.2 seconds rather than issuing blanket recalls affecting innocent producers.
+**Key Achievement:** Walmart's 2016 mango contamination investigation required **7 days** to trace product origin using paper records. After implementing IBM Food Trust, the same query completed in **2.2 seconds**—a 350,000× speed improvement (Walmart 2019). This rapid traceability enabled surgical recalls: during the 2019 romaine lettuce recall, Walmart identified the contaminated farm in 2.2 seconds rather than issuing blanket recalls affecting innocent producers.
 
-**Technical Architecture:** Hyperledger Fabric provides permissioned blockchain with RAFT consensus (crash fault tolerant, fast finality), channels for selective data sharing, and 2,000-3,000 TPS throughput. Business model uses tiered membership ($100-$10,000/month) with transaction fees per tracked product (IBM, 2023).
+**Technical Architecture:** Hyperledger Fabric provides permissioned blockchain with RAFT consensus (crash fault tolerant, fast finality), channels for selective data sharing, and 2,000-3,000 TPS throughput. Business model uses tiered membership ($100-$10,000/month) with transaction fees per tracked product (IBM 2023).
 
-**Limitations:** Permissioned architecture creates centralization risk—consortium governance can exclude smaller players, and consumers must trust the consortium rather than independently verifying data (Saberi et al., 2019).
+**Limitations:** Permissioned architecture creates centralization risk—consortium governance can exclude smaller players, and consumers must trust the consortium rather than independently verifying data (Saberi et al. 2019).
 
 ```mermaid
 flowchart LR
@@ -51,7 +51,7 @@ flowchart LR
     C -.->|getTraceHistory\nread-only| BC
 ```
 
-*Figure 2 Supply chain data flow with blockchain integration*
+FIGURE 2. Supply chain data flow with blockchain integration
 
 ---
 
@@ -63,7 +63,7 @@ The choice between public (Ethereum) and permissioned (Hyperledger Fabric) block
 
 The architectural differences between Ethereum and Hyperledger Fabric create distinct trade-offs across trust models, performance characteristics, and economic viability.
 
-*Table 4 Key architectural differences between Ethereum and Hyperledger Fabric for food traceability (sources: Casino et al., 2019; Zhao et al., 2019; IBM Food Trust, 2023)*
+TABLE 4. Key architectural differences between Ethereum and Hyperledger Fabric for food traceability (sources: Casino et al. 2019; Zhao et al. 2019; IBM Food Trust 2023)
 | Criterion                 | Ethereum (Public)                                        | Hyperledger Fabric (Permissioned)                   |
 | ------------------------- | -------------------------------------------------------- | --------------------------------------------------- |
 | **Trust Model**           | Public verification via Etherscan; permissionless access | Consortium trust required; controlled membership    |
@@ -77,11 +77,11 @@ The architectural differences between Ethereum and Hyperledger Fabric create dis
 
 **Trust vs Performance Trade-offs:**
 
-Ethereum's public blockchain prioritizes transparency over efficiency. Any consumer can independently verify product journeys via Etherscan without trusting producers—critical for consumer-facing applications where supply chain trust is low (Zhao et al., 2019). This permissionless access enables individual producers to deploy traceability systems without consortium coordination (Saberi et al., 2019). However, transparency comes at substantial cost: empirical performance evaluations document Ethereum achieving 30-50 TPS throughput with 12-second block times, while Hyperledger Fabric demonstrates 2,000-3,500 TPS with sub-second latency—representing 100× throughput advantage for enterprise deployments (Ucbas et al., 2023). Variable gas fees ($0.50-$50) make Ethereum economically impractical for low-margin products where transaction costs can exceed product value (Zhao et al., 2019, p. 91). Additionally, public ledgers create privacy concerns as competitors can analyze transaction volumes and supply chain relationships (Saberi et al., 2019).
+Ethereum's public blockchain prioritizes transparency over efficiency. Any consumer can independently verify product journeys via Etherscan without trusting producers—critical for consumer-facing applications where supply chain trust is low (Zhao et al. 2019). This permissionless access enables individual producers to deploy traceability systems without consortium coordination (Saberi et al. 2019). However, transparency comes at substantial cost: empirical performance evaluations document Ethereum achieving 30-50 TPS throughput with 12-second block times, while Hyperledger Fabric demonstrates 2,000-3,500 TPS with sub-second latency—representing 100× throughput advantage for enterprise deployments (Ucbas et al. 2023). Variable gas fees ($0.50-$50) make Ethereum economically impractical for low-margin products where transaction costs can exceed product value (Zhao et al. 2019, p. 91). Additionally, public ledgers create privacy concerns as competitors can analyze transaction volumes and supply chain relationships (Saberi et al. 2019).
 
-Hyperledger Fabric's permissioned architecture inverts these trade-offs: 2,000-3,500 TPS throughput (100× higher than Ethereum Layer 1) with sub-second latency suits enterprise-scale operations (Casino et al., 2019). Fixed infrastructure costs enable predictable budgeting, while private channels allow selective information sharing without exposing data to competitors (IBM Food Trust, 2023). Performance evaluations using Hyperledger Caliper benchmarking tool demonstrate that Fabric achieves end-to-end throughput exceeding 3,500 transactions per second with sub-second latency even in large intercontinental supply chain networks, validating suitability for enterprise food traceability deployments (El Hajji et al., 2024). Yet this performance requires sacrificing public verifiability—consumers must trust consortium governance rather than independently validating data (Saberi et al., 2019). Consortium formation demands multi-party agreements on governance and technical standards; IBM Food Trust's 18-month Walmart deployment illustrates this complexity (Kamath, 2018). Platform evolution remains controlled by the Linux Foundation and IBM, creating vendor lock-in concerns absent from Ethereum's decentralized governance (Zhao et al., 2019).
+Hyperledger Fabric's permissioned architecture inverts these trade-offs: 2,000-3,500 TPS throughput (100× higher than Ethereum Layer 1) with sub-second latency suits enterprise-scale operations (Casino et al. 2019). Fixed infrastructure costs enable predictable budgeting, while private channels allow selective information sharing without exposing data to competitors (IBM Food Trust 2023). Performance evaluations using Hyperledger Caliper benchmarking tool demonstrate that Fabric achieves end-to-end throughput exceeding 3,500 transactions per second with sub-second latency even in large intercontinental supply chain networks, validating suitability for enterprise food traceability deployments (El Hajji et al. 2024). Yet this performance requires sacrificing public verifiability—consumers must trust consortium governance rather than independently validating data (Saberi et al. 2019). Consortium formation demands multi-party agreements on governance and technical standards; IBM Food Trust's 18-month Walmart deployment illustrates this complexity (Kamath 2018). Platform evolution remains controlled by the Linux Foundation and IBM, creating vendor lock-in concerns absent from Ethereum's decentralized governance (Zhao et al. 2019).
 
-**Regulatory Compliance:** GDPR's "right to be forgotten" presents opposing challenges. Ethereum's immutability conflicts with data deletion requirements, forcing implementations to store only hashes on-chain with deletable off-chain metadata (Saberi et al., 2019). Hyperledger Fabric enables controlled deletion through channel pruning, achieving direct GDPR compliance (IBM, 2023)—a critical advantage for European food producers subject to strict data protection regulations.
+**Regulatory Compliance:** GDPR's "right to be forgotten" presents opposing challenges. Ethereum's immutability conflicts with data deletion requirements, forcing implementations to store only hashes on-chain with deletable off-chain metadata (Saberi et al. 2019). Hyperledger Fabric enables controlled deletion through channel pruning, achieving direct GDPR compliance (IBM 2023)—a critical advantage for European food producers subject to strict data protection regulations.
 
 **Platform Selection:** Neither platform is universally superior—suitability depends on whether transparency or performance is the primary requirement. Academic consensus on platform selection appears in Section 2.2.2.
 
@@ -91,9 +91,9 @@ Zhao et al. (2019) conducted a systematic review of 71 blockchain agri-food valu
 
 **Ethereum papers** focused on consumer-facing transparency, anti-counterfeiting, and direct-to-consumer traceability. **Hyperledger papers** focused on B2B consortiums, cold chain monitoring, and regulatory compliance.
 
-**Recommendation:** Zhao et al. (2019) conclude that platform selection should balance transparency requirements against performance constraints. Public chains suit consumer-facing verification scenarios, while permissioned chains better serve business confidentiality requirements (Zhao et al., 2019, p. 95).
+**Recommendation:** Zhao et al. (2019) conclude that platform selection should balance transparency requirements against performance constraints. Public chains suit consumer-facing verification scenarios, while permissioned chains better serve business confidentiality requirements (Zhao et al. 2019, p. 95).
 
-Recent systematic reviews analyzing blockchain adoption in food supply chains examined 31 conceptual works, 10 implementation works, and 39 case studies, documenting that blockchain implementation enhances food safety through immutable traceability records while facing challenges including scalability, data quality, and integration complexity (Sri Vigna Hema et al., 2024). Empirical case studies demonstrate quantified benefits including 20% cost savings in inventory management, 66.7% reduction in stockout incidents, and 25% decline in administrative staff costs for blockchain-based food traceability systems (Lappas et al., 2025).
+Recent systematic reviews analyzing blockchain adoption in food supply chains examined 31 conceptual works, 10 implementation works, and 39 case studies, documenting that blockchain implementation enhances food safety through immutable traceability records while facing challenges including scalability, data quality, and integration complexity (Sri Vigna Hema et al. 2024). Empirical case studies demonstrate quantified benefits including 20% cost savings in inventory management, 66.7% reduction in stockout incidents, and 25% decline in administrative staff costs for blockchain-based food traceability systems (Lappas et al. 2025).
 
 **Platform Selection Decision:** Based on this academic consensus, this thesis selects **Ethereum** for proof-of-concept to demonstrate public verifiability and consumer-facing transparency. The choice addresses the research gap identified in Section 2.5.1—most blockchain food supply chain frameworks focus on enterprise operations with limited attention to small producer accessibility.
 
@@ -107,11 +107,11 @@ Smart contract design patterns determine how supply chain traceability data is s
 
 ### 2.3.1 Product Registration and Data Storage Patterns
 
-Ethereum's storage costs present a fundamental economic constraint for supply chain applications: storing 256 bits on-chain costs approximately 20,000 gas, making pure on-chain storage prohibitively expensive for traceability systems requiring extensive product metadata (Wang et al., 2021). This economic reality drives adoption of **hybrid storage architectures** that partition data based on immutability requirements.
+Ethereum's storage costs present a fundamental economic constraint for supply chain applications: storing 256 bits on-chain costs approximately 20,000 gas, making pure on-chain storage prohibitively expensive for traceability systems requiring extensive product metadata (Wang et al. 2021). This economic reality drives adoption of **hybrid storage architectures** that partition data based on immutability requirements.
 
-**Hybrid Architecture Pattern:** Wang et al. (2021) demonstrate that storing crop growth data in IPFS (InterPlanetary File System) with corresponding cryptographic hashes recorded in smart contracts "not only increases data security but also alleviates the blockchain storage explosion problem" while maintaining data integrity through content-addressable storage. This pattern stores critical traceability data on-chain (product ID, ownership transfers, timestamps) while storing bulk data off-chain (descriptions, images, sensor logs), cryptographically linked via Keccak-256 hashes (Solidity's native hash function). Empirical performance evaluations document that IPFS integration reduces blockchain storage requirements by 90% compared to pure on-chain approaches while preserving verification capabilities (Gonçalves et al., 2022). Kumar and Tripathi (2020) validate that blockchain-IPFS hybrid models ensure "immutability, integrity, and availability" while overcoming centralized storage provider limitations.
+**Hybrid Architecture Pattern:** Wang et al. (2021) demonstrate that storing crop growth data in IPFS (InterPlanetary File System) with corresponding cryptographic hashes recorded in smart contracts "not only increases data security but also alleviates the blockchain storage explosion problem" while maintaining data integrity through content-addressable storage. This pattern stores critical traceability data on-chain (product ID, ownership transfers, timestamps) while storing bulk data off-chain (descriptions, images, sensor logs), cryptographically linked via Keccak-256 hashes (Solidity's native hash function). Empirical performance evaluations document that IPFS integration reduces blockchain storage requirements by 90% compared to pure on-chain approaches while preserving verification capabilities (Gonçalves et al. 2022). Kumar and Tripathi (2020) validate that blockchain-IPFS hybrid models ensure "immutability, integrity, and availability" while overcoming centralized storage provider limitations.
 
-**Event Emission for Traceability:** Smart contracts emit events to create immutable audit trails without storing data on-chain, achieving cost reductions of 26-53× compared to storage operations (375-750 gas for events vs 20,000 gas for storage). Events enable external applications to reconstruct supply chain state through event log analysis while keeping on-chain costs minimal (Wang et al., 2021). However, recent systematic reviews caution that hybrid architectures must address "integration complexities, data quality, scalability, and regulatory concerns" to realize blockchain's traceability benefits (Lappas et al., 2025). Implementation approaches applying these patterns are detailed in Chapter 4.
+**Event Emission for Traceability:** Smart contracts emit events to create immutable audit trails without storing data on-chain, achieving cost reductions of 26-53× compared to storage operations (375-750 gas for events vs 20,000 gas for storage). Events enable external applications to reconstruct supply chain state through event log analysis while keeping on-chain costs minimal (Wang et al. 2021). However, recent systematic reviews caution that hybrid architectures must address "integration complexities, data quality, scalability, and regulatory concerns" to realize blockchain's traceability benefits (Lappas et al. 2025). Implementation approaches applying these patterns are detailed in Chapter 4.
 
 ```mermaid
 flowchart TB
@@ -133,7 +133,7 @@ flowchart TB
     HASH -.->|Cryptographic Link| DB
 ```
 
-*Figure 3 Hybrid storage architecture with cryptographic linking*
+FIGURE 3. Hybrid storage architecture with cryptographic linking
 
 ### 2.3.2 Role-Based Access Control in Supply Chains
 
@@ -147,19 +147,19 @@ Marchese and Tomarchio (2022) apply RBAC patterns specifically to agri-food supp
 
 Transaction costs directly impact blockchain traceability feasibility for small-margin food products. Gas optimization research identifies three primary strategies: storage vs memory usage, struct packing, and event logging.
 
-**Storage Optimization:** Banerjee et al. (2025) present automated optimization techniques achieving "substantial gas savings of up to 34% on average when tested on 16,529 functions from real-world contracts" through code pattern mining. Storage operations (SSTORE) cost 20,000 gas for new slots versus ~200 gas for SLOAD reads, while memory operations cost only 3 gas per 32 bytes—making memory preferable for temporary computations and storage essential only for persistent state (Li, 2021). Albert et al. (2020) introduce GASOL (Gas Analysis and Optimization for Ethereum Smart Contracts), offering "various cost models for analyzing and optimizing gas consumption" through static analysis.
+**Storage Optimization:** Banerjee et al. (2025) present automated optimization techniques achieving "substantial gas savings of up to 34% on average when tested on 16,529 functions from real-world contracts" through code pattern mining. Storage operations (SSTORE) cost 20,000 gas for new slots versus ~200 gas for SLOAD reads, while memory operations cost only 3 gas per 32 bytes—making memory preferable for temporary computations and storage essential only for persistent state (Li 2021). Albert et al. (2020) introduce GASOL (Gas Analysis and Optimization for Ethereum Smart Contracts), offering "various cost models for analyzing and optimizing gas consumption" through static analysis.
 
 **Struct Packing:** Ethereum stores data in 256-bit (32-byte) slots. Multiple smaller variables can be packed into single slots: two uint128 values occupy one slot versus two slots for unpacked storage, reducing costs by 50%. Nguyen et al. (2022) analyze 10,245 top Ethereum contracts, finding "6,333 contain at least one optimization problem," with struct packing as the most frequent missed optimization opportunity.
 
-**Event vs Storage Trade-off:** Events provide 26-53× cost reduction compared to storage while creating queryable off-chain logs. However, events cannot be accessed by smart contracts during execution—only by external applications—creating trade-offs between on-chain queryability and economic efficiency (Wang et al., 2021). Production supply chain systems must balance these constraints based on query requirements and transaction volumes.
+**Event vs Storage Trade-off:** Events provide 26-53× cost reduction compared to storage while creating queryable off-chain logs. However, events cannot be accessed by smart contracts during execution—only by external applications—creating trade-offs between on-chain queryability and economic efficiency (Wang et al. 2021). Production supply chain systems must balance these constraints based on query requirements and transaction volumes.
 
 ### 2.3.4 Security Considerations and Vulnerabilities
 
 Smart contract vulnerabilities pose severe risks to supply chain traceability systems due to transaction immutability and economic incentives for exploitation.
 
-**Re-entrancy Attacks:** The 2016 DAO hack demonstrated re-entrancy vulnerabilities, resulting in $50M+ loss and Ethereum hard fork. Recent attacks continue: the 2024 Penpie DeFi protocol lost $27M to re-entrancy exploitation. Zhou et al. (2022) systematically examine "13 vulnerabilities in Ethereum smart contracts and their countermeasures," documenting that re-entrancy remains prevalent despite mitigation patterns. Jiao et al. (2024) survey smart contract security analysis tools, noting that "in 2024 alone, over $1.42 billion was lost across 149 documented incidents due to vulnerabilities such as access control flaws ($953M), logic errors ($63M), and reentrancy attacks ($35M)." Mitigation strategies include OpenZeppelin's ReentrancyGuard modifier, Checks-Effects-Interactions pattern, and Solidity 0.8.0+ built-in protections (Zhou et al., 2022).
+**Re-entrancy Attacks:** The 2016 DAO hack demonstrated re-entrancy vulnerabilities, resulting in $50M+ loss and Ethereum hard fork. Recent attacks continue: the 2024 Penpie DeFi protocol lost $27M to re-entrancy exploitation. Zhou et al. (2022) systematically examine "13 vulnerabilities in Ethereum smart contracts and their countermeasures," documenting that re-entrancy remains prevalent despite mitigation patterns. Jiao et al. (2024) survey smart contract security analysis tools, noting that "in 2024 alone, over $1.42 billion was lost across 149 documented incidents due to vulnerabilities such as access control flaws ($953M), logic errors ($63M), and reentrancy attacks ($35M)." Mitigation strategies include OpenZeppelin's ReentrancyGuard modifier, Checks-Effects-Interactions pattern, and Solidity 0.8.0+ built-in protections (Zhou et al. 2022).
 
-**Oracle Problem:** Smart contracts cannot directly access off-chain data—IoT sensor readings, GPS locations, shipping confirmations—introducing "the risk of oracles being compromised and feeding the blockchain with false information" (Caldarelli, 2020). This oracle problem fundamentally challenges blockchain traceability claims: while blockchain guarantees data immutability, it cannot verify off-chain data accuracy ("garbage in, garbage out"). Caldarelli et al. (2020) emphasize that "what the literature neglects about blockchain implication for traceability and sustainability is the so-called oracle problem, and the trustworthiness of information written in smart contracts." Solutions include decentralized oracle networks (Chainlink), trusted execution environments (Intel SGX), and multi-signature validation schemes, each introducing complexity and cost trade-offs.
+**Oracle Problem:** Smart contracts cannot directly access off-chain data—IoT sensor readings, GPS locations, shipping confirmations—introducing "the risk of oracles being compromised and feeding the blockchain with false information" (Caldarelli 2020). This oracle problem fundamentally challenges blockchain traceability claims: while blockchain guarantees data immutability, it cannot verify off-chain data accuracy ("garbage in, garbage out"). Caldarelli et al. (2020) emphasize that "what the literature neglects about blockchain implication for traceability and sustainability is the so-called oracle problem, and the trustworthiness of information written in smart contracts." Solutions include decentralized oracle networks (Chainlink), trusted execution environments (Intel SGX), and multi-signature validation schemes, each introducing complexity and cost trade-offs.
 
 **Contract Upgradability:** Immutability prevents bug fixes and feature additions post-deployment. Proxy patterns (Transparent Proxy, UUPS) separate logic contracts from data storage contracts, enabling logic upgrades while preserving state. Al Amri et al. (2023) analyze OpenZeppelin upgradeable patterns, finding that "Transparent Proxy usage has grown significantly over the last four years" due to simplified upgrade workflows. However, upgradability introduces centralization risks: admin key compromise grants full contract control. Production systems must balance immutability benefits against upgrade flexibility requirements.
 
@@ -173,13 +173,13 @@ The FoodTrace system implements re-entrancy guards and documents oracle problem 
 
 ### 2.4.1 Custodial Wallet Patterns for Enterprise Blockchain
 
-Enterprise blockchain applications face a fundamental tension between security and usability in authentication design. Traditional Web3 applications require users to manage non-custodial wallets through browser extensions (MetaMask) or hardware devices, placing full responsibility for private key security on end users. While this approach maximizes decentralization, empirical research documents significant usability barriers including key loss, phishing attacks, and transaction errors (Voskobojnikov et al., 2021).
+Enterprise blockchain applications face a fundamental tension between security and usability in authentication design. Traditional Web3 applications require users to manage non-custodial wallets through browser extensions (MetaMask) or hardware devices, placing full responsibility for private key security on end users. While this approach maximizes decentralization, empirical research documents significant usability barriers including key loss, phishing attacks, and transaction errors (Voskobojnikov et al. 2021).
 
 **Custodial Wallet Architecture:**
 
-Custodial wallet patterns address these challenges by delegating key management to a trusted server. Users authenticate via familiar email/password credentials, while the server securely stores and manages blockchain private keys. This model mirrors IBM Food Trust's enterprise authentication approach, where consortium members interact through organizational accounts rather than individual cryptocurrency wallets (IBM, 2023).
+Custodial wallet patterns address these challenges by delegating key management to a trusted server. Users authenticate via familiar email/password credentials, while the server securely stores and manages blockchain private keys. This model mirrors IBM Food Trust's enterprise authentication approach, where consortium members interact through organizational accounts rather than individual cryptocurrency wallets (IBM 2023).
 
-*Table 5 Authentication pattern comparison*
+TABLE 5. Authentication pattern comparison
 
 | Pattern | Keys | UX | Security |
 |---------|------|-----|----------|
@@ -189,7 +189,7 @@ Custodial wallet patterns address these challenges by delegating key management 
 
 **Security Implementation:**
 
-Custodial systems require robust key protection. Industry best practices recommend symmetric encryption for private keys stored in databases, with encryption keys managed separately from application code (OWASP, 2023). The AES-256-CBC cipher, approved for classified government data protection, provides strong confidentiality guarantees when combined with unique initialization vectors per encryption operation.
+Custodial systems require robust key protection. Industry best practices recommend symmetric encryption for private keys stored in databases, with encryption keys managed separately from application code (OWASP 2023). The AES-256-CBC cipher, approved for classified government data protection, provides strong confidentiality guarantees when combined with unique initialization vectors per encryption operation.
 
 **Trade-offs:**
 
@@ -205,13 +205,13 @@ Custodial approaches introduce centralization risks—server compromise exposes 
 
 Blockchain applications present unique UX challenges not found in traditional web applications. Cryptocurrency wallet setup presents significant adoption barriers including seed phrase management, private key storage, and network configuration complexity. Traditional web authentication requires email/password entry; blockchain authentication requires a seven-step workflow progressing from extension installation through seed phrase generation, secure storage of 24 words (loss = permanent), connection approval, transaction signing, gas fee payment, and finally confirmation wait.
 
-Blockchain wallet onboarding requires **substantially longer time than traditional account creation** due to seed phrase generation, secure backup procedures, and network configuration steps. Empirical research analyzing 45,821 mobile wallet app reviews documents that users frequently experience irreversible monetary losses due to seed phrase mismanagement, with wallet complexity presenting significant adoption barriers for both novice and experienced users (Voskobojnikov et al., 2021). These irrecoverability challenges are absent in traditional systems where password reset mechanisms prevent permanent account loss.
+Blockchain wallet onboarding requires **substantially longer time than traditional account creation** due to seed phrase generation, secure backup procedures, and network configuration steps. Empirical research analyzing 45,821 mobile wallet app reviews documents that users frequently experience irreversible monetary losses due to seed phrase mismanagement, with wallet complexity presenting significant adoption barriers for both novice and experienced users (Voskobojnikov et al. 2021). These irrecoverability challenges are absent in traditional systems where password reset mechanisms prevent permanent account loss.
 
 **Wallet-Free Access Pattern:**
 
 For supply chain consumer verification, requiring wallet installation defeats accessibility goals. The solution: **read-only blockchain queries** without wallet requirement.
 
-*Table 6 Dual-access authentication pattern for blockchain supply chain systems*
+TABLE 6. Dual-access authentication pattern for blockchain supply chain systems
 
 | User Type | Authentication | Operations | Cost Model |
 |-----------|----------------|------------|------------|
@@ -239,11 +239,11 @@ flowchart TB
     READ -.-> BC
 ```
 
-*Figure 4 Dual-access authentication pattern for FoodTrace*
+FIGURE 4. Dual-access authentication pattern for FoodTrace
 
 This hybrid approach provides security for business operations (wallet signatures authenticate data sources) while maintaining accessibility for consumers (no installation barriers). Read-only queries impose zero cost (RPC providers absorb infrastructure costs), zero setup (works in any browser), and mobile-first design optimized for QR code scanning on smartphones.
 
-Consumer acceptance research examining 715 Greek consumers found high valuation for QR codes with blockchain-based traceability information, with consumers demonstrating willingness to pay price premiums for traceable food products where QR codes enable direct verification of authenticity claims (Tran et al., 2024). Emerging Web3 identity solutions integrating zero-knowledge proofs achieve 12.5-second proof generation times while reducing compliance costs by 40% through automated verification, demonstrating technical feasibility for privacy-preserving consumer authentication patterns (Arshad et al., 2024).
+Consumer acceptance research examining 715 Greek consumers found high valuation for QR codes with blockchain-based traceability information, with consumers demonstrating willingness to pay price premiums for traceable food products where QR codes enable direct verification of authenticity claims (Tran et al. 2024). Emerging Web3 identity solutions integrating zero-knowledge proofs achieve 12.5-second proof generation times while reducing compliance costs by 40% through automated verification, demonstrating technical feasibility for privacy-preserving consumer authentication patterns (Arshad et al. 2024).
 
 **Limitations:** Read-only access prevents consumers from writing to blockchain (acceptable for verification use case), and centralization risk exists (RPC providers can censor queries, though multiple providers mitigate this risk through redundancy).
 
@@ -265,7 +265,7 @@ The proposed IoT simulation design—software-based temperature scenario presets
 
 Ellahi et al. (2024) systematic review of 60 blockchain food supply chain frameworks identified significant research gaps. While 88.3% of frameworks focus on traceability and transparency (data accuracy, supply chain visibility, authenticity verification), only 3% address donation/redistribution and 5% address supply chain financing—critical functions for small producers lacking access to traditional financial services.
 
-*Table 7 Research gaps identified in blockchain food supply chain literature*
+TABLE 7. Research gaps identified in blockchain food supply chain literature
 
 | Gap | Description |
 |-----|-------------|
@@ -275,7 +275,7 @@ Ellahi et al. (2024) systematic review of 60 blockchain food supply chain framew
 
 ### 2.5.2 Thesis Contributions
 
-*Table 8 Technical contributions addressing identified research gaps*
+TABLE 8. Technical contributions addressing identified research gaps
 
 | Contribution | Description |
 |--------------|-------------|
@@ -307,7 +307,7 @@ flowchart TB
     style IBMft fill:#e3f2fd,stroke:#1565c0
 ```
 
-*Figure 5 Research positioning in blockchain food traceability landscape*
+FIGURE 5. Research positioning in blockchain food traceability landscape
 
 The research acknowledges limitations (testnet deployment, simulated sensors, limited scale testing) appropriate for proof-of-concept validation while establishing architectural patterns enabling future production deployment (see Chapter 7 Discussion for production recommendations).
 

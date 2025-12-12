@@ -18,11 +18,11 @@ The FoodTrace system deploys a single Solidity smart contract (ProductRegistry.s
 
 The contract architecture prioritizes three key principles balancing development constraints with business requirements:
 
-**1. Role-Based Access Control:** OpenZeppelin AccessControl library implementation provides granular permissions preventing unauthorized contract interactions. Four roles (PRODUCER_ROLE, DISTRIBUTOR_ROLE, RETAILER_ROLE, DEFAULT_ADMIN_ROLE) map to supply chain actors with specific function access rights. This security pattern follows established Ethereum development best practices (OpenZeppelin, 2024) and enables flexible permission management without contract redeployment.
+**1. Role-Based Access Control:** OpenZeppelin AccessControl library implementation provides granular permissions preventing unauthorized contract interactions. Four roles (PRODUCER_ROLE, DISTRIBUTOR_ROLE, RETAILER_ROLE, DEFAULT_ADMIN_ROLE) map to supply chain actors with specific function access rights. This security pattern follows established Ethereum development best practices (OpenZeppelin 2024) and enables flexible permission management without contract redeployment.
 
 **2. Event-Driven Architecture:** All state-changing operations emit events enabling efficient off-chain indexing. The system emits ProductRegistered and TraceRecordAdded events through Alchemy RPC provider, building cached database views in Supabase for fast queries. This architecture pattern addresses blockchain query limitations while maintaining on-chain verification capability.
 
-**3. Security First:** Multiple defense layers protect against common vulnerabilities including integer overflow (Solidity 0.8+ built-in checks), access control bypass (function modifiers with require statements), and input validation (product existence checks, harvest date validation). Security measures reference patterns documented in comprehensive reviews identifying critical vulnerabilities across blockchain-based supply chain implementations (IEEE Access, 2023).
+**3. Security First:** Multiple defense layers protect against common vulnerabilities including integer overflow (Solidity 0.8+ built-in checks), access control bypass (function modifiers with require statements), and input validation (product existence checks, harvest date validation). Security measures reference patterns documented in comprehensive reviews identifying critical vulnerabilities across blockchain-based supply chain implementations (IEEE Access 2023).
 
 ### 4.1.2 Contract Structure
 
@@ -50,7 +50,7 @@ flowchart TB
     Module2 --> RBAC
 ```
 
-*Figure 7 ProductRegistry contract architecture showing unified design with two functional modules*
+FIGURE 7. ProductRegistry contract architecture showing unified design with two functional modules
 
 This unified design enables direct product existence validation within trace functions (`require(products[productId].exists, "Product not found")`) without cross-contract calls, reducing gas costs and complexity. The trade-off is reduced modularity; both features must be redeployed together if either requires updates.
 
@@ -82,7 +82,7 @@ struct TraceRecord {
     uint256 timestamp;  // block.timestamp (automatic, immutable)
 }
 ```
-*Figure 8 Data Structures of ProductRegistry Contract*
+FIGURE 8. Data structures of ProductRegistry contract
 
 **Design Decision - String Storage vs Hash-Based:**
 
@@ -98,7 +98,7 @@ This illustrates the academic value of documenting trade-offs: future implementa
 
 The contract integrates OpenZeppelin's AccessControl library defining four permission levels:
 
-*Table 13 Role-Based Access Control relationships*
+TABLE 13. Role-based access control relationships
 
 | Role | registerProduct() | addTraceRecord() | Role Management |
 |------|-------------------|------------------|-----------------|
@@ -125,13 +125,13 @@ Note: These gas costs are higher than optimized implementations due to string st
 
 ## 4.3 Testing and Verification
 
-The smart contract testing strategy follows test-driven development principles demonstrated feasible for agile blockchain development despite unique constraints including transaction immutability and deployment costs (IEEE, 2024). Test implementation used Hardhat development environment with Mocha test framework and Chai assertion library, targeting >70% code coverage.
+The smart contract testing strategy follows test-driven development principles demonstrated feasible for agile blockchain development despite unique constraints including transaction immutability and deployment costs (IEEE 2024). Test implementation used Hardhat development environment with Mocha test framework and Chai assertion library, targeting >70% code coverage.
 
 ### 4.3.1 Unit Test Coverage
 
 The test suite (37 test cases in `test/ProductRegistry.test.ts`) validates contract functions through isolated test scenarios, as summarized in Table 14.
 
-*Table 14 ProductRegistry test suite breakdown (37 total tests)*
+TABLE 14. ProductRegistry test suite breakdown (37 total tests)
 
 | Category | Tests | Coverage Focus |
 |----------|-------|----------------|
@@ -168,7 +168,7 @@ Security tests validate protection against common vulnerabilities:
 
 ### 4.4.1 Deployment Process
 
-The ProductRegistry contract was deployed to Ethereum Sepolia testnet using Hardhat deployment script (`scripts/deploy-product-registry.ts`) following the deployment workflow documented in the Hardhat framework (Hardhat, 2024). Deployment used the Hardhat verify task for Etherscan source code publication: `npx hardhat verify --network sepolia 0x5d56f5a8703d7d545319177042cd91FD3339E2b6`.
+The ProductRegistry contract was deployed to Ethereum Sepolia testnet using Hardhat deployment script (`scripts/deploy-product-registry.ts`) following the deployment workflow documented in the Hardhat framework (Hardhat 2024). Deployment used the Hardhat verify task for Etherscan source code publication: `npx hardhat verify --network sepolia 0x5d56f5a8703d7d545319177042cd91FD3339E2b6`.
 
 **Deployment Details:**
 - **Contract Address:** `0x5d56f5a8703d7d545319177042cd91FD3339E2b6`
@@ -178,7 +178,7 @@ The ProductRegistry contract was deployed to Ethereum Sepolia testnet using Hard
 
 Post-deployment testing confirmed gas measurements, as summarized in Table 15.
 
-*Table 15 ProductRegistry gas cost measurements (Sepolia testnet)*
+TABLE 15. ProductRegistry gas cost measurements (Sepolia testnet)
 
 | Operation | Gas Used | Mainnet Cost (20 gwei, €2000 ETH) |
 |-----------|----------|-----------------------------------|
