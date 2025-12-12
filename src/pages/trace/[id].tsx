@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import {
   Box,
   Flex,
+  Button,
   Icon,
   Text,
 } from "@chakra-ui/react";
@@ -94,7 +95,7 @@ function ConsumerTraceContent() {
   if (error) {
     return (
       <Box py={8}>
-        <Text color="red.500" textAlign="center">
+        <Text color="brand.error" textAlign="center">
           {error}
         </Text>
       </Box>
@@ -165,6 +166,20 @@ function ConsumerTraceContent() {
 
       {/* Timeline using real trace data */}
       <TraceTimelineConsumer productId={product.id} />
+
+      <Flex
+        mt={6}
+        justify={{ base: "stretch", sm: "flex-start" }}
+      >
+        <Button
+          type="button"
+          onClick={() => router.push("/trace")}
+          variant="outline"
+          width={{ base: "100%", sm: "auto" }}
+        >
+          Scan another product
+        </Button>
+      </Flex>
     </Box>
   );
 }
