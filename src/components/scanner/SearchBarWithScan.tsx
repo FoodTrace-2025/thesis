@@ -22,7 +22,7 @@ export function SearchBarWithScan({
   return (
     <HStack
       spacing={2}
-      bg="white"
+      bg="brand.surface"
       borderRadius="full"
       px={2}
       py={2}
@@ -44,13 +44,14 @@ export function SearchBarWithScan({
         placeholder="Enter product ID"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && onSearch()}
         border="none"
         _focus={{ boxShadow: 'none' }}
       />
 
       {/* Search button */}
       <Button
-        colorScheme="red"
+        type="button"
         borderRadius="full"
         onClick={onSearch}
       >
