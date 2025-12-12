@@ -27,7 +27,6 @@ interface TraceRecord {
   createdAt: string;
 }
 
-
 const ACTION_COLORS: Record<string, string> = {
   RECEIVED: "blue",
   QUALITY_CHECK: "purple",
@@ -43,7 +42,6 @@ const ACTION_LABELS: Record<string, string> = {
   STOCKED: "Placed on shelf",
   SOLD: "Sold to customer",
 };
-
 
 interface TraceTimelineProps {
   productId: string;
