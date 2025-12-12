@@ -4,9 +4,9 @@ This chapter establishes the foundation for this thesis by introducing blockchai
 
 ## 1.1 Background
 
-Blockchain technology, introduced by Nakamoto (2008) with Bitcoin, has evolved beyond cryptocurrency to enable transparent, immutable record-keeping through smart contracts—self-executing programs deployed on decentralized networks. While blockchain's cryptographic guarantees (immutability, transparency, Byzantine fault tolerance) theoretically address supply chain traceability challenges, practical adoption faces significant barriers: user experience complexity, transaction costs, and scalability limitations (Buterin 2014; Wood 2014).
+Blockchain technology, introduced by Nakamoto (2008) with Bitcoin, has evolved beyond cryptocurrency to enable transparent, immutable record-keeping through smart contracts, which are self-executing programs deployed on decentralized networks. While blockchain's cryptographic guarantees (immutability, transparency, Byzantine fault tolerance) theoretically address supply chain traceability challenges, practical adoption faces significant barriers: user experience complexity, transaction costs, and scalability limitations (Buterin 2014; Wood 2014).
 
-Food supply chains exemplify these challenges. Traditional centralized systems rely on intermediaries and paper-based tracking, creating information asymmetries and slow response times. Blockchain implementations like IBM Food Trust have demonstrated dramatic traceability improvements, reducing query times from days to seconds (Kamath 2018)—showing blockchain's capability for rapid consensus across distributed stakeholders.
+Food supply chains exemplify these challenges. Traditional centralized systems rely on intermediaries and paper-based tracking, creating information asymmetries and slow response times. Blockchain implementations like IBM Food Trust have demonstrated dramatic traceability improvements, reducing query times from days to seconds (Kamath 2018). This demonstrates blockchain's capability for rapid consensus across distributed stakeholders.
 
 However, existing blockchain supply chain implementations face a critical trade-off between accessibility and decentralization. Enterprise solutions like IBM Food Trust provide user-friendly interfaces but rely on permissioned blockchains controlled by centralized gatekeepers, undermining public verifiability (Hyperledger Foundation case study 2019). Conversely, public blockchain applications (Ethereum DApps) offer true decentralization but suffer from wallet complexity barriers that exclude mainstream users (Voskobojnikov et al. 2021). This creates a "crypto-native vs mainstream user" divide limiting adoption beyond technical enthusiasts.
 
@@ -92,7 +92,7 @@ _What is the feasibility of deploying blockchain traceability for small-scale pr
 
 ## 1.4 Scope & Limitations
 
-This **proof-of-concept (POC)** system uses Ethereum Sepolia testnet (not mainnet—zero real costs), Next.js 14.2.15 + React + TypeScript frontend, Solidity ^0.8.20 smart contracts with Hardhat framework, and Supabase (PostgreSQL) for off-chain metadata. The simplified 4-role supply chain model (Producer, Distributor, Retailer, Consumer) focuses on one product category for demonstration.
+This **proof-of-concept (POC)** system uses Ethereum Sepolia testnet (not mainnet, with zero real costs), Next.js 14.2.15 + React + TypeScript frontend, Solidity ^0.8.20 smart contracts with Hardhat framework, and Supabase (PostgreSQL) for off-chain metadata. The simplified 4-role supply chain model (Producer, Distributor, Retailer, Consumer) focuses on one product category for demonstration.
 
 **Key limitations acknowledged:** Testnet deployment means gas costs estimated not experienced; IoT sensor integration deferred to future work (see Chapter 8); limited scalability testing (3-wallet scenario, not high-volume production); no formal security audit or enterprise system integration; 12-week timeline prevents long-term deployment validation. These limitations are justified by educational focus, budget constraints (zero-cost requirement), and time constraints appropriate for bachelor's thesis scope. Detailed limitation implications discussed in Chapter 7.
 
@@ -106,21 +106,21 @@ This thesis is organized as follows. Chapter 1 establishes the research context,
 
 ## References for Chapter 1
 
-Buterin, V. (2014). _Ethereum: A next-generation smart contract and decentralized application platform_. Ethereum Foundation. https://ethereum.org/whitepaper
+Buterin, V. 2014. _Ethereum: A next-generation smart contract and decentralized application platform_. Ethereum Foundation.
 
-Ellahi, R. M., Wood, L. C., & Bekhit, A. E. A. (2024). Blockchain-driven food supply chains: A systematic review for unexplored opportunities. _Applied Sciences_, 14(19), 8944. https://doi.org/10.3390/app14198944
+Ellahi, R. M., et al. 2024. Blockchain-driven food supply chains: A systematic review for unexplored opportunities. _Applied Sciences_, 14(19), 8944.
 
-Hyperledger Foundation. (2019). _Walmart and IBM Food Trust Case Study_. LF Decentralized Trust Case Studies. Retrieved from https://www.lfdecentralizedtrust.org/case-studies/walmart-case-study
+Hyperledger Foundation. 2019. _Walmart and IBM Food Trust Case Study_. LF Decentralized Trust Case Studies.
 
-Kamath, R. (2018). Food traceability on blockchain: Walmart's pork and mango pilots with IBM. _The Journal of the British Blockchain Association_, 1(1), 1-12. https://doi.org/10.31585/jbba-1-1-(10)2018
+Kamath, R. 2018. Food traceability on blockchain: Walmart's pork and mango pilots with IBM. _The Journal of the British Blockchain Association_, 1(1), 1-12.
 
-Lowder, S. K., Skoet, J., & Raney, T. (2016). The number, size, and distribution of farms, smallholder farms, and family farms worldwide. _World Development_, 87, 16–29. https://doi.org/10.1016/j.worlddev.2015.10.041
+Lowder, S. K., Skoet, J., & Raney, T. 2016. The number, size, and distribution of farms, smallholder farms, and family farms worldwide. _World Development_, 87, 16-29.
 
-Nakamoto, S. (2008). _Bitcoin: A peer-to-peer electronic cash system_. https://bitcoin.org/bitcoin.pdf
+Nakamoto, S. 2008. _Bitcoin: A peer-to-peer electronic cash system_.
 
-Voskobojnikov, A., Wiese, O., Mehrabi Koushki, M., Roth, V., & Beznosov, K. (2021). The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. _CHI '21: CHI Conference on Human Factors in Computing Systems_. https://doi.org/10.1145/3411764.3445407
+Voskobojnikov, A., et al. 2021. The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. _CHI '21: CHI Conference on Human Factors in Computing Systems_.
 
-Wood, G. (2014). _Ethereum: A secure decentralised generalised transaction ledger_. Ethereum Foundation. https://ethereum.github.io/yellowpaper/paper.pdf
+Wood, G. 2014. _Ethereum: A secure decentralised generalised transaction ledger_. Ethereum Foundation.
 
 ---
 

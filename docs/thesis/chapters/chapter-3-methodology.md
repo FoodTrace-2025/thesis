@@ -10,7 +10,7 @@ This project follows the ABCDE (Agile Block Chain DApp Engineering) framework, a
 
 The methodology incorporates Scrum principles (Schwaber & Sutherland 2020) adapted for blockchain DApp development through iterative cycles focusing on incremental delivery and continuous validation. Each iteration follows a structured sequence: concept and requirements definition, prototyping and design, implementation with parallel smart contract and frontend development, testing and quality assurance, and deployment with user feedback integration (Pressman & Maxim 2019).
 
-Development utilizes AI-assisted tooling (Claude Code IDE) for code scaffolding, documentation generation, and workflow automation. However, all critical technical decisions—blockchain architecture design, smart contract security patterns, Web3 integration strategies, and platform selection trade-offs—were researched, analyzed, and validated by the development team through literature review and comparative analysis documented in Chapter 2.
+Development utilizes AI-assisted tooling (Claude Code IDE) for code scaffolding, documentation generation, and workflow automation. However, all critical technical decisions (blockchain architecture design, smart contract security patterns, Web3 integration strategies, and platform selection trade-offs) were researched, analyzed, and validated by the development team through literature review and comparative analysis documented in Chapter 2.
 
 ### 3.1.2 Project Structure and Timeline
 
@@ -31,7 +31,7 @@ TABLE 9. FoodTrace 12-week development timeline with validation checkpoints
 
 ### 3.1.3 Risk Assessment
 
-Blockchain-based food traceability systems face multiple risk categories requiring proactive mitigation strategies. Technical risks include smart contract vulnerabilities—given transaction immutability, bugs cannot be corrected without redeployment and data migration. Mitigation strategies include test-driven development achieving >70% code coverage, security audits using automated tools, and phased deployment from local testnet to Sepolia. Integration risks involve Web3 wallet connectivity failures creating poor user experience, mitigated through multiple provider support via RainbowKit and wallet-free consumer query functionality. Timeline risks from the aggressive 12-week schedule are addressed through ruthless scope prioritization to MVP features, mandatory quality gate checkpoints, and buffer time allocation in Weeks 8-9 for unforeseen challenges.
+Blockchain-based food traceability systems face multiple risk categories requiring proactive mitigation strategies. Technical risks include smart contract vulnerabilities. Given transaction immutability, bugs cannot be corrected without redeployment and data migration. Mitigation strategies include test-driven development achieving >70% code coverage, security audits using automated tools, and phased deployment from local testnet to Sepolia. Integration risks involve Web3 wallet connectivity failures creating poor user experience, mitigated through multiple provider support via RainbowKit and wallet-free consumer query functionality. Timeline risks from the aggressive 12-week schedule are addressed through ruthless scope prioritization to MVP features, mandatory quality gate checkpoints, and buffer time allocation in Weeks 8-9 for unforeseen challenges.
 
 ---
 
@@ -121,7 +121,7 @@ TABLE 11. Hybrid data storage allocation
 | Search indexes | Off-chain | Query performance optimization |
 | Cached blockchain data | Off-chain | Response speed improvement |
 
-This hybrid approach addresses cost-efficiency constraints—storing all data on-chain incurs prohibitive gas costs while storing all data off-chain eliminates immutability benefits and prevents independent verification. The strategy achieves balance by storing only critical traceability data on-chain for tamper-proof transparency while maintaining flexible metadata off-chain. Implementation details including cryptographic linking mechanisms, gas cost optimizations, and data synchronization patterns are presented in Chapter 4.
+This hybrid approach addresses cost-efficiency constraints: storing all data on-chain incurs prohibitive gas costs while storing all data off-chain eliminates immutability benefits and prevents independent verification. The strategy achieves balance by storing only critical traceability data on-chain for tamper-proof transparency while maintaining flexible metadata off-chain. Implementation details including cryptographic linking mechanisms, gas cost optimizations, and data synchronization patterns are presented in Chapter 4.
 
 ---
 
@@ -157,27 +157,27 @@ Data collection methods combine quantitative data (blockchain transaction data f
 
 ## References for Chapter 3
 
-ACM Computing Surveys. (2023). Engineering blockchain-based software systems: Foundations, survey, and future directions. *ACM Computing Surveys*, 55(6). https://doi.org/10.1145/3530813
+Fahmideh, M., et al. 2023. Engineering blockchain-based software systems: Foundations, survey, and future directions. _ACM Computing Surveys_, 55(6).
 
-Gálvez, J. F., Mejuto, J. C., & Simal-Gandara, J. (2018). Future challenges on the use of blockchain for food traceability analysis. *TrAC Trends in Analytical Chemistry*, 107, 222-232. https://doi.org/10.1016/j.trac.2018.08.011
+Gálvez, J. F., Mejuto, J. C., & Simal-Gandara, J. 2018. Future challenges on the use of blockchain for food traceability analysis. _TrAC Trends in Analytical Chemistry_, 107, 222-232.
 
-Granillo-Macías, R., González-Hernández, I. J., & Olivares-Benitez, E. (2021). Blockchain for agri-food supply chain traceability. In *Proceedings of the International Conference on Industrial Engineering and Operations Management* (pp. 1095-1103). Rome, Italy.
+Granillo-Macías, R., González-Hernández, I. J., & Olivares-Benitez, E. 2021. Blockchain for agri-food supply chain traceability. In _Proceedings of the International Conference on Industrial Engineering and Operations Management_ (pp. 1095-1103). Rome, Italy.
 
-IEEE. (2024). Feasibility of test-driven development in agile blockchain smart contract development: A comprehensive analysis. *IEEE Conference Publication*, Document 10742781. IEEE Xplore.
+Vijayan Nair, L., & Mittal, H. K. 2024. Feasibility of test-driven development in agile blockchain smart contract development: A comprehensive analysis. In _2024 First International Conference on Technological Innovations and Advance Computing (TIACOMP)_. IEEE.
 
-Marchesi, L., Marchesi, M., & Tonelli, R. (2020). ABCDE—agile block chain DApp engineering. *Blockchain: Research and Applications*, 1(1-2), 100002. https://doi.org/10.1016/j.bcra.2020.100002
+Marchesi, L., Marchesi, M., & Tonelli, R. 2020. ABCDE—agile block chain DApp engineering. _Blockchain: Research and Applications_, 1(1-2), 100002.
 
-MDPI. (2023). Research on the construction of grain food multi-chain blockchain based on zero-knowledge proof. *Foods*, 12(8), 1600. https://doi.org/10.3390/foods12081600
+Zhang, B., et al. 2023. Research on the construction of grain food multi-chain blockchain based on zero-knowledge proof. _Foods_, 12(8), 1600.
 
-Pressman, R. S., & Maxim, B. R. (2019). *Software engineering: A practitioner's approach* (9th ed.). McGraw-Hill Education.
+Pressman, R. S., & Maxim, B. R. 2019. _Software engineering: A practitioner's approach_ (9th ed.). McGraw-Hill Education.
 
-Rongonen, A. (2024). *Blockchain technology in the food supply chains* [Bachelor's thesis, Aalto University]. Aalto University Digital Repository.
+Rongonen, A. 2024. _Blockchain technology in the food supply chains_ [Bachelor's thesis]. Aalto University.
 
-Saurabh, S., & Dey, K. (2021). Blockchain adoption in food supply chains: A review and implementation framework. *Production Planning & Control*, 32(10), 821-841. https://doi.org/10.1080/09537287.2021.1939902
+Saurabh, S., & Dey, K. 2021. Blockchain adoption in food supply chains: A review and implementation framework. _Production Planning & Control_, 32(10), 821-841.
 
-Schwaber, K., & Sutherland, J. (2020). *The Scrum guide: The definitive guide to Scrum: The rules of the game*. Scrum.org. https://scrumguides.org/scrum-guide.html
+Schwaber, K., & Sutherland, J. 2020. _The Scrum guide: The definitive guide to Scrum: The rules of the game_. Scrum.org.
 
-Zhao, G., Liu, S., Lopez, C., Lu, H., Elgueta, S., Chen, H., & Boshkoska, B. M. (2019). Blockchain technology in agri-food value chain management: A synthesis of applications, challenges and future research directions. *Computers in Industry*, 109, 83-99. https://doi.org/10.1016/j.compind.2019.04.002
+Zhao, G., et al. 2019. Blockchain technology in agri-food value chain management: A synthesis of applications, challenges and future research directions. _Computers in Industry_, 109, 83-99.
 
 ---
 

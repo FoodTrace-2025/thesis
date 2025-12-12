@@ -2,7 +2,7 @@
 
 This chapter presents the testing results and performance evaluation of the FoodTrace proof-of-concept system. It begins with an overview of the testing strategy following the Test Pyramid principle (Section 6.1), reports smart contract testing results including code coverage, gas cost measurements, and security analysis (Section 6.2), presents backend and frontend testing results covering API endpoints, component tests, and accessibility compliance (Section 6.3), evaluates system performance including page load times, API response latency, and database query optimization (Section 6.4), and documents end-to-end system validation demonstrating complete supply chain workflows from producer to consumer (Section 6.5). These results provide empirical evidence for addressing the research questions established in Chapter 1.
 
-**Note:** IoT sensor integration (Epic 8) was deferred to future work—see Chapter 8 for proposed design. Testing results reflect actual implemented features only.
+**Note:** IoT sensor integration (Epic 8) was deferred to future work. See Chapter 8 for proposed design. Testing results reflect actual implemented features only.
 
 ## 6.1 Testing Strategy Overview
 
@@ -29,7 +29,7 @@ Testing was integrated into each development sprint using the Hardhat framework 
 
 Smart contract testing achieved 100% statement coverage for ProductRegistry.sol (37 test cases, all passing in ~672ms execution time), significantly exceeding the 70% target. Tests were organized into five categories: deployment tests (2 cases), role management tests (6 cases), product registration tests (8 cases), getter function tests (4 cases), and trace record tests (11 cases), with additional gas profiling tests (6 cases). Gas cost measurements confirmed values within expected ranges (see Table 15, Section 4.4). Complete product journey consumes ~750,000 gas, acceptable for Sepolia testnet deployment.
 
-**Security Validation:** Access control tests verified role-based permissions: unauthorized addresses receive appropriate error messages, role management is restricted to admin, and public view functions are accessible without roles. Input validation tests confirmed rejection of empty product names, future harvest dates, and non-existent product IDs. Security testing practices followed systematic approaches for smart contract vulnerability detection (Vidal et al. 2024). A harvest date validation vulnerability was discovered and fixed during testing—producers could originally register products with future dates (e.g., 2030), enabling fraud scenarios.
+**Security Validation:** Access control tests verified role-based permissions: unauthorized addresses receive appropriate error messages, role management is restricted to admin, and public view functions are accessible without roles. Input validation tests confirmed rejection of empty product names, future harvest dates, and non-existent product IDs. Security testing practices followed systematic approaches for smart contract vulnerability detection (Vidal et al. 2024). A harvest date validation vulnerability was discovered and fixed during testing. Producers could originally register products with future dates (e.g., 2030), enabling fraud scenarios.
 
 ---
 
@@ -57,7 +57,7 @@ Accessibility features implemented following WCAG 2.1 guidelines (W3C 2018) incl
 
 **Page Load Performance:** Measured using Next.js development server with browser DevTools. Homepage <2s, Producer Dashboard <2.5s, Consumer Query <2s on desktop connections. Mobile performance optimized through Next.js Image component (automatic WebP format conversion) and stale-while-revalidate caching strategy.
 
-**API Response Times:** Write endpoints (blockchain transactions) 12-15 seconds median due to Sepolia block confirmation time—this latency is inherent to Ethereum L1 and acceptable for supply chain tracking where operations occur over hours/days, not seconds. Read endpoints <200ms (database caching, Supabase connection pooling). Composite index on (Product.blockchainId, TraceRecord.createdAt) enables efficient trace history retrieval.
+**API Response Times:** Write endpoints (blockchain transactions) 12-15 seconds median due to Sepolia block confirmation time. This latency is inherent to Ethereum L1 and acceptable for supply chain tracking where operations occur over hours/days, not seconds. Read endpoints <200ms (database caching, Supabase connection pooling). Composite index on (Product.blockchainId, TraceRecord.createdAt) enables efficient trace history retrieval.
 
 **Blockchain Latency:** Block confirmation dominates write operation latency. Optimistic UI updates provide responsive user experience by showing pending state before blockchain confirmation, reverting if transaction fails.
 
@@ -143,15 +143,15 @@ Backend security implemented AES-256-GCM encrypted wallet management, role-based
 
 ## References for Chapter 6
 
-Cohn, M. (2009). *Succeeding with agile: Software development using Scrum*. Addison-Wesley Professional.
+Cohn, M. 2009. _Succeeding with agile: Software development using Scrum_. Addison-Wesley Professional.
 
-Hardhat. (2024). *Hardhat documentation: Ethereum development environment*. Retrieved from https://hardhat.org/docs
+Hardhat. 2024. _Hardhat documentation: Ethereum development environment_.
 
-Tramontana, P., Ferrara, A., Cordasco, G., Pirozzi, D., Santone, A., & Tortora, G. (2022). Systematic mapping of testing smart contracts for blockchain applications. *IEEE Access*, 10, 111700-111720. https://doi.org/10.1109/ACCESS.2022.3216874
+Tramontana, P., et al. 2022. Systematic mapping of testing smart contracts for blockchain applications. _IEEE Access_, 10, 111700-111720.
 
-Vidal, F. R., Ivaki, N., & Laranjeiro, N. (2024). Vulnerability detection techniques for smart contracts: A systematic literature review. *Journal of Systems and Software*, 217, 112160. https://doi.org/10.1016/j.jss.2024.112160
+Vidal, F. R., Ivaki, N., & Laranjeiro, N. 2024. Vulnerability detection techniques for smart contracts: A systematic literature review. _Journal of Systems and Software_, 217, 112160.
 
-W3C. (2018). *Web Content Accessibility Guidelines (WCAG) 2.1*. World Wide Web Consortium. Retrieved from https://www.w3.org/TR/WCAG21/
+W3C. 2018. _Web Content Accessibility Guidelines (WCAG) 2.1_. World Wide Web Consortium.
 
 ---
 

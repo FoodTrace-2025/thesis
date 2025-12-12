@@ -89,7 +89,7 @@ FIGURE 8. Data structures of ProductRegistry contract
 The implementation stores product and trace data as Solidity strings rather than bytes32 hashes. This decision prioritized code clarity and development speed over gas optimization:
 
 - **Trade-off accepted:** Higher gas costs (~190,000-207,000 gas per registration vs ~60,000 with hash-based approach)
-- **Benefit gained:** Simplified development—no off-chain hash computation, no hash verification logic, readable data directly on-chain
+- **Benefit gained:** Simplified development with no off-chain hash computation, no hash verification logic, and readable data directly on-chain
 - **POC justification:** Sepolia testnet has zero real costs; gas optimization deferred to production phase
 
 This illustrates the academic value of documenting trade-offs: future implementations can adopt hash-based storage patterns referenced in Chapter 2.3 to achieve 40-60% gas reduction.
@@ -119,7 +119,7 @@ The addTraceRecord() function validates that the caller holds one of the three s
 - Trace record addition: ~180,000-190,000 gas per call
 - View functions: 0 gas (read-only, no transaction required)
 
-Note: These gas costs are higher than optimized implementations due to string storage. On Sepolia testnet, costs are zero (test ETH). Hypothetical mainnet deployment at 20 gwei and €2,000 ETH would cost approximately €0.08 per product registration—acceptable for POC but requiring optimization for production scale.
+Note: These gas costs are higher than optimized implementations due to string storage. On Sepolia testnet, costs are zero (test ETH). Hypothetical mainnet deployment at 20 gwei and €2,000 ETH would cost approximately €0.08 per product registration. This is acceptable for POC but requires optimization for production scale.
 
 ---
 
@@ -160,7 +160,7 @@ Security tests validate protection against common vulnerabilities:
 - Future harvest dates ("Future date not allowed" error)
 - Non-existent product IDs ("Product not found" error)
 
-**Security Finding Resolved:** Initial implementation lacked harvest date validation—producers could register products with future dates (e.g., 2030), enabling fraud scenarios. Adding `require(harvestDate <= block.timestamp, "Future date not allowed")` resolved the vulnerability. This discovery demonstrates value of systematic security testing beyond happy path validation.
+**Security Finding Resolved:** Initial implementation lacked harvest date validation. Producers could register products with future dates (e.g., 2030), enabling fraud scenarios. Adding `require(harvestDate <= block.timestamp, "Future date not allowed")` resolved the vulnerability. This discovery demonstrates value of systematic security testing beyond happy path validation.
 
 ---
 
@@ -190,13 +190,13 @@ TABLE 15. ProductRegistry gas cost measurements (Sepolia testnet)
 
 *Note: Sepolia testnet has zero real costs (test ETH from faucets). Mainnet estimates assume optimistic conditions.*
 
-On Sepolia testnet, costs are zero. Hypothetical mainnet deployment would cost approximately €0.30 per complete product journey—acceptable for POC demonstration but requiring gas optimization for production scale.
+On Sepolia testnet, costs are zero. Hypothetical mainnet deployment would cost approximately €0.30 per complete product journey. This is acceptable for POC demonstration but requires gas optimization for production scale.
 
 ### 4.4.2 Design Iterations and Challenges
 
 Smart contract development revealed several challenges requiring design iterations:
 
-**Challenge 1 - Role Granting Integration:** Initial design assumed role management would be manual (admin grants roles via Etherscan). Implementation required integrating role granting into the company approval API flow—when platform admin approves a company, the backend automatically calls `grantProducerRole()`, `grantDistributorRole()`, or `grantRetailerRole()` based on company type. This required secure wallet decryption (AES-256-GCM) in the Next.js API route to sign blockchain transactions.
+**Challenge 1 - Role Granting Integration:** Initial design assumed role management would be manual (admin grants roles via Etherscan). Implementation required integrating role granting into the company approval API flow. When platform admin approves a company, the backend automatically calls `grantProducerRole()`, `grantDistributorRole()`, or `grantRetailerRole()` based on company type. This required secure wallet decryption (AES-256-GCM) in the Next.js API route to sign blockchain transactions.
 
 **Challenge 2 - Trace API 500 Errors:** Four distinct root causes discovered during integration testing:
 1. Wallet private key mismatch (encryption key environment variable misconfigured)
@@ -212,7 +212,7 @@ Each required systematic debugging through Etherscan transaction analysis and co
 
 **Improvement 1 - Hash-Based Storage:** Implementing bytes32 hash storage from the start would reduce gas costs by 60%. The naive string approach provided faster development but created technical debt requiring refactoring for production.
 
-**Improvement 2 - Upgradeable Contract Patterns:** Current contract is immutable—any bugs require redeployment and data migration. OpenZeppelin's UUPS proxy pattern would enable bug fixes without data loss. Trade-off: increased complexity and attack surface. For POC, immutability acceptable; for production, upgradeability recommended.
+**Improvement 2 - Upgradeable Contract Patterns:** Current contract is immutable. Any bugs require redeployment and data migration. OpenZeppelin's UUPS proxy pattern would enable bug fixes without data loss. Trade-off: increased complexity and attack surface. For POC, immutability acceptable; for production, upgradeability recommended.
 
 ### 4.4.4 Production Deployment Considerations
 
@@ -221,7 +221,7 @@ Each required systematic debugging through Etherscan transaction analysis and co
 - Evaluate Layer 2 solutions (Polygon, Arbitrum - 90% cost reduction)
 - Consider Hyperledger Fabric for B2B contexts (zero transaction costs)
 
-**Oracle Problem:** Smart contracts cannot verify off-chain data authenticity—the "garbage in, garbage out" problem. This is an inherent blockchain limitation discussed in Chapter 7.
+**Oracle Problem:** Smart contracts cannot verify off-chain data authenticity, known as the "garbage in, garbage out" problem. This is an inherent blockchain limitation discussed in Chapter 7.
 
 ---
 
@@ -239,7 +239,7 @@ This chapter detailed the smart contract implementation addressing Research Ques
 
 **Implementation Insights:**
 
-- String storage prioritized code clarity over gas optimization—documented trade-off with academic value
+- String storage prioritized code clarity over gas optimization, a documented trade-off with academic value
 - Event-driven architecture enables off-chain indexing without prohibitive query costs
 - Test-driven development caught harvest date validation vulnerability before deployment
 - Role granting integration required secure wallet handling (AES-256-GCM decryption in API routes)
@@ -250,7 +250,7 @@ This chapter detailed the smart contract implementation addressing Research Ques
 - Higher gas costs (~190k per call) due to string storage vs hash-based alternatives (~60k)
 - Oracle problem: cannot verify off-chain data authenticity without trusted hardware
 - Scalability limitations: Layer 1 Ethereum throughput (15-30 TPS) inadequate for national-scale traceability
-- IoT sensor integration (Epic 8) deferred to future work—see Chapter 8 for proposed design
+- IoT sensor integration (Epic 8) deferred to future work (see Chapter 8 for proposed design)
 
 Next chapter (Chapter 5: System Implementation) describes the Web3 integration, backend API, and frontend interfaces connecting users to this smart contract.
 
@@ -258,15 +258,15 @@ Next chapter (Chapter 5: System Implementation) describes the Web3 integration, 
 
 **References for Chapter 4**
 
-Blockchain Technology to Support Agri-Food Supply Chains: A Comprehensive Review. (2023). _IEEE Access_, Document 10187146. https://doi.org/10.1109/ACCESS.2023.3297722
+Fiore, M., & Mongiello, M. 2023. Blockchain technology to support agri-food supply chains: A comprehensive review. _IEEE Access_, 11, 75311-75324.
 
-Ethereum.org. (2024). _Gas optimization best practices_. Retrieved from https://ethereum.org/en/developers/docs/gas/
+Ethereum.org. 2024. _Gas optimization best practices_.
 
-Hardhat. (2024). _Hardhat documentation: Ethereum development environment_. Retrieved from https://hardhat.org/docs
+Hardhat. 2024. _Hardhat documentation: Ethereum development environment_.
 
-IEEE. (2024). Feasibility of test-driven development in agile blockchain smart contract development: A comprehensive analysis. _IEEE Conference Publication_, Document 10742781. IEEE Xplore.
+Vijayan Nair, L., & Mittal, H. K. 2024. Feasibility of test-driven development in agile blockchain smart contract development: A comprehensive analysis. In _2024 First International Conference on Technological Innovations and Advance Computing (TIACOMP)_. IEEE.
 
-OpenZeppelin. (2024). _OpenZeppelin Contracts documentation: Secure smart contract library_. Retrieved from https://docs.openzeppelin.com/contracts
+OpenZeppelin. 2024. _OpenZeppelin Contracts documentation: Secure smart contract library_.
 
 ---
 

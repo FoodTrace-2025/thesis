@@ -9,7 +9,7 @@ This chapter describes the implementation of the supporting system components th
 **Note:** This chapter references:
 - Section 2.4.1 (Custodial Wallet Patterns) → Backend correspondence
 - Section 2.4.2 (Wallet-Free Consumer Access) → Frontend correspondence
-- IoT sensor integration (Epic 8) was deferred to future work—see Chapter 8 for proposed design
+- IoT sensor integration (Epic 8) was deferred to future work (see Chapter 8 for proposed design)
 
 ---
 
@@ -206,17 +206,17 @@ Next chapter (Chapter 6: Results and Testing) presents performance metrics, test
 
 ## References for Chapter 5
 
-Chakra UI. (2024). _Chakra UI Documentation_. https://chakra-ui.com/
+Chakra UI. 2024. _Chakra UI Documentation_.
 
-Next.js. (2024). _Next.js Documentation_. Vercel. https://nextjs.org/docs
+Next.js. 2024. _Next.js Documentation_. Vercel.
 
-Prisma. (2024). _Prisma Documentation_. https://www.prisma.io/docs
+Prisma. 2024. _Prisma Documentation_.
 
-Viem. (2024). _Viem Documentation_. https://viem.sh/
+Viem. 2024. _Viem Documentation_.
 
-Voskobojnikov, A., Wiese, O., Mehrabi Koushki, M., Roth, V., & Beznosov, K. (2021). The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. _CHI '21: CHI Conference on Human Factors in Computing Systems_. https://doi.org/10.1145/3411764.3445407
+Voskobojnikov, A., et al. 2021. The U in crypto stands for usable: An empirical study of user experience with mobile cryptocurrency wallets. _CHI '21: CHI Conference on Human Factors in Computing Systems_.
 
-Wagmi. (2024). _Wagmi Documentation_. https://wagmi.sh/
+Wagmi. 2024. _Wagmi Documentation_.
 
 ---
 
