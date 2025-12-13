@@ -33,8 +33,8 @@ type ProductResponse = {
 // This matches what ProductSummaryCard expects
 type ProductTraceSummary = {
   productName: string;
-  batchId: string;
-  qrCodeId: string;
+  blockchainId: string;
+  productId: string;
   originFarm: string;
   originLocation: string;
   productionDate: string;
