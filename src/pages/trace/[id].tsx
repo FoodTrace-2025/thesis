@@ -12,7 +12,7 @@ import { LockIcon } from "@chakra-ui/icons";
 import { ConsumerLayout } from "@/components/layout/ConsumerLayout";
 import { LoadingSpinner, ErrorBoundary } from "@/components/ui";
 import { ProductSummaryCard } from "@/components/product";
-import { TraceTimelineConsumer } from "@/components/trace/TraceTimeLineConsumer";
+import { TraceTimelineConsumer } from "@/components/trace/TraceTimelineConsumer";
 
 // This matches the API response from /api/products/[id]
 type ProductResponse = {
@@ -94,20 +94,34 @@ function ConsumerTraceContent() {
 
   if (error) {
     return (
-      <Box py={8}>
-        <Text color="brand.error" textAlign="center">
+      <Box py={8} textAlign="center">
+        <Text color="brand.error" mb={4}>
           {error}
         </Text>
+        <Button
+          type="button"
+          onClick={() => router.push("/trace")}
+          variant="outline"
+        >
+          Go back to scan
+        </Button>
       </Box>
     );
   }
 
   if (!product) {
     return (
-      <Box py={8}>
-        <Text textAlign="center" color="brand.muted">
+      <Box py={8} textAlign="center">
+        <Text color="brand.muted" mb={4}>
           Product not found.
         </Text>
+        <Button
+          type="button"
+          onClick={() => router.push("/trace")}
+          variant="outline"
+        >
+          Go back to scan
+        </Button>
       </Box>
     );
   }
@@ -177,7 +191,7 @@ function ConsumerTraceContent() {
           variant="outline"
           width={{ base: "100%", sm: "auto" }}
         >
-          Scan another product
+          Scan Another Product
         </Button>
       </Flex>
     </Box>
