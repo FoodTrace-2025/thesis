@@ -1,6 +1,5 @@
 // src/styles/theme.ts
 import { extendTheme } from '@chakra-ui/react';
-import { warn } from 'console';
 
 const theme = extendTheme({
   colors: {
