@@ -1,11 +1,13 @@
 // src/pages/trace/[id].tsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import {
   Box,
   Flex,
   Button,
   Icon,
+  IconButton,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -90,6 +92,44 @@ function ConsumerTraceContent() {
     fetchProduct();
   }, [id]);
 
+  const shareUrl = useMemo(
+    () => (typeof window !== "undefined" ? window.location.href : ""),
+    []
+  );
+
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: product?.name ?? "FoodTrace product",
+          url: shareUrl,
+        });
+        toast({
+          title: "Link shared",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        toast({
+          title: "Link copied to clipboard",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    } catch (err) {
+      console.error("Share failed:", err);
+      toast({
+        title: "Could not share. Please try again.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
+  };
+
   if (isLoading) {
     return <LoadingSpinner text="Verifying product on blockchain..." />;
   }
@@ -130,8 +170,8 @@ function ConsumerTraceContent() {
 
   const summaryData: ProductTraceSummary = {
     productName: product.name,
-    batchId: `#${product.blockchainId}`,
-    qrCodeId: product.id,
+    blockchainId: `#${product.blockchainId}`,
+    productId: product.id,
     originFarm: product.company?.name ?? "Not available",
     originLocation: product.origin,
     productionDate: product.harvestDate.slice(0, 10),
@@ -141,36 +181,23 @@ function ConsumerTraceContent() {
     lastUpdated: new Date(product.createdAt).toLocaleString(),
   };
 
-  const handleShare = async () => {
-    const shareUrl = typeof window !== "undefined" ? window.location.href : "";
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: product?.name ?? "FoodTrace product",
-          url: shareUrl,
-        });
-      } else {
-        await navigator.clipboard.writeText(shareUrl);
-        toast({
-          title: "Link copied",
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-        });
-      }
-    } catch (err) {
-      console.error("Share failed:", err);
-      toast({
-        title: "Could not share. Please try again.",
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-      });
-    }
-  };
-
   return (
     <Box py={8}>
+      <Head>
+        <title>{product.name} - FoodTrace Journey</title>
+        <meta
+          name="description"
+          content={`View the complete journey of ${product.name} from ${product.origin}.`}
+        />
+        <meta property="og:title" content={`${product.name} - FoodTrace`} />
+        <meta
+          property="og:description"
+          content={`See the complete supply chain journey of this product from ${product.origin}.`}
+        />
+        <meta property="og:url" content={shareUrl} />
+        <meta property="og:type" content="website" />
+      </Head>
+
       <Flex
         direction={{ base: "column", md: "row" }}
         gap={6}
@@ -179,7 +206,7 @@ function ConsumerTraceContent() {
       >
         {/* Left: product summary card */}
         <Box flex="2">
-          <ProductSummaryCard data={summaryData} />
+          <ProductSummaryCard data={summaryData} onShare={handleShare} />
         </Box>
 
         {/* Right: explanation card */}
@@ -222,16 +249,6 @@ function ConsumerTraceContent() {
           width={{ base: "100%", sm: "auto" }}
         >
           Scan Another Product
-        </Button>
-        <Button
-          type="button"
-          onClick={handleShare}
-          leftIcon={<LinkIcon />}
-          ml={{ base: 0, sm: 3 }}
-          mt={{ base: 3, sm: 0 }}
-          width={{ base: "100%", sm: "auto" }}
-        >
-          Share Product
         </Button>
       </Flex>
     </Box>

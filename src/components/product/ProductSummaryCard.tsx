@@ -5,14 +5,16 @@ import {
   Icon,
   SimpleGrid,
   Stack,
+  HStack,
+  IconButton,
   Text,
 } from "@chakra-ui/react";
-import { CheckCircleIcon } from "@chakra-ui/icons";
+import { CheckCircleIcon, LinkIcon } from "@chakra-ui/icons";
 
 export type ProductSummaryData = {
   productName: string;
-  batchId: string;
-  qrCodeId?: string;
+  blockchainId: string;
+  productId?: string;
   originFarm: string;
   originLocation: string;
   productionDate: string;
@@ -24,9 +26,10 @@ export type ProductSummaryData = {
 
 type ProductSummaryCardProps = {
   data: ProductSummaryData;
+  onShare?: () => void;
 };
 
-export function ProductSummaryCard({ data }: ProductSummaryCardProps) {
+export function ProductSummaryCard({ data, onShare }: ProductSummaryCardProps) {
   const isVerified = data.blockchainStatus === "VERIFIED";
 
   return (
@@ -37,46 +40,60 @@ export function ProductSummaryCard({ data }: ProductSummaryCardProps) {
       p={6}
     >
       {/* Header */}
-      <Stack
-        direction={{ base: "column", md: "row" }}
-        justify="space-between"
-        align={{ base: "flex-start", md: "center" }}
-        mb={4}
-        spacing={4}
-      >
+      <Stack spacing={4} mb={4}>
+        <Flex
+          direction={{ base: "column", md: "row" }}
+          justify="space-between"
+          align={{ base: "flex-start", md: "center" }}
+          gap={3}
+        >
+          <HStack spacing={2} align="center">
+            <Heading size="md" color="brand.dark">
+              {data.productName}
+            </Heading>
+            {onShare && (
+              <IconButton
+                aria-label="Share product link"
+                icon={<LinkIcon />}
+                variant="ghost"
+                onClick={onShare}
+                minW="44px"
+                minH="44px"
+              />
+            )}
+          </HStack>
+
+          <Flex align="center" gap={2}>
+            <Icon
+              as={CheckCircleIcon}
+              boxSize={6}
+              color={isVerified ? "green.500" : "yellow.400"}
+            />
+            <Box>
+              <Text
+                fontSize="sm"
+                fontWeight="semibold"
+                color={isVerified ? "green.600" : "yellow.700"}
+              >
+                {isVerified ? "Blockchain verified" : "Verification pending"}
+              </Text>
+              <Text fontSize="xs" color="brand.muted">
+                Last updated: {data.lastUpdated}
+              </Text>
+            </Box>
+          </Flex>
+        </Flex>
+
         <Box>
-          <Heading size="md" mb={1} color="brand.dark">
-            {data.productName}
-          </Heading>
           <Text fontSize="sm" color="brand.muted">
-            Batch ID: {data.batchId}
+            Blockchain ID: {data.blockchainId}
           </Text>
-          {data.qrCodeId && (
+          {data.productId && (
             <Text fontSize="sm" color="brand.muted">
-              QR Code: {data.qrCodeId}
+              Product ID: {data.productId}
             </Text>
           )}
         </Box>
-
-        <Flex align="center" gap={2}>
-          <Icon
-            as={CheckCircleIcon}
-            boxSize={6}
-            color={isVerified ? "green.500" : "yellow.400"}
-          />
-          <Box>
-            <Text
-              fontSize="sm"
-              fontWeight="semibold"
-              color={isVerified ? "green.600" : "yellow.700"}
-            >
-              {isVerified ? "Blockchain verified" : "Verification pending"}
-            </Text>
-            <Text fontSize="xs" color="brand.muted">
-              Last updated: {data.lastUpdated}
-            </Text>
-          </Box>
-        </Flex>
       </Stack>
 
       {/* Info grid */}
