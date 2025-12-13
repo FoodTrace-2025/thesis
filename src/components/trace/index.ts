@@ -3,4 +3,4 @@
 
 export { TraceRecordForm } from './TraceRecordForm';
 export { TraceTimeline } from './TraceTimeline';
-export { TraceTimelineConsumer } from './TraceTimelineConsumer';  
+export { TraceTimelineConsumer } from './ConsumerTraceTimeline';

@@ -12,7 +12,7 @@ import { LockIcon } from "@chakra-ui/icons";
 import { ConsumerLayout } from "@/components/layout/ConsumerLayout";
 import { LoadingSpinner, ErrorBoundary } from "@/components/ui";
 import { ProductSummaryCard } from "@/components/product";
-import { TraceTimelineConsumer } from "@/components/trace/TraceTimelineConsumer";
+import { TraceTimelineConsumer } from "@/components/trace/TraceTimelineC";
 
 // This matches the API response from /api/products/[id]
 type ProductResponse = {
