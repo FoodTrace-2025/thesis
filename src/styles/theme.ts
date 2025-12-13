@@ -15,7 +15,6 @@ const theme = extendTheme({
       surfaceAlt: "#E9F6E2",   // Light green background, selected states
       pageBg: "#FFF6DA",       // Page background (cream/yellow)
       error: "#E53E3E",        // red
-      warning: "#D69E2E",      // yellow
     },
 
     status: {
