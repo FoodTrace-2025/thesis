@@ -38,10 +38,10 @@ Deploy application to production environment (Render.com Native Runtime). Smart 
 - Epic 9 (Consumer Query Interface) - Public-facing consumer query page
 
 **Optional/Deferred Epics (NOT required for deployment):**
-- Epic 6 (Product Transfer Workflow) - Already implemented in Stories 7.16-7.17
+- Epic 6 (Product Transfer Workflow) - Core workflow in Stories 7.16-7.17; email notifications not implemented
 - Epic 8 (IoT Simulator) - Deferred to Future Work
-- Epic 10 (Multi-Party Verification) - Optional enhancement
-- Epic 12 (Data Visualization) - Timeline already implemented in Epic 7
+- Epic 10 (Multi-Party Verification) - Optional enhancement, not implemented
+- Epic 12 (Data Visualization) - TraceTimeline in Epic 7; Temperature Chart requires Epic 8 (deferred)
 
 **Pre-deployment verification:**
 
