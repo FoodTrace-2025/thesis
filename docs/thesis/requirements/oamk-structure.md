@@ -271,7 +271,7 @@ Based on OAMK thesis template "Thesis Report G22.docx" (also known as 110625 tem
 
 ### 1.5 Thesis Structure (0.5 page)
 
-Brief overview of each chapter (one paragraph per chapter).
+Single flowing paragraph summarizing the thesis structure (per professor guidance).
 
 ---
 
