@@ -7,11 +7,10 @@ import {
   Flex,
   Button,
   Icon,
-  IconButton,
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { LockIcon, LinkIcon } from "@chakra-ui/icons";
+import { LockIcon } from "@chakra-ui/icons";
 import { ConsumerLayout } from "@/components/layout/ConsumerLayout";
 import { LoadingSpinner, ErrorBoundary } from "@/components/ui";
 import { ProductSummaryCard } from "@/components/product";
