@@ -7,8 +7,9 @@ import {
   Button,
   Icon,
   Text,
+  useToast,
 } from "@chakra-ui/react";
-import { LockIcon } from "@chakra-ui/icons";
+import { LockIcon, LinkIcon } from "@chakra-ui/icons";
 import { ConsumerLayout } from "@/components/layout/ConsumerLayout";
 import { LoadingSpinner, ErrorBoundary } from "@/components/ui";
 import { ProductSummaryCard } from "@/components/product";
@@ -54,6 +55,7 @@ export default function ConsumerTracePage() {
 function ConsumerTraceContent() {
   const router = useRouter();
   const { id } = router.query;
+  const toast = useToast();
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -139,6 +141,34 @@ function ConsumerTraceContent() {
     lastUpdated: new Date(product.createdAt).toLocaleString(),
   };
 
+  const handleShare = async () => {
+    const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: product?.name ?? "FoodTrace product",
+          url: shareUrl,
+        });
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        toast({
+          title: "Link copied",
+          status: "success",
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    } catch (err) {
+      console.error("Share failed:", err);
+      toast({
+        title: "Could not share. Please try again.",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <Box py={8}>
       <Flex
@@ -192,6 +222,16 @@ function ConsumerTraceContent() {
           width={{ base: "100%", sm: "auto" }}
         >
           Scan Another Product
+        </Button>
+        <Button
+          type="button"
+          onClick={handleShare}
+          leftIcon={<LinkIcon />}
+          ml={{ base: 0, sm: 3 }}
+          mt={{ base: 3, sm: 0 }}
+          width={{ base: "100%", sm: "auto" }}
+        >
+          Share Product
         </Button>
       </Flex>
     </Box>
