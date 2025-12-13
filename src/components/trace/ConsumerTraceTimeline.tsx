@@ -51,7 +51,7 @@ interface TraceTimelineProps {
   productId: string;
 }
 
-export function TraceTimelineConsumer({ productId }: TraceTimelineProps) {
+export function ConsumerTraceTimeline({ productId }: TraceTimelineProps) {
   const [records, setRecords] = useState<TraceRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');

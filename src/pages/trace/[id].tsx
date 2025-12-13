@@ -12,7 +12,7 @@ import { LockIcon } from "@chakra-ui/icons";
 import { ConsumerLayout } from "@/components/layout/ConsumerLayout";
 import { LoadingSpinner, ErrorBoundary } from "@/components/ui";
 import { ProductSummaryCard } from "@/components/product";
-import { TraceTimelineConsumer } from "@/components/trace/TraceTimelineC";
+import { ConsumerTraceTimeline } from "@/components/trace/ConsumerTraceTimeline";
 
 // This matches the API response from /api/products/[id]
 type ProductResponse = {
@@ -179,7 +179,7 @@ function ConsumerTraceContent() {
       </Flex>
 
       {/* Timeline using real trace data */}
-      <TraceTimelineConsumer productId={product.id} />
+      <ConsumerTraceTimeline productId={product.id} />
 
       <Flex
         mt={6}
