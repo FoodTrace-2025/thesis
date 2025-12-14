@@ -13,7 +13,19 @@ const theme = extendTheme({
       surface: "#FFFFFF",      // White card backgrounds
       surfaceAlt: "#E9F6E2",   // Light green background, selected states
       pageBg: "#FFF6DA",       // Page background (cream/yellow)
+      error: "#E53E3E",        // red
     },
+
+    status: {
+      received: "#3182CE",        // blue
+      qualityChecked: "#805AD5",   // purple
+      shipped: "#DD6B20",         // orange
+      stocked: "#38A169",         // green
+      sold: "#319795",            // teal
+      default: "#9CA3AF",       // gray fallback
+
+    },
+
   },
   fonts: {
     heading: 'Inter, system-ui, sans-serif',

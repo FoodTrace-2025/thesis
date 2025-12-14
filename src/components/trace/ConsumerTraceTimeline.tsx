@@ -27,13 +27,12 @@ interface TraceRecord {
   createdAt: string;
 }
 
-
 const ACTION_COLORS: Record<string, string> = {
-  RECEIVED: "blue",
-  QUALITY_CHECK: "purple",
-  SHIPPED: "orange",
-  STOCKED: "green",
-  SOLD: "teal",
+  RECEIVED: "status.received",
+  QUALITY_CHECK: "status.qualityChecked",
+  SHIPPED: "status.shipped",
+  STOCKED: "status.stocked",
+  SOLD: "status.sold",
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -44,12 +43,15 @@ const ACTION_LABELS: Record<string, string> = {
   SOLD: "Sold to customer",
 };
 
+function getActionColor(action: string): string {
+  return ACTION_COLORS[action] || "status.default";
+}
 
 interface TraceTimelineProps {
   productId: string;
 }
 
-export function TraceTimelineConsumer({ productId }: TraceTimelineProps) {
+export function ConsumerTraceTimeline({ productId }: TraceTimelineProps) {
   const [records, setRecords] = useState<TraceRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -90,7 +92,7 @@ export function TraceTimelineConsumer({ productId }: TraceTimelineProps) {
   if (error) {
     return (
       <Center py={8}>
-        <Text color="red.500">{error}</Text>
+        <Text color="brand.error">{error}</Text>
       </Center>
     );
   }
@@ -132,7 +134,7 @@ export function TraceTimelineConsumer({ productId }: TraceTimelineProps) {
 
       <VStack spacing={0} align="stretch" position="relative">
         {records.map((record, index) => {
-          const colorScheme = ACTION_COLORS[record.action] || 'gray';
+          const actionColor = getActionColor(record.action);
           const label = ACTION_LABELS[record.action] || record.action;
 
           return (
@@ -158,7 +160,7 @@ export function TraceTimelineConsumer({ productId }: TraceTimelineProps) {
                 h="16px"
                 borderRadius="full"
                 borderWidth="3px"
-                borderColor={`${colorScheme}.500`}
+                borderColor={actionColor}
                 bg="brand.surface"
               />
 
@@ -174,7 +176,12 @@ export function TraceTimelineConsumer({ productId }: TraceTimelineProps) {
                   p={4}
                 >
                   <HStack justify="space-between" align="center" mb={2}>
-                    <Badge colorScheme={colorScheme} borderRadius="full" px={3}>
+                    <Badge
+                      borderRadius="full"
+                      px={3}
+                      bg={actionColor}
+                      color="white"
+                    >
                       {label}
                     </Badge>
                     <HStack spacing={1} color="brand.muted" fontSize="xs">
