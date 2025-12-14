@@ -12,7 +12,7 @@ Build reusable React component library using Chakra UI v2 to accelerate frontend
 
 #### Scope Change (2025-12-04)
 
-**Status:** ✅ DONE (Scoped Down)
+**Status:** ✅ DONE (Stories 4.1-4.3 complete)
 
 **Decision:** Use Chakra UI components directly instead of creating wrapper components.
 
@@ -30,6 +30,12 @@ Build reusable React component library using Chakra UI v2 to accelerate frontend
 - LoadingSpinner.tsx - async operation indicator
 - ErrorBoundary.tsx - error handling component
 - Login page UI (login.tsx)
+
+**Story 4.3 (Added 2025-12-14):**
+- Public landing page at `/` with hero section and "How It Works"
+- Dual CTAs: "Track a Product" → `/trace`, "Business Login" → `/login`
+- Component demo page moved to `/demo`
+- Estimated: 2-3 hours
 
 **What was intentionally skipped:**
 - Wrapper components (Button.tsx, Modal.tsx, Select.tsx, etc.) - Use Chakra directly

@@ -18,7 +18,8 @@
 ## Routing Structure (Pages Router)
 
 **Public Routes:**
-- `/` - Homepage (landing page)
+- `/` - Homepage (landing page with hero + CTAs) [Epic 4]
+- `/demo` - Component demo page (theme reference) [Epic 4]
 - `/trace` - Consumer landing page (QR scanner + manual entry) [Epic 9]
 - `/trace/:id` - Product journey page (wallet-free, no auth) [Epic 9]
 

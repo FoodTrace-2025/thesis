@@ -62,7 +62,8 @@ foodtrace/
 │   │   ├── admin/
 │   │   │   └── iot-simulator.tsx
 │   │   ├── _app.tsx            # App wrapper (Chakra provider, auth)
-│   │   └── index.tsx           # Homepage
+│   │   ├── index.tsx           # Homepage (public landing page)
+│   │   └── demo.tsx            # Component demo page (theme reference)
 │   ├── components/             # React components
 │   │   ├── shared/             # Shared components (Layout, Button, Modal)
 │   │   │   ├── Layout.tsx
@@ -130,6 +131,7 @@ foodtrace/
 | Path | File | Purpose |
 |------|------|---------|
 | `/` | `pages/index.tsx` | Homepage (public landing page) |
+| `/demo` | `pages/demo.tsx` | Component demo page (theme reference) |
 | `/producer/dashboard` | `pages/producer/dashboard.tsx` | Producer product list |
 | `/producer/register` | `pages/producer/register.tsx` | Product registration form |
 | `/producer/product/[id]` | `pages/producer/product/[id].tsx` | Product details, QR download |

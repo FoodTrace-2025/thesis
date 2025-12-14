@@ -1,147 +1,158 @@
-// src/pages/index.tsx - Story 4.1 demo page
-import { Box, Heading, Text, Button, VStack, HStack, Input, Card, Checkbox, CardBody, CardHeader } from "@chakra-ui/react";
-import { Layout } from "@/components/layout";
-import { LoadingSpinner } from "@/components/ui";
+// src/pages/index.tsx - Story 4.3: Public Landing Page
+// Hero section with dual CTAs + How It Works section
+import Head from "next/head";
+import NextLink from "next/link";
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  Heading,
+  HStack,
+  Icon,
+  Link,
+  SimpleGrid,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { FaSeedling, FaTruck, FaQrcode } from "react-icons/fa";
 
-export default function DemoPage() {
+export default function LandingPage() {
   return (
-    <Layout>
-      <VStack spacing={8} align="stretch">
-        <Heading>FoodTrace Component Demo</Heading>
+    <>
+      <Head>
+        <title>FoodTrace - Know Where Your Food Comes From</title>
+        <meta
+          name="description"
+          content="Blockchain-verified food traceability from producer to your table. Track any product with a simple QR scan."
+        />
+      </Head>
 
-        {/* Theme Colors Display */}
-        <Box>
-          <Text fontWeight="bold" mb={2}>
-            Theme Colors:
-          </Text>
-          <HStack spacing={4} align="stretch">
-            <Box
-              flex="1"
-              bg="brand.primary"
-              color="white"
-              p={4}
-              borderRadius="md"
+      <Box bg="brand.pageBg" minH="100vh">
+        {/* Minimal Header */}
+        <Flex
+          as="header"
+          justify="space-between"
+          align="center"
+          px={{ base: 4, md: 8 }}
+          py={4}
+        >
+          <Heading size="md" color="brand.primary">
+            FoodTrace
+          </Heading>
+          <Link
+            as={NextLink}
+            href="/login"
+            color="brand.primary"
+            fontWeight="medium"
+            _hover={{ textDecoration: "underline" }}
+          >
+            Login
+          </Link>
+        </Flex>
+
+        {/* Hero Section */}
+        <Container maxW="container.lg" py={{ base: 12, md: 20 }}>
+          <VStack spacing={6} textAlign="center">
+            <Heading
+              as="h1"
+              size={{ base: "xl", md: "2xl" }}
+              color="brand.dark"
+              lineHeight="shorter"
             >
-              Primary (Green)
-            </Box>
-            <Box
-              flex="1"
-              bg="brand.secondary"
-              color="white"
-              p={4}
-              borderRadius="md"
+              Know Where Your Food Comes From
+            </Heading>
+            <Text
+              fontSize={{ base: "md", md: "lg" }}
+              color="brand.muted"
+              maxW="600px"
             >
-              Secondary (Light Green)
-            </Box>
-            <Box
-              flex="1"
-              bg="brand.accent"
-              color="white"
-              p={4}
-              borderRadius="md"
+              Blockchain-verified traceability from producer to your table
+            </Text>
+            <HStack
+              spacing={4}
+              pt={4}
+              flexDirection={{ base: "column", sm: "row" }}
+              w={{ base: "100%", sm: "auto" }}
             >
-              Accent (Orange)
-            </Box>
-            <Box
-              flex="1"
-              bg="brand.dark"
-              color="white"
-              p={4}
-              borderRadius="md"
+              <Button
+                as={NextLink}
+                href="/trace"
+                size="lg"
+                w={{ base: "100%", sm: "auto" }}
+                minH="44px"
+              >
+                Track a Product
+              </Button>
+              <Button
+                as={NextLink}
+                href="/login"
+                variant="outline"
+                size="lg"
+                w={{ base: "100%", sm: "auto" }}
+                minH="44px"
+              >
+                Business Login
+              </Button>
+            </HStack>
+          </VStack>
+        </Container>
+
+        {/* How It Works Section */}
+        <Box bg="brand.surface" py={{ base: 12, md: 16 }}>
+          <Container maxW="container.lg">
+            <Heading
+              size="lg"
+              textAlign="center"
+              mb={10}
+              color="brand.dark"
             >
-              Dark (Text)
-            </Box>
-            <Box
-              flex="1"
-              bg="brand.muted"
-              color="white"
-              p={4}
-              borderRadius="md"
-            >
-              Muted (Secondary Text)
-            </Box>
-            <Box
-              flex="1"
-              bg="brand.border"
-              color="white"
-              p={4}
-              borderRadius="md"
-            >
-              Border (Input/Card Border)
-            </Box>
-            <Box
-              flex="1"
-              bg="brand.surface"
-              color="black"
-              p={4}
-              borderRadius="md"
-            >
-              Surface (White Card)
-            </Box>
-            <Box
-              flex="1"
-              bg="brand.surfaceAlt"
-              color="white"
-              p={4}
-              borderRadius="md"
-            >
-              Surface Alt (Light Green Background)
-            </Box>
-          </HStack>
+              How It Works
+            </Heading>
+            <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8}>
+              {/* Step 1: Register */}
+              <VStack spacing={4} textAlign="center">
+                <Icon as={FaSeedling} boxSize={12} color="brand.primary" />
+                <Text fontWeight="bold" color="brand.dark" fontSize="lg">
+                  1. Register
+                </Text>
+                <Text color="brand.muted" fontSize="sm">
+                  Producers register products on the blockchain
+                </Text>
+              </VStack>
+
+              {/* Step 2: Track */}
+              <VStack spacing={4} textAlign="center">
+                <Icon as={FaTruck} boxSize={12} color="brand.primary" />
+                <Text fontWeight="bold" color="brand.dark" fontSize="lg">
+                  2. Track
+                </Text>
+                <Text color="brand.muted" fontSize="sm">
+                  Every handoff recorded through the supply chain
+                </Text>
+              </VStack>
+
+              {/* Step 3: Verify */}
+              <VStack spacing={4} textAlign="center">
+                <Icon as={FaQrcode} boxSize={12} color="brand.primary" />
+                <Text fontWeight="bold" color="brand.dark" fontSize="lg">
+                  3. Verify
+                </Text>
+                <Text color="brand.muted" fontSize="sm">
+                  Consumers scan QR code to see the full journey
+                </Text>
+              </VStack>
+            </SimpleGrid>
+          </Container>
         </Box>
 
-
-        {/* Input display */}
-        <Box>
-          <Text fontWeight="bold" mb={2}>
-            Input (green focus border):
+        {/* Footer */}
+        <Box py={6} textAlign="center">
+          <Text fontSize="sm" color="brand.muted">
+            FoodTrace - Bachelor&apos;s Thesis Project (OAMK 2025)
           </Text>
-          <Input placeholder="Click to see green focus border" />
         </Box>
-
-        {/* Checkbox display */}
-        <Box>
-          <Text fontWeight="bold" mb={2}>
-            Checkbox (green check):
-          </Text>
-          <Checkbox>Check me</Checkbox>
-        </Box>
-
-        {/* Card display */}
-        <Box>
-          <Text fontWeight="bold" mb={2}>
-            Card Component:
-          </Text>
-          <Card>
-            <CardHeader>
-              <Heading size="md">Product Card</Heading>
-            </CardHeader>
-            <CardBody>
-              <Text>This card has borderRadius and boxShadow from theme.</Text>
-            </CardBody>
-          </Card>
-        </Box>
-
-        {/* LoadingSpinner display */}
-        <Box>
-          <Text fontWeight="bold" mb={2}>
-            Loading Spinner:
-          </Text>
-          <LoadingSpinner text="Loading data..." />
-        </Box>
-
-        {/* button display */}
-        <Box>
-          <Text fontWeight="bold" mb={2}>
-            Buttons:
-          </Text>
-          <HStack spacing={4}>
-            <Button>Primary Button</Button>
-            <Button variant="outline">Outline Button</Button>
-          </HStack>
-        </Box>
-      </VStack>
-    </Layout>
+      </Box>
+    </>
   );
 }
-

@@ -4,6 +4,22 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 85 (2025-12-14) - Story 4.3 Public Landing Page Implemented
+
+### Session 85 Achievements
+
+✅ **Story 4.3 Created**: Public Landing Page story with acceptance criteria, tasks, technical specs
+✅ **UX Research Conducted**: Landing page best practices 2025 (hero section, dual CTAs, minimal navigation)
+✅ **Landing Page Implemented**: Hero section with headline, subheadline, dual CTAs (Track/Business Login)
+✅ **How It Works Section Added**: 3-step supply chain flow with react-icons (FaSeedling, FaTruck, FaQrcode)
+✅ **Demo Page Preserved**: Moved to `/demo` route as theme reference
+✅ **Documentation Updated**: Epic 4 PRD, source-tree.md, frontend-architecture.md updated
+✅ **All Tests Passing**: 245/245 tests pass, build succeeds
+
+**Impact:** Professional landing page for thesis demo. Dual audience support (consumers → /trace, business → /login).
+
+---
+
 ## Session 84 (2025-12-14) - Epic 9 Complete (Story 9.3 Implemented)
 
 ### Session 84 Achievements
@@ -148,20 +164,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 74 (2025-12-06) - Thesis Chapter Corrections Complete
-
-### Session 74 Achievements
-
-✅ **All 7 Thesis Chapters Corrected**: Removed fabricated SensorData/IoT content
-✅ **Chapter 4 Rewritten**: Fixed 3 contracts→1, 109 tests→37, 87k gas→~190k gas
-✅ **Chapter 5 Updated**: Removed entire IoT Simulator section (5.3)
-✅ **Chapter 6 Rewritten**: Replaced 3 fake IoT scenarios with actual validation scenarios
-✅ **Chapter 7 Enhanced**: Added "Scope Reduction Decisions" section (7.3.4)
-✅ **Chapter 8 Expanded**: Added IoT design to Future Work with Solidity code sample
-✅ **Academic Integrity Preserved**: Thesis now reflects actual implementation only
-
-**Impact:** Thesis chapters aligned with reality. 363 insertions, 295 deletions across 7 files.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (74-84). Older sessions (1-73) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (75-85). Older sessions (1-74) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
