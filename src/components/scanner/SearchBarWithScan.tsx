@@ -37,6 +37,8 @@ export function SearchBarWithScan({
         variant="ghost"
         onClick={onScanClick}
         borderRadius="full"
+        minH="44px"
+        minW="44px"
       />
 
       {/* Input */}
@@ -54,6 +56,7 @@ export function SearchBarWithScan({
         type="button"
         borderRadius="full"
         onClick={onSearch}
+        minH="44px"
       >
         Search
       </Button>

@@ -1,7 +1,6 @@
-// src/pages/consumer/home.tsx
-// Story 7.5: Consumer Trace Entry Page
-// Allows consumers to scan QR codes or enter product IDs to view trace history
 // src/pages/trace/index.tsx
+// Story 9.1: Consumer Landing Page
+// Allows consumers to scan QR codes or enter product IDs to view trace history
 import { useState } from "react";
 import { useRouter } from "next/router";
 import {

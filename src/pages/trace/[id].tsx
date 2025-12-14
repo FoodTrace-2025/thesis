@@ -143,6 +143,7 @@ function ConsumerTraceContent() {
           type="button"
           onClick={() => router.push("/trace")}
           variant="outline"
+          minH="44px"
         >
           Go back to scan
         </Button>
@@ -160,6 +161,7 @@ function ConsumerTraceContent() {
           type="button"
           onClick={() => router.push("/trace")}
           variant="outline"
+          minH="44px"
         >
           Go back to scan
         </Button>
@@ -246,6 +248,7 @@ function ConsumerTraceContent() {
           onClick={() => router.push("/trace")}
           variant="outline"
           width={{ base: "100%", sm: "auto" }}
+          minH="44px"
         >
           Scan Another Product
         </Button>
