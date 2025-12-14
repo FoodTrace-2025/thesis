@@ -1,5 +1,6 @@
 // Get Trace History API
 // Story 7.3: GET Trace History API
+// Story 9.3: Add synthetic registration event as first entry
 // GET /api/products/:id/trace-history - Get complete trace history for a product
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -67,7 +68,13 @@ export default async function handler(
     const productId = req.query.id as string;
     const product = await prisma.product.findUnique({
       where: { id: productId },
-      select: { id: true },
+      select: {
+        id: true,
+        origin: true,
+        transactionHash: true,
+        createdAt: true,
+        company: { select: { name: true } },
+      },
     });
 
     if (!product) {
@@ -108,7 +115,7 @@ export default async function handler(
       prisma.traceRecord.count({ where: { productId } }),
     ]);
 
-    // 5. Format response
+    // 5. Format trace records
     const formattedRecords: TraceRecordResponse[] = traceRecords.map((record) => ({
       id: record.id,
       action: record.action,
@@ -124,11 +131,30 @@ export default async function handler(
       createdAt: record.createdAt.toISOString(),
     }));
 
-    // 6. Success response
+    // 6. Create synthetic registration event (Story 9.3)
+    const registrationEvent: TraceRecordResponse = {
+      id: 'registration',
+      action: 'REGISTERED',
+      location: product.origin,
+      notes: null,
+      actor: {
+        name: 'Producer',
+        role: 'PRODUCER',
+        company: product.company.name,
+      },
+      transactionHash: product.transactionHash,
+      etherscanLink: `https://sepolia.etherscan.io/tx/${product.transactionHash}`,
+      createdAt: product.createdAt.toISOString(),
+    };
+
+    // 7. Prepend registration event to trace records
+    const allRecords = [registrationEvent, ...formattedRecords];
+
+    // 8. Success response (total includes registration)
     return res.status(200).json({
       success: true,
-      traceRecords: formattedRecords,
-      total,
+      traceRecords: allRecords,
+      total: total + 1,
       limit,
       offset,
     });

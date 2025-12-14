@@ -26,9 +26,13 @@ jest.mock('@/lib/prisma', () => ({
 const mockPrisma = prisma as jest.Mocked<typeof prisma>;
 
 describe('GET /api/products/:id/trace-history', () => {
-  // Mock product
+  // Mock product (includes fields for registration event - Story 9.3)
   const mockProduct = {
     id: 'test-product-id',
+    origin: 'Hirsimäki Farm, Oulu',
+    transactionHash: '0xregistration1234567890abcdef1234567890abcdef1234567890abcdef12345678',
+    createdAt: new Date('2025-12-03T09:00:00Z'),
+    company: { name: 'Hirsimäki Farm Oy' },
   };
 
   // Mock trace records
@@ -96,10 +100,10 @@ describe('GET /api/products/:id/trace-history', () => {
     });
   });
 
-  // ==================== EMPTY HISTORY ====================
+  // ==================== EMPTY TRACE HISTORY ====================
 
-  describe('Empty History', () => {
-    it('should return 200 with empty array when no trace records', async () => {
+  describe('Empty Trace History', () => {
+    it('should return registration event when no trace records', async () => {
       (mockPrisma.traceRecord.findMany as jest.Mock).mockResolvedValueOnce([]);
       (mockPrisma.traceRecord.count as jest.Mock).mockResolvedValueOnce(0);
 
@@ -111,8 +115,10 @@ describe('GET /api/products/:id/trace-history', () => {
           expect(res.status).toBe(200);
           const json = await res.json();
           expect(json.success).toBe(true);
-          expect(json.traceRecords).toEqual([]);
-          expect(json.total).toBe(0);
+          // Story 9.3: Registration event is always included
+          expect(json.traceRecords).toHaveLength(1);
+          expect(json.traceRecords[0].action).toBe('REGISTERED');
+          expect(json.total).toBe(1);
           expect(json.limit).toBe(50);
           expect(json.offset).toBe(0);
         },
@@ -123,7 +129,7 @@ describe('GET /api/products/:id/trace-history', () => {
   // ==================== SUCCESS CASES ====================
 
   describe('Success Cases', () => {
-    it('should return 200 with trace records', async () => {
+    it('should return 200 with registration + trace records', async () => {
       await testApiHandler({
         pagesHandler: handler,
         params: { id: 'test-product-id' },
@@ -132,13 +138,14 @@ describe('GET /api/products/:id/trace-history', () => {
           expect(res.status).toBe(200);
           const json = await res.json();
           expect(json.success).toBe(true);
-          expect(json.traceRecords).toHaveLength(2);
-          expect(json.total).toBe(2);
+          // Story 9.3: 1 registration + 2 trace records = 3
+          expect(json.traceRecords).toHaveLength(3);
+          expect(json.total).toBe(3);
         },
       });
     });
 
-    it('should include actor name, role, and company', async () => {
+    it('should include actor name, role, and company for trace records', async () => {
       await testApiHandler({
         pagesHandler: handler,
         params: { id: 'test-product-id' },
@@ -146,7 +153,8 @@ describe('GET /api/products/:id/trace-history', () => {
           const res = await fetch({ method: 'GET' });
           const json = await res.json();
 
-          expect(json.traceRecords[0].actor).toEqual({
+          // Index 1 is first trace record (index 0 is registration)
+          expect(json.traceRecords[1].actor).toEqual({
             name: 'Liisa Korhonen',
             role: 'DISTRIBUTOR',
             company: 'Helsinki Distributors',
@@ -163,7 +171,8 @@ describe('GET /api/products/:id/trace-history', () => {
           const res = await fetch({ method: 'GET' });
           const json = await res.json();
 
-          expect(json.traceRecords[0].etherscanLink).toBe(
+          // Index 0 is registration, index 1 is first trace record
+          expect(json.traceRecords[1].etherscanLink).toBe(
             'https://sepolia.etherscan.io/tx/0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
           );
         },
@@ -185,8 +194,10 @@ describe('GET /api/products/:id/trace-history', () => {
           );
 
           const json = await res.json();
-          expect(json.traceRecords[0].createdAt).toBe('2025-12-04T10:00:00.000Z');
-          expect(json.traceRecords[1].createdAt).toBe('2025-12-04T11:00:00.000Z');
+          // Index 0 is registration (2025-12-03), index 1-2 are trace records
+          expect(json.traceRecords[0].createdAt).toBe('2025-12-03T09:00:00.000Z'); // Registration
+          expect(json.traceRecords[1].createdAt).toBe('2025-12-04T10:00:00.000Z');
+          expect(json.traceRecords[2].createdAt).toBe('2025-12-04T11:00:00.000Z');
         },
       });
     });
@@ -199,7 +210,60 @@ describe('GET /api/products/:id/trace-history', () => {
           const res = await fetch({ method: 'GET' });
           const json = await res.json();
 
-          expect(json.traceRecords[1].notes).toBeNull();
+          // Index 2 is second trace record (has null notes)
+          expect(json.traceRecords[2].notes).toBeNull();
+        },
+      });
+    });
+  });
+
+  // ==================== REGISTRATION EVENT (Story 9.3) ====================
+
+  describe('Registration Event', () => {
+    it('should include registration as first event', async () => {
+      await testApiHandler({
+        pagesHandler: handler,
+        params: { id: 'test-product-id' },
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          const json = await res.json();
+
+          expect(json.traceRecords[0].action).toBe('REGISTERED');
+          expect(json.traceRecords[0].id).toBe('registration');
+        },
+      });
+    });
+
+    it('should use product data for registration event', async () => {
+      await testApiHandler({
+        pagesHandler: handler,
+        params: { id: 'test-product-id' },
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          const json = await res.json();
+          const reg = json.traceRecords[0];
+
+          expect(reg.location).toBe('Hirsimäki Farm, Oulu');
+          expect(reg.actor.company).toBe('Hirsimäki Farm Oy');
+          expect(reg.actor.role).toBe('PRODUCER');
+          expect(reg.actor.name).toBe('Producer');
+          expect(reg.transactionHash).toBe('0xregistration1234567890abcdef1234567890abcdef1234567890abcdef12345678');
+          expect(reg.etherscanLink).toBe(
+            'https://sepolia.etherscan.io/tx/0xregistration1234567890abcdef1234567890abcdef1234567890abcdef12345678'
+          );
+        },
+      });
+    });
+
+    it('should have null notes for registration event', async () => {
+      await testApiHandler({
+        pagesHandler: handler,
+        params: { id: 'test-product-id' },
+        test: async ({ fetch }) => {
+          const res = await fetch({ method: 'GET' });
+          const json = await res.json();
+
+          expect(json.traceRecords[0].notes).toBeNull();
         },
       });
     });
@@ -251,7 +315,7 @@ describe('GET /api/products/:id/trace-history', () => {
       });
     });
 
-    it('should return correct total count', async () => {
+    it('should return correct total count including registration', async () => {
       (mockPrisma.traceRecord.count as jest.Mock).mockResolvedValueOnce(25);
 
       await testApiHandler({
@@ -261,7 +325,8 @@ describe('GET /api/products/:id/trace-history', () => {
           const res = await fetch({ method: 'GET' });
           const json = await res.json();
 
-          expect(json.total).toBe(25);
+          // Story 9.3: total = trace records + 1 registration
+          expect(json.total).toBe(26);
           expect(mockPrisma.traceRecord.count).toHaveBeenCalledWith({
             where: { productId: 'test-product-id' },
           });

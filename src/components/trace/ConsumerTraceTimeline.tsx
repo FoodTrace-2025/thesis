@@ -28,6 +28,7 @@ interface TraceRecord {
 }
 
 const ACTION_COLORS: Record<string, string> = {
+  REGISTERED: "status.registered",
   RECEIVED: "status.received",
   QUALITY_CHECK: "status.qualityChecked",
   SHIPPED: "status.shipped",
@@ -36,6 +37,7 @@ const ACTION_COLORS: Record<string, string> = {
 };
 
 const ACTION_LABELS: Record<string, string> = {
+  REGISTERED: "Product registered",
   RECEIVED: "Received at facility",
   QUALITY_CHECK: "Quality checked",
   SHIPPED: "Shipped to next location",

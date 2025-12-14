@@ -17,13 +17,13 @@ const theme = extendTheme({
     },
 
     status: {
+      registered: "#2F7D32",      // brand.primary green - first event
       received: "#3182CE",        // blue
-      qualityChecked: "#805AD5",   // purple
+      qualityChecked: "#805AD5",  // purple
       shipped: "#DD6B20",         // orange
       stocked: "#38A169",         // green
       sold: "#319795",            // teal
-      default: "#9CA3AF",       // gray fallback
-
+      default: "#9CA3AF",         // gray fallback
     },
 
   },
