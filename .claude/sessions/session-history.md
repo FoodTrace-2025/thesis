@@ -4,6 +4,20 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 87 (2025-12-14) - Chapter 8 Review & Citation Fix
+
+### Session 87 Achievements
+
+✅ **Chapter 8 Comprehensive Review**: Analyzed for Word copy readiness (diagrams, citations, bullet points, text limits)
+✅ **Citation Verification**: All 5 Chapter 8 citations verified against main references.md
+✅ **Citation Misattribution Fixed**: "80% wallet abandonment rate" → "significant wallet usability barriers" (Voskobojnikov 2021)
+✅ **Table 23 Analysis**: Confirmed properly formatted (10-13 words per cell, no changes needed)
+✅ **Writing Standards Compliance**: Word count ~1,200 (within 1,100-1,300 target), sequential table numbering verified
+
+**Impact:** Chapter 8 ready for Word copy. All 8 thesis chapters now complete in markdown.
+
+---
+
 ## Session 86 (2025-12-14) - Epic 10 Removed (Redundant Feature)
 
 ### Session 86 Achievements
@@ -149,19 +163,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 76 (2025-12-08) - Epic 13 Deployment Complete
-
-### Session 76 Achievements
-
-✅ **Epic 13 Complete**: All 5 stories (13.1-13.5) implemented and verified
-✅ **Production Deployment**: Live at https://foodtrace.onrender.com with auto-deploy from main
-✅ **Smoke Testing Verified**: Auth, products, transfers, QR scanner all working on production
-✅ **Mobile QR Scanner Verified**: Tested on Android phone - camera and scanning works
-✅ **Documentation Created**: README Live Demo section, docs/deployment.md guide
-✅ **Release Tagged**: v1.0.0-thesis-demo created and pushed to GitHub
-
-**Impact:** Production deployment complete. Thesis demo ready. Epic 9 pending (by TaiSheng/YiLing).
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (76-86). Older sessions (1-75) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (77-87). Older sessions (1-76) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
