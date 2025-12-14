@@ -4,6 +4,21 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
+## Session 86 (2025-12-14) - Epic 10 Removed (Redundant Feature)
+
+### Session 86 Achievements
+
+✅ **Epic 10 Review**: Story 10.4 Frontend UI implemented and tested (Verify button, VerificationBadge)
+✅ **Blockchain Roles Granted**: Created grant-roles.ts script to grant DISTRIBUTOR_ROLE/RETAILER_ROLE
+✅ **Critical Analysis**: Identified "Verify" function as redundant with existing "Quality Check" trace records
+✅ **Decision Made**: Epic 10 NOT IMPLEMENTED - separate verification adds no value over existing traces
+✅ **Code Reverted**: All Epic 10 changes removed (12 modified files reverted, 7 new files deleted)
+✅ **Documentation Updated**: Epic 10 PRD updated with "Decision: Not Implemented" section explaining rationale
+
+**Impact:** Scope optimization - redundant feature removed. Quality Check traces already serve as implicit verification.
+
+---
+
 ## Session 85 (2025-12-14) - Story 4.3 Public Landing Page Implemented
 
 ### Session 85 Achievements
@@ -149,19 +164,4 @@ This file contains the last 10 session achievements for historical reference.
 
 ---
 
-## Session 75 (2025-12-06) - Epic 9 Review + Stories Created
-
-### Session 75 Achievements
-
-✅ **Epic 9 Comprehensive Review**: Identified IoT/verification references to defer, technology mismatches fixed
-✅ **Epic 11 Merged into Epic 9**: QRScanner already exists from Epic 7, Epic 11 archived
-✅ **Best Practice Research**: GS1 Digital Link standards, registration as first event, back button UX
-✅ **Stories 9.1-9.4 Created**: Landing page, product detail, registration event, share/polish
-✅ **PRD/Architecture Updated**: Epic 9 rewritten, Epic 13 refs updated, routes corrected
-✅ **URL Format Standardized**: `/trace/{blockchainId}` matches existing QR codes
-
-**Impact:** Epic 9 ready for implementation. 4 stories created (~7 hours total). Epic 11 merged to avoid duplication.
-
----
-
-**Archive Note:** This file keeps only the last 10 sessions (75-85). Older sessions (1-74) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md
+**Archive Note:** This file keeps only the last 10 sessions (76-86). Older sessions (1-75) were removed per /recap command rules. For current session status, see /home/kala/Documents/GitHub/thesis/CLAUDE.md

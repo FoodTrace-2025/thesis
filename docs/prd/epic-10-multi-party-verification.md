@@ -1,6 +1,28 @@
 ### Epic 10: Multi-Party Verification (Optional)
 
-**Implementation Status**: Optional enhancement. Thesis Chapter 1.3.2 does not list multi-party verification as core objective. Recommended for future work if time permits after Week 6 checkpoint.
+## Decision: Not Implemented
+
+**Status:** Deliberately excluded from scope
+**Decision Date:** 2025-12-14
+**Rationale:**
+
+Epic 10's "Verify" function was determined to be **redundant** with existing functionality:
+
+1. **Quality Check trace records already serve as verification** - When a distributor adds a "Quality Check" trace record (Epic 7), they are implicitly attesting that they inspected and verified the product.
+
+2. **No distinct value** - A separate "Verify" button performs the same trust function as existing trace records, adding UI complexity without benefit.
+
+3. **Scope optimization** - Removing redundant features keeps the thesis POC focused and demonstrates deliberate architectural decision-making.
+
+**Alternative approach (if verification count needed in future):**
+- Derive verification count from unique companies that added "QUALITY_CHECK" trace records
+- No additional smart contract function required
+
+This decision aligns with best practices for scope management: explicitly documenting exclusions with rationale rather than leaving features unimplemented without explanation.
+
+---
+
+**Implementation Status**: ~~Optional enhancement~~ **NOT IMPLEMENTED** (see decision above)
 
 **Priority:** 🟢 Could Have (Optional Enhancement)
 **Estimated Time:** 4-6 hours (basic), 6-8 hours (with reputation)
