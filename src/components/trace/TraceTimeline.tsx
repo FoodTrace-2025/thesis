@@ -33,12 +33,17 @@ interface TraceRecord {
 
 // Action badge colors for visual distinction
 const ACTION_COLORS: Record<string, string> = {
-  RECEIVED: 'blue',
-  QUALITY_CHECK: 'purple',
-  SHIPPED: 'orange',
-  STOCKED: 'green',
-  SOLD: 'teal',
+  REGISTERED: "status.registered",
+  RECEIVED: "status.received",
+  QUALITY_CHECK: "status.qualityChecked",
+  SHIPPED: "status.shipped",
+  STOCKED: "status.stocked",
+  SOLD: "status.sold",
 };
+
+function getActionColor(action: string): string {
+  return ACTION_COLORS[action] || "status.default";
+}
 
 interface TraceTimelineProps {
   productId: string;
@@ -85,7 +90,7 @@ export function TraceTimeline({ productId }: TraceTimelineProps) {
   if (error) {
     return (
       <Center py={8}>
-        <Text color="red.500">{error}</Text>
+        <Text color="brand.error">{error}</Text>
       </Center>
     );
   }
@@ -114,71 +119,82 @@ export function TraceTimeline({ productId }: TraceTimelineProps) {
 
   return (
     <VStack spacing={0} align="stretch">
-      {records.map((record, index) => (
-        <Box key={record.id} position="relative">
-          {/* Timeline connector line */}
-          {index < records.length - 1 && (
-            <Box
-              position="absolute"
-              left="12px"
-              top="24px"
-              bottom="-12px"
-              width="2px"
-              bg="brand.border"
-            />
-          )}
+      {records.map((record, index) => {
+        const actionColor = getActionColor(record.action);
+        const label = record.action.replace('_', ' ')
+        return (
+          <Box key={record.id} position="relative">
+            {/* Timeline connector line */}
+            {index < records.length - 1 && (
+              <Box
+                position="absolute"
+                left="12px"
+                top="24px"
+                bottom="-12px"
+                width="2px"
+                bg="brand.border"
+              />
+            )}
 
-          <HStack align="flex-start" spacing={4} py={3}>
-            {/* Timeline dot with action-specific color */}
-            <Box
-              w="24px"
-              h="24px"
-              borderRadius="full"
-              bg={`${ACTION_COLORS[record.action] || 'gray'}.500`}
-              flexShrink={0}
-              mt={1}
-            />
-
-            {/* Content */}
-            <Box flex={1}>
-              <HStack spacing={2} mb={1} flexWrap="wrap">
-                <Badge colorScheme={ACTION_COLORS[record.action] || 'gray'}>
-                  {record.action.replace('_', ' ')}
-                </Badge>
-                <Text fontSize="sm" color="brand.muted">
-                  {new Date(record.createdAt).toLocaleString()}
-                </Text>
-              </HStack>
-
-              <Text fontWeight="medium" color="brand.dark">
-                {record.location}
-              </Text>
-
-              <Text fontSize="sm" color="brand.muted">
-                {record.actor.name} from {record.actor.company}
-              </Text>
-
-              {record.notes && (
-                <Text fontSize="sm" color="brand.muted" mt={1}>
-                  {record.notes}
-                </Text>
-              )}
-
-              <Link
-                href={record.etherscanLink}
-                isExternal
-                fontSize="xs"
-                color="brand.accent"
+            <HStack align="flex-start" spacing={4} py={3}>
+              {/* Timeline dot with action-specific color */}
+              <Box
+                w="24px"
+                h="24px"
+                borderRadius="full"
+                bg={actionColor}
+                flexShrink={0}
                 mt={1}
-                display="inline-flex"
-                alignItems="center"
-              >
-                Verify on Etherscan <ExternalLinkIcon mx="2px" />
-              </Link>
-            </Box>
-          </HStack>
-        </Box>
-      ))}
+              />
+
+              {/* Content */}
+              <Box flex={1}>
+                <HStack spacing={2} mb={1} flexWrap="wrap">
+                  <Badge
+                    borderRadius="full"
+                    px={3}
+                    borderWidth="1px"
+                    borderColor={actionColor}
+                    color={actionColor}
+                    bg="brand.surface"
+                  >
+                    {label}
+                  </Badge>
+                  <Text fontSize="sm" color="brand.muted">
+                    {new Date(record.createdAt).toLocaleString()}
+                  </Text>
+                </HStack>
+
+                <Text fontWeight="medium" color="brand.dark">
+                  {record.location}
+                </Text>
+
+                <Text fontSize="sm" color="brand.muted">
+                  {record.actor.name} from {record.actor.company}
+                </Text>
+
+                {record.notes && (
+                  <Text fontSize="sm" color="brand.muted" mt={1}>
+                    {record.notes}
+                  </Text>
+                )}
+
+                <Link
+                  href={record.etherscanLink}
+                  isExternal
+                  fontSize="xs"
+                  color="brand.accent"
+                  mt={1}
+                  display="inline-flex"
+                  alignItems="center"
+                >
+                  Verify on Etherscan <ExternalLinkIcon mx="2px" />
+                </Link>
+              </Box>
+            </HStack>
+          </Box>
+        );
+      })}
     </VStack>
   );
 }

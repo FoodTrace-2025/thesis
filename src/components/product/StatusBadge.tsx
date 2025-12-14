@@ -11,15 +11,23 @@ interface StatusBadgeProps {
 }
 
 const STATUS_CONFIG = {
-  IN_STOCK: { label: 'In Stock', colorScheme: 'green' },
-  SOLD: { label: 'Sold', colorScheme: 'gray' },
-  IN_TRANSIT: { label: 'In Transit', colorScheme: 'orange' },
+  IN_STOCK: { label: 'In Stock', color: 'status.stocked' },
+  SOLD: { label: 'Sold', color: 'status.default' },
+  IN_TRANSIT: { label: 'In Transit', color: 'status.shipped' },
 } as const;
 
 export function StatusBadge({ status }: StatusBadgeProps) {
   const config = STATUS_CONFIG[status];
   return (
-    <Badge colorScheme={config.colorScheme} fontSize="xs">
+    <Badge
+      fontSize="xs"
+      borderRadius="full"
+      px={3}
+      borderWidth="1px"
+      borderColor={config.color}
+      color={config.color}
+      bg="brand.surface"
+    >
       {config.label}
     </Badge>
   );
