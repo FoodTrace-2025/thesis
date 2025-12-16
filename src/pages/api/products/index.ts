@@ -22,7 +22,14 @@ const querySchema = z.object({
 });
 
 // Response types
-type ProductStatus = 'IN_STOCK' | 'SOLD' | 'IN_TRANSIT';
+type OnChainStatus =
+  | 'REGISTERED'
+  | 'RECEIVED'
+  | 'QUALITY_CHECK'
+  | 'SHIPPED'
+  | 'STOCKED'
+  | 'SOLD'
+  | 'REJECTED';
 
 interface ProductResponse {
   id: string;
@@ -31,7 +38,7 @@ interface ProductResponse {
   blockchainId: number;
   harvestDate: string;
   currentOwner: { name: string } | null;
-  status: ProductStatus;
+  status: OnChainStatus;
   createdAt: string;
   // Story 7.17: Shipping info (only for incoming=me)
   shippedBy?: { name: string };
@@ -60,6 +67,16 @@ type ApiResponse = SuccessResponse | ErrorResponse;
 async function getProductsWithStatus(
   products: { id: string; name: string; origin: string; blockchainId: number; harvestDate: Date; currentOwner: { name: string } | null; createdAt: Date }[]
 ): Promise<ProductResponse[]> {
+  const validStatuses: Set<OnChainStatus> = new Set([
+    'REGISTERED',
+    'RECEIVED',
+    'QUALITY_CHECK',
+    'SHIPPED',
+    'STOCKED',
+    'SOLD',
+    'REJECTED',
+  ]);
+
   return Promise.all(
     products.map(async (product) => {
       const lastTrace = await prisma.traceRecord.findFirst({
@@ -68,7 +85,9 @@ async function getProductsWithStatus(
         select: { action: true },
       });
 
-      const status: ProductStatus = lastTrace?.action === 'SOLD' ? 'SOLD' : 'IN_STOCK';
+      const rawAction = lastTrace?.action?.toString().toUpperCase() as OnChainStatus | undefined;
+      const status: OnChainStatus =
+        (rawAction && validStatuses.has(rawAction) && rawAction) || 'REGISTERED';
 
       return {
         id: product.id,
@@ -249,7 +268,7 @@ export default async function handler(
         prisma.product.count({ where: whereClause }),
       ]);
 
-      // Format response with IN_TRANSIT status and shipping info
+      // Format response with SHIPPED status and shipping info
       const formattedProducts: ProductResponse[] = products.map((product) => {
         const shippedTrace = product.traceRecords[0]; // Most recent SHIPPED trace to me
         return {
@@ -259,7 +278,7 @@ export default async function handler(
           blockchainId: product.blockchainId,
           harvestDate: product.harvestDate.toISOString(),
           currentOwner: product.currentOwner,
-          status: 'IN_TRANSIT' as ProductStatus,
+          status: 'SHIPPED',
           createdAt: product.createdAt.toISOString(),
           // Shipping info
           shippedBy: shippedTrace?.company ? { name: shippedTrace.company.name } : undefined,

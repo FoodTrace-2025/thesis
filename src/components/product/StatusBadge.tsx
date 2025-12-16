@@ -1,23 +1,45 @@
 // Story 7.12: Product Status Badge Component
 // Story 7.17: Added IN_TRANSIT status for incoming shipments
-// Displays IN_STOCK (green), SOLD (gray), or IN_TRANSIT (orange) status
+// Extended for on-chain statuses and REJECTED business status
 
 import { Badge } from '@chakra-ui/react';
 
-export type ProductStatus = 'IN_STOCK' | 'SOLD' | 'IN_TRANSIT';
+export type ProductStatus =
+  | 'IN_STOCK'
+  | 'SOLD'
+  | 'IN_TRANSIT'
+  | 'REGISTERED'
+  | 'RECEIVED'
+  | 'QUALITY_CHECK'
+  | 'SHIPPED'
+  | 'STOCKED'
+  | 'REJECTED';
 
 interface StatusBadgeProps {
-  status: ProductStatus;
+  status: ProductStatus | string;
 }
 
-const STATUS_CONFIG = {
-  IN_STOCK: { label: 'In Stock', color: 'status.stocked' },
-  SOLD: { label: 'Sold', color: 'status.default' },
-  IN_TRANSIT: { label: 'In Transit', color: 'status.shipped' },
-} as const;
+const STATUS_CONFIG: Record<
+  string,
+  { label: string; color: string }
+> = {
+  REGISTERED: { label: 'Registered', color: 'status.registered' },
+  RECEIVED: { label: 'Received', color: 'status.received' },
+  QUALITY_CHECK: { label: 'Quality Check', color: 'status.qualityChecked' },
+  SHIPPED: { label: 'Shipped', color: 'status.shipped' },
+  STOCKED: { label: 'Stocked', color: 'status.stocked' },
+  SOLD: { label: 'Sold', color: 'status.sold' },
+  REJECTED: { label: 'Rejected', color: 'brand.error' },
+
+  // Legacy statuses mapped to closest equivalents
+  IN_STOCK: { label: 'Stocked', color: 'status.stocked' },
+  IN_TRANSIT: { label: 'Shipped', color: 'status.shipped' },
+};
 
 export function StatusBadge({ status }: StatusBadgeProps) {
-  const config = STATUS_CONFIG[status];
+  const key = (status || '').toString().toUpperCase();
+  const config = STATUS_CONFIG[key] || { label: key || 'Unknown', color: 'status.default' };
+
   return (
     <Badge
       fontSize="xs"
