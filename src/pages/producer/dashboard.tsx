@@ -87,11 +87,7 @@ interface ProducerDashboardProps {
   companyName: string;
 }
 
-export default function ProducerDashboard({
-  userName,
-  userRole,
-  companyName,
-}: ProducerDashboardProps) {
+export default function ProducerDashboard({}: ProducerDashboardProps) {
   const router = useRouter();
   type TrendRange = '7d' | '30d' | '1y';
   // Product list state
@@ -124,8 +120,6 @@ export default function ProducerDashboard({
     fetchProducts();
   }, []);
 
-  const totalBatches = products.length;
-  const onChainRecords = products.length; // placeholder: assume 1 per product
   type TrendPoint = { label: string; value: number; raw: string };
 
   const filteredProducts = useMemo(() => {

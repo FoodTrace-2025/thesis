@@ -45,6 +45,15 @@ type OnChainStatus =
   | "SOLD"
   | "REJECTED";
 
+type ApiProduct = {
+  id: string;
+  name: string;
+  blockchainId: number;
+  harvestDate?: string;
+  createdAt: string;
+  status: ProductStatus | string;
+};
+
 const STATUS_OPTIONS: { value: OnChainStatus | "ALL"; label: string }[] = [
   { value: "ALL", label: "All statuses" },
   { value: "REGISTERED", label: "Registered" },
@@ -117,7 +126,7 @@ export default function ProducerBatchesPage() {
           setError(data.error || "Failed to fetch batches");
           return;
         }
-        const mapped: BatchRow[] = data.products.map((p: any) => ({
+        const mapped: BatchRow[] = (data.products as ApiProduct[]).map((p) => ({
           id: p.id,
           name: p.name,
           blockchainId: p.blockchainId,

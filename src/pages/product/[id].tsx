@@ -1,6 +1,6 @@
 // Product detail page for internal roles (producer/distributor/retailer)
 // Shows product summary and full trace timeline
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -10,7 +10,6 @@ import {
   Spinner,
   Center,
   Icon,
-  useToast,
   HStack,
   VStack,
 } from "@chakra-ui/react";
@@ -48,7 +47,6 @@ type ProductSummaryData = {
 
 export default function ProductDetailPage() {
   const router = useRouter();
-  const toast = useToast();
   const { id } = router.query;
 
   const [product, setProduct] = useState<ProductResponse | null>(null);
@@ -80,25 +78,6 @@ export default function ProductDetailPage() {
 
     fetchProduct();
   }, [id]);
-
-  const handleCopy = async (value: string, label: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      toast({
-        title: `${label} copied`,
-        status: "success",
-        duration: 2000,
-        isClosable: true,
-      });
-    } catch {
-      toast({
-        title: `Failed to copy ${label}`,
-        status: "error",
-        duration: 2000,
-        isClosable: true,
-      });
-    }
-  };
 
   if (isLoading) {
     return (

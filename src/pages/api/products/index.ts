@@ -67,7 +67,7 @@ type ApiResponse = SuccessResponse | ErrorResponse;
 async function getProductsWithStatus(
   products: { id: string; name: string; origin: string; blockchainId: number; harvestDate: Date; currentOwner: { name: string } | null; createdAt: Date }[]
 ): Promise<ProductResponse[]> {
-  const validStatuses: Set<OnChainStatus> = new Set([
+  const validStatuses: Set<OnChainStatus> = new Set<OnChainStatus>([
     'REGISTERED',
     'RECEIVED',
     'QUALITY_CHECK',
@@ -75,7 +75,7 @@ async function getProductsWithStatus(
     'STOCKED',
     'SOLD',
     'REJECTED',
-  ]);
+  ] as OnChainStatus[]);
 
   return Promise.all(
     products.map(async (product) => {
