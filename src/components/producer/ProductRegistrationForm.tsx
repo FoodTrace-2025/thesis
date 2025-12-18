@@ -2,7 +2,8 @@
 // Story 5.5: Product Registration Form Component
 // Story 5.6: Updated to use success modal with QR code
 
-import { useState, FormEvent, useRef, type RefObject } from 'react';
+import { useState, FormEvent, useRef, type RefObject, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import {
   Box,
   Button,
@@ -19,10 +20,25 @@ import {
   Flex,
   Divider,
   Icon,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalCloseButton,
+  useToast,
+  IconButton,
 } from '@chakra-ui/react';
 import { z } from 'zod';
 import { RegistrationSuccessModal } from './RegistrationSuccessModal';
-import { InfoIcon } from '@chakra-ui/icons';
+import { InfoIcon, CloseIcon,  } from '@chakra-ui/icons';
+import { FiMapPin } from "react-icons/fi";
+type SelectorMapProps = {
+  latLng: { lat: number | null; lng: number | null } | null;
+  onSelect: (coords: { lat: number; lng: number }) => void;
+  isOpen: boolean;
+};
 
 // Validation schema matching API (Story 5.3)
 const registerSchema = z.object({
@@ -60,6 +76,11 @@ export function ProductRegistrationForm() {
   const [harvestDate, setHarvestDate] = useState('');
   const [quantity, setQuantity] = useState('');
   const [expireDate, setExpireDate] = useState('');
+  const [latLng, setLatLng] = useState<{ lat: number | null; lng: number | null }>({
+    lat: null,
+    lng: null,
+  });
+  const [isLocating, setIsLocating] = useState(false);
 
   // UI state
   const [isLoading, setIsLoading] = useState(false);
@@ -71,12 +92,19 @@ export function ProductRegistrationForm() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const certInputRef = useRef<HTMLInputElement | null>(null);
+  const mapDisclosure = useDisclosure();
+  const [mapSelection, setMapSelection] = useState<{ lat: number; lng: number } | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<{
+    image?: File;
+    cert?: File;
+  }>({});
+  const [isLocatingInModal, setIsLocatingInModal] = useState(false);
+  const toast = useToast();
 
-  const handleFileChange = (fileList: FileList | null) => {
-    // Placeholder for future upload integration
-    if (!fileList || fileList.length === 0) return;
-    // We purposely do nothing except avoid unused warnings.
-  };
+  const SelectorMap = dynamic<SelectorMapProps>(
+    async () => (await import('./SelectorMap')).SelectorMap,
+    { ssr: false }
+  );
 
   const validateForm = (): boolean => {
     const result = registerSchema.safeParse({ name, origin, harvestDate });
@@ -104,8 +132,19 @@ export function ProductRegistrationForm() {
     try {
       const response = await fetch('/api/products/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, origin, harvestDate }),
+        body: (() => {
+          const formData = new FormData();
+          formData.append('name', name);
+          formData.append('origin', origin);
+          formData.append('harvestDate', harvestDate);
+          if (quantity) formData.append('quantity', quantity);
+          if (expireDate) formData.append('expireDate', expireDate);
+          if (latLng.lat !== null) formData.append('lat', String(latLng.lat));
+          if (latLng.lng !== null) formData.append('lng', String(latLng.lng));
+          if (selectedFiles.image) formData.append('productImage', selectedFiles.image);
+          if (selectedFiles.cert) formData.append('certificate', selectedFiles.cert);
+          return formData;
+        })(),
       });
 
       const data = await response.json();
@@ -142,11 +181,53 @@ export function ProductRegistrationForm() {
     setHarvestDate('');
     setQuantity('');
     setExpireDate('');
+    setLatLng({ lat: null, lng: null });
+    setSelectedFiles({});
     setErrors({});
     setApiError('');
     setSuccessData(null);
     onClose(); // Close modal (Story 5.6)
   };
+
+  const reverseGeocode = async (lat: number, lng: number) => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+      );
+      const data = await res.json();
+      const city =
+        data?.address?.city || data?.address?.town || data?.address?.village || data?.address?.hamlet;
+      const state = data?.address?.state;
+      const country = data?.address?.country;
+      const displayName = data?.display_name;
+      const formatted =
+        city || state || country
+          ? `${city ?? ''}${state ? `${city ? ', ' : ''}${state}` : ''}${
+              country ? `${city || state ? ', ' : ''}${country}` : ''
+            }`
+          : displayName || '';
+      if (formatted) setOrigin(formatted);
+      return formatted;
+    } catch {
+      // silent fallback
+      return '';
+    }
+  };
+
+  useEffect(() => {
+    if (!navigator?.geolocation) return;
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setLatLng({ lat: latitude, lng: longitude });
+        reverseGeocode(latitude, longitude);
+        setIsLocating(false);
+      },
+      () => setIsLocating(false),
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  }, []);
 
   // Form with modal (Story 5.6 - replaced inline success state with modal)
   return (
@@ -235,11 +316,11 @@ export function ProductRegistrationForm() {
             </FormControl>
           </SimpleGrid>
 
-          <FormControl isInvalid={!!errors.origin}>
-            <FormLabel color="brand.dark">Origin</FormLabel>
-            <Flex gap={3} direction={{ base: 'column', md: 'row' }}>
-              <Input
-                flex="1"
+            <FormControl isInvalid={!!errors.origin}>
+              <FormLabel color="brand.dark">Origin</FormLabel>
+              <Flex gap={3} direction={{ base: 'column', md: 'row' }}>
+                <Input
+                  flex="1"
                 value={origin}
                 onChange={(e) => {
                   setOrigin(e.target.value);
@@ -247,16 +328,23 @@ export function ProductRegistrationForm() {
                 }}
                 placeholder="Automatically loaded: City, Province"
                 isDisabled={isLoading}
-              />
-              <Button variant="outline" minW={{ base: '100%', md: '160px' }} isDisabled>
+                />
+              <Button
+                variant="outline"
+                minW={{ base: '100%', md: '160px' }}
+                leftIcon={<FiMapPin />}
+                onClick={mapDisclosure.onOpen}
+              >
                 Select on Map
               </Button>
-            </Flex>
-            <FormErrorMessage>{errors.origin}</FormErrorMessage>
-            <Text fontSize="xs" color="brand.muted" mt={1}>
-              Lat: — &nbsp; Lng: —
-            </Text>
-          </FormControl>
+              </Flex>
+              <FormErrorMessage>{errors.origin}</FormErrorMessage>
+              <Text fontSize="xs" color="brand.muted" mt={1}>
+                {isLocating
+                  ? 'Detecting location...'
+                  : `Lat: ${latLng.lat ?? '—'}  Lng: ${latLng.lng ?? '—'}`}
+              </Text>
+            </FormControl>
 
           <Divider />
 
@@ -269,14 +357,30 @@ export function ProductRegistrationForm() {
               title="Upload Product Image"
               description="Upload PNG/JPG, max 5MB."
               inputRef={imageInputRef}
-              onFileChange={(files) => handleFileChange(files)}
+              file={selectedFiles.image}
+              accept="image/png,image/jpeg"
+              onFileChange={(files) => {
+                if (files && files[0]) setSelectedFiles((prev) => ({ ...prev, image: files[0] }));
+              }}
+              onRemove={() => {
+                setSelectedFiles((prev) => ({ ...prev, image: undefined }));
+                if (imageInputRef.current) imageInputRef.current.value = '';
+              }}
               isDisabled={isLoading}
             />
             <UploadCard
               title="Upload Certificate"
               description="Upload PDF/JPG, max 5MB."
               inputRef={certInputRef}
-              onFileChange={(files) => handleFileChange(files)}
+              accept="application/pdf,image/png,image/jpeg"
+              file={selectedFiles.cert}
+              onFileChange={(files) => {
+                if (files && files[0]) setSelectedFiles((prev) => ({ ...prev, cert: files[0] }));
+              }}
+              onRemove={() => {
+                setSelectedFiles((prev) => ({ ...prev, cert: undefined }));
+                if (certInputRef.current) certInputRef.current.value = '';
+              }}
               isDisabled={isLoading}
             />
           </SimpleGrid>
@@ -302,6 +406,69 @@ export function ProductRegistrationForm() {
           )}
         </VStack>
       </Box>
+
+      {/* Map Modal */}
+      <Modal isOpen={mapDisclosure.isOpen} onClose={mapDisclosure.onClose} size="xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Select Location</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <SelectorMap
+              latLng={mapSelection || latLng}
+              onSelect={(coords) => setMapSelection(coords)}
+              isOpen={mapDisclosure.isOpen}
+            />
+            <Text fontSize="sm" color="brand.muted" mt={2}>
+              Click on the map to set a location.
+            </Text>
+          </ModalBody>
+          <ModalFooter gap={3}>
+            <Button variant="outline" onClick={mapDisclosure.onClose}>
+              Cancel
+            </Button>
+            <Button
+              variant="outline"
+              isLoading={isLocatingInModal}
+              isDisabled={isLocatingInModal}
+              onClick={() => {
+                if (!navigator?.geolocation) {
+                  toast({ title: 'Failed to get current location', status: 'error', duration: 2000, isClosable: true });
+                  return;
+                }
+                setIsLocatingInModal(true);
+                navigator.geolocation.getCurrentPosition(
+                  async (pos) => {
+                    const { latitude, longitude } = pos.coords;
+                    setMapSelection({ lat: latitude, lng: longitude });
+                    setLatLng({ lat: latitude, lng: longitude });
+                    await reverseGeocode(latitude, longitude);
+                    setIsLocatingInModal(false);
+                  },
+                  () => {
+                    setIsLocatingInModal(false);
+                    toast({ title: 'Failed to get current location', status: 'error', duration: 2000, isClosable: true });
+                  },
+                  { enableHighAccuracy: true, timeout: 8000 }
+                );
+              }}
+            >
+              Use current location
+            </Button>
+            <Button
+              onClick={async () => {
+                if (mapSelection) {
+                  setLatLng(mapSelection);
+                  await reverseGeocode(mapSelection.lat, mapSelection.lng);
+                }
+                mapDisclosure.onClose();
+              }}
+            >
+              Use this location
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
@@ -311,12 +478,18 @@ function UploadCard({
   description,
   inputRef,
   onFileChange,
+  file,
+  accept,
+  onRemove,
   isDisabled,
 }: {
   title: string;
   description: string;
   inputRef: RefObject<HTMLInputElement>;
   onFileChange: (files: FileList | null) => void;
+  file?: File;
+  accept?: string;
+  onRemove?: () => void;
   isDisabled?: boolean;
 }) {
   return (
@@ -340,23 +513,65 @@ function UploadCard({
         bg="brand.surfaceAlt"
         p={6}
         textAlign="center"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          const files = e.dataTransfer.files;
+          if (!files || files.length === 0) return;
+          onFileChange(files);
+        }}
       >
-        <Icon as={InfoIcon} color="brand.muted" boxSize={6} mb={2} />
-        <Text fontSize="sm" color="brand.muted" mb={3}>
-          Drop file or Browse
-        </Text>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => inputRef.current?.click()}
-          isDisabled={isDisabled}
-        >
-          Browse
-        </Button>
+        {file ? (
+          <Flex
+            align="center"
+            justify="space-between"
+            bg="brand.surface"
+            borderWidth="1px"
+            borderColor="brand.border"
+            borderRadius="md"
+            p={2}
+            mb={3}
+            gap={3}
+          >
+            <Flex align="center" gap={2}>
+              <Icon as={InfoIcon} color="brand.primary" boxSize={5} />
+              <Text fontSize="sm" color="brand.dark">
+                {file.name}
+              </Text>
+            </Flex>
+            <IconButton
+              aria-label="Remove file"
+              icon={<CloseIcon />}
+              size="sm"
+              variant="ghost"
+              color="brand.error"
+              onClick={onRemove}
+              isDisabled={isDisabled}
+            />
+          </Flex>
+        ) : (
+          <>
+            <Icon as={InfoIcon} color="brand.muted" boxSize={6} mb={2} />
+            <Text fontSize="sm" color="brand.muted" mb={3}>
+              Drop file or Browse
+            </Text>
+          </>
+        )}
+        <Flex justify="center">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => inputRef.current?.click()}
+            isDisabled={isDisabled}
+          >
+            Browse
+          </Button>
+        </Flex>
         <Input
           ref={inputRef}
           type="file"
           display="none"
+          accept={accept}
           onChange={(e) => onFileChange(e.target.files)}
         />
       </Box>
