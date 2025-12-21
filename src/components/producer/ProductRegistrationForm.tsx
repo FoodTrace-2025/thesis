@@ -132,19 +132,19 @@ export function ProductRegistrationForm() {
     try {
       const response = await fetch('/api/products/register', {
         method: 'POST',
-        body: (() => {
-          const formData = new FormData();
-          formData.append('name', name);
-          formData.append('origin', origin);
-          formData.append('harvestDate', harvestDate);
-          if (quantity) formData.append('quantity', quantity);
-          if (expireDate) formData.append('expireDate', expireDate);
-          if (latLng.lat !== null) formData.append('lat', String(latLng.lat));
-          if (latLng.lng !== null) formData.append('lng', String(latLng.lng));
-          if (selectedFiles.image) formData.append('productImage', selectedFiles.image);
-          if (selectedFiles.cert) formData.append('certificate', selectedFiles.cert);
-          return formData;
-        })(),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          origin,
+          harvestDate,
+          quantity,
+          expireDate,
+          lat: latLng.lat,
+          lng: latLng.lng,
+          // File uploads are disabled in this JSON-only submission
+          productImage: null,
+          certificate: null,
+        }),
       });
 
       const data = await response.json();
@@ -192,7 +192,7 @@ export function ProductRegistrationForm() {
   const reverseGeocode = async (lat: number, lng: number) => {
     try {
       const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=en`
       );
       const data = await res.json();
       const city =

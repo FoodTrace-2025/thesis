@@ -25,6 +25,7 @@ type ProductResponse = {
   origin: string;
   blockchainId: number;
   harvestDate: string | null;
+  expireDate?: string | null;
   transactionHash: string | null;
   status?: ProductStatus;
   company: { name: string } | null;
@@ -39,7 +40,7 @@ type ProductSummaryData = {
   originFarm: string;
   originLocation: string;
   productionDate: string;
-  bestBefore: string;
+  expireDate: string;
   certification?: string;
   blockchainStatus: "VERIFIED" | "PENDING" | "ERROR";
   lastUpdated: string;
@@ -114,7 +115,9 @@ export default function ProductDetailPage() {
     productionDate: product.harvestDate
       ? new Date(product.harvestDate).toLocaleDateString()
       : "Not available",
-    bestBefore: "Not available",
+    expireDate: product.expireDate
+      ? new Date(product.expireDate).toLocaleDateString()
+      : "Not available",
     certification: "Not available",
     blockchainStatus: "VERIFIED",
     lastUpdated: new Date(product.createdAt).toLocaleString(),
