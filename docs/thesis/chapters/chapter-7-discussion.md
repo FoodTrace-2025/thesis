@@ -127,20 +127,15 @@ The 12-week thesis timeline required prioritization decisions. IoT sensor integr
 
 **Rationale for IoT Deferral:**
 
-1. **Core Value First:** The thesis problem statement addresses "accessibility-decentralization trade-off", specifically wallet-free consumer access and blockchain traceability demonstration. IoT sensors add automation but are not essential to validating core thesis claims. Manual trace entry demonstrates the same blockchain traceability with less implementation complexity.
-
-2. **Timeline Reality:** Epic 7 (Supply Chain Tracking) required 17 stories and substantial debugging (trace API 500 errors, ownership transfer logic, dashboard tabs). Adding Epic 8 IoT complexity risked incomplete core features.
-
-3. **Foundation Before Enhancement:** The current implementation provides a stable foundation on which IoT integration can be built. Manual entry validates the blockchain architecture; IoT would replace the data entry mechanism without changing the immutability or transparency properties.
+The decision to defer IoT integration reflects three considerations. First, the thesis problem statement addresses the "accessibility-decentralization trade-off," specifically wallet-free consumer access and blockchain traceability demonstration. IoT sensors add automation but are not essential to validating core thesis claims; manual trace entry demonstrates the same blockchain traceability with less implementation complexity. Second, timeline reality constrained the scope: Epic 7 (Supply Chain Tracking) required 17 stories and substantial debugging (trace API 500 errors, ownership transfer logic, dashboard tabs), and adding Epic 8 IoT complexity risked incomplete core features. Third, the current implementation provides a stable foundation on which IoT integration can be built. Manual entry validates the blockchain architecture; IoT would replace the data entry mechanism without changing the immutability or transparency properties.
 
 **What Was Preserved:**
-- Complete 4-role supply chain workflow (Producer → Distributor → Retailer → Consumer)
-- Blockchain immutability and public verifiability via Etherscan
-- Wallet-free consumer access pattern (core accessibility innovation)
-- Role-based access control with ownership transfers
-- Dashboard UX with tabs, incoming shipments, and QR scanning
 
-**Academic Integrity Note:** This thesis honestly documents scope reduction rather than claiming features that were not implemented. The IoT design is documented in Chapter 8 Future Work, demonstrating that the capability was designed even if not built. This approach aligns with academic standards for POC validation where documenting limitations is as valuable as documenting successes.
+The scope reduction preserved all core functionality: the complete 4-role supply chain workflow (Producer → Distributor → Retailer → Consumer), blockchain immutability and public verifiability via Etherscan, the wallet-free consumer access pattern representing the core accessibility innovation, role-based access control with ownership transfers, and dashboard UX with tabs, incoming shipments, and QR scanning.
+
+**Academic Integrity Note:** 
+
+This thesis honestly documents scope reduction rather than claiming features that were not implemented. The IoT design is documented in Chapter 8 Future Work, demonstrating that the capability was designed even if not built. This approach aligns with academic standards for POC validation where documenting limitations is as valuable as documenting successes.
 
 ### 7.3.5 User Experience Barriers
 

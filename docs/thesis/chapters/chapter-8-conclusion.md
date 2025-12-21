@@ -40,15 +40,7 @@ The work challenges assumptions that public blockchains are unsuitable for small
 
 ## 8.4 Limitations
 
-This thesis honestly documents several constraints inherent to the proof-of-concept scope:
-
-**Economic Constraints:** Gas costs (~€0.30 per product journey on Layer 1) require optimization or Layer 2 migration for production viability. The Sepolia testnet deployment masks true mainnet costs.
-
-**Oracle Problem:** Blockchain guarantees data immutability but not accuracy at input—the fundamental "garbage in, garbage out" challenge. Multi-party verification provides social consensus but not cryptographic proof of real-world truth.
-
-**Regulatory Compliance:** GDPR "right to erasure" conflicts with blockchain immutability. The hybrid architecture partially addresses this (personal data deletable off-chain), but wallet addresses and timestamps persist permanently on-chain.
-
-**Scope Reduction:** IoT sensor integration (Epic 8) was deferred due to timeline constraints. The current implementation validates blockchain traceability through manual data entry; IoT would automate collection without changing immutability properties.
+This thesis honestly documents several constraints inherent to the proof-of-concept scope. Economic constraints present the first limitation: gas costs (~€0.30 per product journey on Layer 1) require optimization or Layer 2 migration for production viability, and the Sepolia testnet deployment masks true mainnet costs. The oracle problem represents a fundamental limitation, as blockchain guarantees data immutability but not accuracy at input—the "garbage in, garbage out" challenge. Multi-party verification provides social consensus but not cryptographic proof of real-world truth. Regulatory compliance conflicts also exist, particularly regarding GDPR "right to erasure" which conflicts with blockchain immutability. The hybrid architecture partially addresses this by keeping personal data deletable off-chain, but wallet addresses and timestamps persist permanently on-chain. Finally, scope reduction affected the implementation: IoT sensor integration (Epic 8) was deferred due to timeline constraints. The current implementation validates blockchain traceability through manual data entry; IoT would automate collection without changing immutability properties.
 
 These limitations are not failures but honest documentation appropriate for bachelor's thesis POC scope.
 

@@ -86,11 +86,7 @@ FIGURE 8. Data structures of ProductRegistry contract
 
 **Design Decision - String Storage vs Hash-Based:**
 
-The implementation stores product and trace data as Solidity strings rather than bytes32 hashes. This decision prioritized code clarity and development speed over gas optimization:
-
-- **Trade-off accepted:** Higher gas costs (~190,000-207,000 gas per registration vs ~60,000 with hash-based approach)
-- **Benefit gained:** Simplified development with no off-chain hash computation, no hash verification logic, and readable data directly on-chain
-- **POC justification:** Sepolia testnet has zero real costs; gas optimization deferred to production phase
+The implementation stores product and trace data as Solidity strings rather than bytes32 hashes. This decision prioritized code clarity and development speed over gas optimization. The accepted trade-off is higher gas costs (~190,000-207,000 gas per registration compared to ~60,000 with hash-based approaches), but the benefit gained is simplified development with no off-chain hash computation, no hash verification logic, and readable data directly on-chain. Since Sepolia testnet has zero real costs, gas optimization was deferred to the production phase.
 
 This illustrates the academic value of documenting trade-offs: future implementations can adopt hash-based storage patterns referenced in Chapter 2.3 to achieve 40-60% gas reduction.
 
@@ -231,26 +227,15 @@ This chapter detailed the smart contract implementation addressing Research Ques
 
 **Key Achievements:**
 
-- One deployed, verified contract (ProductRegistry) on Sepolia testnet at `0x5d56f5a8703d7d545319177042cd91FD3339E2b6`
-- 100% statement coverage for smart contract (37 tests, exceeds >70% target)
-- Role-based access control (PRODUCER, DISTRIBUTOR, RETAILER, ADMIN) preventing unauthorized modifications
-- Public verifiability via Etherscan enabling independent audit trail verification
-- Unified contract design combining product registration and trace recording
+The implementation resulted in one deployed, verified contract (ProductRegistry) on Sepolia testnet at `0x5d56f5a8703d7d545319177042cd91FD3339E2b6`, achieving 100% statement coverage for the smart contract (37 tests, exceeding the >70% target). The contract implements role-based access control (PRODUCER, DISTRIBUTOR, RETAILER, ADMIN) preventing unauthorized modifications, with public verifiability via Etherscan enabling independent audit trail verification. The unified contract design combines product registration and trace recording in a single deployment.
 
 **Implementation Insights:**
 
-- String storage prioritized code clarity over gas optimization, a documented trade-off with academic value
-- Event-driven architecture enables off-chain indexing without prohibitive query costs
-- Test-driven development caught harvest date validation vulnerability before deployment
-- Role granting integration required secure wallet handling (AES-256-GCM decryption in API routes)
+String storage prioritized code clarity over gas optimization, a documented trade-off with academic value. The event-driven architecture enables off-chain indexing without prohibitive query costs. Test-driven development caught the harvest date validation vulnerability before deployment, demonstrating the value of systematic security testing. Role granting integration required secure wallet handling through AES-256-GCM decryption in API routes.
 
 **Acknowledged Constraints:**
 
-- Testnet deployment doesn't reflect real economic costs (Sepolia ETH has no monetary value)
-- Higher gas costs (~190k per call) due to string storage vs hash-based alternatives (~60k)
-- Oracle problem: cannot verify off-chain data authenticity without trusted hardware
-- Scalability limitations: Layer 1 Ethereum throughput (15-30 TPS) inadequate for national-scale traceability
-- IoT sensor integration (Epic 8) deferred to future work (see Chapter 8 for proposed design)
+The testnet deployment does not reflect real economic costs since Sepolia ETH has no monetary value, and higher gas costs (~190k per call) result from string storage compared to hash-based alternatives (~60k). The oracle problem remains unresolved: the smart contract cannot verify off-chain data authenticity without trusted hardware. Scalability limitations also apply, as Layer 1 Ethereum throughput (15-30 TPS) is inadequate for national-scale traceability. IoT sensor integration (Epic 8) was deferred to future work; see Chapter 8 for the proposed design.
 
 Next chapter (Chapter 5: System Implementation) describes the Web3 integration, backend API, and frontend interfaces connecting users to this smart contract.
 

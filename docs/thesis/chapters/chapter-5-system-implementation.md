@@ -182,23 +182,15 @@ This chapter demonstrated the supporting system components connecting users to t
 
 **Key Achievements:**
 
-- Custodial wallet pattern eliminating MetaMask requirement for business users
-- Wallet-free consumer access via public RPC queries (no wallet installation needed)
-- Role-based dashboards with tab navigation for Producer, Distributor, and Retailer
-- QR code scanning for product lookup via html5-qrcode library
-- Incoming shipments workflow with recipient selection and accept functionality
-- Responsive mobile-first design optimized for QR scanning
+The implementation delivers a custodial wallet pattern eliminating the MetaMask requirement for business users, alongside wallet-free consumer access via public RPC queries requiring no wallet installation. Role-based dashboards with tab navigation serve Producer, Distributor, and Retailer users, while QR code scanning for product lookup is implemented via the html5-qrcode library. The incoming shipments workflow includes recipient selection and accept functionality, with responsive mobile-first design optimized for QR scanning.
 
 **Correspondence to Literature:**
 
-- Section 2.4.1 (Custodial Wallet Patterns) → Custodial wallet implementation with AES-256-GCM encryption
-- Section 2.4.2 (Wallet-Free Consumer Access) → Consumer interface requiring no wallet
+The implementation corresponds directly to the literature review: Section 2.4.1 (Custodial Wallet Patterns) informed the custodial wallet implementation with AES-256-GCM encryption, while Section 2.4.2 (Wallet-Free Consumer Access) guided the consumer interface design requiring no wallet.
 
 **Limitations Acknowledged:**
 
-- Custodial wallet centralization risk (platform holds private keys)
-- RPC provider centralization (Alchemy as single point of failure)
-- IoT sensor integration deferred to future work (see Chapter 8)
+The custodial wallet pattern introduces centralization risk since the platform holds private keys. RPC provider centralization also exists with Alchemy serving as a single point of failure. IoT sensor integration was deferred to future work; see Chapter 8 for the proposed design.
 
 Next chapter (Chapter 6: Results and Testing) presents performance metrics, test coverage results, and system validation.
 
