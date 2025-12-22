@@ -2,11 +2,11 @@ import { render, screen, waitFor } from "@/test/test-utils";
 import { ConsumerTraceTimeline } from "./ConsumerTraceTimeline";
 
 describe("ConsumerTraceTimeline", () => {
-  const mockFetch = jest.fn<Promise<Response>, [RequestInfo | URL, RequestInit?]>();
-  global.fetch = mockFetch as unknown as typeof fetch;
+  const originalFetch = global.fetch as typeof fetch;
 
   afterEach(() => {
     jest.clearAllMocks();
+    global.fetch = originalFetch;
   });
 
   it("renders timeline records when fetch succeeds", async () => {
@@ -19,7 +19,6 @@ describe("ConsumerTraceTimeline", () => {
             action: "REGISTERED",
             location: "Farm A",
             notes: null,
-            expireDate: null,
             actor: { name: "Alice", role: "PRODUCER", company: "Farm Co" },
             transactionHash: "0x123",
             etherscanLink: "https://example.com/tx/0x123",
@@ -29,7 +28,8 @@ describe("ConsumerTraceTimeline", () => {
       }),
     };
 
-    mockFetch.mockResolvedValue(mockResponse as unknown as Response);
+    // @ts-expect-error mock fetch
+    global.fetch = jest.fn(() => Promise.resolve(mockResponse));
 
     render(<ConsumerTraceTimeline productId="test-id" />);
 
@@ -46,7 +46,8 @@ describe("ConsumerTraceTimeline", () => {
       json: async () => ({ error: "Product not found" }),
     };
 
-    mockFetch.mockResolvedValue(mockResponse as unknown as Response);
+    // @ts-expect-error mock fetch
+    global.fetch = jest.fn(() => Promise.resolve(mockResponse));
 
     render(<ConsumerTraceTimeline productId="missing-id" />);
 
@@ -61,7 +62,8 @@ describe("ConsumerTraceTimeline", () => {
       json: async () => ({ traceRecords: [] }),
     };
 
-    mockFetch.mockResolvedValue(mockResponse as unknown as Response);
+    // @ts-expect-error mock fetch
+    global.fetch = jest.fn(() => Promise.resolve(mockResponse));
 
     render(<ConsumerTraceTimeline productId="empty" />);
 

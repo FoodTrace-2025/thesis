@@ -5,9 +5,8 @@ import { render, screen, fireEvent, waitFor } from '@/test/test-utils';
 import userEvent from '@testing-library/user-event';
 import { TraceRecordForm } from './TraceRecordForm';
 
-// Mock fetch (default success for all tests)
-const mockFetch = jest.fn<Promise<Response>, [RequestInfo | URL, RequestInit?]>();
-global.fetch = mockFetch as unknown as typeof fetch;
+// Mock fetch
+global.fetch = jest.fn();
 
 // Mock useToast
 const mockToast = jest.fn();
@@ -28,7 +27,7 @@ describe('TraceRecordForm', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockFetch.mockResolvedValue({
+    (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => ({
         success: true,
@@ -36,7 +35,6 @@ describe('TraceRecordForm', () => {
           id: 'trace-1',
           action: 'RECEIVED',
           transactionHash: '0x1234567890abcdef',
-          expireDate: null,
         },
       }),
     });
@@ -285,19 +283,29 @@ describe('TraceRecordForm', () => {
     });
 
     it('should show error toast on API error', async () => {
-      // With all fetch calls mocked as success, ensure no error message appears
       const user = userEvent.setup();
+
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({
+          error: 'Unauthorized',
+        }),
+      });
+
       render(<TraceRecordForm {...defaultProps} />);
 
+      // Fill form
       const select = screen.getByRole('combobox');
       await user.selectOptions(select, 'RECEIVED');
+
       const locationInput = screen.getByPlaceholderText(/Helsinki Distribution Center/i);
       await user.type(locationInput, 'Test');
+
       const submitButton = screen.getByRole('button', { name: /Add Trace Record/i });
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.queryByText('Unauthorized')).not.toBeInTheDocument();
+        expect(screen.getByText('Unauthorized')).toBeInTheDocument();
       });
     });
 
@@ -342,36 +350,52 @@ describe('TraceRecordForm', () => {
     });
 
     it('should handle network errors', async () => {
-      // With fetch mocked to success, network error path should not surface
       const user = userEvent.setup();
+
+      (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
+
       render(<TraceRecordForm {...defaultProps} />);
 
+      // Fill form
       const select = screen.getByRole('combobox');
       await user.selectOptions(select, 'RECEIVED');
+
       const locationInput = screen.getByPlaceholderText(/Helsinki Distribution Center/i);
       await user.type(locationInput, 'Test');
+
       const submitButton = screen.getByRole('button', { name: /Add Trace Record/i });
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.queryByText(/Network error/i)).not.toBeInTheDocument();
+        expect(screen.getByText(/Network error. Please try again./i)).toBeInTheDocument();
       });
     });
 
     it('should handle API validation errors', async () => {
-      // With fetch mocked to success, no validation error should render
       const user = userEvent.setup();
+
+      (global.fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({
+          code: 'VALIDATION_ERROR',
+          details: [{ path: ['location'], message: 'Location is invalid' }],
+        }),
+      });
+
       render(<TraceRecordForm {...defaultProps} />);
 
+      // Fill form
       const select = screen.getByRole('combobox');
       await user.selectOptions(select, 'RECEIVED');
+
       const locationInput = screen.getByPlaceholderText(/Helsinki Distribution Center/i);
       await user.type(locationInput, 'Test');
+
       const submitButton = screen.getByRole('button', { name: /Add Trace Record/i });
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.queryByText('Location is invalid')).not.toBeInTheDocument();
+        expect(screen.getByText('Location is invalid')).toBeInTheDocument();
       });
     });
   });

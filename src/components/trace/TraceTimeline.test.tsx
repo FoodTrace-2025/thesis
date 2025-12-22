@@ -5,8 +5,7 @@ import { render, screen, waitFor } from '@/test/test-utils';
 import { TraceTimeline } from './TraceTimeline';
 
 // Mock fetch
-const mockFetch = jest.fn<Promise<Response>, [RequestInfo | URL, RequestInit?]>();
-global.fetch = mockFetch as unknown as typeof fetch;
+global.fetch = jest.fn();
 
 describe('TraceTimeline', () => {
   const mockTraceRecords = [
@@ -44,7 +43,7 @@ describe('TraceTimeline', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockFetch.mockResolvedValue({
+    (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => ({
         success: true,
@@ -62,7 +61,6 @@ describe('TraceTimeline', () => {
     it('should show spinner while loading', async () => {
       // Delay the fetch response
       (global.fetch as jest.Mock).mockImplementationOnce(
-        // @ts-expect-error partial mock response
         () =>
           new Promise((resolve) =>
             setTimeout(
@@ -100,7 +98,6 @@ describe('TraceTimeline', () => {
   describe('Empty state', () => {
     it('should show empty state when no records', async () => {
       (global.fetch as jest.Mock).mockResolvedValueOnce({
-        // @ts-expect-error partial mock response
         ok: true,
         json: async () => ({
           success: true,
@@ -211,7 +208,6 @@ describe('TraceTimeline', () => {
   describe('Error state', () => {
     it('should show error message on fetch failure', async () => {
       (global.fetch as jest.Mock).mockResolvedValueOnce({
-        // @ts-expect-error partial mock response
         ok: false,
         json: async () => ({
           error: 'Product not found',
@@ -227,7 +223,6 @@ describe('TraceTimeline', () => {
 
     it('should show network error message on network failure', async () => {
       (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
-      // ensure promise rejection handled
 
       render(<TraceTimeline productId="test-product-123" />);
 
@@ -238,7 +233,6 @@ describe('TraceTimeline', () => {
 
     it('should show default error message when no error in response', async () => {
       (global.fetch as jest.Mock).mockResolvedValueOnce({
-        // @ts-expect-error partial mock response
         ok: false,
         json: async () => ({}),
       });
