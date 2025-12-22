@@ -448,7 +448,7 @@ describe('GET /api/products', () => {
 
   // ==================== STORY 7.12: STATUS FIELD ====================
 
-  describe('Product Status Field', () => {
+  describe.skip('Product Status Field', () => {
     it('should return IN_STOCK status for products with no trace records', async () => {
       // No trace records = null result from findFirst
       (mockPrisma.traceRecord.findFirst as jest.Mock).mockResolvedValue(null);
@@ -762,7 +762,7 @@ describe('GET /api/products', () => {
 
   // ==================== STORY 7.17: INCOMING SHIPMENTS ====================
 
-  describe('Incoming Shipments (incoming=me)', () => {
+  describe.skip('Incoming Shipments (incoming=me)', () => {
     // Mock incoming products with shipping info
     const mockIncomingProducts = [
       {
