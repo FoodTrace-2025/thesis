@@ -80,7 +80,7 @@ describe('GET /api/products', () => {
     (mockPrisma.product.findMany as jest.Mock).mockResolvedValue(mockProducts);
     (mockPrisma.product.count as jest.Mock).mockResolvedValue(2);
 
-    // Story 7.12: Default - products are IN_STOCK (last action not SOLD)
+    // Story 7.12: Default - products are REGISTERED (no trace yet)
     (mockPrisma.traceRecord.findFirst as jest.Mock).mockResolvedValue({
       action: 'RECEIVED',
     });
@@ -448,8 +448,8 @@ describe('GET /api/products', () => {
 
   // ==================== STORY 7.12: STATUS FIELD ====================
 
-  describe.skip('Product Status Field', () => {
-    it('should return IN_STOCK status for products with no trace records', async () => {
+  describe('Product Status Field', () => {
+    it('should return REGISTERED status for products with no trace records', async () => {
       // No trace records = null result from findFirst
       (mockPrisma.traceRecord.findFirst as jest.Mock).mockResolvedValue(null);
 
@@ -459,13 +459,13 @@ describe('GET /api/products', () => {
           const res = await fetch({ method: 'GET' });
           expect(res.status).toBe(200);
           const json = await res.json();
-          expect(json.products[0].status).toBe('IN_STOCK');
-          expect(json.products[1].status).toBe('IN_STOCK');
+          expect(json.products[0].status).toBe('REGISTERED');
+          expect(json.products[1].status).toBe('REGISTERED');
         },
       });
     });
 
-    it('should return IN_STOCK status for products with last action RECEIVED', async () => {
+    it('should return RECEIVED status for products with last action RECEIVED', async () => {
       (mockPrisma.traceRecord.findFirst as jest.Mock).mockResolvedValue({
         action: 'RECEIVED',
       });
@@ -476,7 +476,7 @@ describe('GET /api/products', () => {
           const res = await fetch({ method: 'GET' });
           expect(res.status).toBe(200);
           const json = await res.json();
-          expect(json.products[0].status).toBe('IN_STOCK');
+          expect(json.products[0].status).toBe('RECEIVED');
         },
       });
     });
@@ -498,7 +498,7 @@ describe('GET /api/products', () => {
       });
     });
 
-    it('should return IN_STOCK for non-SOLD actions (QUALITY_CHECK, SHIPPED, STOCKED)', async () => {
+    it('should return the action for non-SOLD actions (QUALITY_CHECK, SHIPPED, STOCKED)', async () => {
       // Test each non-SOLD action
       const nonSoldActions = ['QUALITY_CHECK', 'SHIPPED', 'STOCKED'];
 
@@ -510,7 +510,7 @@ describe('GET /api/products', () => {
           test: async ({ fetch }) => {
             const res = await fetch({ method: 'GET' });
             const json = await res.json();
-            expect(json.products[0].status).toBe('IN_STOCK');
+            expect(json.products[0].status).toBe(action);
           },
         });
       }
@@ -529,7 +529,7 @@ describe('GET /api/products', () => {
           expect(res.status).toBe(200);
           const json = await res.json();
           expect(json.products[0]).toHaveProperty('status');
-          expect(json.products[0].status).toBe('IN_STOCK');
+          expect(json.products[0].status).toBe('RECEIVED');
         },
       });
     });
@@ -762,7 +762,7 @@ describe('GET /api/products', () => {
 
   // ==================== STORY 7.17: INCOMING SHIPMENTS ====================
 
-  describe.skip('Incoming Shipments (incoming=me)', () => {
+  describe('Incoming Shipments (incoming=me)', () => {
     // Mock incoming products with shipping info
     const mockIncomingProducts = [
       {
@@ -814,7 +814,7 @@ describe('GET /api/products', () => {
       });
     });
 
-    it('should return incoming products with IN_TRANSIT status', async () => {
+    it('should return incoming products with SHIPPED status', async () => {
       (mockPrisma.product.findMany as jest.Mock).mockResolvedValueOnce(mockIncomingProducts);
       (mockPrisma.product.count as jest.Mock).mockResolvedValueOnce(1);
 
@@ -827,7 +827,7 @@ describe('GET /api/products', () => {
           const json = await res.json();
           expect(json.success).toBe(true);
           expect(json.products).toHaveLength(1);
-          expect(json.products[0].status).toBe('IN_TRANSIT');
+          expect(json.products[0].status).toBe('SHIPPED');
         },
       });
     });
