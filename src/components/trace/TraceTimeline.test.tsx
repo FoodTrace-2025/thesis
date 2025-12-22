@@ -7,7 +7,7 @@ import { TraceTimeline } from './TraceTimeline';
 // Mock fetch
 global.fetch = jest.fn();
 
-describe.skip('TraceTimeline', () => {
+describe('TraceTimeline', () => {
   const mockTraceRecords = [
     {
       id: 'trace-1',

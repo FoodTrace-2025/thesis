@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@/test/test-utils";
 import { ConsumerTraceTimeline } from "./ConsumerTraceTimeline";
 
-describe.skip("ConsumerTraceTimeline", () => {
+describe("ConsumerTraceTimeline", () => {
   const originalFetch = global.fetch as typeof fetch;
 
   afterEach(() => {

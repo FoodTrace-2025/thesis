@@ -22,7 +22,7 @@ jest.mock('@/lib/prisma', () => ({
 
 const mockPrisma = prisma as jest.Mocked<typeof prisma>;
 
-describe.skip('GET /api/products/[id]', () => {
+describe('GET /api/products/[id]', () => {
   // Mock product
   const mockProduct = {
     id: 'cuid-product-1',

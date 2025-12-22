@@ -18,7 +18,7 @@ jest.mock('@chakra-ui/react', () => {
   };
 });
 
-describe.skip('TraceRecordForm', () => {
+describe('TraceRecordForm', () => {
   const defaultProps = {
     productId: 'test-product-123',
     userRole: 'DISTRIBUTOR',
