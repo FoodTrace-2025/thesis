@@ -35,6 +35,7 @@ describe('TraceRecordForm', () => {
           id: 'trace-1',
           action: 'RECEIVED',
           transactionHash: '0x1234567890abcdef',
+          expireDate: null,
         },
       }),
     });

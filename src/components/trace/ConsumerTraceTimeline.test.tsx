@@ -19,6 +19,7 @@ describe("ConsumerTraceTimeline", () => {
             action: "REGISTERED",
             location: "Farm A",
             notes: null,
+            expireDate: null,
             actor: { name: "Alice", role: "PRODUCER", company: "Farm Co" },
             transactionHash: "0x123",
             etherscanLink: "https://example.com/tx/0x123",
