@@ -7,7 +7,6 @@
 
 // IMPORTANT: next-test-api-route-handler must be imported first
 import { testApiHandler } from 'next-test-api-route-handler';
-import * as handler from './approve';
 import { prisma } from '@/lib/prisma';
 
 // Mock NextAuth - must be before handler import
@@ -57,6 +56,9 @@ jest.mock('@/lib/crypto', () => ({
   encryptWalletKey: jest.fn(() => 'mock-encrypted-private-key'),
   getEncryptionKey: jest.fn(() => '0'.repeat(64)),
 }));
+
+// Import handler after mocks so the mocks apply
+import * as handler from './approve';
 
 const mockPrisma = prisma as jest.Mocked<typeof prisma>;
 

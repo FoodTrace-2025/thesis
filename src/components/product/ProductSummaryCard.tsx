@@ -18,7 +18,7 @@ export type ProductSummaryData = {
   originFarm: string;
   originLocation: string;
   productionDate: string;
-  bestBefore: string;
+  expireDate: string;
   certification?: string;
   blockchainStatus: "VERIFIED" | "PENDING" | "ERROR";
   lastUpdated: string;
@@ -101,7 +101,7 @@ export function ProductSummaryCard({ data, onShare }: ProductSummaryCardProps) {
         <InfoItem label="Origin farm" value={data.originFarm} />
         <InfoItem label="Origin location" value={data.originLocation} />
         <InfoItem label="Production date" value={data.productionDate} />
-        <InfoItem label="Best before" value={data.bestBefore} />
+        <InfoItem label="Expire Date" value={data.expireDate} />
         {data.certification && (
           <InfoItem label="Certification" value={data.certification} />
         )}

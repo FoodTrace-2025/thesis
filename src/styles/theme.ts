@@ -24,6 +24,7 @@ const theme = extendTheme({
       stocked: "#38A169",         // green
       sold: "#319795",            // teal
       default: "#9CA3AF",         // gray fallback
+      rejected: "#E53E3E",        // red
     },
 
   },

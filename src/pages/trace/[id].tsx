@@ -22,6 +22,7 @@ type ProductResponse = {
   name: string;
   origin: string;
   blockchainId: number;
+  expireDate?: string | null;
   harvestDate: string;
   transactionHash: string;
   currentOwner: { name: string } | null;
@@ -37,7 +38,7 @@ type ProductTraceSummary = {
   originFarm: string;
   originLocation: string;
   productionDate: string;
-  bestBefore: string;
+  expireDate: string;
   certification: string;
   blockchainStatus: "VERIFIED" | "PENDING" | "ERROR";
   lastUpdated: string;
@@ -176,7 +177,9 @@ function ConsumerTraceContent() {
     originFarm: product.company?.name ?? "Not available",
     originLocation: product.origin,
     productionDate: product.harvestDate.slice(0, 10),
-    bestBefore: "Not available",
+    expireDate: product.expireDate
+      ? new Date(product.expireDate).toLocaleDateString()
+      : "Not available",
     certification: "Not available",
     blockchainStatus: "VERIFIED",
     lastUpdated: new Date(product.createdAt).toLocaleString(),
