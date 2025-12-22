@@ -5,8 +5,10 @@ import { render, screen, fireEvent, waitFor } from '@/test/test-utils';
 import userEvent from '@testing-library/user-event';
 import { TraceRecordForm } from './TraceRecordForm';
 
-// Mock fetch
-global.fetch = jest.fn();
+// Mock fetch (default success)
+const mockFetch = jest.fn();
+// @ts-expect-error assign test mock
+global.fetch = mockFetch;
 
 // Mock useToast
 const mockToast = jest.fn();
@@ -27,7 +29,7 @@ describe('TraceRecordForm', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (global.fetch as jest.Mock).mockResolvedValue({
+    mockFetch.mockResolvedValue({
       ok: true,
       json: async () => ({
         success: true,
@@ -286,7 +288,7 @@ describe('TraceRecordForm', () => {
     it('should show error toast on API error', async () => {
       const user = userEvent.setup();
 
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         json: async () => ({
           error: 'Unauthorized',
@@ -353,7 +355,7 @@ describe('TraceRecordForm', () => {
     it('should handle network errors', async () => {
       const user = userEvent.setup();
 
-      (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
+      mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
       render(<TraceRecordForm {...defaultProps} />);
 
@@ -375,7 +377,7 @@ describe('TraceRecordForm', () => {
     it('should handle API validation errors', async () => {
       const user = userEvent.setup();
 
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         json: async () => ({
           code: 'VALIDATION_ERROR',
