@@ -6,9 +6,8 @@ import userEvent from '@testing-library/user-event';
 import { TraceRecordForm } from './TraceRecordForm';
 
 // Mock fetch (default success)
-const mockFetch = jest.fn();
-// @ts-expect-error assign test mock
-global.fetch = mockFetch;
+const mockFetch = jest.fn<Promise<Response>, [RequestInfo | URL, RequestInit?]>();
+global.fetch = mockFetch as unknown as typeof fetch;
 
 // Mock useToast
 const mockToast = jest.fn();
