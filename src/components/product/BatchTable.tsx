@@ -23,6 +23,8 @@ export type BatchTableRow = {
   harvestDate?: string | null;
   createdAt: string;
   status: ProductStatus | string;
+  origin?: string | null;
+  currentOwner?: { name: string } | null;
 };
 
 interface BatchTableProps {
@@ -30,6 +32,8 @@ interface BatchTableProps {
   onCopy?: (value: string, label: string) => void;
   detailBasePath?: string; // e.g., "/product"
   showDetail?: boolean;
+  showOrigin?: boolean;
+  showOwner?: boolean;
 }
 
 export function BatchTable({
@@ -37,6 +41,8 @@ export function BatchTable({
   onCopy,
   detailBasePath = "/product",
   showDetail = true,
+  showOrigin = false,
+  showOwner = false,
 }: BatchTableProps) {
   const renderDate = (row: BatchTableRow) =>
     row.harvestDate
@@ -59,6 +65,8 @@ export function BatchTable({
           <Tr>
             <Th>Blockchain ID</Th>
             <Th>Product</Th>
+            {showOrigin && <Th>Origin</Th>}
+            {showOwner && <Th>Current Owner</Th>}
             <Th>Date</Th>
             <Th>Status</Th>
             <Th>Product ID</Th>
@@ -85,6 +93,8 @@ export function BatchTable({
                 </HStack>
               </Td>
               <Td>{row.name}</Td>
+              {showOrigin && <Td>{row.origin || "—"}</Td>}
+              {showOwner && <Td>{row.currentOwner?.name || "—"}</Td>}
               <Td>{renderDate(row)}</Td>
               <Td>
                 <StatusBadge status={row.status} />
