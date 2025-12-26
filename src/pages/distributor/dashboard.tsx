@@ -45,7 +45,7 @@ import {
 import { InfoIcon, ViewIcon } from '@chakra-ui/icons';
 import { Layout } from '@/components/layout';
 import { TraceRecordForm } from '@/components/trace';
-import { type ProductStatus } from '@/components/product';
+import { StatusBadge, type ProductStatus } from '@/components/product';
 import { QRScanner } from '@/components/scanner';
 import { ProductTrendCard } from '@/components/analytics/ProductTrendCard';
 import { TrendRange } from '@/components/analytics/trend';
@@ -110,7 +110,6 @@ interface DistributorDashboardProps {
 export default function DistributorDashboard({
   userName,
   userRole,
-  companyName,
 }: DistributorDashboardProps) {
   // Product list state (Story 7.6, 7.14: Tabs)
   const [custodyProducts, setCustodyProducts] = useState<Product[]>([]);
