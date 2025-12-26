@@ -27,6 +27,11 @@ const theme = extendTheme({
       rejected: "#E53E3E",        // red
     },
 
+    blockchain: {
+      verified: "#2F7D32",
+      pending: "#EA580C",
+      rejected: "#E53E3E",
+    }
   },
   fonts: {
     heading: 'Inter, system-ui, sans-serif',
