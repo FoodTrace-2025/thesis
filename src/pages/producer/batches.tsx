@@ -1,6 +1,5 @@
 // src/pages/producer/batches.tsx
 import { useEffect, useMemo, useState } from "react";
-import NextLink from "next/link";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -9,32 +8,18 @@ import {
   HStack,
   IconButton,
   Input,
-  Link,
   Select,
   Spinner,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tooltip,
-  Tr,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { ExternalLinkIcon, SearchIcon, RepeatIcon, CopyIcon, AddIcon } from "@chakra-ui/icons";
+import { SearchIcon, RepeatIcon, AddIcon } from "@chakra-ui/icons";
 import { Layout } from "@/components/layout";
-import { StatusBadge, type ProductStatus } from "@/components/product";
+import { type ProductStatus } from "@/components/product";
 import { useToast } from "@chakra-ui/react";
+import { BatchTable, type BatchTableRow } from "@/components/product/BatchTable";
 
-type BatchRow = {
-  id: string; // product ID (internal)
-  name: string;
-  blockchainId: number;
-  harvestDate?: string;
-  createdAt: string;
-  status: ProductStatus | string;
-};
+type BatchRow = BatchTableRow & { harvestDate?: string };
 
 type OnChainStatus =
   | "REGISTERED"
@@ -143,14 +128,6 @@ export default function ProducerBatchesPage() {
     };
     fetchRows();
   }, []);
-
-  const renderDate = (row: BatchRow) =>
-    row.harvestDate
-      ? new Date(row.harvestDate).toLocaleDateString()
-      : new Date(row.createdAt).toLocaleDateString();
-
-  const renderProductId = (id: string) =>
-    id ? `${id.slice(0, 6)}...${id.slice(-4)}` : "N/A";
 
   const handleCopy = async (value: string, label: string) => {
     try {
@@ -270,79 +247,11 @@ export default function ProducerBatchesPage() {
         )}
 
         {!isLoading && !error && filteredRows.length > 0 && (
-          <Box
-            borderWidth="1px"
-            borderRadius="lg"
-            borderColor="brand.border"
-            bg="brand.surface"
-            overflowX="auto"
-          >
-            <Table size="sm">
-              <Thead bg="brand.surfaceAlt">
-                <Tr>
-                  <Th>Blockchain ID</Th>
-                  <Th>Product</Th>
-                  <Th>Date</Th>
-                  <Th>Status</Th>
-                  <Th>Product ID</Th>
-                  <Th>Detail</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {filteredRows.map((row) => (
-                  <Tr key={row.id}>
-                    <Td>
-                      <HStack spacing={2}>
-                        <Text>#{row.blockchainId}</Text>
-                        <IconButton
-                          aria-label="Copy blockchain ID"
-                          icon={<CopyIcon />}
-                          size="xs"
-                          variant="ghost"
-                          minW="32px"
-                          minH="32px"
-                          onClick={() => handleCopy(row.blockchainId.toString(), "Blockchain ID")}
-                        />
-                      </HStack>
-                    </Td>
-                    <Td>{row.name}</Td>
-                    <Td>{renderDate(row)}</Td>
-                    <Td>
-                      <StatusBadge status={toOnChainStatus(row.status) ?? row.status} />
-                    </Td>
-                    <Td>
-                      <HStack spacing={2}>
-                        <Tooltip label={row.id}>
-                          <Text as="span">{renderProductId(row.id)}</Text>
-                        </Tooltip>
-                        <IconButton
-                          aria-label="Copy product ID"
-                          icon={<CopyIcon />}
-                          size="xs"
-                          variant="ghost"
-                          minW="32px"
-                          minH="32px"
-                          onClick={() => handleCopy(row.id, "Product ID")}
-                        />
-                      </HStack>
-                    </Td>
-                    <Td>
-                      <Link
-                        as={NextLink}
-                        href={`/product/${row.id}`}
-                        color="brand.accent"
-                        display="inline-flex"
-                        alignItems="center"
-                        gap={1}
-                      >
-                        Detail <ExternalLinkIcon boxSize={3} />
-                      </Link>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </Box>
+          <BatchTable
+            rows={filteredRows}
+            onCopy={handleCopy}
+            detailBasePath="/product"
+          />
         )}
       </VStack>
     </Layout>
