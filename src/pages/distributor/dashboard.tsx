@@ -6,7 +6,7 @@
 // Story 7.17: Incoming Shipments section with Accept workflow
 // DISTRIBUTOR role only - displays products in company's custody
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo, type ChangeEvent } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
@@ -25,6 +25,8 @@ import {
   Button,
   Icon,
   Input,
+  Flex,
+  Select,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -42,9 +44,12 @@ import {
 } from '@chakra-ui/react';
 import { InfoIcon, ViewIcon } from '@chakra-ui/icons';
 import { Layout } from '@/components/layout';
-import { TraceRecordForm, TraceTimeline } from '@/components/trace';
+import { TraceRecordForm } from '@/components/trace';
 import { StatusBadge, type ProductStatus } from '@/components/product';
 import { QRScanner } from '@/components/scanner';
+import { ProductTrendCard } from '@/components/analytics/ProductTrendCard';
+import { TrendRange } from '@/components/analytics/trend';
+import { BatchTable, type BatchTableRow } from '@/components/product/BatchTable';
 
 // Product type matching API response (Story 7.4, 7.12: Added status field)
 interface Product {
@@ -105,7 +110,6 @@ interface DistributorDashboardProps {
 export default function DistributorDashboard({
   userName,
   userRole,
-  companyName,
 }: DistributorDashboardProps) {
   // Product list state (Story 7.6, 7.14: Tabs)
   const [custodyProducts, setCustodyProducts] = useState<Product[]>([]);
@@ -124,9 +128,9 @@ export default function DistributorDashboard({
   const [incomingLoading, setIncomingLoading] = useState(true);
   const [incomingError, setIncomingError] = useState<string | null>(null);
 
-  // Modal state for Add Trace Record (Story 7.7 Task 1)
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  // Trend range state
+  const [range, setRange] = useState<TrendRange>('7d');
+
   const toast = useToast();
 
   // Story 7.17: Accept modal state for incoming shipments
@@ -136,9 +140,6 @@ export default function DistributorDashboard({
     onClose: onAcceptClose,
   } = useDisclosure();
   const [acceptProductId, setAcceptProductId] = useState<string | null>(null);
-
-  // Timeline expand state (Story 7.7 Task 2)
-  const [expandedProductId, setExpandedProductId] = useState<string | null>(null);
 
   // Receive Product state (Story 7.7 Task 3)
   const [blockchainIdInput, setBlockchainIdInput] = useState('');
@@ -219,39 +220,111 @@ export default function DistributorDashboard({
     }
   };
 
+  const filterByRange = useCallback(
+    <T extends { createdAt: string }>(items: T[]): T[] => {
+      const now = new Date();
+      const rangeDays = range === '7d' ? 7 : range === '30d' ? 30 : 365;
+      const start = new Date(now);
+      start.setDate(now.getDate() - (rangeDays - 1));
+      return items.filter((item) => {
+        const created = new Date(item.createdAt);
+        return created >= start && created <= now;
+      });
+    },
+    [range]
+  );
+
+  // Range applies only to historical/handled products (not current snapshots)
+  const filteredHistory = useMemo(() => filterByRange(historyProducts), [filterByRange, historyProducts]);
+
+  const allProductsForTrend = useMemo(
+    () => [...filteredHistory],
+    [filteredHistory]
+  );
+
+  const custodyIds = useMemo(() => new Set(custodyProducts.map((p) => p.id)), [custodyProducts]);
+  const incomingIds = useMemo(() => new Set(incomingProducts.map((p) => p.id)), [incomingProducts]);
+
+  const totalShipments = useMemo(() => {
+    const ids = new Set<string>();
+    filteredHistory.forEach((p) => ids.add(p.id));
+    return ids.size;
+  }, [filteredHistory]);
+
+  const inCustody = custodyProducts.length;
+  const incomingCount = incomingProducts.length;
+
+  const handleCopy = useCallback(
+    async (value: string, label: string) => {
+      try {
+        await navigator.clipboard.writeText(value);
+        toast({
+          title: `${label} copied`,
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        });
+      } catch {
+        toast({
+          title: `Failed to copy ${label}`,
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    },
+    [toast]
+  );
+
+  const custodyRows: BatchTableRow[] = useMemo(
+    () =>
+      custodyProducts.map((p) => ({
+        id: p.id,
+        name: p.name,
+        blockchainId: p.blockchainId,
+        harvestDate: p.harvestDate,
+        createdAt: p.createdAt,
+        status: p.status,
+      })),
+    [custodyProducts]
+  );
+
+  const historyRows: BatchTableRow[] = useMemo(
+    () =>
+      historyProducts.map((p) => ({
+        id: p.id,
+        name: p.name,
+        blockchainId: p.blockchainId,
+        harvestDate: p.harvestDate,
+        createdAt: p.createdAt,
+        status: p.status,
+      })),
+    [historyProducts]
+  );
+
+  const completedCount = useMemo(() => {
+    let count = 0;
+    filteredHistory.forEach((p) => {
+      if (!custodyIds.has(p.id) && !incomingIds.has(p.id)) {
+        count += 1;
+      }
+    });
+    return count;
+  }, [filteredHistory, custodyIds, incomingIds]);
+
   // Fetch custody and incoming products on mount
   useEffect(() => {
     fetchCustodyProducts();
     fetchIncomingProducts(); // Story 7.17
   }, []);
 
-  // Handle Add Trace button click (Story 7.7 Task 1)
-  const handleAddTrace = (productId: string) => {
-    setSelectedProductId(productId);
-    onOpen();
-  };
-
-  // Handle trace record success (Story 7.7 Task 1, 7.14: Refetch both lists)
-  const handleTraceSuccess = () => {
-    onClose();
-    setSelectedProductId(null);
-    fetchCustodyProducts(); // Refetch custody list
-    if (historyLoaded) {
-      fetchHistoryProducts(); // Refetch history if already loaded
+  // Ensure history data is available for KPIs/trend (uses existing endpoint)
+  useEffect(() => {
+    if (!historyLoaded) {
+      fetchHistoryProducts();
     }
-    toast({
-      title: 'Trace record added',
-      description: 'The trace record has been recorded on the blockchain.',
-      status: 'success',
-      duration: 4000,
-      isClosable: true,
-    });
-  };
-
-  // Toggle timeline visibility (Story 7.7 Task 2)
-  const toggleTimeline = (productId: string) => {
-    setExpandedProductId((prev) => (prev === productId ? null : productId));
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [historyLoaded]);
 
   // Lookup product by blockchainId (Story 7.7 Task 3, Story 7.10 enhancement)
   const handleLookup = useCallback(
@@ -335,6 +408,41 @@ export default function DistributorDashboard({
       <VStack spacing={6} align="stretch">
         <Heading color="brand.primary">Distributor Dashboard</Heading>
         <Text color="brand.muted">Welcome, {userName}</Text>
+
+        <Flex
+          justify="space-between"
+          align={{ base: 'flex-start', md: 'center' }}
+          gap={3}
+          wrap="wrap"
+          py={2}
+        >
+          <Select
+            maxW="200px"
+            value={range}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => setRange(e.target.value as TrendRange)}
+          >
+            <option value="7d">Last 7 days</option>
+            <option value="30d">Last 30 days</option>
+            <option value="1y">Last 1 year</option>
+          </Select>
+        </Flex>
+
+        {/* KPI Row */}
+        <SimpleGrid columns={{ base: 1, md: 4 }} spacing={4}>
+          <KpiCard label="Total Shipments" value={totalShipments.toString()} />
+          <KpiCard label="In Custody" value={inCustody.toString()} />
+          <KpiCard label="Incoming Shipments" value={incomingCount.toString()} />
+          <KpiCard label="Completed" value={completedCount.toString()} />
+        </SimpleGrid>
+
+        {/* Trend */}
+        <ProductTrendCard
+          title="Shipments Trend Overview"
+          products={allProductsForTrend}
+          range={range}
+          onRangeChange={setRange}
+          footerText="Data source: Sepolia (counts per created date)"
+        />
 
         {/* Story 7.17: Incoming Shipments Section */}
         <Box
@@ -566,80 +674,13 @@ export default function DistributorDashboard({
                   </Center>
                 )}
 
-                {/* Products grid */}
+                {/* Products table */}
                 {!custodyLoading && !custodyError && custodyProducts.length > 0 && (
-                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
-                    {custodyProducts.map((product) => (
-                      <Box key={product.id}>
-                        <Box
-                          borderWidth="1px"
-                          borderRadius="lg"
-                          borderColor={
-                            expandedProductId === product.id
-                              ? 'brand.accent'
-                              : 'brand.border'
-                          }
-                          bg="brand.surface"
-                          p={4}
-                        >
-                          {/* Story 7.12: Name + Status Badge */}
-                          <HStack justify="space-between" mb={2}>
-                            <Heading size="sm" color="brand.dark">
-                              {product.name}
-                            </Heading>
-                            <StatusBadge status={product.status} />
-                          </HStack>
-                          <Text fontSize="sm" color="brand.muted">
-                            Product #{product.blockchainId}
-                          </Text>
-                          <Text fontSize="sm" color="brand.muted">
-                            Origin: {product.origin}
-                          </Text>
-                          <Text fontSize="sm" color="brand.muted">
-                            Harvested:{' '}
-                            {new Date(product.harvestDate).toLocaleDateString()}
-                          </Text>
-                          <Text fontSize="sm" color="brand.muted" mb={3}>
-                            Current Owner: {product.currentOwner?.name || 'Sold to Consumer'}
-                          </Text>
-
-                          {/* Action buttons - Add Trace always visible in custody tab */}
-                          <HStack spacing={2}>
-                            {product.currentOwner?.name === companyName && (
-                              <Button
-                                size="sm"
-                                colorScheme="green"
-                                onClick={() => handleAddTrace(product.id)}
-                              >
-                                Add Trace
-                              </Button>
-                            )}
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => toggleTimeline(product.id)}
-                            >
-                              {expandedProductId === product.id
-                                ? 'Hide Timeline'
-                                : 'View Timeline'}
-                            </Button>
-                          </HStack>
-                        </Box>
-
-                        {/* Timeline display */}
-                        {expandedProductId === product.id && (
-                          <Box
-                            mt={2}
-                            pl={4}
-                            borderLeftWidth="2px"
-                            borderColor="brand.accent"
-                          >
-                            <TraceTimeline productId={product.id} />
-                          </Box>
-                        )}
-                      </Box>
-                    ))}
-                  </SimpleGrid>
+                  <BatchTable
+                    rows={custodyRows}
+                    onCopy={handleCopy}
+                    detailBasePath="/product"
+                  />
                 )}
               </TabPanel>
 
@@ -676,104 +717,19 @@ export default function DistributorDashboard({
                   </Center>
                 )}
 
-                {/* Products grid */}
+                {/* Products table */}
                 {!historyLoading && !historyError && historyProducts.length > 0 && (
-                  <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
-                    {historyProducts.map((product) => (
-                      <Box key={product.id}>
-                        <Box
-                          borderWidth="1px"
-                          borderRadius="lg"
-                          borderColor={
-                            expandedProductId === product.id
-                              ? 'brand.accent'
-                              : 'brand.border'
-                          }
-                          bg="brand.surface"
-                          p={4}
-                        >
-                          {/* Story 7.12: Name + Status Badge */}
-                          <HStack justify="space-between" mb={2}>
-                            <Heading size="sm" color="brand.dark">
-                              {product.name}
-                            </Heading>
-                            <StatusBadge status={product.status} />
-                          </HStack>
-                          <Text fontSize="sm" color="brand.muted">
-                            Product #{product.blockchainId}
-                          </Text>
-                          <Text fontSize="sm" color="brand.muted">
-                            Origin: {product.origin}
-                          </Text>
-                          <Text fontSize="sm" color="brand.muted">
-                            Harvested:{' '}
-                            {new Date(product.harvestDate).toLocaleDateString()}
-                          </Text>
-                          <Text fontSize="sm" color="brand.muted" mb={3}>
-                            Current Owner: {product.currentOwner?.name || 'Sold to Consumer'}
-                          </Text>
-
-                          {/* Action buttons - Add Trace only if still owned */}
-                          <HStack spacing={2}>
-                            {product.currentOwner?.name === companyName && (
-                              <Button
-                                size="sm"
-                                colorScheme="green"
-                                onClick={() => handleAddTrace(product.id)}
-                              >
-                                Add Trace
-                              </Button>
-                            )}
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => toggleTimeline(product.id)}
-                            >
-                              {expandedProductId === product.id
-                                ? 'Hide Timeline'
-                                : 'View Timeline'}
-                            </Button>
-                          </HStack>
-                        </Box>
-
-                        {/* Timeline display */}
-                        {expandedProductId === product.id && (
-                          <Box
-                            mt={2}
-                            pl={4}
-                            borderLeftWidth="2px"
-                            borderColor="brand.accent"
-                          >
-                            <TraceTimeline productId={product.id} />
-                          </Box>
-                        )}
-                      </Box>
-                    ))}
-                  </SimpleGrid>
+                  <BatchTable
+                    rows={historyRows}
+                    onCopy={handleCopy}
+                    detailBasePath="/product"
+                  />
                 )}
               </TabPanel>
             </TabPanels>
           </Tabs>
         </Box>
       </VStack>
-
-      {/* Add Trace Record Modal (Story 7.7 Task 1) */}
-      <Modal isOpen={isOpen} onClose={onClose} size="lg">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Add Trace Record</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
-            {selectedProductId && (
-              <TraceRecordForm
-                productId={selectedProductId}
-                userRole={userRole}
-                onSuccess={handleTraceSuccess}
-              />
-            )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
 
       {/* QR Scanner Modal (Story 7.10) */}
       <Modal isOpen={isScannerOpen} onClose={onScannerClose} size="lg">
@@ -806,5 +762,24 @@ export default function DistributorDashboard({
         </ModalContent>
       </Modal>
     </Layout>
+  );
+}
+
+function KpiCard({ label, value }: { label: string; value: string }) {
+  return (
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      borderColor="brand.border"
+      bg="brand.surface"
+      p={4}
+    >
+      <Text fontSize="sm" color="brand.muted">
+        {label}
+      </Text>
+      <Text fontSize="2xl" fontWeight="semibold" color="brand.primary">
+        {value}
+      </Text>
+    </Box>
   );
 }
