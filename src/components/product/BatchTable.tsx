@@ -1,4 +1,5 @@
 import NextLink from "next/link";
+import { type ReactNode } from "react";
 import {
   Box,
   HStack,
@@ -34,6 +35,8 @@ interface BatchTableProps {
   showDetail?: boolean;
   showOrigin?: boolean;
   showOwner?: boolean;
+  actionsHeader?: string;
+  renderActions?: (row: BatchTableRow) => ReactNode;
 }
 
 export function BatchTable({
@@ -43,6 +46,8 @@ export function BatchTable({
   showDetail = true,
   showOrigin = false,
   showOwner = false,
+  actionsHeader = "Actions",
+  renderActions,
 }: BatchTableProps) {
   const renderDate = (row: BatchTableRow) =>
     row.harvestDate
@@ -70,6 +75,7 @@ export function BatchTable({
             <Th>Date</Th>
             <Th>Status</Th>
             <Th>Product ID</Th>
+            {renderActions && <Th>{actionsHeader}</Th>}
             {showDetail && <Th>Detail</Th>}
           </Tr>
         </Thead>
@@ -117,6 +123,7 @@ export function BatchTable({
                   )}
                 </HStack>
               </Td>
+              {renderActions && <Td>{renderActions(row)}</Td>}
               {showDetail && (
                 <Td>
                   <Link

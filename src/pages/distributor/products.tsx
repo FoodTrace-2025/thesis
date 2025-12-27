@@ -1,7 +1,7 @@
 // src/pages/distributor/products.tsx
 // Distributor "My Products" view reusing shared batch table
 
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, type ReactNode } from "react";
 import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
@@ -24,11 +24,19 @@ import {
   TabPanel,
   Badge,
   useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { SearchIcon, RepeatIcon } from "@chakra-ui/icons";
 import { Layout } from "@/components/layout";
 import { type ProductStatus } from "@/components/product";
 import { BatchTable, type BatchTableRow } from "@/components/product/BatchTable";
+import { TraceRecordForm } from "@/components/trace";
 
 type OnChainStatus =
   | "REGISTERED"
@@ -127,7 +135,7 @@ interface DistributorProductsProps {
   companyName: string;
 }
 
-export default function DistributorProductsPage({}: DistributorProductsProps) {
+export default function DistributorProductsPage({ userRole }: DistributorProductsProps) {
   const [custodyRows, setCustodyRows] = useState<BatchTableRow[]>([]);
   const [historyRows, setHistoryRows] = useState<BatchTableRow[]>([]);
   const [status, setStatus] = useState<OnChainStatus | "ALL">("ALL");
@@ -138,7 +146,13 @@ export default function DistributorProductsPage({}: DistributorProductsProps) {
   const [custodyError, setCustodyError] = useState<string | null>(null);
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [historyLoaded, setHistoryLoaded] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const handleModalClose = () => {
+    onClose();
+    setSelectedProductId(null);
+  };
 
   const filteredRows = useMemo(() => {
     const rows = activeTab === 0 ? custodyRows : historyRows;
@@ -154,38 +168,37 @@ export default function DistributorProductsPage({}: DistributorProductsProps) {
     });
   }, [activeTab, custodyRows, historyRows, query, status]);
 
-  useEffect(() => {
-    const fetchCustody = async () => {
-      setCustodyLoading(true);
-      setCustodyError(null);
-      try {
-        const res = await fetch("/api/products?owner=me");
-        const data = await res.json();
-        if (!res.ok) {
-          setCustodyError(data.error || "Failed to fetch products");
-          return;
-        }
-        const mapped: BatchTableRow[] = (data.products as ApiProduct[]).map(
-          (p) => ({
-            id: p.id,
-            name: p.name,
-            blockchainId: p.blockchainId,
-            harvestDate: p.harvestDate,
-            createdAt: p.createdAt,
-            status: p.status,
-            origin: p.origin,
-            currentOwner: p.currentOwner,
-          })
-        );
-        setCustodyRows(mapped);
-      } catch {
-        setCustodyError("Network error. Please try again.");
-      } finally {
-        setCustodyLoading(false);
+  const fetchCustody = useCallback(async () => {
+    setCustodyLoading(true);
+    setCustodyError(null);
+    try {
+      const res = await fetch("/api/products?owner=me");
+      const data = await res.json();
+      if (!res.ok) {
+        setCustodyError(data.error || "Failed to fetch products");
+        return;
       }
-    };
-    fetchCustody();
+      const mapped: BatchTableRow[] = (data.products as ApiProduct[]).map((p) => ({
+        id: p.id,
+        name: p.name,
+        blockchainId: p.blockchainId,
+        harvestDate: p.harvestDate,
+        createdAt: p.createdAt,
+        status: p.status,
+        origin: p.origin,
+        currentOwner: p.currentOwner,
+      }));
+      setCustodyRows(mapped);
+    } catch {
+      setCustodyError("Network error. Please try again.");
+    } finally {
+      setCustodyLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchCustody();
+  }, [fetchCustody]);
 
   const fetchHistory = useCallback(async () => {
     setHistoryLoading(true);
@@ -217,6 +230,27 @@ export default function DistributorProductsPage({}: DistributorProductsProps) {
       setHistoryLoading(false);
     }
   }, []);
+
+  const handleAddTrace = (productId: string) => {
+    setSelectedProductId(productId);
+    onOpen();
+  };
+
+  const handleTraceSuccess = () => {
+    onClose();
+    setSelectedProductId(null);
+    fetchCustody();
+    if (historyLoaded) {
+      fetchHistory();
+    }
+    toast({
+      title: "Trace record added",
+      description: "The trace record has been recorded.",
+      status: "success",
+      duration: 4000,
+      isClosable: true,
+    });
+  };
 
   const handleCopy = useCallback(
     async (value: string, label: string) => {
@@ -250,7 +284,7 @@ export default function DistributorProductsPage({}: DistributorProductsProps) {
           wrap="wrap"
         >
           <Heading size="lg" color="brand.dark">
-            Receive Product
+            My Products
           </Heading>
         </Flex>
 
@@ -294,6 +328,11 @@ export default function DistributorProductsPage({}: DistributorProductsProps) {
                 error={custodyError}
                 rows={filteredRows}
                 onCopy={handleCopy}
+                renderActions={(row) => (
+                  <Button size="sm" colorScheme="green" onClick={() => handleAddTrace(row.id)}>
+                    Add Trace
+                  </Button>
+                )}
               />
             </TabPanel>
             <TabPanel px={0}>
@@ -317,6 +356,23 @@ export default function DistributorProductsPage({}: DistributorProductsProps) {
           </TabPanels>
         </Tabs>
       </VStack>
+
+      <Modal isOpen={isOpen} onClose={handleModalClose} size="lg">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add Trace Record</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            {selectedProductId && (
+              <TraceRecordForm
+                productId={selectedProductId}
+                userRole={userRole}
+                onSuccess={handleTraceSuccess}
+              />
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Layout>
   );
 }
@@ -384,11 +440,13 @@ function TableState({
   error,
   rows,
   onCopy,
+  renderActions,
 }: {
   isLoading: boolean;
   error: string | null;
   rows: BatchTableRow[];
   onCopy: (value: string, label: string) => void;
+  renderActions?: (row: BatchTableRow) => ReactNode;
 }) {
   if (isLoading) {
     return (
@@ -434,6 +492,8 @@ function TableState({
       detailBasePath="/product"
       showOrigin
       showOwner
+      renderActions={renderActions}
+      actionsHeader="Actions"
     />
   );
 }
