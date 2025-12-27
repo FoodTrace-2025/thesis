@@ -25,6 +25,8 @@ const theme = extendTheme({
       sold: "#319795",            // teal
       default: "#9CA3AF",         // gray fallback
       rejected: "#E53E3E",        // red
+      custody: "#F59E0B",       // amber
+      history: "#805AD5",        // purple
     },
 
     blockchain: {
