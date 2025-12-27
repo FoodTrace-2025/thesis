@@ -18,6 +18,8 @@ import {
   SimpleGrid,
   Badge,
   Icon,
+  IconButton,
+  Tooltip,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -30,7 +32,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { ViewIcon, InfoIcon } from '@chakra-ui/icons';
+import { ViewIcon, InfoIcon, CopyIcon } from '@chakra-ui/icons';
 import { Layout } from '@/components/layout';
 import { TraceRecordForm } from '@/components/trace';
 import { QRScanner } from '@/components/scanner';
@@ -144,21 +146,23 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
       setLookupError('');
       setLookupProduct(null);
 
-      try {
-        const response = await fetch(`/api/products/${idToLookup}`);
-        const data = await response.json();
-        if (!response.ok) {
-          setLookupError(data.error || 'Product not found');
-          return;
-        }
-        setLookupProduct(data.product);
-      } catch {
-        setLookupError('Network error. Please try again.');
-      } finally {
+      const match =
+        incomingProducts.find(
+          (p) =>
+            p.id === idToLookup ||
+            p.blockchainId.toString() === idToLookup
+        ) || null;
+
+      if (!match) {
+        setLookupError('Product not found in incoming shipments');
         setIsLookingUp(false);
+        return;
       }
+
+      setLookupProduct(match);
+      setIsLookingUp(false);
     },
-    [blockchainIdInput]
+    [blockchainIdInput, incomingProducts]
   );
 
   const handleScan = useCallback(
@@ -199,6 +203,28 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
     [incomingProducts, acceptProductId]
   );
 
+  const handleCopy = async (value: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      toast({
+        title: `${label} copied`,
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch {
+      toast({
+        title: `Failed to copy ${label}`,
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const renderProductId = (id: string) =>
+    id ? `${id.slice(0, 6)}...${id.slice(-4)}` : 'N/A';
+
   return (
     <Layout>
       <VStack align="stretch" spacing={6} py={6}>
@@ -218,7 +244,7 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
               <Heading size="md" color="brand.dark">
                 Incoming Shipments
               </Heading>
-              <Badge colorScheme="orange" borderRadius="full" fontSize="sm">
+              <Badge color="brand.primary" borderRadius="full" fontSize="sm">
                 {incomingProducts.length}
               </Badge>
             </HStack>
@@ -263,35 +289,40 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
                   key={product.id}
                   borderWidth="1px"
                   borderRadius="md"
-                  borderColor="orange.200"
-                  bg="orange.50"
+                  borderColor="brand.border"
+                  bg="brand.surfaceAlt"
                   p={4}
-                >
+                  maxW="360px"
+                  >
                   <HStack justify="space-between" mb={2}>
                     <Heading size="sm" color="brand.dark">
                       {product.name}
                     </Heading>
                     <StatusBadge status="IN_TRANSIT" />
                   </HStack>
-                  <Text fontSize="sm" color="brand.muted">
-                    Product ID: {product.id}
-                  </Text>
-                  <Text fontSize="sm" color="brand.muted">
-                    Origin: {product.origin}
-                  </Text>
+                  <HStack spacing={2} mb={2}>
+                    <Tooltip label={product.id}>
+                      <Text fontSize="sm" color="brand.muted">
+                        Product ID: {renderProductId(product.id)}
+                      </Text>
+                    </Tooltip>
+                    <IconButton
+                      aria-label="Copy product ID"
+                      icon={<CopyIcon />}
+                      size="xs"
+                      variant="ghost"
+                      minW="32px"
+                      minH="32px"
+                      onClick={() => handleCopy(product.id, 'Product ID')}
+                    />
+                  </HStack>
                   {product.shippedBy && (
-                    <Text fontSize="sm" color="brand.muted">
+                    <Text fontSize="sm" color="brand.muted" mb={2}>
                       Shipped by: {product.shippedBy.name}
-                    </Text>
-                  )}
-                  {product.shippedAt && (
-                    <Text fontSize="sm" color="brand.muted" mb={3}>
-                      Shipped: {new Date(product.shippedAt).toLocaleDateString()}
                     </Text>
                   )}
                   <Button
                     size="sm"
-                    colorScheme="orange"
                     onClick={() => handleAcceptClick(product.id)}
                     mt={2}
                   >
@@ -322,7 +353,6 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
               maxW="300px"
             />
             <Button
-              colorScheme="green"
               onClick={() => handleLookup()}
               isLoading={isLookingUp}
               loadingText="Looking up..."
@@ -362,7 +392,14 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
               <Heading size="xs" color="brand.dark" mb={2}>
                 Add RECEIVED Trace Record
               </Heading>
-              <TraceRecordForm productId={lookupProduct.id} userRole={userRole} onSuccess={handleReceiveSuccess} />
+              <TraceRecordForm
+                productId={lookupProduct.id}
+                userRole={userRole}
+                onSuccess={handleReceiveSuccess}
+                defaultAction="RECEIVED"
+                lockedAction="RECEIVED"
+                requireAcknowledgement
+              />
             </Box>
           )}
         </Box>
@@ -409,6 +446,7 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
                 userRole={userRole}
                 onSuccess={handleAcceptSuccess}
                 defaultAction="RECEIVED"
+                lockedAction="RECEIVED"
                 requireAcknowledgement
               />
             )}

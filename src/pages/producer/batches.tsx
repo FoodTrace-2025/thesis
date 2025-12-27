@@ -248,13 +248,13 @@ export default function ProducerBatchesPage({ companyName }: ProducerBatchesProp
           <TabList>
             <Tab>
               In Custody
-              <Badge ml={2} colorScheme="green" borderRadius="full">
+              <Badge ml={2} borderRadius="full" bg="status.custody" color="brand.surface">
                 {rows.filter((r) => (r.currentOwner?.name || "").toLowerCase() === companyName.toLowerCase()).length}
               </Badge>
             </Tab>
             <Tab>
-              All
-              <Badge ml={2} colorScheme="gray" borderRadius="full">
+              All Batches
+              <Badge ml={2} borderRadius="full" bg="status.history" color="brand.surface">
                 {rows.length}
               </Badge>
             </Tab>

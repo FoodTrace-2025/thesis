@@ -69,6 +69,7 @@ interface TraceRecordFormProps {
   onSuccess?: () => void;
   defaultAction?: string; // Story 7.17: Pre-select action (e.g., 'RECEIVED' for Accept workflow)
   requireAcknowledgement?: boolean;
+  lockedAction?: string; // When provided, action is fixed and selector is hidden
 }
 
 export function TraceRecordForm({
@@ -77,12 +78,18 @@ export function TraceRecordForm({
   onSuccess,
   defaultAction,
   requireAcknowledgement = false,
+  lockedAction,
 }: TraceRecordFormProps) {
   const toast = useToast();
-  const availableActions = ROLE_ACTIONS[userRole] || [];
+  const availableActions = lockedAction
+    ? [lockedAction]
+    : ROLE_ACTIONS[userRole] || [];
 
   // Form state - initialize with defaultAction if provided and valid for this role
-  const initialAction = defaultAction && availableActions.includes(defaultAction) ? defaultAction : '';
+  const initialAction =
+    (lockedAction && lockedAction) ||
+    (defaultAction && availableActions.includes(defaultAction) && defaultAction) ||
+    '';
   const [action, setAction] = useState(initialAction);
   const [location, setLocation] = useState('');
   const [notes, setNotes] = useState('');
@@ -240,25 +247,27 @@ export function TraceRecordForm({
           </Alert>
         )}
 
-        <FormControl isInvalid={!!errors.action} isRequired>
-          <FormLabel color="brand.dark">Action</FormLabel>
-          <Select
-            value={action}
-            onChange={(e) => {
-              setAction(e.target.value);
-              if (errors.action) setErrors((prev) => ({ ...prev, action: '' }));
-            }}
-            placeholder="Select action"
-            isDisabled={isLoading}
-          >
-            {availableActions.map((act) => (
-              <option key={act} value={act}>
-                {ACTION_LABELS[act]}
-              </option>
-            ))}
-          </Select>
-          <FormErrorMessage>{errors.action}</FormErrorMessage>
-        </FormControl>
+        {!lockedAction && (
+          <FormControl isInvalid={!!errors.action} isRequired>
+            <FormLabel color="brand.dark">Action</FormLabel>
+            <Select
+              value={action}
+              onChange={(e) => {
+                setAction(e.target.value);
+                if (errors.action) setErrors((prev) => ({ ...prev, action: '' }));
+              }}
+              placeholder="Select action"
+              isDisabled={isLoading}
+            >
+              {availableActions.map((act) => (
+                <option key={act} value={act}>
+                  {ACTION_LABELS[act]}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>{errors.action}</FormErrorMessage>
+          </FormControl>
+        )}
 
         {/* Story 7.16: Company selector for SHIPPED action */}
         {action === 'SHIPPED' && (

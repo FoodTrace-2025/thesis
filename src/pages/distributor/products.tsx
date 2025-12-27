@@ -300,13 +300,13 @@ export default function DistributorProductsPage({ userRole }: DistributorProduct
           <TabList>
             <Tab>
               In Custody{" "}
-              <Badge ml={2} colorScheme="blue">
+              <Badge ml={2} borderRadius="full" bg="status.custody" color="brand.surface">
                 {custodyRows.length}
               </Badge>
             </Tab>
             <Tab>
               Product History{" "}
-              <Badge ml={2} colorScheme="purple">
+              <Badge ml={2} borderRadius="full" bg="status.history" color="brand.surface">
                 {historyRows.length}
               </Badge>
             </Tab>
