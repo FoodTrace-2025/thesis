@@ -7,6 +7,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormLabel,
   FormErrorMessage,
@@ -67,6 +68,7 @@ interface TraceRecordFormProps {
   userRole: string;
   onSuccess?: () => void;
   defaultAction?: string; // Story 7.17: Pre-select action (e.g., 'RECEIVED' for Accept workflow)
+  requireAcknowledgement?: boolean;
 }
 
 export function TraceRecordForm({
@@ -74,6 +76,7 @@ export function TraceRecordForm({
   userRole,
   onSuccess,
   defaultAction,
+  requireAcknowledgement = false,
 }: TraceRecordFormProps) {
   const toast = useToast();
   const availableActions = ROLE_ACTIONS[userRole] || [];
@@ -86,6 +89,7 @@ export function TraceRecordForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [apiError, setApiError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isAcknowledged, setIsAcknowledged] = useState(!requireAcknowledgement);
 
   // Story 7.16: Company selection for SHIPPED action
   const [recipientCompanyId, setRecipientCompanyId] = useState('');
@@ -326,11 +330,28 @@ export function TraceRecordForm({
           <FormErrorMessage>{errors.notes}</FormErrorMessage>
         </FormControl>
 
+        {requireAcknowledgement && (
+          <FormControl isInvalid={!isAcknowledged}>
+            <Checkbox
+              isChecked={isAcknowledged}
+              onChange={(e) => setIsAcknowledged(e.target.checked)}
+              colorScheme="green"
+            >
+              I have physically received and verified this product.
+            </Checkbox>
+            {!isAcknowledged && (
+              <FormErrorMessage>
+                This confirmation is required.
+              </FormErrorMessage>
+            )}
+          </FormControl>
+        )}
+
         <Button
           type="submit"
           isLoading={isLoading}
           loadingText="Recording on blockchain..."
-          isDisabled={isLoading}
+          isDisabled={isLoading || !isAcknowledged}
           mt={4}
         >
           Add Trace Record

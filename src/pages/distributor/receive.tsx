@@ -1,8 +1,7 @@
 // src/pages/distributor/receive.tsx
 // Distributor Receive Product workflow (scan/lookup + RECEIVED form)
 
-import { useCallback, useEffect, useState } from 'react';
-import NextLink from 'next/link';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
@@ -12,10 +11,13 @@ import {
   AlertIcon,
   Box,
   Button,
-  Flex,
   Heading,
   HStack,
   Input,
+  Center,
+  SimpleGrid,
+  Badge,
+  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -28,10 +30,11 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { ViewIcon } from '@chakra-ui/icons';
+import { ViewIcon, InfoIcon } from '@chakra-ui/icons';
 import { Layout } from '@/components/layout';
 import { TraceRecordForm } from '@/components/trace';
 import { QRScanner } from '@/components/scanner';
+import { StatusBadge } from '@/components/product';
 
 // Product type matching API response
 interface Product {
@@ -43,6 +46,11 @@ interface Product {
   currentOwner: { name: string } | null;
   status: string;
   createdAt: string;
+}
+
+interface IncomingProduct extends Product {
+  shippedBy?: { name: string };
+  shippedAt?: string;
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -89,9 +97,10 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
   const [lookupError, setLookupError] = useState('');
   const [isLookingUp, setIsLookingUp] = useState(false);
 
-  const [incomingCount, setIncomingCount] = useState(0);
+  const [incomingProducts, setIncomingProducts] = useState<IncomingProduct[]>([]);
   const [incomingError, setIncomingError] = useState<string | null>(null);
   const [incomingLoading, setIncomingLoading] = useState(true);
+  const [acceptProductId, setAcceptProductId] = useState<string | null>(null);
 
   const toast = useToast();
   const {
@@ -99,8 +108,13 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
     onOpen: onScannerOpen,
     onClose: onScannerClose,
   } = useDisclosure();
+  const {
+    isOpen: isAcceptOpen,
+    onOpen: onAcceptOpen,
+    onClose: onAcceptClose,
+  } = useDisclosure();
 
-  const fetchIncomingCount = useCallback(async () => {
+  const fetchIncomingProducts = useCallback(async () => {
     setIncomingLoading(true);
     setIncomingError(null);
     try {
@@ -110,7 +124,7 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
         setIncomingError(data.error || 'Failed to fetch incoming shipments');
         return;
       }
-      setIncomingCount((data.products as Product[]).length);
+      setIncomingProducts(data.products as IncomingProduct[]);
     } catch {
       setIncomingError('Network error. Please try again.');
     } finally {
@@ -119,8 +133,8 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
   }, []);
 
   useEffect(() => {
-    fetchIncomingCount();
-  }, [fetchIncomingCount]);
+    fetchIncomingProducts();
+  }, [fetchIncomingProducts]);
 
   const handleLookup = useCallback(
     async (idOverride?: string) => {
@@ -159,7 +173,7 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
   const handleReceiveSuccess = () => {
     setLookupProduct(null);
     setBlockchainIdInput('');
-    fetchIncomingCount();
+    fetchIncomingProducts();
     toast({
       title: 'Product received',
       description: 'The product is now in your custody.',
@@ -169,6 +183,22 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
     });
   };
 
+  const handleAcceptClick = (productId: string) => {
+    setAcceptProductId(productId);
+    onAcceptOpen();
+  };
+
+  const handleAcceptSuccess = () => {
+    onAcceptClose();
+    setAcceptProductId(null);
+    fetchIncomingProducts();
+  };
+
+  const acceptProduct = useMemo(
+    () => incomingProducts.find((p) => p.id === acceptProductId) || null,
+    [incomingProducts, acceptProductId]
+  );
+
   return (
     <Layout>
       <VStack align="stretch" spacing={6} py={6}>
@@ -176,40 +206,102 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
           Receive Product
         </Heading>
 
-        <Flex
+        <Box
           borderWidth="1px"
           borderRadius="lg"
           borderColor="brand.border"
           bg="brand.surface"
           p={4}
-          align="center"
-          justify="space-between"
-          wrap="wrap"
-          gap={3}
         >
-          <Box>
-            <Text fontWeight="semibold" color="brand.dark">
-              Incoming Shipments
-            </Text>
-            <Text color="brand.muted" fontSize="sm">
-              Products awaiting acceptance
-            </Text>
-          </Box>
-          {incomingLoading ? (
-            <Spinner size="sm" color="brand.primary" />
-          ) : incomingError ? (
-            <Text color="brand.error" fontSize="sm">
-              {incomingError}
-            </Text>
-          ) : (
-            <Text fontSize="2xl" fontWeight="bold" color="brand.primary">
-              {incomingCount}
-            </Text>
+          <HStack justify="space-between" mb={4}>
+            <HStack>
+              <Heading size="md" color="brand.dark">
+                Incoming Shipments
+              </Heading>
+              <Badge colorScheme="orange" borderRadius="full" fontSize="sm">
+                {incomingProducts.length}
+              </Badge>
+            </HStack>
+            <Button size="sm" variant="ghost" onClick={fetchIncomingProducts}>
+              Refresh
+            </Button>
+          </HStack>
+
+          {/* Loading state */}
+          {incomingLoading && (
+            <Center py={6}>
+              <Spinner size="md" color="brand.primary" />
+            </Center>
           )}
-          <Button as={NextLink} href="/distributor/products" colorScheme="green" variant="outline">
-            Go to My Products
-          </Button>
-        </Flex>
+
+          {/* Error state */}
+          {incomingError && !incomingLoading && (
+            <Alert status="error" borderRadius="md">
+              <AlertIcon />
+              <Box flex="1">{incomingError}</Box>
+              <Button size="sm" onClick={fetchIncomingProducts}>
+                Retry
+              </Button>
+            </Alert>
+          )}
+
+          {/* Empty state */}
+          {!incomingLoading && !incomingError && incomingProducts.length === 0 && (
+            <Center py={6} flexDirection="column">
+              <Icon as={InfoIcon} boxSize={6} color="brand.muted" mb={2} />
+              <Text color="brand.muted" fontSize="sm">
+                No incoming shipments
+              </Text>
+            </Center>
+          )}
+
+          {/* Incoming products list */}
+          {!incomingLoading && !incomingError && incomingProducts.length > 0 && (
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+              {incomingProducts.map((product) => (
+                <Box
+                  key={product.id}
+                  borderWidth="1px"
+                  borderRadius="md"
+                  borderColor="orange.200"
+                  bg="orange.50"
+                  p={4}
+                >
+                  <HStack justify="space-between" mb={2}>
+                    <Heading size="sm" color="brand.dark">
+                      {product.name}
+                    </Heading>
+                    <StatusBadge status="IN_TRANSIT" />
+                  </HStack>
+                  <Text fontSize="sm" color="brand.muted">
+                    Product ID: {product.id}
+                  </Text>
+                  <Text fontSize="sm" color="brand.muted">
+                    Origin: {product.origin}
+                  </Text>
+                  {product.shippedBy && (
+                    <Text fontSize="sm" color="brand.muted">
+                      Shipped by: {product.shippedBy.name}
+                    </Text>
+                  )}
+                  {product.shippedAt && (
+                    <Text fontSize="sm" color="brand.muted" mb={3}>
+                      Shipped: {new Date(product.shippedAt).toLocaleDateString()}
+                    </Text>
+                  )}
+                  <Button
+                    size="sm"
+                    colorScheme="orange"
+                    onClick={() => handleAcceptClick(product.id)}
+                    mt={2}
+                  >
+                    Accept Shipment
+                  </Button>
+                </Box>
+              ))}
+            </SimpleGrid>
+          )}
+        </Box>
 
         <Box
           borderWidth="1px"
@@ -283,6 +375,43 @@ export default function DistributorReceivePage({ userRole }: DistributorReceiveP
           <ModalCloseButton />
           <ModalBody pb={6}>
             <QRScanner onScan={handleScan} />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+      {/* Accept Shipment Modal */}
+      <Modal isOpen={isAcceptOpen} onClose={onAcceptClose} size="lg">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Accept Incoming Shipment</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            {acceptProduct && (
+              <Box
+                mb={4}
+                borderWidth="1px"
+                borderRadius="md"
+                borderColor="brand.border"
+                p={3}
+                bg="brand.surfaceAlt"
+              >
+                <Text fontWeight="semibold" color="brand.dark">
+                  {acceptProduct.name}
+                </Text>
+                <Text fontSize="sm" color="brand.muted">
+                  Product ID: {acceptProduct.id}
+                </Text>
+              </Box>
+            )}
+            {acceptProductId && (
+              <TraceRecordForm
+                productId={acceptProductId}
+                userRole={userRole}
+                onSuccess={handleAcceptSuccess}
+                defaultAction="RECEIVED"
+                requireAcknowledgement
+              />
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>

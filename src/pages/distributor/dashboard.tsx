@@ -193,7 +193,7 @@ export default function DistributorDashboard({}: DistributorDashboardProps) {
     <Layout>
       <VStack spacing={6} align="stretch">
         <Heading size="lg" color="brand.dark">
-          Receive Product
+          Distributor Dashboard
         </Heading>
 
         <Flex
