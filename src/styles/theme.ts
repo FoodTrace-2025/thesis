@@ -25,7 +25,8 @@ const theme = extendTheme({
       sold: "#319795",            // teal
       default: "#9CA3AF",         // gray fallback
       rejected: "#E53E3E",        // red
-      custody: "#F59E0B",       // amber
+      inCustody: "#F59E0B",       // amber
+      inStore: "#3B82F6",        // blue
       history: "#805AD5",        // purple
     },
 

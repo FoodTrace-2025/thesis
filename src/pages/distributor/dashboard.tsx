@@ -6,7 +6,7 @@
 // Story 7.17: Incoming Shipments section with Accept workflow
 // DISTRIBUTOR role only - displays products in company's custody
 
-import { useState, useEffect, useCallback, useMemo, type ChangeEvent } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
@@ -17,8 +17,6 @@ import {
   VStack,
   Box,
   SimpleGrid,
-  Flex,
-  Select,
 } from '@chakra-ui/react';
 import { Layout } from '@/components/layout';
 import { type ProductStatus } from '@/components/product';
@@ -160,22 +158,22 @@ export default function DistributorDashboard({}: DistributorDashboardProps) {
 
   const totalShipments = useMemo(() => {
     const ids = new Set<string>();
-    filteredHistory.forEach((p) => ids.add(p.id));
+    historyProducts.forEach((p) => ids.add(p.id));
     return ids.size;
-  }, [filteredHistory]);
+  }, [historyProducts]);
 
   const inCustody = custodyProducts.length;
   const incomingCount = incomingProducts.length;
 
   const completedCount = useMemo(() => {
     let count = 0;
-    filteredHistory.forEach((p) => {
+    historyProducts.forEach((p) => {
       if (!custodyIds.has(p.id) && !incomingIds.has(p.id)) {
         count += 1;
       }
     });
     return count;
-  }, [filteredHistory, custodyIds, incomingIds]);
+  }, [historyProducts, custodyIds, incomingIds]);
 
   // Fetch custody and incoming products on mount
   useEffect(() => {
@@ -191,28 +189,10 @@ export default function DistributorDashboard({}: DistributorDashboardProps) {
 
   return (
     <Layout>
-      <VStack spacing={6} align="stretch">
+      <VStack align="stretch" spacing={6} py={6}>
         <Heading size="lg" color="brand.dark">
           Distributor Dashboard
         </Heading>
-
-        <Flex
-          justify="space-between"
-          align={{ base: 'flex-start', md: 'center' }}
-          gap={3}
-          wrap="wrap"
-          py={2}
-        >
-          <Select
-            maxW="200px"
-            value={range}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) => setRange(e.target.value as TrendRange)}
-          >
-            <option value="7d">Last 7 days</option>
-            <option value="30d">Last 30 days</option>
-            <option value="1y">Last 1 year</option>
-          </Select>
-        </Flex>
 
         {/* KPI Row */}
         <SimpleGrid columns={{ base: 1, md: 4 }} spacing={4}>

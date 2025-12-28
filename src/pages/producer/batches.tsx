@@ -14,7 +14,7 @@ import {
   Input,
   Select,
   Spinner,
-  Text,
+  Heading,
   VStack,
   Tabs,
   TabList,
@@ -224,16 +224,16 @@ export default function ProducerBatchesPage({ companyName }: ProducerBatchesProp
 
   return (
     <Layout>
-      <VStack align="stretch" spacing={4} py={6}>
+      <VStack align="stretch" spacing={6} py={6}>
         <Flex
           justify="space-between"
           align={{ base: "flex-start", md: "center" }}
           gap={3}
           wrap="wrap"
         >
-          <Text fontSize="xl" fontWeight="semibold" color="brand.dark">
+          <Heading size="lg" color="brand.dark">
             My Batches
-          </Text>
+          </Heading>
           <Button
             type="button"
             onClick={() => router.push("/producer/register")}

@@ -1,11 +1,9 @@
 // src/pages/retailer/dashboard.tsx
 // Story 7.8: Retailer Dashboard
-// Story 7.15: Dashboard Tabs - In Stock + Product History
-// Story 7.17: Incoming Shipments section with Accept workflow
-// Same pattern as Distributor Dashboard (Story 7.7, 7.14)
+// Updated to mirror producer/distributor KPI + trend pattern
 // RETAILER role only - displays products in company's custody
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
@@ -17,12 +15,13 @@ import {
   HStack,
   Box,
   SimpleGrid,
-  Spinner,
+  Badge,
+  Button,
+  Icon,
   Center,
   Alert,
   AlertIcon,
-  Button,
-  Icon,
+  Spinner,
   Input,
   Modal,
   ModalOverlay,
@@ -30,20 +29,22 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  useDisclosure,
-  useToast,
   Tabs,
   TabList,
   Tab,
   TabPanels,
   TabPanel,
-  Badge,
+  useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import { InfoIcon, ViewIcon } from '@chakra-ui/icons';
 import { Layout } from '@/components/layout';
+import { type ProductStatus } from '@/components/product';
+import { ProductTrendCard } from '@/components/analytics/ProductTrendCard';
+import { TrendRange } from '@/components/analytics/trend';
 import { TraceRecordForm, TraceTimeline } from '@/components/trace';
-import { StatusBadge, type ProductStatus } from '@/components/product';
 import { QRScanner } from '@/components/scanner';
+import { StatusBadge } from '@/components/product';
 
 // Product type matching API response (Story 7.4, 7.12: Added status field)
 interface Product {
@@ -117,6 +118,9 @@ export default function RetailerDashboard({
   const [historyError, setHistoryError] = useState<string | null>(null);
   const [historyLoaded, setHistoryLoaded] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+
+  // Trend range state
+  const [range, setRange] = useState<TrendRange>('7d');
 
   // Story 7.17: Incoming Shipments state
   const [incomingProducts, setIncomingProducts] = useState<IncomingProduct[]>([]);
@@ -210,6 +214,30 @@ export default function RetailerDashboard({
     }
   };
 
+  const filterByRange = useCallback(
+    <T extends { createdAt: string }>(items: T[]): T[] => {
+      const now = new Date();
+      const rangeDays = range === '7d' ? 7 : range === '30d' ? 30 : 365;
+      const start = new Date(now);
+      start.setDate(now.getDate() - (rangeDays - 1));
+      return items.filter((item) => {
+        const created = new Date(item.createdAt);
+        return created >= start && created <= now;
+      });
+    },
+    [range]
+  );
+
+  const soldProducts = useMemo(
+    () =>
+      historyProducts.filter(
+        (p) => (p.status || '').toString().toUpperCase() === 'SOLD'
+      ),
+    [historyProducts]
+  );
+
+  const soldForTrend = useMemo(() => filterByRange(soldProducts), [filterByRange, soldProducts]);
+
   // Story 7.15: Handle tab change - lazy load history on first click
   const handleTabChange = (index: number) => {
     setActiveTab(index);
@@ -223,6 +251,13 @@ export default function RetailerDashboard({
     fetchInStockProducts();
     fetchIncomingProducts(); // Story 7.17
   }, []);
+
+  // Ensure history is loaded for KPIs/trend
+  useEffect(() => {
+    if (!historyLoaded) {
+      fetchHistoryProducts();
+    }
+  }, [historyLoaded]);
 
   // Handle Add Trace button click
   const handleAddTrace = (productId: string) => {
@@ -293,9 +328,7 @@ export default function RetailerDashboard({
     setLookupProduct(null);
     setBlockchainIdInput('');
     fetchInStockProducts(); // Refetch in-stock list
-    if (historyLoaded) {
-      fetchHistoryProducts(); // Refetch history if already loaded
-    }
+    fetchHistoryProducts(); // Refetch history for KPIs/trend
     toast({
       title: 'Product received',
       description: 'The product is now in your custody.',
@@ -317,9 +350,7 @@ export default function RetailerDashboard({
     setAcceptProductId(null);
     fetchIncomingProducts(); // Refetch incoming (product should disappear)
     fetchInStockProducts(); // Refetch in-stock (product should appear)
-    if (historyLoaded) {
-      fetchHistoryProducts(); // Refetch history if already loaded
-    }
+    fetchHistoryProducts(); // Refetch history for KPIs/trend
     toast({
       title: 'Shipment accepted',
       description: 'The product is now in your stock.',
@@ -334,6 +365,21 @@ export default function RetailerDashboard({
       <VStack spacing={6} align="stretch">
         <Heading color="brand.primary">Retailer Dashboard</Heading>
         <Text color="brand.muted">Welcome, {userName}</Text>
+
+        <SimpleGrid columns={{ base: 1, md: 4 }} spacing={4}>
+          <KpiCard label="Total Products" value={historyProducts.length.toString()} />
+          <KpiCard label="In Custody" value={inStockProducts.length.toString()} />
+          <KpiCard label="Incoming Shipments" value={incomingProducts.length.toString()} />
+          <KpiCard label="Sold Products" value={soldProducts.length.toString()} />
+        </SimpleGrid>
+
+        <ProductTrendCard
+          title="Sales Trend Overview"
+          products={soldForTrend}
+          range={range}
+          onRangeChange={setRange}
+          footerText="Counts of sold products over time"
+        />
 
         {/* Story 7.17: Incoming Shipments Section */}
         <Box
@@ -805,5 +851,24 @@ export default function RetailerDashboard({
         </ModalContent>
       </Modal>
     </Layout>
+  );
+}
+
+function KpiCard({ label, value }: { label: string; value: string }) {
+  return (
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
+      borderColor="brand.border"
+      bg="brand.surface"
+      p={4}
+    >
+      <Text fontSize="sm" color="brand.muted">
+        {label}
+      </Text>
+      <Text fontSize="2xl" fontWeight="semibold" color="brand.primary">
+        {value}
+      </Text>
+    </Box>
   );
 }
