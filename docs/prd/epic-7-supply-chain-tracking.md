@@ -1,6 +1,6 @@
 ### Epic 7: Supply Chain Tracking
 
-**Updated: 2025-12-05 (Session 72)** - 17/17 stories complete - EPIC COMPLETE
+**Updated: 2025-12-28 (Session 91)** - 17/19 stories complete - Stories 7.18-7.19 added for Quality Check Rejection
 
 **Priority:** 🔴 Must Have
 **Estimated Time:** 22-24 hours (Smart Contract 4h + Backend 6-7h + Frontend 12-13h)
@@ -296,6 +296,8 @@ export async function GET(req, { params }) {
 | 7.15 | Retailer Dashboard Tabs | 2h | ✅ Complete | YiLing |
 | 7.16 | SHIPPED Action - Recipient Selection | 2h | ✅ Complete | TaiSheng + YiLing |
 | 7.17 | Incoming Shipments Visibility | 2.5h | ✅ Complete | TaiSheng + YiLing |
+| 7.18 | QUALITY_FAIL Action + Quarantine Flag | 2-2.5h | 📝 Ready for Review | TaiSheng + YiLing |
+| 7.19 | Quarantined Products Dashboard | 1-1.5h | 📝 Ready for Review | YiLing |
 
 **Story Breakdown Update (Session 67):** Original Stories 7.6-7.7 split into 7.6-7.10 for better testability and context management. Each story is independently testable and scoped to 2 hours or less. QR Scanner (7.10) added as shared component for product lookup, replacing manual ID entry.
 
@@ -311,6 +313,10 @@ export async function GET(req, { params }) {
 Total additional estimate: ~12.5 hours - ALL COMPLETE.
 
 **Story Split (Session 72):** Original 7.16 (3-4h) split into 7.16 + 7.17 per [Humanizing Work vertical slicing](https://www.humanizingwork.com/the-humanizing-work-guide-to-splitting-user-stories/) best practices. Each story is independently testable and delivers end-to-end value.
+
+**Stories 7.18-7.19 Addition (Session 91 - Quality Check Rejection):** Added stories to implement pass/fail results for quality checks. When quality check fails, product is marked as quarantined and moved to separate dashboard section. Per [SG Systems Global](https://sgsystemsglobal.com/guides/inventory-quarantine-system/) best practices: rejected products must be visually separated from sellable inventory. Key features:
+- 7.18: QUALITY_FAIL action + isQuarantined flag + Pass/Fail UI in form ⏳
+- 7.19: Quarantined Products dashboard section (follows 7.17 pattern) ⏳
 
 #### Team Assignment
 

@@ -89,6 +89,7 @@ export default function DistributorDashboard({}: DistributorDashboardProps) {
   // Story 7.17: Incoming Shipments state
   const [incomingProducts, setIncomingProducts] = useState<IncomingProduct[]>([]);
 
+
   // Trend range state
   const [range, setRange] = useState<TrendRange>('7d');
 
@@ -130,6 +131,7 @@ export default function DistributorDashboard({}: DistributorDashboardProps) {
     } catch {
     }
   };
+
 
   const filterByRange = useCallback(
     <T extends { createdAt: string }>(items: T[]): T[] => {

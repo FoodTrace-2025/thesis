@@ -36,9 +36,21 @@ const ACTION_COLORS: Record<string, string> = {
   REGISTERED: "status.registered",
   RECEIVED: "status.received",
   QUALITY_CHECK: "status.qualityChecked",
+  QUALITY_FAIL: "status.rejected", // Story 7.18: Red color for failed quality check
   SHIPPED: "status.shipped",
   STOCKED: "status.stocked",
   SOLD: "status.sold",
+};
+
+// Story 7.18: Human-readable action labels (consistency with ConsumerTraceTimeline)
+const ACTION_LABELS: Record<string, string> = {
+  REGISTERED: "Registered",
+  RECEIVED: "Received",
+  QUALITY_CHECK: "Quality Check",
+  QUALITY_FAIL: "Quality Fail",
+  SHIPPED: "Shipped",
+  STOCKED: "Stocked",
+  SOLD: "Sold",
 };
 
 function getActionColor(action: string): string {
@@ -121,7 +133,8 @@ export function TraceTimeline({ productId }: TraceTimelineProps) {
     <VStack spacing={0} align="stretch">
       {records.map((record, index) => {
         const actionColor = getActionColor(record.action);
-        const label = record.action.replace('_', ' ')
+        // Story 7.18: Use ACTION_LABELS for consistent formatting (not string replace)
+        const label = ACTION_LABELS[record.action] || record.action;
         return (
           <Box key={record.id} position="relative">
             {/* Timeline connector line */}

@@ -21,6 +21,7 @@ import ProductRegistryABI from '@/lib/abi/ProductRegistry';
 const TRACE_ACTIONS = [
   'RECEIVED',
   'QUALITY_CHECK',
+  'QUALITY_FAIL', // Story 7.18: Quality check rejection
   'SHIPPED',
   'STOCKED',
   'SOLD',
@@ -333,6 +334,7 @@ export default async function handler(
 
       // Story 7.4: Transfer ownership on RECEIVED action (idempotent)
       // Story 7.11: Clear ownership on SOLD (product leaves supply chain)
+      // Story 7.18: Set isQuarantined on QUALITY_FAIL
       if (action === 'RECEIVED') {
         await tx.product.update({
           where: { id: product.id },
@@ -343,10 +345,16 @@ export default async function handler(
           where: { id: product.id },
           data: { currentOwnerId: null },
         });
+      } else if (action === 'QUALITY_FAIL') {
+        await tx.product.update({
+          where: { id: product.id },
+          data: { isQuarantined: true },
+        });
       }
 
-      // Story 7.4 + 7.11: Include ownership transfer info in audit log
+      // Story 7.4 + 7.11 + 7.18: Include ownership/quarantine info in audit log
       const isOwnershipChange = action === 'RECEIVED' || action === 'SOLD';
+      const isQuarantine = action === 'QUALITY_FAIL';
       await tx.auditLog.create({
         data: {
           action: 'TRACE_RECORD_ADDED',
@@ -367,6 +375,8 @@ export default async function handler(
             soldToConsumer: action === 'SOLD' || undefined,
             // Story 7.16: Recipient company for SHIPPED
             recipientCompanyId: validatedRecipientCompanyId || undefined,
+            // Story 7.18: Quarantine flag for QUALITY_FAIL
+            isQuarantined: isQuarantine || undefined,
           },
         },
       });

@@ -1,6 +1,7 @@
 // src/components/trace/TraceRecordForm.tsx
 // Story 7.5: TraceRecordForm Component
 // Story 7.17: Added defaultAction prop for Accept workflow
+// Story 7.18: Added Pass/Fail result field for Quality Check
 // Form for adding trace records to products on the blockchain
 
 import { useState, useEffect, FormEvent } from 'react';
@@ -11,7 +12,10 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
+  HStack,
   Input,
+  Radio,
+  RadioGroup,
   Select,
   Textarea,
   VStack,
@@ -44,6 +48,7 @@ const ROLE_ACTIONS: Record<string, string[]> = {
 const ACTION_LABELS: Record<string, string> = {
   RECEIVED: 'Received',
   QUALITY_CHECK: 'Quality Check',
+  QUALITY_FAIL: 'Quality Fail', // Story 7.18
   SHIPPED: 'Shipped',
   STOCKED: 'Stocked',
   SOLD: 'Sold',
@@ -98,6 +103,9 @@ export function TraceRecordForm({
   const [isLoading, setIsLoading] = useState(false);
   const [isAcknowledged, setIsAcknowledged] = useState(!requireAcknowledgement);
 
+  // Story 7.18: Pass/Fail result for Quality Check
+  const [result, setResult] = useState<'PASS' | 'FAIL' | ''>('');
+
   // Story 7.16: Company selection for SHIPPED action
   const [recipientCompanyId, setRecipientCompanyId] = useState('');
   const [companies, setCompanies] = useState<Company[]>([]);
@@ -105,6 +113,7 @@ export function TraceRecordForm({
   const [companiesError, setCompaniesError] = useState('');
 
   // Fetch companies when SHIPPED action is selected
+  // Story 7.18: Clear result when action changes
   useEffect(() => {
     if (action === 'SHIPPED') {
       setCompaniesLoading(true);
@@ -133,6 +142,11 @@ export function TraceRecordForm({
       setCompanies([]);
       setCompaniesError('');
     }
+
+    // Story 7.18: Clear result when action is not QUALITY_CHECK
+    if (action !== 'QUALITY_CHECK') {
+      setResult('');
+    }
   }, [action]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -140,10 +154,10 @@ export function TraceRecordForm({
     setApiError('');
 
     // Validate
-    const result = traceSchema.safeParse({ action, location, notes });
-    if (!result.success) {
+    const validation = traceSchema.safeParse({ action, location, notes });
+    if (!validation.success) {
       const fieldErrors: Record<string, string> = {};
-      result.error.issues.forEach((issue) => {
+      validation.error.issues.forEach((issue) => {
         const field = issue.path[0] as string;
         fieldErrors[field] = issue.message;
       });
@@ -159,13 +173,29 @@ export function TraceRecordForm({
       }));
       return;
     }
+
+    // Story 7.18: Validate result for QUALITY_CHECK action (Distributors/Retailers only)
+    // Producers do outgoing QC which is always pass - they don't see the result field
+    if (action === 'QUALITY_CHECK' && userRole !== 'PRODUCER' && !result) {
+      setErrors((prev) => ({
+        ...prev,
+        result: 'Please select Pass or Fail',
+      }));
+      return;
+    }
     setErrors({});
+
+    // Story 7.18: Map result to final action
+    // Pass → QUALITY_CHECK, Fail → QUALITY_FAIL
+    const finalAction = action === 'QUALITY_CHECK' && result === 'FAIL'
+      ? 'QUALITY_FAIL'
+      : action;
 
     setIsLoading(true);
     try {
       // Story 7.16: Include recipientCompanyId for SHIPPED
       const requestBody: { action: string; location: string; notes: string; recipientCompanyId?: string } = {
-        action,
+        action: finalAction,
         location,
         notes,
       };
@@ -200,7 +230,7 @@ export function TraceRecordForm({
         title: 'Trace record added',
         description: (
           <Text>
-            {ACTION_LABELS[action]} recorded.{' '}
+            {ACTION_LABELS[finalAction]} recorded.{' '}
             <Link
               href={`https://sepolia.etherscan.io/tx/${data.traceRecord.transactionHash}`}
               isExternal
@@ -220,6 +250,7 @@ export function TraceRecordForm({
       setLocation('');
       setNotes('');
       setRecipientCompanyId(''); // Story 7.16
+      setResult(''); // Story 7.18
       onSuccess?.();
     } catch (err) {
       console.error('Add trace record failed:', err);
@@ -304,6 +335,31 @@ export function TraceRecordForm({
               </Select>
             )}
             <FormErrorMessage>{errors.recipientCompanyId}</FormErrorMessage>
+          </FormControl>
+        )}
+
+        {/* Story 7.18: Result field for Quality Check (Pass/Fail) */}
+        {/* Only shown for Distributors/Retailers - Producers do outgoing QC which is always pass */}
+        {action === 'QUALITY_CHECK' && userRole !== 'PRODUCER' && (
+          <FormControl isInvalid={!!errors.result} isRequired>
+            <FormLabel color="brand.dark">Result</FormLabel>
+            <RadioGroup
+              value={result}
+              onChange={(val) => {
+                setResult(val as 'PASS' | 'FAIL');
+                if (errors.result) setErrors((prev) => ({ ...prev, result: '' }));
+              }}
+            >
+              <HStack spacing={6}>
+                <Radio value="PASS" colorScheme="green" isDisabled={isLoading}>
+                  Pass
+                </Radio>
+                <Radio value="FAIL" colorScheme="red" isDisabled={isLoading}>
+                  Fail
+                </Radio>
+              </HStack>
+            </RadioGroup>
+            <FormErrorMessage>{errors.result}</FormErrorMessage>
           </FormControl>
         )}
 

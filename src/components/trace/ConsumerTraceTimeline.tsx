@@ -31,6 +31,7 @@ const ACTION_COLORS: Record<string, string> = {
   REGISTERED: "status.registered",
   RECEIVED: "status.received",
   QUALITY_CHECK: "status.qualityChecked",
+  QUALITY_FAIL: "status.rejected", // Story 7.18: Red color for failed quality check
   SHIPPED: "status.shipped",
   STOCKED: "status.stocked",
   SOLD: "status.sold",
@@ -40,6 +41,7 @@ const ACTION_LABELS: Record<string, string> = {
   REGISTERED: "Product registered",
   RECEIVED: "Received at facility",
   QUALITY_CHECK: "Quality checked",
+  QUALITY_FAIL: "Quality failed inspection", // Story 7.18
   SHIPPED: "Shipped to next location",
   STOCKED: "Placed on shelf",
   SOLD: "Sold to customer",

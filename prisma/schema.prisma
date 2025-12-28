@@ -150,6 +150,9 @@ model Product {
   currentOwnerId  String?
   currentOwner    Company? @relation("ProductOwner", fields: [currentOwnerId], references: [id])
 
+  // Story 7.18: Quality Check Rejection (Quarantine)
+  isQuarantined   Boolean  @default(false)
+
   // Relation for Epic 7: Supply Chain Tracking
   traceRecords    TraceRecord[]
 
@@ -166,7 +169,7 @@ model TraceRecord {
   productId       String
   userId          String   // User who added the trace record
   companyId       String   // Company of the user
-  action          String   // "RECEIVED", "QUALITY_CHECK", "SHIPPED", "STOCKED", "SOLD"
+  action          String   // "RECEIVED", "QUALITY_CHECK", "QUALITY_FAIL", "SHIPPED", "STOCKED", "SOLD"
   location        String   // "Helsinki Distribution Center"
   notes           String?  // Optional quality notes
   transactionHash String   // Blockchain transaction hash

@@ -3,7 +3,8 @@
 // Story 7.12: Product Status Badges - Added status field
 // Story 7.13: Product History API - Added history=me filter
 // Story 7.17: Incoming Shipments API - Added incoming=me filter
-// GET /api/products - List products with optional owner/company/history/incoming filter
+// Story 7.18: Quarantine Filter - Added quarantined=me filter
+// GET /api/products - List products with optional owner/company/history/incoming/quarantined filter
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
@@ -17,6 +18,7 @@ const querySchema = z.object({
   company: z.enum(['me']).optional(), // Products registered by user's company (for producers)
   history: z.enum(['me']).optional(), // Story 7.13: Products where company has ANY trace record
   incoming: z.enum(['me']).optional(), // Story 7.17: Products shipped to me but not yet received
+  quarantined: z.enum(['me']).optional(), // Story 7.18: Quarantined products owned by user's company
   limit: z.coerce.number().int().min(1).max(100).default(50),
   offset: z.coerce.number().int().min(0).default(0),
 });
@@ -26,6 +28,7 @@ type OnChainStatus =
   | 'REGISTERED'
   | 'RECEIVED'
   | 'QUALITY_CHECK'
+  | 'QUALITY_FAIL' // Story 7.18
   | 'SHIPPED'
   | 'STOCKED'
   | 'SOLD'
@@ -71,6 +74,7 @@ async function getProductsWithStatus(
     'REGISTERED',
     'RECEIVED',
     'QUALITY_CHECK',
+    'QUALITY_FAIL', // Story 7.18
     'SHIPPED',
     'STOCKED',
     'SOLD',
@@ -123,13 +127,13 @@ export default async function handler(
       });
     }
 
-    const { owner, company, history, incoming, limit, offset } = validation.data;
+    const { owner, company, history, incoming, quarantined, limit, offset } = validation.data;
 
-    // 3. Story 7.13 + 7.17: Validate mutually exclusive filters
-    const filterCount = [owner, company, history, incoming].filter(Boolean).length;
+    // 3. Story 7.13 + 7.17 + 7.18: Validate mutually exclusive filters
+    const filterCount = [owner, company, history, incoming, quarantined].filter(Boolean).length;
     if (filterCount > 1) {
       return res.status(400).json({
-        error: 'Only one filter allowed: owner, company, history, or incoming',
+        error: 'Only one filter allowed: owner, company, history, incoming, or quarantined',
         code: 'VALIDATION_ERROR',
       });
     }
@@ -146,10 +150,11 @@ export default async function handler(
 
       // 5. Build where clause based on filter type
       // owner=me: products currently owned by user's company (for distributors/retailers)
+      //           Story 7.18: Excludes quarantined products (they appear in quarantined=me)
       // company=me: products registered by user's company (for producers)
       const whereClause = company === 'me'
         ? { companyId: session.user.companyId }
-        : { currentOwnerId: session.user.companyId };
+        : { currentOwnerId: session.user.companyId, isQuarantined: false };
 
       const [products, total] = await Promise.all([
         prisma.product.findMany({
@@ -295,7 +300,45 @@ export default async function handler(
       });
     }
 
-    // 9. Public access: return all products
+    // 9. Story 7.18: quarantined=me - quarantined products owned by user's company
+    if (quarantined === 'me') {
+      const session = await getServerSession(req, res, authOptions);
+      if (!session?.user?.companyId) {
+        return res.status(401).json({
+          error: 'Authentication required',
+          code: 'UNAUTHORIZED',
+        });
+      }
+
+      // Find products that are quarantined AND owned by user's company
+      const whereClause = {
+        currentOwnerId: session.user.companyId,
+        isQuarantined: true,
+      };
+
+      const [products, total] = await Promise.all([
+        prisma.product.findMany({
+          where: whereClause,
+          include: { currentOwner: { select: { name: true } } },
+          take: limit,
+          skip: offset,
+          orderBy: { createdAt: 'desc' },
+        }),
+        prisma.product.count({ where: whereClause }),
+      ]);
+
+      const formattedProducts = await getProductsWithStatus(products);
+
+      return res.status(200).json({
+        success: true,
+        products: formattedProducts,
+        total,
+        limit,
+        offset,
+      });
+    }
+
+    // 10. Public access: return all products
     const [products, total] = await Promise.all([
       prisma.product.findMany({
         include: { currentOwner: { select: { name: true } } },

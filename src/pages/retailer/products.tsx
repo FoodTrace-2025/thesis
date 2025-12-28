@@ -140,14 +140,18 @@ interface RetailerProductsProps {
 export default function RetailerProductsPage({ userRole }: RetailerProductsProps) {
   const [custodyRows, setCustodyRows] = useState<BatchTableRow[]>([]);
   const [historyRows, setHistoryRows] = useState<BatchTableRow[]>([]);
+  const [quarantineRows, setQuarantineRows] = useState<BatchTableRow[]>([]); // Story 7.19
   const [status, setStatus] = useState<OnChainStatus | "ALL">("ALL");
   const [query, setQuery] = useState("");
   const [activeTab, setActiveTab] = useState(0);
   const [custodyLoading, setCustodyLoading] = useState(true);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [quarantineLoading, setQuarantineLoading] = useState(false); // Story 7.19
   const [custodyError, setCustodyError] = useState<string | null>(null);
   const [historyError, setHistoryError] = useState<string | null>(null);
+  const [quarantineError, setQuarantineError] = useState<string | null>(null); // Story 7.19
   const [historyLoaded, setHistoryLoaded] = useState(false);
+  const [quarantineLoaded, setQuarantineLoaded] = useState(false); // Story 7.19
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -157,7 +161,7 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
   };
 
   const filteredRows = useMemo(() => {
-    const rows = activeTab === 0 ? custodyRows : historyRows;
+    const rows = activeTab === 0 ? custodyRows : activeTab === 1 ? historyRows : quarantineRows;
     return rows.filter((row) => {
       const matchesQuery =
         !query ||
@@ -168,7 +172,7 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
         status === "ALL" || (canonical !== null && canonical === status);
       return matchesQuery && matchesStatus;
     });
-  }, [activeTab, custodyRows, historyRows, query, status]);
+  }, [activeTab, custodyRows, historyRows, quarantineRows, query, status]);
 
   const fetchCustody = useCallback(async () => {
     setCustodyLoading(true);
@@ -231,6 +235,36 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
     }
   }, []);
 
+  // Story 7.19: Fetch quarantined products
+  const fetchQuarantine = useCallback(async () => {
+    setQuarantineLoading(true);
+    setQuarantineError(null);
+    try {
+      const res = await fetch("/api/products?quarantined=me");
+      const data = await res.json();
+      if (!res.ok) {
+        setQuarantineError(data.error || "Failed to fetch quarantined products");
+        return;
+      }
+      const mapped: BatchTableRow[] = (data.products as ApiProduct[]).map((p) => ({
+        id: p.id,
+        name: p.name,
+        blockchainId: p.blockchainId,
+        harvestDate: p.harvestDate,
+        createdAt: p.createdAt,
+        status: p.status,
+        origin: p.origin,
+        currentOwner: p.currentOwner,
+      }));
+      setQuarantineRows(mapped);
+      setQuarantineLoaded(true);
+    } catch {
+      setQuarantineError("Network error. Please try again.");
+    } finally {
+      setQuarantineLoading(false);
+    }
+  }, []);
+
   const handleAddTrace = (productId: string) => {
     setSelectedProductId(productId);
     onOpen();
@@ -242,6 +276,9 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
     fetchCustody();
     if (historyLoaded) {
       fetchHistory();
+    }
+    if (quarantineLoaded) {
+      fetchQuarantine(); // Story 7.19: Refresh quarantine on trace action
     }
     toast({
       title: "Trace record added",
@@ -296,6 +333,9 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
             if (index === 1 && !historyLoaded) {
               fetchHistory();
             }
+            if (index === 2 && !quarantineLoaded) {
+              fetchQuarantine(); // Story 7.19: Lazy-load quarantine data
+            }
           }}
         >
           <TabList>
@@ -309,6 +349,12 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
               Product History{" "}
               <Badge ml={2} borderRadius="full" bg="status.history" color="brand.surface">
                 {historyRows.length}
+              </Badge>
+            </Tab>
+            <Tab>
+              Quarantined{" "}
+              <Badge ml={2} borderRadius="full" colorScheme="red">
+                {quarantineRows.length}
               </Badge>
             </Tab>
           </TabList>
@@ -352,6 +398,25 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
               <TableState
                 isLoading={historyLoading}
                 error={historyError}
+                rows={filteredRows}
+                onCopy={handleCopy}
+              />
+            </TabPanel>
+            {/* Story 7.19: Quarantined Products Tab */}
+            <TabPanel px={0}>
+              <Filters
+                query={query}
+                status={status}
+                onQueryChange={setQuery}
+                onStatusChange={setStatus}
+                onReset={() => {
+                  setQuery("");
+                  setStatus("ALL");
+                }}
+              />
+              <TableState
+                isLoading={quarantineLoading}
+                error={quarantineError}
                 rows={filteredRows}
                 onCopy={handleCopy}
               />
