@@ -1,5 +1,5 @@
-// src/pages/distributor/products.tsx
-// Distributor "My Products" view reusing shared batch table
+// src/pages/retailer/products.tsx
+// Retailer "My Products" page using shared table layout
 
 import { useEffect, useMemo, useState, useCallback, type ReactNode } from "react";
 import { GetServerSidePropsContext } from "next";
@@ -11,6 +11,9 @@ import {
   Button,
   Flex,
   HStack,
+  Text,
+  Center,
+  Icon,
   IconButton,
   Input,
   Select,
@@ -32,7 +35,7 @@ import {
   ModalBody,
   useDisclosure,
 } from "@chakra-ui/react";
-import { SearchIcon, RepeatIcon } from "@chakra-ui/icons";
+import { SearchIcon, RepeatIcon, InfoIcon } from "@chakra-ui/icons";
 import { Layout } from "@/components/layout";
 import { type ProductStatus } from "@/components/product";
 import { BatchTable, type BatchTableRow } from "@/components/product/BatchTable";
@@ -104,11 +107,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { redirect: { destination: "/login", permanent: false } };
   }
 
-  if (session.user.role !== "DISTRIBUTOR") {
+  if (session.user.role !== "RETAILER") {
     return { redirect: { destination: "/dashboard", permanent: false } };
   }
 
-  // Fetch company name for ownership comparison
   let companyName = "";
   if (session.user.companyId) {
     const company = await prisma.company.findUnique({
@@ -128,14 +130,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-interface DistributorProductsProps {
+interface RetailerProductsProps {
   userName: string;
   userRole: string;
   companyId: string | null;
   companyName: string;
 }
 
-export default function DistributorProductsPage({ userRole }: DistributorProductsProps) {
+export default function RetailerProductsPage({ userRole }: RetailerProductsProps) {
   const [custodyRows, setCustodyRows] = useState<BatchTableRow[]>([]);
   const [historyRows, setHistoryRows] = useState<BatchTableRow[]>([]);
   const [status, setStatus] = useState<OnChainStatus | "ALL">("ALL");
@@ -210,18 +212,16 @@ export default function DistributorProductsPage({ userRole }: DistributorProduct
         setHistoryError(data.error || "Failed to fetch history");
         return;
       }
-      const mapped: BatchTableRow[] = (data.products as ApiProduct[]).map(
-        (p) => ({
-          id: p.id,
-          name: p.name,
-          blockchainId: p.blockchainId,
-          harvestDate: p.harvestDate,
-          createdAt: p.createdAt,
-          status: p.status,
-          origin: p.origin,
-          currentOwner: p.currentOwner,
-        })
-      );
+      const mapped: BatchTableRow[] = (data.products as ApiProduct[]).map((p) => ({
+        id: p.id,
+        name: p.name,
+        blockchainId: p.blockchainId,
+        harvestDate: p.harvestDate,
+        createdAt: p.createdAt,
+        status: p.status,
+        origin: p.origin,
+        currentOwner: p.currentOwner,
+      }));
       setHistoryRows(mapped);
       setHistoryLoaded(true);
     } catch {
@@ -276,7 +276,7 @@ export default function DistributorProductsPage({ userRole }: DistributorProduct
 
   return (
     <Layout>
-      <VStack align="stretch" spacing={6} py={6}>
+      <VStack align="stretch" spacing={4} py={6}>
         <Flex
           justify="space-between"
           align={{ base: "flex-start", md: "center" }}
@@ -290,6 +290,7 @@ export default function DistributorProductsPage({ userRole }: DistributorProduct
 
         <Tabs
           index={activeTab}
+          colorScheme="green"
           onChange={(index) => {
             setActiveTab(index);
             if (index === 1 && !historyLoaded) {
@@ -299,8 +300,8 @@ export default function DistributorProductsPage({ userRole }: DistributorProduct
         >
           <TabList>
             <Tab>
-              In Custody{" "}
-              <Badge ml={2} borderRadius="full" bg="status.inCustody" color="brand.surface">
+              In Store{" "}
+              <Badge ml={2} borderRadius="full" bg="status.inStore" color="brand.surface">
                 {custodyRows.length}
               </Badge>
             </Tab>
@@ -329,9 +330,11 @@ export default function DistributorProductsPage({ userRole }: DistributorProduct
                 rows={filteredRows}
                 onCopy={handleCopy}
                 renderActions={(row) => (
-                  <Button size="sm" colorScheme="green" onClick={() => handleAddTrace(row.id)}>
-                    Add Trace
-                  </Button>
+                  <HStack spacing={2}>
+                    <Button size="sm" onClick={() => handleAddTrace(row.id)}>
+                      Add Trace
+                    </Button>
+                  </HStack>
                 )}
               />
             </TabPanel>
@@ -395,8 +398,8 @@ function Filters({
       direction={{ base: "column", md: "row" }}
       gap={3}
       align={{ base: "stretch", md: "center" }}
-      mt={4}
       mb={3}
+      mt={4}
     >
       <HStack flex="1">
         <Input
@@ -472,16 +475,15 @@ function TableState({
 
   if (rows.length === 0) {
     return (
-      <Box
-        borderWidth="1px"
-        borderRadius="md"
-        borderColor="brand.border"
-        p={6}
-        textAlign="center"
-        color="brand.muted"
-      >
-        No products match your filters.
-      </Box>
+      <Center py={8} flexDirection="column">
+        <Icon as={InfoIcon} boxSize={8} color="brand.muted" mb={3} />
+        <Text color="brand.muted" fontWeight="medium">
+          No products in stock yet
+        </Text>
+        <Text color="brand.muted" fontSize="sm" mt={1}>
+          Products will appear here when you receive them.
+        </Text>
+      </Center>
     );
   }
 
@@ -493,7 +495,7 @@ function TableState({
       showOrigin
       showOwner
       renderActions={renderActions}
-      actionsHeader="Actions"
+      actionsHeader={renderActions ? "Actions" : undefined}
     />
   );
 }

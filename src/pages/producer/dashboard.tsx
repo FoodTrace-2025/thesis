@@ -11,6 +11,7 @@ import { prisma } from '@/lib/prisma';
 import { useRouter } from "next/router";
 import {
   Flex,
+  Heading,
   Text,
   VStack,
   Box,
@@ -141,16 +142,16 @@ export default function ProducerDashboard({}: ProducerDashboardProps) {
 
   return (
     <Layout>
-      <VStack spacing={6} align="stretch">
+      <VStack align="stretch" spacing={6} py={6}>
         <Flex
           justify="space-between"
           align={{ base: "flex-start", md: "center" }}
           gap={3}
           wrap="wrap"
         >
-          <Text fontSize="xl" fontWeight="semibold" color="brand.dark">
-            My Batches
-          </Text>
+          <Heading size="lg" color="brand.dark">
+            Producer Dashboard
+          </Heading>
           <Button
             type="button"
             onClick={() => router.push("/producer/register")}
