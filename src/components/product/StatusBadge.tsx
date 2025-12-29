@@ -5,15 +5,13 @@
 import { Badge } from '@chakra-ui/react';
 
 export type ProductStatus =
-  | 'IN_STOCK'
   | 'SOLD'
-  | 'IN_TRANSIT'
   | 'REGISTERED'
   | 'RECEIVED'
   | 'QUALITY_CHECK'
   | 'SHIPPED'
   | 'STOCKED'
-  | 'REJECTED';
+  | 'QUALITY_FAIL';
 
 interface StatusBadgeProps {
   status: ProductStatus | string;
@@ -21,7 +19,7 @@ interface StatusBadgeProps {
 
 const STATUS_CONFIG: Record<
   string,
-  { label: string; color: string }
+  { label: string; color: string; bg?: string; textColor?: string }
 > = {
   REGISTERED: { label: 'Registered', color: 'status.registered' },
   RECEIVED: { label: 'Received', color: 'status.received' },
@@ -29,11 +27,8 @@ const STATUS_CONFIG: Record<
   SHIPPED: { label: 'Shipped', color: 'status.shipped' },
   STOCKED: { label: 'Stocked', color: 'status.stocked' },
   SOLD: { label: 'Sold', color: 'status.sold' },
-  REJECTED: { label: 'Rejected', color: 'brand.error' },
+  QUALITY_FAIL: { label: 'Quality Fail', color: 'status.rejected' },
 
-  // Legacy statuses mapped to closest equivalents
-  IN_STOCK: { label: 'Stocked', color: 'status.stocked' },
-  IN_TRANSIT: { label: 'Shipped', color: 'status.shipped' },
 };
 
 export function StatusBadge({ status }: StatusBadgeProps) {
