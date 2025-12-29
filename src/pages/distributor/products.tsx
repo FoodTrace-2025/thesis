@@ -74,17 +74,18 @@ const toOnChainStatus = (
 ): OnChainStatus | null => {
   const raw = (status || "").toString().trim().toUpperCase();
   if (!raw) return null;
+  const key = raw.replace(/[\s_-]+/g, "");
 
   const aliases: Record<string, OnChainStatus> = {
-    IN_STOCK: "STOCKED",
+    INSTOCK: "STOCKED",
     INTRANSIT: "SHIPPED",
-    IN_TRANSIT: "SHIPPED",
     QUALITYCHECKED: "QUALITY_CHECK",
     QUALITYCHECK: "QUALITY_CHECK",
+    QUALITYFAIL: "REJECTED",
     REJECT: "REJECTED",
   };
 
-  const canonical = aliases[raw] || (raw as OnChainStatus);
+  const canonical = aliases[key] || (raw as OnChainStatus);
   const valid = new Set<OnChainStatus>([
     "REGISTERED",
     "RECEIVED",

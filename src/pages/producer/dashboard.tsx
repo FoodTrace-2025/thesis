@@ -21,7 +21,6 @@ import {
   Alert,
   AlertIcon,
   Button,
-  Select,
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import { Layout } from '@/components/layout';
@@ -38,6 +37,8 @@ type OnChainStatus =
   | 'STOCKED'
   | 'SOLD'
   | 'REJECTED';
+
+const PENDING_STATUS_SET = new Set<OnChainStatus>(['REGISTERED', 'RECEIVED', 'QUALITY_CHECK', 'SHIPPED']);
 
 interface Product {
   id: string;
@@ -120,25 +121,40 @@ export default function ProducerDashboard({}: ProducerDashboardProps) {
     fetchProducts();
   }, []);
 
-  const filteredProducts = useMemo(() => {
-    const now = new Date();
-    const rangeDays = range === '7d' ? 7 : range === '30d' ? 30 : 365;
-    const start = new Date(now);
-    start.setDate(now.getDate() - (rangeDays - 1));
+  const normalizeStatus = (status: ProductStatus | OnChainStatus | string | null | undefined) => {
+    const raw = (status || '').toString().trim().toUpperCase();
+    if (!raw) return '' as OnChainStatus;
+    const key = raw.replace(/[\s_-]+/g, '');
 
-    return products.filter((p) => {
-      const created = new Date(p.createdAt);
-      return created >= start && created <= now;
-    });
-  }, [products, range]);
+    const aliases: Record<string, OnChainStatus> = {
+      INSTOCK: 'STOCKED',
+      INTRANSIT: 'SHIPPED',
+      QUALITYCHECKED: 'QUALITY_CHECK',
+      QUALITYCHECK: 'QUALITY_CHECK',
+      QUALITYFAIL: 'REJECTED',
+      REJECT: 'REJECTED',
+    };
 
-  const normalizeStatus = (status: ProductStatus | OnChainStatus | string | null | undefined) =>
-    (status || '').toString().toUpperCase();
+    return aliases[key] || (raw as OnChainStatus);
+  };
 
-  const pendingStatuses = new Set<OnChainStatus>(['REGISTERED', 'RECEIVED', 'QUALITY_CHECK', 'SHIPPED']);
-  const pendingVerifications = filteredProducts.filter((p) => pendingStatuses.has(normalizeStatus(p.status) as OnChainStatus)).length;
-  const rejectedBatches = filteredProducts.filter((p) => normalizeStatus(p.status) === 'REJECTED').length;
-  const filteredCount = filteredProducts.length;
+  const { totalProducts, onChainRecords, pendingVerifications, rejectedProducts } = useMemo(() => {
+    let pending = 0;
+    let rejected = 0;
+
+    for (const product of products) {
+      const status = normalizeStatus(product.status);
+      if (PENDING_STATUS_SET.has(status as OnChainStatus)) pending += 1;
+      if (status === 'REJECTED') rejected += 1;
+    }
+
+    return {
+      totalProducts: products.length,
+      onChainRecords: products.length,
+      pendingVerifications: pending,
+      rejectedProducts: rejected,
+    };
+  }, [products]);
 
   return (
     <Layout>
@@ -162,32 +178,13 @@ export default function ProducerDashboard({}: ProducerDashboardProps) {
           </Button>
         </Flex>
 
-        {/* Filters row placeholder */}
-        <Flex
-          justify="space-between"
-          align={{ base: 'flex-start', md: 'center' }}
-          gap={3}
-          wrap="wrap"
-          py={2}
-        >
-          <Select
-            maxW="200px"
-            value={range}
-            onChange={(e) => setRange(e.target.value as TrendRange)}
-          >
-            <option value="7d">Last 7 days</option>
-            <option value="30d">Last 30 days</option>
-            <option value="1y">Last 1 year</option>
-          </Select>
-        </Flex>
-
         {/* KPIs */}
         {!isLoading && !error && (
           <SimpleGrid columns={{ base: 1, md: 4 }} spacing={4}>
-            <KpiCard label="Total Batches" value={filteredCount.toString()} />
-            <KpiCard label="On-chain Records" value={filteredCount.toString()} />
+            <KpiCard label="Total Batches" value={totalProducts.toString()} />
+            <KpiCard label="On-chain Records" value={onChainRecords.toString()} />
             <KpiCard label="Pending Verifications" value={pendingVerifications.toString()} />
-            <KpiCard label="Rejected Batches" value={rejectedBatches.toString()} valueSize="2xl" />
+            <KpiCard label="Rejected Products" value={rejectedProducts.toString()} valueSize="2xl" />
           </SimpleGrid>
         )}
 

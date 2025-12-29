@@ -5,7 +5,12 @@
 import { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { Flex, VStack, Button, Text } from '@chakra-ui/react';
+import { 
+  Flex, 
+  VStack, 
+  Button, 
+  Heading 
+} from '@chakra-ui/react';
 import { Layout } from '@/components/layout';
 import { ProductRegistrationForm } from '@/components/producer/ProductRegistrationForm';
 import { useRouter } from "next/router";
@@ -29,16 +34,16 @@ export default function ProductRegistrationPage() {
     const router = useRouter();
   return (
     <Layout>
-      <VStack spacing={6} align="stretch" maxW="1200px" mx="auto" py={4}>
+      <VStack spacing={6} align="stretch" maxW="1200px" mx="auto" py={6}>
         <Flex
           justify="space-between"
           align={{ base: "flex-start", md: "center" }}
           gap={3}
           wrap="wrap"
         >
-          <Text fontSize="xl" fontWeight="semibold" color="brand.dark">
-            My Batches
-          </Text>
+          <Heading size="lg" color="brand.dark">
+            Product Registration
+          </Heading>
           <Button
             type="button"
             onClick={() => router.back()} 

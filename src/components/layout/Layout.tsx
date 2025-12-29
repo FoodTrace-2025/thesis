@@ -31,8 +31,8 @@ function getRoleLabel(role: string): string {
 const navByRole: Record<string, { label: string; href: string }[]> = {
   PRODUCER: [
     { label: 'Dash Board', href: '/producer/dashboard' },
-    { label: 'Create Batch', href: '/producer/register' },
-    { label: 'My Batches', href: '/producer/batches' },
+    { label: 'Register Product', href: '/producer/register' },
+    { label: 'My Products', href: '/producer/products' },
   ],
   DISTRIBUTOR: [
     { label: 'Dash Board', href: '/distributor/dashboard' },

@@ -1,7 +1,6 @@
-// src/pages/retailer/products.tsx
-// Retailer "My Products" page using shared table layout
-
+// src/pages/producer/batches.tsx
 import { useEffect, useMemo, useState, useCallback, type ReactNode } from "react";
+import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
@@ -11,9 +10,6 @@ import {
   Button,
   Flex,
   HStack,
-  Text,
-  Center,
-  Icon,
   IconButton,
   Input,
   Select,
@@ -26,7 +22,6 @@ import {
   TabPanels,
   TabPanel,
   Badge,
-  useToast,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -34,12 +29,15 @@ import {
   ModalCloseButton,
   ModalBody,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { SearchIcon, RepeatIcon, InfoIcon } from "@chakra-ui/icons";
+import { SearchIcon, RepeatIcon, AddIcon } from "@chakra-ui/icons";
 import { Layout } from "@/components/layout";
 import { type ProductStatus } from "@/components/product";
 import { BatchTable, type BatchTableRow } from "@/components/product/BatchTable";
 import { TraceRecordForm } from "@/components/trace";
+
+type BatchRow = BatchTableRow;
 
 type OnChainStatus =
   | "REGISTERED"
@@ -53,11 +51,11 @@ type OnChainStatus =
 type ApiProduct = {
   id: string;
   name: string;
-  origin: string;
   blockchainId: number;
   harvestDate?: string;
-  currentOwner: { name: string } | null;
   createdAt: string;
+  origin?: string;
+  currentOwner?: { name: string } | null;
   status: ProductStatus | string;
 };
 
@@ -108,7 +106,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { redirect: { destination: "/login", permanent: false } };
   }
 
-  if (session.user.role !== "RETAILER") {
+  if (session.user.role !== "PRODUCER") {
     return { redirect: { destination: "/dashboard", permanent: false } };
   }
 
@@ -131,49 +129,91 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-interface RetailerProductsProps {
+interface ProducerProductsProps {
   userName: string;
   userRole: string;
   companyId: string | null;
   companyName: string;
 }
 
-export default function RetailerProductsPage({ userRole }: RetailerProductsProps) {
-  const [custodyRows, setCustodyRows] = useState<BatchTableRow[]>([]);
-  const [historyRows, setHistoryRows] = useState<BatchTableRow[]>([]);
-  const [quarantineRows, setQuarantineRows] = useState<BatchTableRow[]>([]); // Story 7.19
+export default function ProducerProductsPage({ userRole }: ProducerProductsProps) {
+  const router = useRouter();
+  const [custodyRows, setCustodyRows] = useState<BatchRow[]>([]);
+  const [historyRows, setHistoryRows] = useState<BatchRow[]>([]);
   const [status, setStatus] = useState<OnChainStatus | "ALL">("ALL");
   const [query, setQuery] = useState("");
   const [activeTab, setActiveTab] = useState(0);
   const [custodyLoading, setCustodyLoading] = useState(true);
-  const [historyLoading, setHistoryLoading] = useState(false);
-  const [quarantineLoading, setQuarantineLoading] = useState(false); // Story 7.19
+  const [historyLoading, setHistoryLoading] = useState(true);
   const [custodyError, setCustodyError] = useState<string | null>(null);
   const [historyError, setHistoryError] = useState<string | null>(null);
-  const [quarantineError, setQuarantineError] = useState<string | null>(null); // Story 7.19
   const [historyLoaded, setHistoryLoaded] = useState(false);
-  const [quarantineLoaded, setQuarantineLoaded] = useState(false); // Story 7.19
+  const quarantineLoading = false;
+  const quarantineError: string | null = null;
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
-  const handleModalClose = () => {
-    onClose();
-    setSelectedProductId(null);
-  };
 
-  const filteredRows = useMemo(() => {
-    const rows = activeTab === 0 ? custodyRows : activeTab === 1 ? historyRows : quarantineRows;
-    return rows.filter((row) => {
-      const matchesQuery =
-        !query ||
-        row.id.toLowerCase().includes(query.toLowerCase()) ||
-        row.name.toLowerCase().includes(query.toLowerCase());
-      const canonical = toOnChainStatus(row.status);
-      const matchesStatus =
-        status === "ALL" || (canonical !== null && canonical === status);
-      return matchesQuery && matchesStatus;
+  const allRows = useMemo(() => {
+    const byId = new Map<string, BatchTableRow>();
+    [...historyRows, ...custodyRows].forEach((row) => {
+      byId.set(row.id, row);
     });
-  }, [activeTab, custodyRows, historyRows, quarantineRows, query, status]);
+    return Array.from(byId.values());
+  }, [historyRows, custodyRows]);
+
+  const quarantineRows = useMemo(
+    () => allRows.filter((row) => toOnChainStatus(row.status) === "REJECTED"),
+    [allRows]
+  );
+
+  const filteredSets = useMemo(() => {
+    const applyFilters = (rows: BatchTableRow[]) =>
+      rows.filter((row) => {
+        const matchesQuery =
+          !query ||
+          row.id.toLowerCase().includes(query.toLowerCase()) ||
+          row.name.toLowerCase().includes(query.toLowerCase());
+        const canonical = toOnChainStatus(row.status);
+        const matchesStatus = status === "ALL" || (canonical !== null && canonical === status);
+        return matchesQuery && matchesStatus;
+      });
+
+    return {
+      custody: applyFilters(custodyRows),
+      history: applyFilters(allRows),
+      quarantine: applyFilters(quarantineRows),
+    };
+  }, [custodyRows, allRows, quarantineRows, query, status]);
+
+  const fetchHistory = useCallback(async () => {
+    setHistoryLoading(true);
+    setHistoryError(null);
+    try {
+      const res = await fetch("/api/products?company=me");
+      const data = await res.json();
+      if (!res.ok) {
+        setHistoryError(data.error || "Failed to fetch products");
+        return;
+      }
+      const mapped: BatchTableRow[] = (data.products as ApiProduct[]).map((p) => ({
+        id: p.id,
+        name: p.name,
+        blockchainId: p.blockchainId,
+        harvestDate: p.harvestDate,
+        createdAt: p.createdAt,
+        status: p.status,
+        origin: p.origin,
+        currentOwner: p.currentOwner,
+      }));
+      setHistoryRows(mapped);
+      setHistoryLoaded(true);
+    } catch {
+      setHistoryError("Network error. Please try again.");
+    } finally {
+      setHistoryLoading(false);
+    }
+  }, []);
 
   const fetchCustody = useCallback(async () => {
     setCustodyLoading(true);
@@ -205,66 +245,8 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
 
   useEffect(() => {
     fetchCustody();
-  }, [fetchCustody]);
-
-  const fetchHistory = useCallback(async () => {
-    setHistoryLoading(true);
-    setHistoryError(null);
-    try {
-      const res = await fetch("/api/products?history=me");
-      const data = await res.json();
-      if (!res.ok) {
-        setHistoryError(data.error || "Failed to fetch history");
-        return;
-      }
-      const mapped: BatchTableRow[] = (data.products as ApiProduct[]).map((p) => ({
-        id: p.id,
-        name: p.name,
-        blockchainId: p.blockchainId,
-        harvestDate: p.harvestDate,
-        createdAt: p.createdAt,
-        status: p.status,
-        origin: p.origin,
-        currentOwner: p.currentOwner,
-      }));
-      setHistoryRows(mapped);
-      setHistoryLoaded(true);
-    } catch {
-      setHistoryError("Network error. Please try again.");
-    } finally {
-      setHistoryLoading(false);
-    }
-  }, []);
-
-  // Story 7.19: Fetch quarantined products
-  const fetchQuarantine = useCallback(async () => {
-    setQuarantineLoading(true);
-    setQuarantineError(null);
-    try {
-      const res = await fetch("/api/products?quarantined=me");
-      const data = await res.json();
-      if (!res.ok) {
-        setQuarantineError(data.error || "Failed to fetch quarantined products");
-        return;
-      }
-      const mapped: BatchTableRow[] = (data.products as ApiProduct[]).map((p) => ({
-        id: p.id,
-        name: p.name,
-        blockchainId: p.blockchainId,
-        harvestDate: p.harvestDate,
-        createdAt: p.createdAt,
-        status: p.status,
-        origin: p.origin,
-        currentOwner: p.currentOwner,
-      }));
-      setQuarantineRows(mapped);
-      setQuarantineLoaded(true);
-    } catch {
-      setQuarantineError("Network error. Please try again.");
-    } finally {
-      setQuarantineLoading(false);
-    }
-  }, []);
+    fetchHistory();
+  }, [fetchCustody, fetchHistory]);
 
   const handleAddTrace = (productId: string) => {
     setSelectedProductId(productId);
@@ -278,12 +260,8 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
     if (historyLoaded) {
       fetchHistory();
     }
-    if (quarantineLoaded) {
-      fetchQuarantine(); // Story 7.19: Refresh quarantine on trace action
-    }
     toast({
       title: "Trace record added",
-      description: "The trace record has been recorded.",
       status: "success",
       duration: 4000,
       isClosable: true,
@@ -314,7 +292,7 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
 
   return (
     <Layout>
-      <VStack align="stretch" spacing={4} py={6}>
+      <VStack align="stretch" spacing={6} py={6}>
         <Flex
           justify="space-between"
           align={{ base: "flex-start", md: "center" }}
@@ -324,32 +302,36 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
           <Heading size="lg" color="brand.dark">
             My Products
           </Heading>
+          <Button
+            type="button"
+            onClick={() => router.push("/producer/register")}
+            leftIcon={<AddIcon />}
+            width={{ base: "100%", sm: "auto" }}
+          >
+            Create Batch
+          </Button>
         </Flex>
 
         <Tabs
           index={activeTab}
-          colorScheme="green"
           onChange={(index) => {
             setActiveTab(index);
             if (index === 1 && !historyLoaded) {
               fetchHistory();
             }
-            if (index === 2 && !quarantineLoaded) {
-              fetchQuarantine(); // Story 7.19: Lazy-load quarantine data
-            }
           }}
         >
           <TabList>
             <Tab>
-              In Store{" "}
-              <Badge ml={2} borderRadius="full" bg="status.inStore" color="brand.surface">
+              In Custody{" "}
+              <Badge ml={2} borderRadius="full" bg="status.inCustody" color="brand.surface">
                 {custodyRows.length}
               </Badge>
             </Tab>
             <Tab>
               Product History{" "}
               <Badge ml={2} borderRadius="full" bg="status.history" color="brand.surface">
-                {historyRows.length}
+                {allRows.length}
               </Badge>
             </Tab>
             <Tab>
@@ -374,14 +356,12 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
               <TableState
                 isLoading={custodyLoading}
                 error={custodyError}
-                rows={filteredRows}
+                rows={filteredSets.custody}
                 onCopy={handleCopy}
                 renderActions={(row) => (
-                  <HStack spacing={2}>
-                    <Button size="sm" onClick={() => handleAddTrace(row.id)}>
-                      Add Trace
-                    </Button>
-                  </HStack>
+                  <Button size="sm" colorScheme="green" onClick={() => handleAddTrace(row.id)}>
+                    Add Trace
+                  </Button>
                 )}
               />
             </TabPanel>
@@ -399,11 +379,10 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
               <TableState
                 isLoading={historyLoading}
                 error={historyError}
-                rows={filteredRows}
+                rows={filteredSets.history}
                 onCopy={handleCopy}
               />
             </TabPanel>
-            {/* Story 7.19: Quarantined Products Tab */}
             <TabPanel px={0}>
               <Filters
                 query={query}
@@ -418,7 +397,7 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
               <TableState
                 isLoading={quarantineLoading}
                 error={quarantineError}
-                rows={filteredRows}
+                rows={filteredSets.quarantine}
                 onCopy={handleCopy}
               />
             </TabPanel>
@@ -426,7 +405,14 @@ export default function RetailerProductsPage({ userRole }: RetailerProductsProps
         </Tabs>
       </VStack>
 
-      <Modal isOpen={isOpen} onClose={handleModalClose} size="lg">
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          setSelectedProductId(null);
+          onClose();
+        }}
+        size="lg"
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add Trace Record</ModalHeader>
@@ -464,8 +450,8 @@ function Filters({
       direction={{ base: "column", md: "row" }}
       gap={3}
       align={{ base: "stretch", md: "center" }}
-      mb={3}
       mt={4}
+      mb={3}
     >
       <HStack flex="1">
         <Input
@@ -527,13 +513,7 @@ function TableState({
 
   if (error) {
     return (
-      <Box
-        borderWidth="1px"
-        borderColor="brand.error"
-        borderRadius="md"
-        p={4}
-        color="brand.error"
-      >
+      <Box borderWidth="1px" borderColor="brand.error" borderRadius="md" p={4} color="brand.error">
         {error}
       </Box>
     );
@@ -541,15 +521,16 @@ function TableState({
 
   if (rows.length === 0) {
     return (
-      <Center py={8} flexDirection="column">
-        <Icon as={InfoIcon} boxSize={8} color="brand.muted" mb={3} />
-        <Text color="brand.muted" fontWeight="medium">
-          No products in stock yet
-        </Text>
-        <Text color="brand.muted" fontSize="sm" mt={1}>
-          Products will appear here when you receive them.
-        </Text>
-      </Center>
+      <Box
+        borderWidth="1px"
+        borderRadius="md"
+        borderColor="brand.border"
+        p={6}
+        textAlign="center"
+        color="brand.muted"
+      >
+        No products match your filters.
+      </Box>
     );
   }
 
@@ -561,7 +542,7 @@ function TableState({
       showOrigin
       showOwner
       renderActions={renderActions}
-      actionsHeader={renderActions ? "Actions" : undefined}
+      actionsHeader="Actions"
     />
   );
 }

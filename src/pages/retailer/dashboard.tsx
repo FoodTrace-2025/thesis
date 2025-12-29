@@ -148,8 +148,10 @@ export default function RetailerDashboard({ userName }: RetailerDashboardProps) 
 
   return (
     <Layout>
-      <VStack spacing={6} align="stretch">
-        <Heading color="brand.primary">Retailer Dashboard</Heading>
+      <VStack spacing={6} py={6} align="stretch">
+        <Heading size="lg" color="brand.dark">
+          Retailer Dashboard
+        </Heading>
         <Text color="brand.muted">Welcome, {userName}</Text>
 
         {/* Story 7.20: KPI snapshots (not range-filtered) */}
