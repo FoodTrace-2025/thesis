@@ -245,12 +245,12 @@ describe('GET /api/products', () => {
 
           expect(mockPrisma.product.findMany).toHaveBeenCalledWith(
             expect.objectContaining({
-              where: { currentOwnerId: 'company-1' },
+              where: { currentOwnerId: 'company-1', isQuarantined: false },
             })
           );
 
           expect(mockPrisma.product.count).toHaveBeenCalledWith({
-            where: { currentOwnerId: 'company-1' },
+            where: { currentOwnerId: 'company-1', isQuarantined: false },
           });
         },
       });
@@ -697,7 +697,7 @@ describe('GET /api/products', () => {
           const res = await fetch({ method: 'GET' });
           expect(res.status).toBe(400);
           const json = await res.json();
-          expect(json.error).toBe('Only one filter allowed: owner, company, history, or incoming');
+          expect(json.error).toBe('Only one filter allowed: owner, company, history, incoming, or quarantined');
           expect(json.code).toBe('VALIDATION_ERROR');
         },
       });
@@ -711,7 +711,7 @@ describe('GET /api/products', () => {
           const res = await fetch({ method: 'GET' });
           expect(res.status).toBe(400);
           const json = await res.json();
-          expect(json.error).toBe('Only one filter allowed: owner, company, history, or incoming');
+          expect(json.error).toBe('Only one filter allowed: owner, company, history, incoming, or quarantined');
           expect(json.code).toBe('VALIDATION_ERROR');
         },
       });
@@ -725,7 +725,7 @@ describe('GET /api/products', () => {
           const res = await fetch({ method: 'GET' });
           expect(res.status).toBe(400);
           const json = await res.json();
-          expect(json.error).toBe('Only one filter allowed: owner, company, history, or incoming');
+          expect(json.error).toBe('Only one filter allowed: owner, company, history, incoming, or quarantined');
           expect(json.code).toBe('VALIDATION_ERROR');
         },
       });
@@ -739,7 +739,7 @@ describe('GET /api/products', () => {
           const res = await fetch({ method: 'GET' });
           expect(res.status).toBe(400);
           const json = await res.json();
-          expect(json.error).toBe('Only one filter allowed: owner, company, history, or incoming');
+          expect(json.error).toBe('Only one filter allowed: owner, company, history, incoming, or quarantined');
           expect(json.code).toBe('VALIDATION_ERROR');
         },
       });
@@ -753,7 +753,7 @@ describe('GET /api/products', () => {
           const res = await fetch({ method: 'GET' });
           expect(res.status).toBe(400);
           const json = await res.json();
-          expect(json.error).toBe('Only one filter allowed: owner, company, history, or incoming');
+          expect(json.error).toBe('Only one filter allowed: owner, company, history, incoming, or quarantined');
           expect(json.code).toBe('VALIDATION_ERROR');
         },
       });

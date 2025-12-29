@@ -133,8 +133,8 @@ describe('TraceTimeline', () => {
       render(<TraceTimeline productId="test-product-123" />);
 
       await waitFor(() => {
-        expect(screen.getByText('RECEIVED')).toBeInTheDocument();
-        expect(screen.getByText('SHIPPED')).toBeInTheDocument();
+        expect(screen.getByText('Received')).toBeInTheDocument();
+        expect(screen.getByText('Shipped')).toBeInTheDocument();
       });
     });
 
