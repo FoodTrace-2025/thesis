@@ -135,7 +135,11 @@ Responsive design implemented using Chakra UI's responsive style props: mobile-f
 
 All three business user dashboards share common architectural patterns while implementing role-specific workflows:
 
-**Producer Dashboard** provides product registration form collecting product name, origin location, harvest date, weight, and product photo. Client-side validation using React Hook Form with Zod schema ensures data completeness before blockchain submission. Form submission triggers API request creating blockchain transaction and database record atomically. Transaction state feedback displays loading spinner during blockchain confirmation (12-15 second Sepolia block time), success message with product ID and QR code upon confirmation, and detailed error messages if transaction fails. Product list view displays registered products with thumbnails, action buttons for QR code generation (downloads 300x300px PNG using react-qr-code library), and transfer functionality to downstream partners.
+**Producer Dashboard** provides product registration form collecting product name, origin location, harvest date, weight, and product photo. Client-side validation using React Hook Form with Zod schema ensures data completeness before blockchain submission. Form submission triggers API request creating blockchain transaction and database record atomically. Transaction state feedback displays loading spinner during blockchain confirmation (12-15 second Sepolia block time), success message with product ID and QR code upon confirmation, and detailed error messages if transaction fails. Product list view displays registered products with thumbnails, action buttons for QR code generation (downloads 300x300px PNG using react-qr-code library), and transfer functionality to downstream partners. The Producer dashboard interface is shown in Figure 12.
+
+![Producer Dashboard](../screenshots/producer-dashboard.png)
+
+FIGURE 11. Producer dashboard showing batch statistics, trend chart, and navigation for product registration and management.
 
 **Distributor Dashboard** focuses on receiving products and adding trace records during transport/storage. Dashboard organized with tabs: "In Custody" (products currently owned) and "Product History" (previously handled products). "Incoming Shipments" section above tabs displays products shipped to this company with "Accept" button triggering RECEIVED trace. Trace record form provides action type selection (RECEIVED, QUALITY_CHECK, SHIPPED) with location and notes fields. Product detail view shows complete supply chain journey using vertical timeline component displaying all trace records chronologically with action badges, actor companies, locations, timestamps, and Etherscan links for blockchain verification.
 
@@ -166,11 +170,15 @@ flowchart LR
     DISPLAY --> VERIFY[Etherscan Link]
 ```
 
-FIGURE 11. Wallet-free consumer query flow with fallback manual entry
+FIGURE 12. Wallet-free consumer query flow with fallback manual entry
 
 Product detail page fetches data via `/api/products/[id]/trace-history` endpoint (public read-only) and displays product identity (name, origin, harvest date), supply chain timeline with all trace records, and blockchain proof via Etherscan link for independent verification.
 
-Mobile-optimized layout prioritizes information hierarchy: product identity and verification status above fold, supply chain timeline lazy-loaded on scroll, technical details (block numbers, transaction hashes) collapsed by default with "Show Technical Details" expand button. Page load time <2 seconds on 4G network achieved through Next.js Image component optimization (automatic WebP format conversion) and aggressive caching (stale-while-revalidate strategy).
+Mobile-optimized layout prioritizes information hierarchy: product identity and verification status above fold, supply chain timeline lazy-loaded on scroll, technical details (block numbers, transaction hashes) collapsed by default with "Show Technical Details" expand button. Page load time <2 seconds on 4G network achieved through Next.js Image component optimization (automatic WebP format conversion) and aggressive caching (stale-while-revalidate strategy). The complete consumer trace view interface is shown in Figure 13.
+
+![Consumer Trace View](../screenshots/consumer-trace-view.png)
+
+FIGURE 13. Consumer trace view showing complete product journey from Producer through Distributor to Retailer with blockchain verification links. Each trace record displays timestamp, location, actor company, and "View blockchain record" link for independent verification on Etherscan.
 
 Accessibility features include ARIA labels for screen readers, keyboard navigation support for non-touch devices, and color-blind safe palette (blue/amber/red zones use patterns in addition to color for differentiation).
 
@@ -212,4 +220,4 @@ Wagmi. 2024. _Wagmi Documentation_.
 
 ---
 
-**Word Count:** ~1,900 words | **Tables:** 16-17 | **Figures:** 9-11 | **References:** 6
+**Word Count:** ~2,000 words | **Tables:** 16-17 | **Figures:** 9-13 | **References:** 6

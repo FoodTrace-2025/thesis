@@ -6,7 +6,7 @@ This chapter presents the testing results and performance evaluation of the Food
 
 ## 6.1 Testing Strategy Overview
 
-Testing followed the Test Pyramid principle (Cohn 2009), as illustrated in Figure 12. Unit tests form the foundation with highest coverage (>70% target), integration tests verify component interactions and blockchain-database synchronization, and end-to-end tests validate complete user workflows across four supply chain roles. Performance testing measured transaction times, API latency, and page load speeds throughout development.
+Testing followed the Test Pyramid principle (Cohn 2009), as illustrated in Figure 14. Unit tests form the foundation with highest coverage (>70% target), integration tests verify component interactions and blockchain-database synchronization, and end-to-end tests validate complete user workflows across four supply chain roles. Performance testing measured transaction times, API latency, and page load speeds throughout development.
 
 ```mermaid
 flowchart TB
@@ -19,7 +19,7 @@ flowchart TB
     E2E --> INT --> UNIT
 ```
 
-FIGURE 12. FoodTrace test distribution following Test Pyramid principle. Unit tests (smart contract + component) form the foundation, integration tests verify API and blockchain-database sync, E2E tests validate complete workflows.
+FIGURE 14. FoodTrace test distribution following Test Pyramid principle. Unit tests (smart contract + component) form the foundation, integration tests verify API and blockchain-database sync, E2E tests validate complete workflows.
 
 Testing was integrated into each development sprint using the Hardhat framework (Hardhat 2024) for smart contract testing and Jest with React Testing Library for frontend components. This approach addressed blockchain-specific challenges including transaction immutability and state verification complexity (Tramontana et al. 2022).
 
@@ -102,7 +102,7 @@ flowchart LR
     R3 -.->|Wallet-Free<br/>Access| C1
 ```
 
-FIGURE 13. Complete supply chain journey showing trace record actions at each stage. Solid arrows indicate ownership transfer; dashed arrow indicates wallet-free consumer access.
+FIGURE 15. Complete supply chain journey showing trace record actions at each stage. Solid arrows indicate ownership transfer; dashed arrow indicates wallet-free consumer access.
 
 Producer registered "Organic Blueberries" with origin "Helsinki Farm" and harvest date. System response: blockchain confirmation in ~12-15 seconds, QR code generated automatically, product visible in Producer dashboard. Distributor logged in, viewed "Incoming Shipments" section showing product shipped to their company. Distributor clicked "Accept" → RECEIVED trace recorded on blockchain → product moved to "In Custody" tab. Distributor added QUALITY_CHECK trace with location notes. Distributor selected recipient company and clicked SHIPPED. Retailer viewed incoming shipment, accepted product (RECEIVED trace), added STOCKED trace. Retailer marked product SOLD. Consumer accessed product via QR code scan on mobile device (wallet-free), viewed complete timeline showing all trace events with timestamps, actors, and Etherscan verification links. Desktop interface provides QR code display for printing and manual product ID search.
 
@@ -126,6 +126,14 @@ TABLE 21. System validation summary
 | QR Functionality | Mobile scan, Etherscan verification links | ✅ All pass |
 | Access Control | Frontend, API, smart contract layers | ✅ All pass |
 | Dashboard UI | Tabs, filtering, badges, lazy loading | ✅ All pass |
+
+### 6.5.4 Blockchain Verification
+
+Each trace record links to Etherscan for independent verification, allowing consumers to confirm transactions exist on the public blockchain without trusting the application. Figure 16 shows an example transaction verification on Sepolia Etherscan.
+
+![Etherscan Transaction Verification](../screenshots/etherscan-transaction.png)
+
+FIGURE 16. Etherscan transaction verification showing successful "Add Trace Record" function call on ProductRegistry smart contract. Transaction details include block confirmation, gas usage, and contract interaction data, enabling independent verification of supply chain events.
 
 ---
 
@@ -155,4 +163,4 @@ W3C. 2018. _Web Content Accessibility Guidelines (WCAG) 2.1_. World Wide Web Con
 
 ---
 
-**Word Count:** ~1,150 words | **Tables:** 18-21 | **Figures:** 12-13 | **References:** 5
+**Word Count:** ~1,250 words | **Tables:** 18-21 | **Figures:** 14-16 | **References:** 5
