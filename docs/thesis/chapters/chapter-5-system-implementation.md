@@ -174,17 +174,13 @@ FIGURE 12. Wallet-free consumer query flow with fallback manual entry
 
 Product detail page fetches data via `/api/products/[id]/trace-history` endpoint (public read-only) and displays product identity (name, origin, harvest date), supply chain timeline with all trace records, and blockchain proof via Etherscan link for independent verification.
 
-Mobile-optimized layout prioritizes information hierarchy: product identity and verification status above fold, supply chain timeline lazy-loaded on scroll, technical details (block numbers, transaction hashes) collapsed by default with "Show Technical Details" expand button. Page load time <2 seconds on 4G network achieved through Next.js Image component optimization (automatic WebP format conversion) and aggressive caching (stale-while-revalidate strategy). The complete consumer trace view interface is shown in Figure 13.
-
-![Consumer Trace View](../screenshots/consumer-trace-view.png)
-
-FIGURE 13. Consumer trace view showing complete product journey from Producer through Distributor to Retailer with blockchain verification links. Each trace record displays timestamp, location, actor company, and "View blockchain record" link for independent verification on Etherscan.
+Mobile-optimized layout prioritizes information hierarchy: product identity and verification status above fold, supply chain timeline lazy-loaded on scroll, technical details (block numbers, transaction hashes) collapsed by default with "Show Technical Details" expand button. Page load time under 2 seconds on 4G network achieved through Next.js Image component optimization (automatic WebP format conversion) and aggressive caching (stale-while-revalidate strategy). The complete consumer trace view interface showing the product journey from Producer through Distributor to Retailer with blockchain verification links is presented in Appendix 2.
 
 Accessibility features include ARIA labels for screen readers, keyboard navigation support for non-touch devices, and color-blind safe palette (blue/amber/red zones use patterns in addition to color for differentiation).
 
 ---
 
-## Chapter 5 Summary
+## 5.3 Chapter 5 Summary
 
 This chapter demonstrated the supporting system components connecting users to the smart contract detailed in Chapter 4. The implementation validates Research Question 4 "How can user experience challenges be addressed to enable broader blockchain adoption?" through:
 

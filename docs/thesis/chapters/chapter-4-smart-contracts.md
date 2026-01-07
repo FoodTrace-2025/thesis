@@ -144,19 +144,13 @@ Test coverage achieved 100% statement coverage for ProductRegistry.sol, exceedin
 
 ### 4.3.2 Security Testing
 
-Security tests validate protection against common vulnerabilities:
+Security tests validate protection against common vulnerabilities through two primary test categories: access control and input validation.
 
-**Access Control Tests:** Systematically verify role permissions match specification. Tests confirm:
-- Unauthorized addresses receive "Caller must be producer, distributor, or retailer" error
-- Role management restricted to admin addresses
-- Public view functions accessible without roles
+Access control tests systematically verify that role permissions match the specification. These tests confirm that unauthorized addresses receive appropriate rejection messages when attempting restricted operations, that role management functions remain accessible only to admin addresses, and that public view functions work correctly without requiring any roles. This ensures the contract's permission model cannot be bypassed through unexpected call patterns.
 
-**Input Validation Tests:** Submit malformed data confirming require statements reject:
-- Empty product names ("Name required" error)
-- Future harvest dates ("Future date not allowed" error)
-- Non-existent product IDs ("Product not found" error)
+Input validation tests submit malformed data to confirm that the contract's require statements properly reject invalid inputs. Tests verify that empty product names are rejected, that future harvest dates trigger validation errors, and that operations on non-existent product IDs fail gracefully with descriptive error messages. Each validation check returns a human-readable error string enabling debugging during integration.
 
-**Security Finding Resolved:** Initial implementation lacked harvest date validation. Producers could register products with future dates (e.g., 2030), enabling fraud scenarios. Adding `require(harvestDate <= block.timestamp, "Future date not allowed")` resolved the vulnerability. This discovery demonstrates value of systematic security testing beyond happy path validation.
+One significant security finding emerged during testing. The initial implementation lacked harvest date validation, which would have allowed producers to register products with future dates such as year 2030. This oversight could enable fraud scenarios where products are pre-registered before actual harvest. The vulnerability was resolved by adding a require statement that compares the harvest date against the current block timestamp, rejecting any date in the future. This discovery demonstrates the value of systematic security testing beyond happy path validation, as the vulnerability would not have been caught through functional testing alone.
 
 ---
 
@@ -164,13 +158,9 @@ Security tests validate protection against common vulnerabilities:
 
 ### 4.4.1 Deployment Process
 
-The ProductRegistry contract was deployed to Ethereum Sepolia testnet using Hardhat deployment script (`scripts/deploy-product-registry.ts`) following the deployment workflow documented in the Hardhat framework (Hardhat 2024). Deployment used the Hardhat verify task for Etherscan source code publication: `npx hardhat verify --network sepolia 0x5d56f5a8703d7d545319177042cd91FD3339E2b6`.
+The ProductRegistry contract was deployed to Ethereum Sepolia testnet using a Hardhat deployment script following the deployment workflow documented in the Hardhat framework (Hardhat 2024). After successful deployment, the contract source code was verified on Etherscan using the Hardhat verify task, enabling public inspection of the implementation.
 
-**Deployment Details:**
-- **Contract Address:** `0x5d56f5a8703d7d545319177042cd91FD3339E2b6`
-- **Network:** Ethereum Sepolia Testnet (Chain ID: 11155111)
-- **Deployment Gas:** ~928,485 gas (3.1% of block gas limit)
-- **Etherscan Verification:** ✅ Source code publicly visible
+The deployed contract resides at address 0x5d56f5a8703d7d545319177042cd91FD3339E2b6 on the Ethereum Sepolia Testnet, which operates under Chain ID 11155111. The deployment transaction consumed approximately 928,485 gas units, representing 3.1% of the block gas limit. Source code verification on Etherscan was completed successfully, allowing anyone to view and audit the contract implementation directly on the block explorer.
 
 Post-deployment testing confirmed gas measurements, as summarized in Table 15.
 
@@ -212,12 +202,9 @@ Each required systematic debugging through Etherscan transaction analysis and co
 
 ### 4.4.4 Production Deployment Considerations
 
-**Gas Cost Economics:** Current implementation (~750,000 gas per product journey) is expensive for mainnet. Gas optimization best practices documented by Ethereum.org (2024) recommend production systems should:
-- Adopt hash-based storage (40-60% reduction)
-- Evaluate Layer 2 solutions (Polygon, Arbitrum - 90% cost reduction)
-- Consider Hyperledger Fabric for B2B contexts (zero transaction costs)
+The current implementation consumes approximately 750,000 gas per complete product journey, which would be expensive on Ethereum mainnet. Gas optimization best practices documented by Ethereum.org (2024) recommend several strategies for production systems. Hash-based storage could reduce costs by 40-60% compared to the current string-based approach. Layer 2 solutions such as Polygon or Arbitrum offer approximately 90% cost reduction while maintaining Ethereum security guarantees. For business-to-business contexts where public transparency is less critical, Hyperledger Fabric eliminates transaction costs entirely through its permissioned architecture.
 
-**Oracle Problem:** Smart contracts cannot verify off-chain data authenticity, known as the "garbage in, garbage out" problem. This is an inherent blockchain limitation discussed in Chapter 7.
+Beyond cost considerations, smart contracts face the oracle problem: they cannot verify off-chain data authenticity. This limitation, commonly described as "garbage in, garbage out," means the blockchain can only guarantee data immutability, not data accuracy. If a producer submits false harvest information, the smart contract has no mechanism to detect or reject the fraudulent data. This inherent blockchain limitation is discussed further in Chapter 7.
 
 ---
 
