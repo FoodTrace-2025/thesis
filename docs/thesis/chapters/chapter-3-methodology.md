@@ -6,7 +6,7 @@ This chapter describes the research methodology and technical approach employed 
 
 ### 3.1.1 Development Framework
 
-This project follows the ABCDE (Agile Block Chain DApp Engineering) framework, a blockchain-adapted agile methodology that separates development activities into two parallel flows: smart contract development and off-chain software development, each performed iteratively with integration activities every 2-3 iterations (Marchesi et al. 2020). This dual-flow approach addresses unique blockchain development challenges including transaction immutability, decentralized deployment, and consensus mechanism dependencies that differentiate blockchain engineering from conventional software development (ACM Computing Surveys 2023).
+This project follows the ABCDE (Agile Block Chain DApp Engineering) framework, a blockchain-adapted agile methodology that separates development activities into two parallel flows: smart contract development and off-chain software development, each performed iteratively with integration activities every 2-3 iterations (Marchesi et al. 2020). This dual-flow approach addresses unique blockchain development challenges including transaction immutability, decentralized deployment, and consensus mechanism dependencies that differentiate blockchain engineering from conventional software development (Fahmideh et al. 2023).
 
 The methodology incorporates Scrum principles (Schwaber & Sutherland 2020) adapted for blockchain DApp development through iterative cycles focusing on incremental delivery and continuous validation. Each iteration follows a structured sequence: concept and requirements definition, prototyping and design, implementation with parallel smart contract and frontend development, testing and quality assurance, and deployment with user feedback integration (Pressman & Maxim 2019).
 
@@ -22,11 +22,10 @@ TABLE 9. FoodTrace 12-week development timeline with validation checkpoints
 
 | Week | Phase | Key Deliverable | Checkpoint |
 |------|-------|-----------------|------------|
-| 0 | Pre-Kickoff | Documentation ready | - |
-| 1-2 | Planning | PRD + Architecture validated | ✓ Week 2 |
-| 3-4 | Smart Contracts | Sepolia deployment, >70% coverage | ✓ Week 4 |
-| 5-7 | Frontend/Backend | 4 role interfaces, Web3 integration | ✓ Week 7 |
-| 8-9 | Testing/Deployment | Complete POC deployed | ✓ Week 9 |
+| 0 | Planning | PRD + Architecture validated | Week 2 |
+| 3-4 | Smart Contracts | Sepolia deployment, >70% coverage | Week 4 |
+| 5-7 | Frontend/Backend | 4 role interfaces, Web3 integration | Week 7 |
+| 8-9 | Testing/Deployment | Complete POC deployed | Week 9 |
 | 10-12 | Thesis Writing | 60+ page thesis submitted | - |
 
 ### 3.1.3 Risk Assessment
@@ -58,7 +57,7 @@ TABLE 10. Ethereum vs Hyperledger Fabric comparison for POC context
 | Public Verification | Yes (Etherscan) | No (consortium access) |
 | Throughput | 15-30 TPS | 3,000-10,000 TPS |
 | Privacy Controls | Limited | GDPR-compliant |
-| POC Suitability | ✓ Recommended | Enterprise-focused |
+| POC Suitability | Recommended | Enterprise-focused |
 
 The thesis acknowledges Hyperledger Fabric's strengths in different contexts: enterprise B2B consortiums requiring privacy through GDPR-compliant identity management, high transaction throughput, and zero transaction costs (no gas fees). These advantages become relevant for production deployment scenarios but represent unnecessary complexity overhead for educational proof-of-concept focused on demonstrating blockchain traceability concepts rather than production scalability.
 
@@ -107,7 +106,7 @@ This architecture balances simplicity appropriate for 12-week development timeli
 
 ### 3.3.2 Hybrid Data Strategy
 
-The system employs hybrid data storage balancing blockchain immutability with off-chain efficiency, following architectural patterns documented in blockchain-based food supply chain frameworks (MDPI 2023). Table 11 summarizes the data allocation strategy.
+The system employs hybrid data storage balancing blockchain immutability with off-chain efficiency, following architectural patterns documented in blockchain-based food supply chain frameworks (Zhang et al. 2023). Table 11 summarizes the data allocation strategy.
 
 TABLE 11. Hybrid data storage allocation
 
@@ -129,7 +128,7 @@ This hybrid approach addresses cost-efficiency constraints: storing all data on-
 
 ### 3.4.1 Testing Approach
 
-The testing approach emphasizes risk-based prioritization across multiple test levels, following test-driven development principles demonstrated feasible for agile blockchain smart contract development (IEEE 2024). The test pyramid strategy prioritizes unit testing volume over integration and end-to-end tests for optimal development velocity and defect detection efficiency.
+The testing approach emphasizes risk-based prioritization across multiple test levels, following test-driven development principles demonstrated feasible for agile blockchain smart contract development (Vijayan Nair & Mittal 2024). The test pyramid strategy prioritizes unit testing volume over integration and end-to-end tests for optimal development velocity and defect detection efficiency.
 
 Test categories include unit tests validating individual smart contract functions with >70% coverage target, integration tests validating multi-contract interactions and state consistency, end-to-end tests validating complete user workflows across UI, API, and blockchain layers, and non-functional requirements tests covering performance, security, and reliability. Quality gates enforce deterministic pass/fail rules before story closure, with test standards including no flaky tests, dynamic waiting strategies, stateless tests, and self-cleaning test data. Detailed test results and coverage analysis are presented in Chapter 6.
 

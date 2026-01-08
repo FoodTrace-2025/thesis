@@ -18,12 +18,12 @@ Query performance on read-only endpoints averages <200ms (Supabase connection po
 
 Table 22 summarizes the alignment between research objectives established in Chapter 1 and implementation results.
 
-TABLE 22. Research objectives alignment
+TABLE 22. Research objectives alignment with implementation results
 
 | Objective | Target | Result |
 |-----------|--------|--------|
 | SO1: Smart Contract | >70% coverage | ✅ 100% (37 tests) |
-| SO2: Wallet-Free | No consumer wallet | ✅ Met (QR + RPC) |
+| SO2: Wallet-Free Access | No consumer wallet | ✅ Met (QR + RPC) |
 | SO3: Hybrid Data | On/off-chain split | ✅ Met |
 | SO4: Web3 Frontend | 4-role dashboards | ✅ Met |
 | SO5: IoT Integration | Sensor pattern | ❌ Deferred |
@@ -57,7 +57,7 @@ Consumer query testing validated that non-technical users successfully verified 
 
 ### 7.2.3 Speed: Real-Time Traceability Versus Multi-Day Reconciliation
 
-Blockchain consensus enables sub-second to sub-minute traceability compared to days or weeks for traditional paper-based systems. The Walmart case study (IBM 2019) provides the seminal benchmark: tracing mango origins required 6 days 18 hours using paper records versus 2.2 seconds with blockchain, representing a 281,000× speedup that enables targeted recalls instead of blanket regional bans.
+Blockchain consensus enables sub-second to sub-minute traceability compared to days or weeks for traditional paper-based systems. The Walmart case study (Hyperledger Foundation 2019) provides the seminal benchmark: tracing mango origins required 6 days 18 hours using paper records versus 2.2 seconds with blockchain, representing a 281,000× speedup that enables targeted recalls instead of blanket regional bans.
 
 The implementation achieved 1.8-second average query performance, beating Hyperledger Fabric benchmarks. Complete supply chain journeys (Producer → Distributor → Retailer → Consumer) execute in 4.2 seconds end-to-end, meeting FDA FSMA Rule 204 requirement for 24-hour traceability with 99.995% time margin. Zhao et al.'s (2019) review demonstrates blockchain traceability enables sub-second to sub-minute query times compared to multi-day traditional reconciliation processes, representing order-of-magnitude improvement in recall response speed.
 
@@ -85,7 +85,7 @@ The complete supply chain journey (product registration at ~200,000 gas plus thr
 
 **Layer 2 Solutions:** Polygon, Arbitrum, and Optimism offer 90%+ cost reductions while maintaining Ethereum security guarantees. This would reduce per-product costs to €0.01-0.03, making blockchain traceability economically viable for a broader range of products. See Chapter 8 Future Work for Layer 2 migration recommendations.
 
-**Scalability Constraints:** Beyond cost, Ethereum L1 processes only 15-30 transactions per second (TPS), compared to Visa's 24,000 TPS. This represents a fundamental throughput limitation identified in systematic literature reviews (Zhou et al. 2020). This "scalability trilemma" (Buterin 2017) reflects the inherent trade-off between decentralization, security, and scalability in public blockchains, as illustrated in Figure 14.
+**Scalability Constraints:** Beyond cost, Ethereum L1 processes only 15-30 transactions per second (TPS), compared to Visa's 24,000 TPS. This represents a fundamental throughput limitation identified in systematic literature reviews (Zhou et al. 2020). This "scalability trilemma" (Buterin 2017) reflects the inherent trade-off between decentralization, security, and scalability in public blockchains, as illustrated in Figure 17.
 
 ```mermaid
 flowchart TB
@@ -192,9 +192,9 @@ FDA. 2023. _FSMA Rule 204: Food traceability requirements_. U.S. Food and Drug A
 
 Godyn, M., Kedziora, M., & Ren, Y. 2022. Analysis of solutions for a blockchain compliance with GDPR. _Scientific Reports_, 12, 15021.
 
-Han, Z., et al. 2024. Blockchain-based data integrity verification. In _4th International Conference on Blockchain Technology and Information Security (ICBCTIS)_ (pp. 169-174). IEEE.
+Han, Z., et al. 2024. Blockchain-based data integrity verification. In _4th International Conference on Blockchain Technology and Information Security (ICBCTIS)_ (pp. 226-232). IEEE.
 
-IBM. 2019. _Walmart and IBM Food Trust case study_. Hyperledger Foundation Case Studies.
+Hyperledger Foundation. 2019. _Walmart and IBM Food Trust Case Study_. LF Decentralized Trust Case Studies.
 
 Li, Y., et al. 2023. Blockchain-based data integrity verification scheme in AIoT cloud-edge computing environment. _IEEE Transactions on Engineering Management_, 71, 12556-12565.
 

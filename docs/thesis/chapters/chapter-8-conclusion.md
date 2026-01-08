@@ -58,7 +58,7 @@ TABLE 24. Future work roadmap
 | Medium (6-12 mo) | IoT + Privacy | Sensor integration with edge computing, zk-SNARKs for selective disclosure |
 | Long (1-2 yr) | Scale + Compliance | Hyperledger Fabric comparison, industry consortium, FDA/EU regulatory reporting |
 
-**IoT Sensor Integration:** The deferred Epic 8 architecture includes DHT22 sensors (~€5-10), ESP32 microcontrollers (~€8-15), and edge computing for hourly on-chain summaries. Total per-unit cost: €15-30 versus €150-200 for industrial-grade HSM sensors.
+**IoT Sensor Integration:** The deferred Epic 8 architecture includes DHT22 sensors (€5-10), ESP32 microcontrollers (€8-15), and edge computing for hourly on-chain summaries. Total per-unit cost: €15-30 versus €150-200 for industrial-grade HSM sensors.
 
 **Gas Optimization:** Replace string storage with bytes32 hashes (keccak256) for 40-60% gas reduction. Layer 2 migration (Polygon, Arbitrum, Optimism) offers 90%+ cost reduction while maintaining Ethereum security guarantees.
 
@@ -66,9 +66,9 @@ TABLE 24. Future work roadmap
 
 ## 8.6 Final Remarks
 
-This research demonstrates that blockchain technology can transform food supply chain transparency from trust-based to cryptographically-verified systems. The proof-of-concept validates that Ethereum public blockchain can provide transparent, immutable traceability while addressing mainstream accessibility through wallet-free consumer access and custodial wallet patterns.
+This research demonstrates that blockchain technology can transform food supply chain transparency from trust-based to cryptographically verified systems. The proof-of-concept validates that Ethereum public blockchain can provide transparent, immutable traceability while addressing mainstream accessibility through wallet-free consumer access and custodial wallet patterns.
 
-The question is no longer "Can blockchain work for food traceability?" This thesis answers yes, with documented constraints. The question is now "How do we scale this technology accessibly?" The answer requires Layer 2 deployment, gas optimization, and IoT integration—the future work documented in Section 8.5.
+The question is no longer "Can blockchain work for food traceability?" This thesis answers yes, with documented constraints. The question is now "How do we scale this technology accessibly?" The answer requires Layer 2 deployment, gas optimization, and IoT integration which are the future works documented in Section 8.5.
 
 ---
 

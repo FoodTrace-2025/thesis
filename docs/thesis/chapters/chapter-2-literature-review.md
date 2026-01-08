@@ -27,7 +27,7 @@ Food safety exemplifies traceability urgency. WHO (2022) reports 600 million peo
 
 IBM Food Trust demonstrates blockchain's practical viability for supply chain traceability. The Hyperledger Fabric consortium includes 500+ participants tracking 25+ million products (Kamath 2018; Vu et al. 2024).
 
-**Key Achievement:** Walmart's mango contamination investigation required **7 days** using paper records. After IBM Food Trust implementation, the same query completed in **2.2 seconds** (Walmart 2019). This enabled surgical recalls rather than blanket recalls affecting innocent producers.
+**Key Achievement:** Walmart's mango contamination investigation required **7 days** using paper records. After IBM Food Trust implementation, the same query completed in **2.2 seconds** (Hyperledger Foundation 2019). This enabled surgical recalls rather than blanket recalls affecting innocent producers.
 
 **Limitations:** Permissioned architecture creates centralization risk: consumers must trust consortium governance rather than independently verifying data (Saberi et al. 2019). This limitation motivates this thesis's public blockchain approach enabling independent consumer verification.
 
@@ -77,9 +77,9 @@ Table 4 summarizes key trade-offs. Ethereum enables independent consumer verific
 
 GDPR compliance presents platform-specific challenges: Ethereum's immutability conflicts with data deletion requirements, requiring hybrid on-chain hash with deletable off-chain data (Saberi et al. 2019). Neither platform is universally superior; suitability depends on transparency versus performance priorities.
 
-### 2.2.2 Academic Consensus and Platform Selection
+### 2.2.2 Academic Consensus
 
-Zhao et al. (2019) systematic review of 71 blockchain agri-food papers finds equal consideration of public and permissioned blockchains: Ethereum papers focus on consumer-facing transparency, while Hyperledger papers focus on B2B consortiums. Recent systematic reviews document blockchain enhances food safety through immutable records while facing scalability and integration challenges (Sri Vigna Hema et al. 2024; Lappas et al. 2025).
+Zhao et al. (2019) systematic review of 71 blockchain agri-food papers finds equal consideration of public and permissioned blockchains: Ethereum papers focus on consumer-facing transparency, while Hyperledger papers focus on B2B consortiums. Recent systematic reviews document blockchain enhances food safety through immutable records while facing scalability and integration challenges (Sri Vigna Hema et al. 2024; Vasileiou et al. 2025).
 
 **Platform Selection Decision:** This thesis selects **Ethereum** to demonstrate public verifiability and wallet-free consumer access, addressing the research gap where most frameworks focus on enterprise operations (Section 2.5.1). Detailed platform justification appears in Chapter 3 Methodology.
 
@@ -145,7 +145,7 @@ Traditional Web3 applications require users to manage non-custodial wallets thro
 
 **Custodial wallet patterns** address these challenges by delegating key management to a trusted server: users authenticate via familiar email/password credentials while the server stores and manages blockchain private keys. This model mirrors IBM Food Trust's enterprise approach where consortium members interact through organizational accounts (IBM 2023).
 
-TABLE 5. Authentication pattern comparison
+TABLE 5. Authentication pattern comparison for blockchain applications
 
 | Pattern | Keys | UX | Security |
 |---------|------|-----|----------|
@@ -193,7 +193,7 @@ flowchart TB
 
 FIGURE 4. Dual-access authentication pattern for FoodTrace
 
-This hybrid approach provides security for business operations while maintaining consumer accessibility. Consumer acceptance research examining 715 Greek consumers found high valuation for QR codes with blockchain-based traceability, with willingness to pay price premiums for traceable products (Tran et al. 2024). Emerging Web3 identity solutions demonstrate technical feasibility for privacy-preserving authentication patterns (Arshad et al. 2024). Implementation details appear in Chapter 5.
+This hybrid approach provides security for business operations while maintaining consumer accessibility. Consumer acceptance research examining 715 Greek consumers found high valuation for QR codes with blockchain-based traceability, with willingness to pay price premiums for traceable products (Tran et al. 2024). Emerging Web3 identity solutions demonstrate technical feasibility for privacy-preserving authentication patterns (Arshad et al. 2025). Implementation details appear in Chapter 5.
 
 ---
 
@@ -217,10 +217,10 @@ TABLE 8. Technical contributions addressing identified research gaps
 
 | Contribution | Description |
 |--------------|-------------|
-| TC1: Wallet-Free Consumer Access | Read-only blockchain queries via public RPC enabling QR code scanning without wallet installation (addresses Gap 1) |
-| TC2: IoT Simulation Design (Future Work) | Proposed architecture for software-based temperature simulation documented in Chapter 8; deferred due to time constraints (addresses Gap 2) |
-| TC3: Hybrid Data Architecture | Critical data on-chain with metadata off-chain, achieving 90% gas cost reduction via Keccak-256 hash linking (addresses Gap 3) |
-| TC4: Small Producer Feasibility | Ethereum viability analysis for small-scale producers with barrier evaluation and database comparison (addresses Gap 1) |
+| Wallet-Free Consumer Access | Read-only blockchain queries via public RPC enabling QR code scanning without wallet installation (addresses Gap 1) |
+| IoT Simulation Design (Future Work) | Proposed architecture for software-based temperature simulation documented in Chapter 8; deferred due to time constraints (addresses Gap 2) |
+| Hybrid Data Architecture | Critical data on-chain with metadata off-chain, achieving 90% gas cost reduction via Keccak-256 hash linking (addresses Gap 3) |
+| Small Producer Feasibility | Ethereum viability analysis for small-scale producers with barrier evaluation and database comparison (addresses Gap 1) |
 
 ### 2.5.3 Field Positioning
 
@@ -247,8 +247,6 @@ flowchart TB
 
 FIGURE 5. Research positioning in blockchain food traceability landscape
 
-The research acknowledges limitations (testnet deployment, simulated sensors, limited scale testing) appropriate for proof-of-concept validation while establishing architectural patterns enabling future production deployment (see Chapter 7 Discussion for production recommendations).
-
 ---
 
 ## References for Chapter 2
@@ -257,7 +255,7 @@ Al Amri, S., Aniello, L., & Sassone, V. 2023. A review of upgradeable smart cont
 
 Albert, E., et al. 2020. GASOL: Gas analysis and optimization for Ethereum smart contracts. In _26th International Conference on Tools and Algorithms for the Construction and Analysis of Systems (TACAS 2020)_ (pp. 118-125). Springer.
 
-Arshad, U., et al. 2024. Web3-based identity and KYC innovations for next-generation FinTech. _ACM Transactions on the Web_.
+Arshad, U., et al. 2025. Web3-based identity and KYC innovations for next-generation FinTech. _ACM Transactions on the Web_.
 
 Banerjee, A., Sober, M., & Schulte, S. 2025. Towards Solidity smart contract efficiency optimization through code mining. In _Proceedings of the 40th ACM/SIGAPP Symposium on Applied Computing (SAC '25)_. ACM.
 
@@ -267,7 +265,7 @@ Casino, F., Dasaklis, T. K., & Patsakis, C. 2019. A systematic literature review
 
 Cruz, J. P., Kaji, Y., & Yanai, N. 2018. RBAC-SC: Role-based access control using smart contract. _IEEE Access_, 6, 12240-12251.
 
-El Hajji, M., et al. 2024. Optimization of agrifood supply chains using Hyperledger Fabric blockchain technology. _Computers and Electronics in Agriculture_, 225, 109330.
+El Hajji, M., et al. 2024. Optimization of agrifood supply chains using Hyperledger Fabric blockchain technology. _Computers and Electronics in Agriculture_, 227, 109503.
 
 Ellahi, R. M., et al. 2024. Blockchain-driven food supply chains: A systematic review for unexplored opportunities. _Applied Sciences_, 14(19), 8944.
 
@@ -287,9 +285,9 @@ Kamath, R. 2018. Food traceability on blockchain: Walmart's pork and mango pilot
 
 Kumar, R., & Tripathi, R. 2020. Blockchain-based framework for data storage in peer-to-peer scheme using InterPlanetary File System. In _Handbook of Research on Blockchain Technology_ (pp. 35-59). Academic Press.
 
-Lappas, P. Z., et al. 2025. Digital transformation of food supply chain management using blockchain: A systematic literature review towards food safety and traceability. _Business & Information Systems Engineering_.
+Vasileiou, M., et al. 2025. Digital transformation of food supply chain management using blockchain: A systematic literature review towards food safety and traceability. _Business & Information Systems Engineering_.
 
-Marchese, A., & Tomarchio, O. 2022. A blockchain-based system for agri-food supply chain traceability management. _SN Computer Science_, 3(4), Article 327.
+Marchese, A., & Tomarchio, O. 2022. A blockchain-based system for agri-food supply chain traceability management. _SN Computer Science_, 3, Article 279.
 
 Nguyen, Q., et al. 2022. GasSaver: A tool for Solidity smart contract optimization. In _Proceedings of the Fourth ACM International Symposium on Blockchain and Secure Critical Infrastructure (ASIA CCS '22)_ (pp. 96-98). ACM.
 
@@ -307,7 +305,7 @@ Voskobojnikov, A., et al. 2021. The U in crypto stands for usable: An empirical 
 
 Vu, N., Ghadge, A., & Bourlakis, M. 2024. The impact of blockchain adoption on supply chain performance: Evidence from food industry. _International Journal of Production Research_, 63, 5402-5427.
 
-Walmart. 2019. _Walmart and IBM Food Trust case study_. Hyperledger Foundation Case Studies.
+Hyperledger Foundation. 2019. _Walmart and IBM Food Trust Case Study_. LF Decentralized Trust Case Studies.
 
 Wang, L., et al. 2021. Smart contract-based agricultural food supply chain traceability. _IEEE Access_, 9, 9296-9307.
 

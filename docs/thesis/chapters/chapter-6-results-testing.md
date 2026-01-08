@@ -69,7 +69,7 @@ TABLE 19. Performance metrics summary (measured December 2025)
 | Consumer page load | <2s | 133ms | ✅ Pass |
 | API read endpoints | <200ms | 184ms | ✅ Pass |
 | API write (blockchain) | 12-15s | 12-15s | ✅ Expected |
-| Smart contract tests | 37 pass | 37 pass (687ms) | ✅ Pass |
+| Smart contract tests | 37 passes | 37 passes (687ms) | ✅ Pass |
 
 ---
 
@@ -112,7 +112,7 @@ TABLE 20. Multi-layer access control validation
 
 | Layer | Attempted Action | Actor | Result | Protection |
 |-------|------------------|-------|--------|------------|
-| Frontend | Access Producer Dashboard | Consumer | Redirected | NextAuth.js middleware |
+| Frontend | Access Producer Dashboard | Consumer | Redirected to Consumer page | NextAuth.js middleware |
 | API | POST /api/products/register | Distributor | 403 Forbidden | Role-based middleware |
 | Smart Contract | addTraceRecord() | No-role address | Tx reverted | OpenZeppelin AccessControl |
 

@@ -1,4 +1,4 @@
-# Chapter 4: Smart Contract Development
+# Chapter 4: Smart Contract Implementation
 
 This chapter details the blockchain layer implementation of the FoodTrace system, focusing on the Solidity smart contract deployed to Ethereum Sepolia testnet. It begins with the overall contract architecture and design principles emphasizing security and modularity (Section 4.1), explains the implementation of the ProductRegistry contract combining product registration and supply chain trace recording in a unified design (Section 4.2), analyzes security considerations and testing approach (Section 4.3), and documents the deployment process and lessons learned (Section 4.4). This chapter demonstrates how the smart contract translates the theoretical concepts from Chapter 2 into functional code.
 
@@ -22,7 +22,7 @@ The contract architecture prioritizes three key principles balancing development
 
 **2. Event-Driven Architecture:** All state-changing operations emit events enabling efficient off-chain indexing. The system emits ProductRegistered and TraceRecordAdded events through Alchemy RPC provider, building cached database views in Supabase for fast queries. This architecture pattern addresses blockchain query limitations while maintaining on-chain verification capability.
 
-**3. Security First:** Multiple defense layers protect against common vulnerabilities including integer overflow (Solidity 0.8+ built-in checks), access control bypass (function modifiers with require statements), and input validation (product existence checks, harvest date validation). Security measures reference patterns documented in comprehensive reviews identifying critical vulnerabilities across blockchain-based supply chain implementations (IEEE Access 2023).
+**3. Security First:** Multiple defense layers protect against common vulnerabilities including integer overflow (Solidity 0.8+ built-in checks), access control bypass (function modifiers with require statements), and input validation (product existence checks, harvest date validation). Security measures reference patterns documented in comprehensive reviews identifying critical vulnerabilities across blockchain-based supply chain implementations (Fiore & Mongiello 2023).
 
 ### 4.1.2 Contract Structure
 
@@ -82,7 +82,7 @@ struct TraceRecord {
     uint256 timestamp;  // block.timestamp (automatic, immutable)
 }
 ```
-FIGURE 8. Data structures of ProductRegistry contract
+FIGURE 8. Data Structures of ProductRegistry Contract
 
 **Design Decision - String Storage vs Hash-Based:**
 
@@ -94,21 +94,19 @@ This illustrates the academic value of documenting trade-offs: future implementa
 
 The contract integrates OpenZeppelin's AccessControl library defining four permission levels:
 
-TABLE 13. Role-based access control relationships
+TABLE 13. Role-Based Access Control relationships
 
-| Role | registerProduct() | addTraceRecord() | Role Management |
-|------|-------------------|------------------|-----------------|
-| PRODUCER_ROLE | ✅ | ✅ | ❌ |
-| DISTRIBUTOR_ROLE | ❌ | ✅ | ❌ |
-| RETAILER_ROLE | ❌ | ✅ | ❌ |
-| DEFAULT_ADMIN_ROLE | ❌ | ❌ | ✅ |
+| Role | registerProduct | addTraceRecord | Role Management |
+|------|-----------------|----------------|-----------------|
+| PRODUCER | ✅ | ✅ | ❌ |
+| DISTRIBUTOR | ❌ | ✅ | ❌ |
+| RETAILER | ❌ | ✅ | ❌ |
+| DEFAULT_ADMIN | ❌ | ❌ | ✅ |
 | Consumer (no role) | ❌ | ❌ | ❌ |
 
 The addTraceRecord() function validates that the caller holds one of the three supply chain roles (producer, distributor, or retailer) before permitting trace record creation. This enables all supply chain participants to record trace events while preventing unauthorized access from consumers or external actors.
 
 **Contract Address (Sepolia):** `0x5d56f5a8703d7d545319177042cd91FD3339E2b6`
-
-**Etherscan Verification:** https://sepolia.etherscan.io/address/0x5d56f5a8703d7d545319177042cd91FD3339E2b6
 
 **Measured Performance (Sepolia Testnet):**
 - Product registration: ~190,000-207,000 gas per call
@@ -121,7 +119,7 @@ Note: These gas costs are higher than optimized implementations due to string st
 
 ## 4.3 Testing and Verification
 
-The smart contract testing strategy follows test-driven development principles demonstrated feasible for agile blockchain development despite unique constraints including transaction immutability and deployment costs (IEEE 2024). Test implementation used Hardhat development environment with Mocha test framework and Chai assertion library, targeting >70% code coverage.
+The smart contract testing strategy follows test-driven development principles demonstrated feasible for agile blockchain development despite unique constraints including transaction immutability and deployment costs (Vijayan Nair & Mittal 2024). Test implementation used Hardhat development environment with Mocha test framework and Chai assertion library, targeting >70% code coverage.
 
 ### 4.3.1 Unit Test Coverage
 
@@ -160,7 +158,7 @@ One significant security finding emerged during testing. The initial implementat
 
 The ProductRegistry contract was deployed to Ethereum Sepolia testnet using a Hardhat deployment script following the deployment workflow documented in the Hardhat framework (Hardhat 2024). After successful deployment, the contract source code was verified on Etherscan using the Hardhat verify task, enabling public inspection of the implementation.
 
-The deployed contract resides at address 0x5d56f5a8703d7d545319177042cd91FD3339E2b6 on the Ethereum Sepolia Testnet, which operates under Chain ID 11155111. The deployment transaction consumed approximately 928,485 gas units, representing 3.1% of the block gas limit. Source code verification on Etherscan was completed successfully, allowing anyone to view and audit the contract implementation directly on the block explorer.
+The deployed contract resides on the Ethereum Sepolia Testnet, which operates under Chain ID 11155111. The deployment transaction consumed approximately 928,485 gas units, representing 3.1% of the block gas limit. Source code verification on Etherscan was completed successfully, allowing anyone to view and audit the contract implementation directly on the block explorer.
 
 Post-deployment testing confirmed gas measurements, as summarized in Table 15.
 
@@ -208,7 +206,7 @@ Beyond cost considerations, smart contracts face the oracle problem: they cannot
 
 ---
 
-## Chapter 4 Summary
+## 4.5 Chapter Summary
 
 This chapter detailed the smart contract implementation addressing Research Question 1: "How suitable is Ethereum blockchain for food supply chain traceability?" Through role-based access control enabling multi-stakeholder coordination and event-driven architecture for off-chain indexing, the implementation validates Ethereum's technical feasibility for POC-scale food traceability applications.
 

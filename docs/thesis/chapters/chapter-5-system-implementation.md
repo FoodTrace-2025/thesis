@@ -15,8 +15,6 @@ This chapter describes the implementation of the supporting system components th
 
 ## 5.1 Backend Development
 
-**Owner:** TaiSheng Chen
-
 The backend architecture uses Next.js 14 API routes (Next.js 2024) for serverless functions combined with Supabase PostgreSQL for off-chain data storage and Wagmi v2 (Wagmi 2024) for blockchain interaction following modern Web3 development patterns.
 
 **Note:** This section corresponds to Section 2.4.1 (Custodial Wallet Patterns) in Literature Review, which reviews custodial wallet patterns, Wagmi/Viem libraries, and API design best practices.
@@ -96,8 +94,6 @@ Addresses common Web3 failure modes: RPC timeout (retry with exponential backoff
 
 ## 5.2 Frontend Development
 
-**Owner:** YiLing Chen
-
 **Note:** This section implements wallet-free access patterns reviewed in Section 2.4.2 (Wallet-Free Consumer Access) to address the 80% wallet setup abandonment rate documented in literature.
 
 The frontend implements four role-specific interfaces (Producer, Distributor, Retailer, Consumer) using Next.js 14 Pages Router with TypeScript and Chakra UI v2 component library (Chakra UI 2024) for accessible, customizable React components following WAI-ARIA design patterns.
@@ -117,7 +113,7 @@ flowchart TB
     end
 
     subgraph Public["Public Routes (No Auth)"]
-        C["/consumer/*"] --> CD[Scan QR, View Product]
+        C["/trace/*"] --> CD[Scan QR, View Product]
         L["/login, /register"]
     end
 

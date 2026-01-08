@@ -76,7 +76,7 @@ Nakamoto, S. 2008. _Bitcoin: A peer-to-peer electronic cash system_.
 
 Next.js. 2024. _Next.js Documentation_. Vercel.
 
-Nguyen, Q., et al. 2022. GasSaver: A tool for Solidity smart contract optimization. In _Proceedings of the Fourth ACM International Symposium on Blockchain and Secure Critical Infrastructure (BSCI '22)_ (pp. 96-98). ACM.
+Nguyen, Q., et al. 2022. GasSaver: A tool for Solidity smart contract optimization. In _Proceedings of the Fourth ACM International Symposium on Blockchain and Secure Critical Infrastructure (BSCI '22)_ (pp. 125-134). ACM.
 
 OpenZeppelin. 2024. _OpenZeppelin Contracts documentation: Secure smart contract library_.
 
