@@ -1,6 +1,6 @@
 # Chapter 2: Literature Review
 
-This chapter reviews the theoretical foundations and practical applications of blockchain technology in food supply chain traceability. It examines traditional supply chain challenges and established blockchain implementations like IBM Food Trust (Section 2.1), compares Ethereum and Hyperledger Fabric architectures for traceability applications (Section 2.2), analyzes smart contract design patterns and security considerations (Section 2.3), and investigates Web3 user experience challenges that inform this thesis's wallet-free consumer access design (Section 2.4). The chapter synthesizes these findings to position this research within existing scholarship and justify key technical decisions.
+This chapter reviews the theoretical foundations and practical applications of blockchain technology in food supply chain traceability. It examines traditional supply chain challenges and established blockchain implementations like IBM Food Trust, then compares Ethereum and Hyperledger Fabric architectures for traceability applications. The chapter also analyzes smart contract design patterns and security considerations, and investigates Web3 user experience challenges that inform this thesis's wallet-free consumer access design. These findings position the research within existing scholarship and justify key technical decisions.
 
 **Target Length:** 2,200-2,700 words (~8-10 pages)
 **Focus:** Justification for design choices + research gap positioning

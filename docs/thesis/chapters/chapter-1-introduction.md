@@ -1,6 +1,6 @@
 # Chapter 1: INTRODUCTION
 
-This chapter establishes the foundation for this thesis by introducing blockchain technology's application in food supply chain traceability. It begins with the background and research gap addressing the accessibility-decentralization trade-off in blockchain implementations (Section 1.1), defines the central problem of mainstream blockchain adoption (Section 1.2), and outlines the research objectives and questions guiding this proof-of-concept system (Section 1.3). The chapter concludes by specifying the scope and limitations of this educational project (Section 1.4) and providing an overview of the eight-chapter thesis structure (Section 1.5).
+This chapter establishes the foundation for this thesis by introducing blockchain technology's application in food supply chain traceability. It begins with the background context, examining the accessibility-decentralization trade-off that limits mainstream blockchain adoption, then defines the central problem and outlines the research objectives guiding this proof-of-concept system. The chapter concludes by specifying the scope and limitations of this educational project and providing an overview of the thesis structure.
 
 ## 1.1 Background
 

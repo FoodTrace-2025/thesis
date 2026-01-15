@@ -1,6 +1,6 @@
 # Chapter 5: System Implementation
 
-This chapter describes the implementation of the supporting system components that connect end users to the smart contract detailed in Chapter 4. It covers the backend architecture including database schema design, API route implementation, and Web3 integration using Wagmi v2 (Section 5.1), and explains the frontend development of role-specific user interfaces built with Next.js and Chakra UI (Section 5.2). Together, these components demonstrate how blockchain technology can be made accessible to mainstream users while maintaining the transparency and immutability benefits established in the literature review.
+This chapter describes the implementation of the supporting system components that connect end users to the smart contract detailed in Chapter 4. It covers the backend architecture including database schema design, API route implementation, and Web3 integration using Wagmi v2, then explains the frontend development of role-specific user interfaces built with Next.js and Chakra UI. Together, these components demonstrate how blockchain technology can be made accessible to mainstream users while maintaining the transparency and immutability benefits established in the literature review.
 
 **Target Length:** 1,800-2,200 words (~4-5 pages)
 **Owners:** TaiSheng (Backend), YiLing (Frontend)

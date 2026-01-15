@@ -1,6 +1,6 @@
 # Chapter 4: Smart Contract Implementation
 
-This chapter details the blockchain layer implementation of the FoodTrace system, focusing on the Solidity smart contract deployed to Ethereum Sepolia testnet. It begins with the overall contract architecture and design principles emphasizing security and modularity (Section 4.1), explains the implementation of the ProductRegistry contract combining product registration and supply chain trace recording in a unified design (Section 4.2), analyzes security considerations and testing approach (Section 4.3), and documents the deployment process and lessons learned (Section 4.4). This chapter demonstrates how the smart contract translates the theoretical concepts from Chapter 2 into functional code.
+This chapter details the blockchain layer implementation of the FoodTrace system, focusing on the Solidity smart contract deployed to Ethereum Sepolia testnet. It begins with the overall contract architecture and design principles emphasizing security and modularity, then explains the implementation of the ProductRegistry contract combining product registration and supply chain trace recording in a unified design. The chapter also analyzes security considerations and testing approach, and documents the deployment process and lessons learned. This demonstrates how the smart contract translates the theoretical concepts from Chapter 2 into functional code.
 
 **Target Length:** 2,000-2,500 words (~3-4 pages)
 **Owner:** Sam (Blockchain Lead)

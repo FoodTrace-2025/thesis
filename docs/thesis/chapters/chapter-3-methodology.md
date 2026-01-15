@@ -1,6 +1,6 @@
 # Chapter 3: Methodology
 
-This chapter describes the research methodology and technical approach employed to design and implement the FoodTrace proof-of-concept system. It explains the BMAD (Agile Blockchain DApp Engineering) development framework adapted for this 12-week thesis project (Section 3.1), justifies the selection of Ethereum over Hyperledger Fabric for the proof-of-concept context (Section 3.2), outlines the technical architecture including hybrid data storage strategy (Section 3.3), and defines the testing and validation approach ensuring code quality and functional correctness (Section 3.4). These methodological decisions establish the foundation for implementation detailed in Chapters 4 and 5.
+This chapter describes the research methodology and technical approach employed to design and implement the FoodTrace proof-of-concept system. It explains the BMAD development framework adapted for this 12-week thesis project, justifies the selection of Ethereum over Hyperledger Fabric for the proof-of-concept context, and outlines the technical architecture including the hybrid data storage strategy. The chapter also defines the testing and validation approach ensuring code quality and functional correctness. These methodological decisions establish the foundation for implementation detailed in Chapters 4 and 5.
 
 ## 3.1 BMAD Development Methodology
 

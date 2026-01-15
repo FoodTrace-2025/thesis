@@ -1,6 +1,6 @@
 # Chapter 8: Conclusion
 
-This final chapter synthesizes the findings of this thesis and positions the FoodTrace proof-of-concept within the broader blockchain food traceability research landscape. It summarizes the work performed across six development phases (Section 8.1), provides evidence-based answers to the five research questions posed in Chapter 1 (Section 8.2), articulates the thesis's contributions to the research field (Section 8.3), acknowledges project limitations and threats to validity (Section 8.4), proposes future research directions (Section 8.5), and concludes with final remarks on blockchain accessibility for mainstream food supply chain stakeholders (Section 8.6).
+This final chapter synthesizes the findings of this thesis and positions the FoodTrace proof-of-concept within the broader blockchain food traceability research landscape. It summarizes the work performed across six development phases, provides evidence-based answers to the five research questions posed in Chapter 1, and articulates the thesis's contributions to the research field. The chapter also acknowledges project limitations and threats to validity, proposes future research directions, and concludes with final remarks on blockchain accessibility for mainstream food supply chain stakeholders.
 
 ## 8.1 Summary of Work
 
